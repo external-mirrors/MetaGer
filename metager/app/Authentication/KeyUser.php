@@ -133,6 +133,36 @@ class KeyUser implements Authenticatable
     }
 
     /**
+     * Wirft den gemerkten Kontostand weg, damit der nächste Zugriff wieder
+     * beim Keyserver nachfragt.
+     *
+     * Für den einen Moment, in dem zehn Sekunden Cache falsch sind: direkt
+     * nach einer Gutschrift. Der Stand steht dann nicht nur da, wo man ihn
+     * gerade geändert hat, sondern auf jeder Seite gleichzeitig — im Kontochip
+     * oben (parts/account-pill), in der Seitenleiste (parts/sidebar) und groß
+     * in der Kachel. „Aufladen abgeschlossen" über „0 Token" ist die eine
+     * Kombination, die dieser Vorgang nicht zeigen darf.
+     *
+     * Verworfen wird beides, und keins von beidem reicht allein: nur
+     * $this->key_data zu leeren liest denselben veralteten Eintrag wieder ein,
+     * nur den Cache zu leeren geht an dem Stand vorbei, den der Guard schon in
+     * dieses Objekt gelegt hat.
+     *
+     * Der abgeleitete {@see getKeyState()} fällt mit weg — er wäre sonst der
+     * letzte Rest des alten Standes, und zwar ausgerechnet der, der die Farbe
+     * des Chips bestimmt.
+     *
+     * Geleert, nicht geladen: die Anfrage passiert beim nächsten Lesen, also
+     * gar nicht, wenn niemand mehr fragt.
+     */
+    public function refresh(): void
+    {
+        Cache::forget("keyserver:key:" . $this->key);
+        $this->key_data = null;
+        $this->state = null;
+    }
+
+    /**
      * The last six characters of the key — enough for a user to tell two of
      * their own keys apart, and the input {@see KeyIdenticon} derives the
      * account's mark from, without ever putting the full secret on a page that

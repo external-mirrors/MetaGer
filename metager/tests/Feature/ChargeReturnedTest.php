@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
@@ -27,15 +28,15 @@ class ChargeReturnedTest extends TestCase
         RateLimiter::clear("account-logincode:" . self::A_KEY);
     }
 
-    private function keyserverKnows(array $extraFakes = []): void
+    private function keyserverKnows(array $extraFakes = [], float $charge = 248): void
     {
         Http::preventStrayRequests();
         Http::fake(array_merge($extraFakes, [
             "*/api/json/key/*" => Http::response([
                 "key" => self::A_KEY,
-                "charge" => 248,
+                "charge" => $charge,
                 "expiration" => "2027-03-14 00:00:00",
-                "charge_orders" => [["amount" => 248, "expiration" => "2027-03-14 00:00:00"]],
+                "charge_orders" => [["amount" => $charge, "expiration" => "2027-03-14 00:00:00"]],
                 "key_config" => ["membershipEndDate" => null],
             ]),
         ]));
@@ -174,6 +175,81 @@ class ChargeReturnedTest extends TestCase
         $this->signedIn()
             ->get("/de-DE/konto/aufladen/abschluss/Z1")
             ->assertNotFound();
+    }
+
+    /**
+     * Der Kontostand auf dieser Seite ist frisch geholt, nicht der, den der
+     * Guard mitbringt.
+     *
+     * Das war der Fehler, mit dem diese Seite lief: KeyUser::getKeyData() hält
+     * zehn Sekunden, und wer von einer Zahlung zurückkommt, ist schneller als
+     * das. Die Seite schrieb „Aufladen abgeschlossen" und der Chip daneben
+     * schrieb den Stand von vorher — bei einem leeren Schlüssel also „0
+     * Token" direkt neben der Bestätigung, dass tausend gekauft wurden.
+     *
+     * Geprüft wird beides an einem Aufruf: dass die neue Zahl da ist *und*
+     * dass die alte nirgends mehr steht. Nur auf die neue zu prüfen würde
+     * nicht auffallen, wenn Chip und Seitenleiste weiter die alte tragen —
+     * genau die Stelle, an der es aufgefallen ist.
+     */
+    public function testTheBalanceIsFetchedAfreshInsteadOfReadFromTheStaleCache(): void
+    {
+        Cache::put("keyserver:key:" . self::A_KEY, [
+            "key" => self::A_KEY,
+            "charge" => 7,
+            "expiration" => "2027-03-14 00:00:00",
+            "charge_orders" => [["amount" => 7, "expiration" => "2027-03-14 00:00:00"]],
+            "key_config" => ["membershipEndDate" => null],
+        ], now()->addMinutes(10));
+
+        $this->keyserverKnows([
+            "*/api/json/checkout/*" => Http::response([
+                "public_id" => "Z1",
+                "amount" => 1000,
+                "price" => "10.00",
+                "expires_at" => "2027-05-14T00:00:00.000Z",
+                "key" => self::A_KEY,
+                "paid" => true,
+            ]),
+        ], charge: 1000);
+
+        $response = $this->signedIn()
+            ->get("/de-DE/konto/aufladen/abschluss/Z1")
+            ->assertOk();
+
+        $response->assertSee(trans("account.pill.charge", ["charge" => 1000]));
+        $response->assertSee("1.000");
+        $response->assertDontSee("7 Token");
+    }
+
+    /**
+     * Und die Seite danach stimmt mit. Der Zwischenspeicher wird nicht nur
+     * umgangen, er wird ersetzt — sonst wäre der Chip auf der Startseite, auf
+     * die der primäre Knopf von hier führt, wieder der alte.
+     */
+    public function testTheRefreshedBalanceIsWhatTheNextPageWillRead(): void
+    {
+        Cache::put("keyserver:key:" . self::A_KEY, [
+            "key" => self::A_KEY,
+            "charge" => 7,
+        ], now()->addMinutes(10));
+
+        $this->keyserverKnows([
+            "*/api/json/checkout/*" => Http::response([
+                "public_id" => "Z1",
+                "amount" => 1000,
+                "price" => "10.00",
+                "expires_at" => "2027-05-14T00:00:00.000Z",
+                "key" => self::A_KEY,
+                "paid" => true,
+            ]),
+        ], charge: 1000);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/aufladen/abschluss/Z1")
+            ->assertOk();
+
+        $this->assertSame(1000.0, (float) Cache::get("keyserver:key:" . self::A_KEY)["charge"]);
     }
 
     public function testAnUnknownReferenceIs404(): void

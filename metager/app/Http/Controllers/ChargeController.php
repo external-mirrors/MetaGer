@@ -619,6 +619,21 @@ final class ChargeController extends Controller
         /** @var KeyUser $user */
         $user = Auth::guard("key")->user();
 
+        // Der Stand, den der Guard mitbringt, ist bis zu zehn Sekunden alt und
+        // damit auf dieser Seite fast immer der von *vor* dieser Zahlung. Er
+        // steht hier nicht nur einmal: unten in der Kachel, oben im Kontochip
+        // und in der Seitenleiste — „Aufladen abgeschlossen" über „0 Token"
+        // war genau das, was man lokal zu sehen bekam.
+        //
+        // Einmal verwerfen genügt für alle drei, weil sie denselben KeyUser
+        // fragen. Und weil der neue Eintrag wieder zehn Sekunden hält, stimmt
+        // auch die Seite danach — Suche oder Konto, je nachdem, wohin man von
+        // hier aus weitergeht.
+        //
+        // Die eine zusätzliche Anfrage an den Keyserver fällt pro
+        // abgeschlossener Zahlung an, nicht pro Seitenaufruf.
+        $user->refresh();
+
         return response()
             ->view("checkout.returned", [
                 "title" => trans("titles.checkout"),
@@ -633,14 +648,14 @@ final class ChargeController extends Controller
                 // Das Ergebnis, wegen dessen der ganze Vorgang stattfand.
                 //
                 // Nur, wenn es die gerade gekaufte Menge schon enthält.
-                // `paid` heißt, dass der Keyserver eine Zahlung zu dieser
-                // Ladung kennt, und er bucht beim Verbuchen der Zahlung gut —
-                // aber KeyUser::getKeyData() ist zehn Sekunden zwischen-
-                // gespeichert, und eine schnelle Rückkehr (Wero) kann darin
-                // landen. Ein Stand von *vor* der Gutschrift, groß gesetzt
-                // unter „Aufladen abgeschlossen", wäre die eine Zahl, die
-                // dieser Vorgang nicht falsch anzeigen darf; im Zweifel nennt
-                // die Seite deshalb nur die gekaufte Menge.
+                // Nach dem refresh() oben ist der Stand frisch vom Keyserver,
+                // aber frisch heißt nicht gutgeschrieben: `paid` sagt nur,
+                // dass dort eine Zahlung zu dieser Ladung steht, und der
+                // Browser kann von einer Weiterleitung zurück sein, bevor sie
+                // verbucht ist. Ein Stand von *vor* der Gutschrift, groß
+                // gesetzt unter „Aufladen abgeschlossen", wäre die eine Zahl,
+                // die dieser Vorgang nicht falsch anzeigen darf; im Zweifel
+                // nennt die Seite deshalb nur die gekaufte Menge.
                 "balance" => $this->creditedBalance($user, $order["amount"]),
                 "accountUrl" => route("account"),
                 // Wo die Auftragsbestätigung liegt: auf der Bestelldetailseite,
@@ -663,6 +678,10 @@ final class ChargeController extends Controller
      * Die Prüfung ist bewusst „mindestens so groß wie gekauft" und nicht ein
      * Vergleich mit einem vorher gemerkten Stand: einen vorherigen Stand gibt
      * es hier nicht, dieser Vorgang kommt von einem anderen Ursprung zurück.
+     *
+     * Setzt voraus, dass {@see KeyUser::refresh()} vorher lief — sonst prüft
+     * sie einen bis zu zehn Sekunden alten Stand und sagt „noch nicht
+     * gutgeschrieben", wo längst gutgeschrieben ist.
      */
     private function creditedBalance(KeyUser $user, float|int $amount): ?float
     {

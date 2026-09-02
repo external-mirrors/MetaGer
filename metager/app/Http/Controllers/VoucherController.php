@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Authentication\CampaignRedemption;
+use App\Authentication\CookieSupport;
 use App\Authentication\KeyBackup;
 use App\Landing\KeymanagerLinks;
 use Illuminate\Http\RedirectResponse;
@@ -98,7 +99,9 @@ final class VoucherController extends Controller
             return $this->enterPage("invalid_code", $this->enteredCode($request));
         }
 
-        return redirect()->to(route("voucher.code", ["code" => $code]));
+        return redirect()
+            ->to(route("voucher.code", ["code" => $code]))
+            ->header("Cache-Control", "no-store, private");
     }
 
     /** Die Vorschau für einen einzeln geteilten/gedruckten Code. */
@@ -223,19 +226,31 @@ final class VoucherController extends Controller
             "expiration" => $expiration,
             "qrUri" => KeyBackup::qrDataUri($key),
             "settingsUrl" => KeyBackup::settingsUrl($request, $key),
-            "accountUrl" => route("account"),
-        ])->header("Cache-Control", "no-store, private");
+            // Das Cookie oben überlebt die Runde vielleicht nicht; `withKeyCheck`
+            // trägt den Schlüssel deshalb auch auf diesen Weg, wie in
+            // {@see KeyCreationController::submit()}. `settingsUrl` bringt sein
+            // `?key=` schon selbst mit — der Hauptweg ist also ohnehin gedeckt.
+            "accountUrl" => CookieSupport::withKeyCheck(route("account"), $key),
+        ]);
     }
 
     private function enterPage(?string $error, string $oldCode): Response
     {
+        // 200 für die leere Seite, 422 für einen falschen Code, 429 für die
+        // Bremse — wie `POST /c` im Keymanager.
+        $status = match ($error) {
+            "invalid_code" => 422,
+            "rate_limited" => 429,
+            default => 200,
+        };
+
         return $this->page("voucher.enter", [
             "title" => trans("titles.voucher"),
             "action" => route("voucher", [], false),
             "error" => $error,
             "oldCode" => $oldCode,
             "codeLength" => self::CODE_LENGTH,
-        ]);
+        ], $status);
     }
 
     private function errorPage(string $error): Response
@@ -247,19 +262,52 @@ final class VoucherController extends Controller
             "title" => trans("titles.voucher"),
             "error" => $error,
             "retryUrl" => $retryable ? route("voucher") : null,
-        ])->setStatusCode($error === "unreachable" ? 502 : 200);
+        ], self::statusFor($error));
     }
 
     /**
+     * Gemeinsamer Rahmen für jede gerenderte Seite dieses Vorgangs.
+     *
+     * `no-store, private` auf allen: der Keymanager setzte es über ein
+     * `router.use` am Kopf von `/c` auf jede Antwort, und die Geschwister
+     * dieses Umzugs ({@see AccountController}, {@see OrderController},
+     * {@see CampaignController}) tun es auch. Die Fehlerseite wiegt am
+     * schwersten — sie zeigt den *pro-Adresse* gezählten Bremszustand, und ein
+     * gemeinsamer Cache, der den an den nächsten Besucher weiterreicht, wäre
+     * falsch.
+     *
      * @param array<string, mixed> $data
      */
-    private function page(string $view, array $data): Response
+    private function page(string $view, array $data, int $status = 200): Response
     {
-        return response()->view($view, array_merge([
-            "navbarFocus" => "login",
-            "css" => [Vite::asset("resources/less/metager/pages/voucher.less")],
-            "js" => [Vite::asset("resources/js/voucher.js")],
-        ], $data));
+        return response()
+            ->view($view, array_merge([
+                "navbarFocus" => "login",
+                "css" => [Vite::asset("resources/less/metager/pages/voucher.less")],
+                "js" => [Vite::asset("resources/js/voucher.js")],
+            ], $data), $status)
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    /**
+     * Der HTTP-Status zu einem Fehlercode, so wie ihn der alte EJS-Router
+     * setzte und wie ihn die Keymanager-API weiterreicht: 404 für einen Code
+     * oder ein Token, das nichts ist; 410 für eins, das etwas war und
+     * verbraucht ist; 429 für die Bremse; 502, wenn der Keyserver gar nicht
+     * geantwortet hat. Übersetzungen für 404, 410 und 429 gibt es — dieser
+     * Vorgang rendert dafür seine eigene Seite, aber der Status soll stimmen:
+     * eine beendete Kampagne unter `/c/campaign/<token>` ist eine 410, damit
+     * ein Crawler die tote Seite aus dem Index nimmt statt sie zu behalten.
+     */
+    private static function statusFor(string $error): int
+    {
+        return match ($error) {
+            "invalid_code", "invalid_token" => 404,
+            "already_redeemed", "campaign_inactive", "budget_exhausted" => 410,
+            "rate_limited" => 429,
+            "unreachable" => 502,
+            default => 500,
+        };
     }
 
     /**
@@ -276,7 +324,9 @@ final class VoucherController extends Controller
             || $request->hasHeader("key")
             || $request->cookie("key") !== null
         ) {
-            return redirect()->to(KeymanagerLinks::accountForVisitor($request));
+            return redirect()
+                ->to(KeymanagerLinks::accountForVisitor($request))
+                ->header("Cache-Control", "no-store, private");
         }
 
         return null;

@@ -154,7 +154,10 @@ class KeyPagesNavigationTest extends TestCase
         // MetaGer-Routen; /keys/c ist nur noch eine dauerhafte Weiterleitung
         // (App\Landing\KeymanagerLinks::voucher()).
         $response->assertSee("/anmelden", false);
-        $response->assertSee("/c", false);
+        // Der ganze Pfad, nicht nur „/c" irgendwo: das schließende
+        // Anführungszeichen bindet die Prüfung an ein href, das genau auf /c
+        // endet — die Einlöseseite.
+        $response->assertSee('/c"', false);
         $response->assertDontSee("/keys/c", false);
     }
 }

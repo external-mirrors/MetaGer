@@ -67,23 +67,33 @@ class VoucherTest extends TestCase
             ->assertSee(trans("campaigns.redeem.teaser.submit"));
     }
 
+    /**
+     * Der Status wird durchgereicht, nicht auf 200 geglättet: 404 für einen
+     * Code, der nichts ist. Die Seite ist trotzdem unsere eigene — die
+     * Fehlerseite dieses Vorgangs, nicht Laravels 404.
+     */
     public function testCodeTeaser404sAsError(): void
     {
         Http::preventStrayRequests();
         Http::fake(["*/api/json/c/voucher/*" => Http::response(["error" => "invalid_code"], 404)]);
 
         $this->get("/de-DE/c/" . self::CODE)
-            ->assertOk()
+            ->assertNotFound()
+            ->assertSee(trans("campaigns.redeem.error.heading"))
             ->assertSee(trans("campaigns.redeem.error.invalid_code"));
     }
 
+    /**
+     * 410 für einen Code, der einmal etwas war und verbraucht ist — damit ein
+     * Crawler die tote Seite aus dem Index nimmt.
+     */
     public function testAlreadyRedeemedCodeShowsThatError(): void
     {
         Http::preventStrayRequests();
         Http::fake(["*/api/json/c/voucher/*" => Http::response(["error" => "already_redeemed"], 410)]);
 
         $this->get("/de-DE/c/" . self::CODE)
-            ->assertOk()
+            ->assertStatus(410)
             ->assertSee(trans("campaigns.redeem.error.already_redeemed"));
     }
 
@@ -138,7 +148,7 @@ class VoucherTest extends TestCase
 
         $this->withHeaders(["Origin" => config("app.url")])
             ->post("/de-DE/c/campaign/sometoken")
-            ->assertOk()
+            ->assertStatus(429)
             ->assertSee(trans("campaigns.redeem.error.rate_limited"));
     }
 
@@ -172,7 +182,7 @@ class VoucherTest extends TestCase
         }
 
         $this->get("/de-DE/c/" . self::CODE)
-            ->assertOk()
+            ->assertStatus(429)
             ->assertSee(trans("campaigns.redeem.error.rate_limited"));
     }
 
@@ -192,7 +202,7 @@ class VoucherTest extends TestCase
     {
         $this->withHeaders(["Origin" => config("app.url")])
             ->post("/de-DE/c", ["code" => "too-short"])
-            ->assertOk()
+            ->assertStatus(422)
             ->assertSee(trans("campaigns.redeem.enter.invalid_code"));
     }
 

@@ -162,12 +162,10 @@ class KeyPagesTranslationsTest extends TestCase
     }
 
     /**
-     * Kein Text zeigt noch auf /keys. Die fünf Seiten sind umgezogen; ein
-     * Verweis auf den alten Pfad funktioniert nur, solange die Weiterleitung
-     * steht, und liest sich dann als Umweg.
-     *
-     * Ausgenommen ist, was vom Schlüsselvorgang noch dort liegt — /keys/c und
-     * das Konto bleiben vorerst und werden bewusst verlinkt.
+     * Kein Text zeigt noch auf /keys. Die Seiten sind umgezogen; ein Verweis
+     * auf den alten Pfad funktioniert nur, solange die Weiterleitung steht,
+     * und liest sich dann als Umweg. Beim Keymanager liegt vom
+     * Schlüsselvorgang nur noch die API — dorthin verlinkt kein Text.
      */
     public function testNoTranslationPointsAtAMovedKeysPath(): void
     {
@@ -186,6 +184,7 @@ class KeyPagesTranslationsTest extends TestCase
                         "/keys/help/",
                         "/keys/key/enter",
                         "/keys/key/create",
+                        "/keys/c",
                     ] as $moved) {
                         if (str_contains($value, $moved)) {
                             $problems[] = "$locale/$file: $key zeigt noch auf $moved";

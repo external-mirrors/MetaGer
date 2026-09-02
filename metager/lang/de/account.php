@@ -100,6 +100,19 @@ return [
             'more' => 'Alle Preise und Zahlungswege',
 
             /**
+             * Die Alternative zum Kauf eines Token-Pakets, die der Keymanager
+             * an derselben Stelle anbot und die beim Umzug hierher verloren
+             * ging. Sie wird nur auf der deutschen Oberfläche gerendert
+             * ({@see \App\Support\MembershipOffer}) — das Beitrittsformular
+             * gibt es in keiner anderen Sprache.
+             */
+            'membership' => [
+                'heading' => 'Oder Mitglied werden?',
+                'text' => 'Mitglieder des gemeinnützigen Trägervereins <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> suchen ohne weitere Kosten: Der Schlüssel wird monatlich aus dem Mitgliedsbeitrag aufgeladen, und Sie tragen die Suchmaschine, statt sie zu bezahlen.',
+                'action' => 'Mitglied werden',
+            ],
+
+            /**
              * Warum gerade kein Paket angeboten wird. Drei Sätze für drei
              * Zustände, die alle drei schon auf der alten Seite standen — nur
              * dass sie dort „Ihr Schlüssel ist bereits voll aufgeladen“ sagte,
@@ -120,21 +133,20 @@ return [
          */
         'save' => [
             'heading' => 'Zugang sichern',
-            'text' => 'Solange dieser Browser das Cookie behält, bleiben Sie angemeldet. Verliert er es — neues Gerät, gelöschte Browserdaten —, ist Ihr Schlüssel der einzige Weg zurück zu Ihrem Guthaben. Hier ist er, und hier sind drei Arten, ihn mitzunehmen.',
+            'text' => 'Solange dieser Browser das Cookie behält, bleiben Sie angemeldet. Verliert er es — neues Gerät, gelöschte Browserdaten —, ist Ihr Schlüssel der einzige Weg zurück zu Ihrem Guthaben. Hier ist er, und hier sind die Wege, ihn mitzunehmen.',
 
             /**
              * Der Schlüssel selbst.
              *
              * Er muss hier stehen — das Anmeldeformular fragt in erster Linie
-             * nach ihm —, und er steht zugeklappt, weil diese Seite für
-             * Supportanfragen fotografiert wird. Die alte Seite zeigte ihn
-             * groß und immer.
+             * nach ihm. Nicht mehr zugeklappt: der QR-Code darunter trägt
+             * denselben Schlüssel und ist nie zugeklappt, ihn hier zu
+             * verstecken hätte also nichts gebracht.
              */
             'key' => [
-                'summary' => 'Schlüssel anzeigen und kopieren',
                 'label' => 'Ihr Schlüssel',
                 'action' => 'Schlüssel kopieren',
-                'hint' => '36 Zeichen. Damit melden Sie sich auf jedem weiteren Gerät an. Zugeklappt, weil diese Seite oft fotografiert wird — wer Ihren Schlüssel sieht, sucht auf Ihre Kosten.',
+                'hint' => '36 Zeichen. Damit melden Sie sich auf jedem weiteren Gerät an.',
             ],
 
             'qr' => [

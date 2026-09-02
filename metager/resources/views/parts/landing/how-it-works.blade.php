@@ -34,10 +34,15 @@
     {{-- Members of SUMA-EV search without paying again. The keymanager had this
          string in de and en and never rendered it — the include that would have
          printed it was dropped at some point and nobody noticed, because the
-         only way to notice was to read the JSON. --}}
-    <p class="landing-steps__membership">
-      {!! __('index.landing.howitworks.steps.1.membership', ['linkMembership' => route('membership_form')]) !!}
-    </p>
+         only way to notice was to read the JSON.
+
+         German interface only: the form it links to exists in no other
+         language (App\Support\MembershipOffer). --}}
+    @if(\App\Support\MembershipOffer::isAdvertised())
+      <p class="landing-steps__membership">
+        {!! __('index.landing.howitworks.steps.1.membership', ['linkMembership' => route('membership_form')]) !!}
+      </p>
+    @endif
 
     <div class="landing-steps__actions">
       <a href="{{ App\Landing\KeymanagerLinks::create() }}"

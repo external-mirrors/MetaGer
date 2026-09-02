@@ -89,6 +89,19 @@ return [
             'more' => 'All prices and payment methods',
 
             /**
+             * The alternative to buying a token package, which the keymanager
+             * offered in the same place and which was lost in the move. It is
+             * rendered on the German interface only
+             * ({@see \App\Support\MembershipOffer}) — the application form
+             * exists in no other language.
+             */
+            'membership' => [
+                'heading' => 'Or become a member?',
+                'text' => 'Members of our non-profit association <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> search at no further cost: the key is topped up from the membership fee every month, and you carry the search engine instead of paying it.',
+                'action' => 'Become a member',
+            ],
+
+            /**
              * Why no package is on offer right now. Three sentences for three
              * states, all three of which the old page had too — except that it
              * said "your key is already fully charged", which is not true: what
@@ -108,20 +121,19 @@ return [
          */
         'save' => [
             'heading' => 'Secure your access',
-            'text' => 'As long as this browser keeps the cookie, you stay signed in. If it loses it — a new device, cleared browsing data — your key is the only way back to your balance. Here it is, and here are three ways to take it with you.',
+            'text' => 'As long as this browser keeps the cookie, you stay signed in. If it loses it — a new device, cleared browsing data — your key is the only way back to your balance. Here it is, and here are the ways to take it with you.',
 
             /**
              * The key itself.
              *
-             * It has to be here — the sign-in form asks for it first of all —
-             * and it is collapsed, because this page gets photographed for
-             * support tickets. The old page showed it large and always.
+             * It has to be here — the sign-in form asks for it first of all.
+             * No longer collapsed: the QR code below it carries the same key
+             * and is never collapsed, so hiding it here bought nothing.
              */
             'key' => [
-                'summary' => 'Show and copy key',
                 'label' => 'Your key',
                 'action' => 'Copy key',
-                'hint' => '36 characters. This is what signs you in on any other device. Collapsed because this page often gets photographed — anyone who sees your key searches at your expense.',
+                'hint' => '36 characters. This is what signs you in on any other device.',
             ],
 
             'qr' => [

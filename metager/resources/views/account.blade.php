@@ -20,8 +20,8 @@
 	**Der Schlüssel steht nicht mehr in voller Länge auf der Seite.** Er stand
 	dort als große, anklickbare Zeichenfolge — auf einer Seite, die Menschen in
 	Supportanfragen fotografieren. Was jetzt dasteht, sind die letzten sechs
-	Zeichen als Kennung, und die drei Wege, den ganzen Schlüssel aufzubewahren,
-	stehen beieinander im Abschnitt „Zugang sichern“.
+	Zeichen als Kennung, und die Wege, den ganzen Schlüssel aufzubewahren,
+	stehen untereinander im Abschnitt „Zugang sichern“.
 
 	**Die Zahlen werden lokalisiert und nicht deutsch formatiert.** `2.480` heißt
 	auf Englisch `2,480`, und diese Seite wird in zwölf Sprachen ausgeliefert.
@@ -118,7 +118,7 @@
 
 		@if($topupBlocked !== null)
 			<p class="account-blocked">@lang("account.page.charge.blocked.$topupBlocked")</p>
-			@if($topupBlocked === 'member')
+			@if($topupBlocked === 'member' && \App\Support\MembershipOffer::isAdvertised())
 				<a class="account-section__more" href="{{ $membershipUrl }}">@lang('account.page.charge.more')</a>
 			@endif
 		@elseif($tiers === [])
@@ -136,6 +136,27 @@
 				@endforeach
 			</ul>
 			<a class="account-section__more" href="{{ $priceUrl }}">@lang('account.page.charge.more')</a>
+
+			{{--
+				Die Alternative zum Bezahlen, an der Stelle, an der jemand
+				bezahlen will. Der Keymanager zeigte den Hinweis auf die
+				Mitgliedschaft an genau dieser Stelle; er ist beim Umzug
+				verlorengegangen, und er gehört hierher und nicht auf eine
+				Werbeseite: Mitglieder suchen ohne weitere Kosten, der
+				Schlüssel wird monatlich aus dem Beitrag aufgefüllt. Wer
+				gerade ein Token-Paket kaufen will, ist der Einzige, den das
+				betrifft.
+
+				Nur auf der deutschen Oberfläche, wie jeder Hinweis auf die
+				Mitgliedschaft — siehe App\Support\MembershipOffer.
+			--}}
+			@if(\App\Support\MembershipOffer::isAdvertised())
+				<div class="account-membership" id="charge-membership">
+					<h3 class="account-membership__heading">@lang('account.page.charge.membership.heading')</h3>
+					<p class="account-membership__text">{!! __('account.page.charge.membership.text') !!}</p>
+					<a class="account-membership__action" href="{{ $membershipUrl }}">@lang('account.page.charge.membership.action')</a>
+				</div>
+			@endif
 		@endif
 	</section>
 
@@ -143,7 +164,8 @@
 		Zugang sichern. Die Kernsektion (Schlüssel, QR, Lesezeichen-URL, und —
 		nur hier, weil nur das Konto den Anmeldecode kennt — das zweite Gerät)
 		steht jetzt in partials/key-backup.blade.php, geteilt mit den
-		Aufladeseiten.
+		Aufladeseiten. Dort steht auch, warum die Wege untereinander und nicht
+		nebeneinander stehen.
 	--}}
 	@if($key !== null)
 		@include('partials.key-backup', ['loginCodeUrl' => $loginCodeUrl])

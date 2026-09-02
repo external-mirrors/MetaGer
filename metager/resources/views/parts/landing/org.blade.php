@@ -23,8 +23,14 @@
         <ul class="landing-links">
           <li><a href="https://suma-ev.de/" target="_blank">{{ trans('mg-story.btn-SUMA-EV') }}</a></li>
           <li><a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), 'spende') }}">{{ trans('mg-story.btn-donate') }}</a></li>
-          <li><a href="{{ route('membership_form') }}" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
-          <li><a href="https://suma-ev.de/mitglieder/" target="_blank">{{ trans('mg-story.btn-member-advantage') }}</a></li>
+          {{-- Beitrittsformular und Mitgliederseite sind beide nur auf Deutsch
+               zu haben — App\Support\MembershipOffer sagt, warum sie darum auch
+               nur dort beworben werden. Übrig bleiben zwei Links, die jeder
+               lesen kann. --}}
+          @if(\App\Support\MembershipOffer::isAdvertised())
+            <li><a href="{{ route('membership_form') }}" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
+            <li><a href="https://suma-ev.de/mitglieder/" target="_blank">{{ trans('mg-story.btn-member-advantage') }}</a></li>
+          @endif
         </ul>
       </li>
 

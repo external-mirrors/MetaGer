@@ -89,6 +89,18 @@ return [
             'more' => 'Tots els preus i mètodes de pagament',
 
             /**
+             * Rendered on the German interface only
+             * ({@see \App\Support\MembershipOffer}) — the SUMA-EV
+             * application form exists in no other language. Translated
+             * all the same, so the catalogues stay in step.
+             */
+            'membership' => [
+                'heading' => 'O potser fer-se soci?',
+                'text' => 'Els socis de la nostra associació sense ànim de lucre <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> cerquen sense cap cost addicional: la clau es recarrega cada mes amb la quota de soci, i vostè sosté el cercador en lloc de pagar-lo.',
+                'action' => 'Fer-se soci',
+            ],
+
+            /**
              * Why no package is on offer right now. Three sentences for three
              * states, all three of which the old page had too — except that it
              * said "your key is already fully charged", which is not true: what
@@ -108,20 +120,19 @@ return [
          */
         'save' => [
             'heading' => 'Assegureu el vostre accés',
-            'text' => 'Mentre aquest navegador conservi la galeta, la sessió seguirà iniciada. Si la perd — un dispositiu nou, dades de navegació esborrades —, la vostra clau és l\'únic camí de tornada al vostre saldo. Aquí la teniu, i aquí teniu tres maneres d\'endur-vos-la.',
+            'text' => 'Mentre aquest navegador conservi la galeta, la sessió seguirà iniciada. Si la perd — un dispositiu nou, dades de navegació esborrades —, la vostra clau és l\'únic camí de tornada al vostre saldo. Aquí la teniu, i aquí teniu les maneres d\'endur-vos-la.',
 
             /**
              * The key itself.
              *
-             * It has to be here — the sign-in form asks for it first of all —
-             * and it is collapsed, because this page gets photographed for
-             * support tickets. The old page showed it large and always.
+             * It has to be here — the sign-in form asks for it first of all.
+             * No longer collapsed: the QR code below it carries the same key
+             * and is never collapsed, so hiding it here bought nothing.
              */
             'key' => [
-                'summary' => 'Mostrar i copiar la clau',
                 'label' => 'La vostra clau',
                 'action' => 'Copiar la clau',
-                'hint' => '36 caràcters. És el que us permet iniciar la sessió en qualsevol altre dispositiu. Plegada perquè sovint es fan fotografies d\'aquesta pàgina: qui vegi la vostra clau cercarà a càrrec vostre.',
+                'hint' => '36 caràcters. És el que us permet iniciar la sessió en qualsevol altre dispositiu.',
             ],
 
             'qr' => [

@@ -454,4 +454,72 @@ class RenderedStyleTest extends DuskTestCase
         });
     }
 
+    /**
+     * Der ganze Schlüssel steht im Feld, in jeder Breite.
+     *
+     * Das Feld auf /konto ist die einzige Stelle, an der jemand ohne Kamera und
+     * ohne Zwischenablage an seinen Schlüssel kommt — er liest ihn dort ab und
+     * tippt ihn auf dem anderen Gerät ein. Als die vier Wege noch als Kacheln
+     * in `repeat(auto-fit, minmax(12rem, 1fr))` nebeneinanderstanden, war das
+     * Feld eine Zwölftel-Karte breit und zeigte zwanzig der sechsunddreißig
+     * Zeichen; die übrigen sechzehn standen hinter dem rechten Rand und waren
+     * nur zu erreichen, indem man in ein `readonly`-Feld klickte und scrollte.
+     *
+     * Das ist nichts, was ein Feature-Test sieht: im Markup steht der Schlüssel
+     * vollständig, `value` liefert ihn vollständig, und die Seite sieht richtig
+     * aus. Nur eine Layout-Engine kennt den Unterschied zwischen `scrollWidth`
+     * und `clientWidth`.
+     *
+     * Zwei Breiten, weil die Antwort darauf zwei verschiedene sind: oberhalb
+     * von @screen-mobile-l reicht der Platz für 0.9rem Monospace, darunter
+     * setzt pages/account.less das Feld kleiner, statt den Schlüssel
+     * abzuschneiden.
+     */
+    #[DataProvider("keyFieldWidths")]
+    public function testTheWholeKeyFitsInItsField(int $width, int $height): void
+    {
+        $key = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
+
+        $this->browse(function (Browser $browser) use ($key, $width, $height) {
+            $browser->resize($width, $height)
+                ->visit("/de-DE")
+                ->addCookie("key", $key, null, [], false)
+                ->visit("/de-DE/konto")
+                ->waitFor("#account-key");
+
+            $field = $browser->script(
+                "const field = document.getElementById('account-key');"
+                    . "return {scroll: field.scrollWidth, client: field.clientWidth, "
+                    . "value: field.value};"
+            )[0];
+
+            $this->assertSame(
+                $key,
+                $field["value"],
+                "Im Feld steht nicht der Schlüssel — dann misst der Vergleich darunter nichts."
+            );
+
+            $this->assertLessThanOrEqual(
+                $field["client"],
+                $field["scroll"],
+                "Bei {$width}px Fensterbreite ist der Schlüssel {$field["scroll"]}px breit und "
+                    . "das Feld nur {$field["client"]}px — es zeigt ihn also nicht ganz. "
+                    . "Wer ihn abtippen will, sieht nur den Anfang. "
+                    . ".account-save__input--key in resources/less/metager/pages/account.less "
+                    . "hält ihn über flex-basis und eine kleinere Schrift auf schmalen Geräten "
+                    . "vollständig im Feld."
+            );
+        });
+    }
+
+    /**
+     * Eine breite und eine schmale, links und rechts von @screen-mobile-l.
+     */
+    public static function keyFieldWidths(): array
+    {
+        return [
+            "desktop" => [1280, 900],
+            "phone" => [375, 800],
+        ];
+    }
 }

@@ -107,7 +107,10 @@ function enhanceTransferDialog() {
     let timer = null;
     let shown = null;
 
-    open.hidden = false;
+    // Verborgen ist der ganze Weg und nicht nur der Knopf — sonst stünde ohne
+    // Skript eine Überschrift mit einem Satz über einen Knopf da, den es nicht
+    // gibt (partials/key-backup.blade.php).
+    (open.closest(".account-save__option") ?? open).hidden = false;
 
     open.addEventListener("click", () => {
         output.textContent = waiting;

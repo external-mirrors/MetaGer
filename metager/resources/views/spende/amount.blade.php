@@ -53,7 +53,7 @@
                     <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/qr') }}">@lang('spende.execute-payment.banktransfer.qrdownload')</a>
                 </div>
             </div>
-            @if(\App\Localization::getLanguage() === "de")
+            @if(\App\Support\MembershipOffer::isAdvertised())
             <div id="membership-hint">
                 <h3>@lang('spende.amount.membershiphint.title')</h3>
                 <div>@lang('spende.amount.membershiphint.description')</div>

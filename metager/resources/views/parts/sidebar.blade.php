@@ -182,7 +182,7 @@
         <span>{{ trans('sidebar.nav2') }}</span>
       </a>
     </li>
-    @if (App\Localization::getLanguage() === "de")
+    @if (App\Support\MembershipOffer::isAdvertised())
     <li>
       <a href="{{ route('membership_form') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/svg-icons/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-member"> 

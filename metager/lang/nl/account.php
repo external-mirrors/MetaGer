@@ -89,6 +89,18 @@ return [
             'more' => 'Alle prijzen en betaalmethoden',
 
             /**
+             * Rendered on the German interface only
+             * ({@see \App\Support\MembershipOffer}) — the SUMA-EV
+             * application form exists in no other language. Translated
+             * all the same, so the catalogues stay in step.
+             */
+            'membership' => [
+                'heading' => 'Of lid worden?',
+                'text' => 'Leden van onze non-profitvereniging <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> zoeken zonder verdere kosten: de sleutel wordt elke maand vanuit de contributie opgewaardeerd, en u draagt de zoekmachine in plaats van ervoor te betalen.',
+                'action' => 'Lid worden',
+            ],
+
+            /**
              * Why no package is on offer right now. Three sentences for three
              * states, all three of which the old page had too — except that it
              * said "your key is already fully charged", which is not true: what
@@ -108,20 +120,19 @@ return [
          */
         'save' => [
             'heading' => 'Stel uw toegang veilig',
-            'text' => 'Zolang deze browser de cookie bewaart, blijft u aangemeld. Verliest hij die — een nieuw apparaat, gewiste browsergegevens —, dan is uw sleutel de enige weg terug naar uw saldo. Hier is hij, en hier zijn drie manieren om hem mee te nemen.',
+            'text' => 'Zolang deze browser de cookie bewaart, blijft u aangemeld. Verliest hij die — een nieuw apparaat, gewiste browsergegevens —, dan is uw sleutel de enige weg terug naar uw saldo. Hier is hij, en hier zijn de manieren om hem mee te nemen.',
 
             /**
              * The key itself.
              *
-             * It has to be here — the sign-in form asks for it first of all —
-             * and it is collapsed, because this page gets photographed for
-             * support tickets. The old page showed it large and always.
+             * It has to be here — the sign-in form asks for it first of all.
+             * No longer collapsed: the QR code below it carries the same key
+             * and is never collapsed, so hiding it here bought nothing.
              */
             'key' => [
-                'summary' => 'Sleutel tonen en kopiëren',
                 'label' => 'Uw sleutel',
                 'action' => 'Sleutel kopiëren',
-                'hint' => '36 tekens. Daarmee meldt u zich op elk ander apparaat aan. Ingeklapt, omdat er vaak foto\'s van deze pagina worden gemaakt — wie uw sleutel ziet, zoekt op uw kosten.',
+                'hint' => '36 tekens. Daarmee meldt u zich op elk ander apparaat aan.',
             ],
 
             'qr' => [

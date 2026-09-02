@@ -91,10 +91,14 @@ class StartpageLandingTest extends TestCase
      * dropped, and the only way to notice was to read the JSON. Members of
      * SUMA-EV search without paying again, which is worth a line on the page
      * that explains paying.
+     *
+     * German only, because a membership is: {@see MembershipAdvertisingTest}
+     * has that rule and both halves of it. A plain `/` in a feature test is
+     * English — the host is `localhost` — so the locale has to be named here.
      */
     public function testTheMembershipNoteIsActuallyRendered(): void
     {
-        $response = $this->get("/")->assertOk();
+        $response = $this->get("/de-DE/")->assertOk();
 
         $response->assertSee("landing-steps__membership", false);
         $response->assertSee(route("membership_form"), false);
@@ -150,7 +154,11 @@ class StartpageLandingTest extends TestCase
         $response->assertSeeText(__("mg-story.ngo.title"));
         $response->assertSeeText(__("mg-story.diversity.title"));
         $response->assertSeeText(__("mg-story.eco.title"));
-        $response->assertSeeText(__("mg-story.btn-member-advantage"));
+
+        // The two membership links in the association card survived too, but
+        // only on the German interface — the form they lead to exists in no
+        // other language ({@see MembershipAdvertisingTest}).
+        $this->get("/de-DE/")->assertOk()->assertSeeText(__("mg-story.btn-member-advantage", locale: "de"));
     }
 
     // ── Signed in: still a search engine ─────────────────────────────────────

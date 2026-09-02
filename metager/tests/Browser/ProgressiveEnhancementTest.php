@@ -294,13 +294,10 @@ class ProgressiveEnhancementTest extends DuskTestCase
                 // Die Kennung des Kontos — dieselbe Marke wie in der Ecke.
                 ->assertVisible(".account-head .account-mark")
 
-                // Der Schlüssel selbst — hinter einem <details>, das ohne
-                // Javascript aufgeht wie mit. Das Anmeldeformular fragt in
-                // erster Linie nach ihm, und wer auf einem Gerät ohne Kamera
-                // sitzt, hat sonst nichts einzugeben.
-                ->assertPresent(".account-key")
-                ->click(".account-key__summary")
-                ->waitFor("#account-key")
+                // Der Schlüssel selbst — immer sichtbar, kein Skript nötig.
+                // Das Anmeldeformular fragt in erster Linie nach ihm, und wer
+                // auf einem Gerät ohne Kamera sitzt, hat sonst nichts
+                // einzugeben.
                 ->assertVisible("#account-key")
 
                 // Und die beiden Wege, ihn mitzunehmen.
@@ -320,7 +317,7 @@ class ProgressiveEnhancementTest extends DuskTestCase
             $this->assertSame(
                 $key,
                 $browser->value("#account-key"),
-                "Im aufgeklappten Feld steht nicht der Schlüssel — dann kann ihn "
+                "Im Feld steht nicht der Schlüssel — dann kann ihn "
                     . "niemand ins Anmeldeformular des zweiten Geräts eintippen."
             );
 

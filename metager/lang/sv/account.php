@@ -89,6 +89,18 @@ return [
             'more' => 'Alla priser och betalsätt',
 
             /**
+             * Rendered on the German interface only
+             * ({@see \App\Support\MembershipOffer}) — the SUMA-EV
+             * application form exists in no other language. Translated
+             * all the same, so the catalogues stay in step.
+             */
+            'membership' => [
+                'heading' => 'Eller bli medlem?',
+                'text' => 'Medlemmar i vår ideella förening <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> söker utan ytterligare kostnad: nyckeln fylls på varje månad ur medlemsavgiften, och du bär sökmotorn i stället för att betala för den.',
+                'action' => 'Bli medlem',
+            ],
+
+            /**
              * Why no package is on offer right now. Three sentences for three
              * states, all three of which the old page had too — except that it
              * said "your key is already fully charged", which is not true: what
@@ -108,20 +120,19 @@ return [
          */
         'save' => [
             'heading' => 'Säkra din åtkomst',
-            'text' => 'Så länge den här webbläsaren behåller kakan förblir du inloggad. Om den förlorar den — en ny enhet, rensade webbläsardata — är din nyckel den enda vägen tillbaka till ditt saldo. Här är den, och här är tre sätt att ta den med dig.',
+            'text' => 'Så länge den här webbläsaren behåller kakan förblir du inloggad. Om den förlorar den — en ny enhet, rensade webbläsardata — är din nyckel den enda vägen tillbaka till ditt saldo. Här är den, och här är sätten att ta den med dig.',
 
             /**
              * The key itself.
              *
-             * It has to be here — the sign-in form asks for it first of all —
-             * and it is collapsed, because this page gets photographed for
-             * support tickets. The old page showed it large and always.
+             * It has to be here — the sign-in form asks for it first of all.
+             * No longer collapsed: the QR code below it carries the same key
+             * and is never collapsed, so hiding it here bought nothing.
              */
             'key' => [
-                'summary' => 'Visa och kopiera nyckel',
                 'label' => 'Din nyckel',
                 'action' => 'Kopiera nyckel',
-                'hint' => '36 tecken. Med dem loggar du in på vilken annan enhet som helst. Hopfälld eftersom den här sidan ofta fotograferas — den som ser din nyckel söker på din bekostnad.',
+                'hint' => '36 tecken. Med dem loggar du in på vilken annan enhet som helst.',
             ],
 
             'qr' => [

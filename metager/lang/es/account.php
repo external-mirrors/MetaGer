@@ -89,6 +89,18 @@ return [
             'more' => 'Todos los precios y formas de pago',
 
             /**
+             * Rendered on the German interface only
+             * ({@see \App\Support\MembershipOffer}) — the SUMA-EV
+             * application form exists in no other language. Translated
+             * all the same, so the catalogues stay in step.
+             */
+            'membership' => [
+                'heading' => '¿O hacerse socio?',
+                'text' => 'Los socios de nuestra asociación sin ánimo de lucro <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> buscan sin coste adicional: la clave se recarga cada mes con la cuota de socio, y usted sostiene el buscador en lugar de pagarlo.',
+                'action' => 'Hacerse socio',
+            ],
+
+            /**
              * Why no package is on offer right now. Three sentences for three
              * states, all three of which the old page had too — except that it
              * said "your key is already fully charged", which is not true: what
@@ -108,20 +120,19 @@ return [
          */
         'save' => [
             'heading' => 'Asegure su acceso',
-            'text' => 'Mientras este navegador conserve la cookie, su sesión seguirá iniciada. Si la pierde — un dispositivo nuevo, datos de navegación borrados —, su clave es el único camino de vuelta a su saldo. Aquí la tiene, y aquí tiene tres formas de llevársela.',
+            'text' => 'Mientras este navegador conserve la cookie, su sesión seguirá iniciada. Si la pierde — un dispositivo nuevo, datos de navegación borrados —, su clave es el único camino de vuelta a su saldo. Aquí la tiene, y aquí tiene las formas de llevársela.',
 
             /**
              * The key itself.
              *
-             * It has to be here — the sign-in form asks for it first of all —
-             * and it is collapsed, because this page gets photographed for
-             * support tickets. The old page showed it large and always.
+             * It has to be here — the sign-in form asks for it first of all.
+             * No longer collapsed: the QR code below it carries the same key
+             * and is never collapsed, so hiding it here bought nothing.
              */
             'key' => [
-                'summary' => 'Mostrar y copiar la clave',
                 'label' => 'Su clave',
                 'action' => 'Copiar la clave',
-                'hint' => '36 caracteres. Es lo que le permite iniciar sesión en cualquier otro dispositivo. Plegada porque a menudo se hacen fotografías de esta página: quien vea su clave buscará a su costa.',
+                'hint' => '36 caracteres. Es lo que le permite iniciar sesión en cualquier otro dispositivo.',
             ],
 
             'qr' => [

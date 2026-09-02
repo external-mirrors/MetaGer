@@ -99,10 +99,9 @@ class AccountPageTest extends TestCase
      * Der Schlüssel steht nicht *im Text* der Seite.
      *
      * Die alte Seite zeigte ihn als große, anklickbare Zeichenfolge, gleich
-     * unter dem QR-Code — auf einer Seite, die Menschen für Supportanfragen
-     * fotografieren. Hier steht er in einem zugeklappten `<details>` und in
-     * einem Feld, also in einem Attribut und nicht im gerenderten Text; der
-     * Test unterscheidet das, indem er den sichtbaren Text prüft.
+     * unter dem QR-Code. Hier steht er in einem Feld, also in einem Attribut
+     * und nicht im gerenderten Text; der Test unterscheidet das, indem er den
+     * sichtbaren Text prüft.
      *
      * Das Gegenstück ist {@see testTheKeyIsThereToBeCopied()}: er muss
      * erreichbar sein, sonst ist die Seite für jemanden ohne Kamera und ohne
@@ -127,9 +126,10 @@ class AccountPageTest extends TestCase
      * zehn Sekunden abtippen will, hat sonst nichts, was er dort eingeben
      * könnte — und das Konto wäre die eine Seite, die ihm nicht hilft.
      *
-     * In einem `<details>` und deshalb ohne Javascript erreichbar; `readonly`
-     * und nicht `disabled`, weil ein deaktiviertes Feld sich weder markieren
-     * noch vorlesen lässt.
+     * Immer sichtbar, kein `<details>` mehr: der QR-Code darunter trägt
+     * denselben Schlüssel offen, ihn hier zu verstecken hätte also nichts
+     * gebracht. `readonly` und nicht `disabled`, weil ein deaktiviertes Feld
+     * sich weder markieren noch vorlesen lässt.
      */
     public function testTheKeyIsThereToBeCopied(): void
     {
@@ -137,11 +137,57 @@ class AccountPageTest extends TestCase
 
         $response = $this->signedIn()->get("/de-DE/konto")->assertOk();
 
-        $response->assertSee('<details class="account-key">', false);
         $response->assertSee('id="account-key"', false);
         $response->assertSee('value="' . self::A_KEY . '"', false);
         $response->assertSee('readonly', false);
-        $response->assertSeeText(__("account.page.save.key.summary"));
+        $response->assertSeeText(__("account.page.save.key.label"));
+    }
+
+    /**
+     * „Weiteres Gerät“ ist als ganzer Weg verborgen, nicht nur sein Knopf.
+     *
+     * Den Anmeldecode kann nur eine Abfrage holen — er gilt zehn Sekunden, und
+     * ihn bei jedem Seitenaufruf im Voraus zu besorgen, hieße ihn auch für
+     * jeden zu besorgen, der ihn nie will. Der Weg gehört deshalb dem Skript,
+     * und `resources/js/account.js` deckt ihn auf.
+     *
+     * Verborgen ist seit dem Umbau zum Stapel der ganze Block und nicht mehr
+     * bloß der Knopf darin: zwischen zwei Trennlinien stünde sonst eine
+     * Überschrift mit einem Satz darüber, was ein Knopf täte, den es auf dieser
+     * Seite gar nicht gibt.
+     */
+    public function testTheSecondDeviceWayIsHiddenUntilTheScriptRevealsIt(): void
+    {
+        $this->keyserverKnows();
+
+        $response = $this->signedIn()->get("/de-DE/konto")->assertOk();
+
+        $response->assertSee('id="account-transfer-way" hidden', false);
+        $response->assertSeeText(__("account.page.save.transfer.label"));
+    }
+
+    /**
+     * Und ohne `$loginCodeUrl` steht der vierte Weg gar nicht erst im Markup.
+     *
+     * partials/key-backup.blade.php ist ein Partial mit einem optionalen
+     * vierten Weg, und nur das Konto kennt den Anmeldecode-Endpunkt. Wer es
+     * ohne `$loginCodeUrl` einbindet, bekommt die drei Wege, die kein zweites
+     * Gerät voraussetzen — ein verborgener Block wäre dort ein Weg, den kein
+     * Skript je aufdecken kann: `#account-transfer`, der Dialog, steht in
+     * account.blade.php und nirgends sonst.
+     */
+    public function testTheBackupPartialDropsTheSecondDeviceWayWithoutALoginCodeUrl(): void
+    {
+        $view = $this->view("partials.key-backup", [
+            "key" => self::A_KEY,
+            "qrUri" => "data:image/png;base64,AAAA",
+            "settingsUrl" => "https://metager.de/settings?key=" . self::A_KEY,
+        ]);
+
+        $view->assertSee('id="account-key"', false);
+        $view->assertSee('id="restore-url"', false);
+        $view->assertDontSee("account-transfer-way", false);
+        $view->assertDontSee(__("account.page.save.transfer.label"), false);
     }
 
     /**

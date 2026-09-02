@@ -21,15 +21,15 @@
 		@include('partials.key-fingerprint')
 	</header>
 
-	<nav class="checkout-nav">
-		<a class="checkout-back" href="{{ route('account.orders.show', ['reference' => $order['public_id']]) }}">← @lang('orders.invoice.breadcrumb', ['reference' => $order['public_id']])</a>
-		<a class="checkout-back" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
+	<nav class="orders-breadcrumb">
+		<a href="{{ route('account.orders.show', ['reference' => $order['public_id']]) }}">← @lang('orders.invoice.breadcrumb', ['reference' => $order['public_id']])</a>
+		<a href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
 	</nav>
 
 	<section class="account-section">
 		@if($invoiceAvailable)
 			<p class="account-section__lede">@lang('orders.invoice.ready')</p>
-			<a class="account-btn account-btn--primary" href="{{ $invoicePdfUrl }}" target="_blank" rel="noopener">@lang('orders.invoice.download')</a>
+			<a class="account-btn account-btn--primary checkout-submit" href="{{ $invoicePdfUrl }}" target="_blank" rel="noopener">@lang('orders.invoice.download')</a>
 		@else
 			<p class="account-section__lede">@lang('orders.invoice.description')</p>
 
@@ -45,18 +45,18 @@
 
 				<div class="orders-invoice__row">
 					<div class="orders-invoice__field @if(in_array('first_name', $errors)) orders-invoice__field--error @endif">
-						<label for="orders-invoice-first-name">@lang('orders.invoice.field.first_name')*</label>
+						<label for="orders-invoice-first-name">@lang('orders.invoice.field.first_name')</label>
 						<input type="text" name="first_name" id="orders-invoice-first-name" autocomplete="given-name" required value="{{ $fields['first_name'] }}">
 					</div>
 					<div class="orders-invoice__field @if(in_array('last_name', $errors)) orders-invoice__field--error @endif">
-						<label for="orders-invoice-last-name">@lang('orders.invoice.field.last_name')*</label>
+						<label for="orders-invoice-last-name">@lang('orders.invoice.field.last_name')</label>
 						<input type="text" name="last_name" id="orders-invoice-last-name" autocomplete="family-name" required value="{{ $fields['last_name'] }}">
 					</div>
 				</div>
 
 				<div class="orders-invoice__row">
 					<div class="orders-invoice__field @if(in_array('address1', $errors)) orders-invoice__field--error @endif">
-						<label for="orders-invoice-address1">@lang('orders.invoice.field.address1')*</label>
+						<label for="orders-invoice-address1">@lang('orders.invoice.field.address1')</label>
 						<input type="text" name="address1" id="orders-invoice-address1" autocomplete="address-line1" required value="{{ $fields['address1'] }}">
 					</div>
 					<div class="orders-invoice__field @if(in_array('address2', $errors)) orders-invoice__field--error @endif">
@@ -67,11 +67,11 @@
 
 				<div class="orders-invoice__row">
 					<div class="orders-invoice__field @if(in_array('zip', $errors)) orders-invoice__field--error @endif">
-						<label for="orders-invoice-zip">@lang('orders.invoice.field.zip')*</label>
+						<label for="orders-invoice-zip">@lang('orders.invoice.field.zip')</label>
 						<input type="text" name="zip" id="orders-invoice-zip" autocomplete="postal-code" required value="{{ $fields['zip'] }}">
 					</div>
 					<div class="orders-invoice__field @if(in_array('city', $errors)) orders-invoice__field--error @endif">
-						<label for="orders-invoice-city">@lang('orders.invoice.field.city')*</label>
+						<label for="orders-invoice-city">@lang('orders.invoice.field.city')</label>
 						<input type="text" name="city" id="orders-invoice-city" autocomplete="address-level2" required value="{{ $fields['city'] }}">
 					</div>
 				</div>
@@ -81,7 +81,7 @@
 					<input type="text" name="state" id="orders-invoice-state" autocomplete="address-level1" value="{{ $fields['state'] }}">
 				</div>
 
-				<button type="submit" class="account-btn account-btn--primary">@lang('orders.invoice.submit')</button>
+				<button type="submit" class="account-btn account-btn--primary checkout-submit">@lang('orders.invoice.submit')</button>
 			</form>
 
 			<p class="orders-invoice__storage">{!! __('orders.invoice.storage') !!}</p>

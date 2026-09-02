@@ -29,9 +29,9 @@
 		@include('partials.key-fingerprint')
 	</header>
 
-	<nav class="checkout-nav">
-		<a class="checkout-back" href="{{ route('account.orders.show', ['reference' => $order['public_id']]) }}">← @lang('orders.refund.breadcrumb', ['reference' => $order['public_id']])</a>
-		<a class="checkout-back" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
+	<nav class="orders-breadcrumb">
+		<a href="{{ route('account.orders.show', ['reference' => $order['public_id']]) }}">← @lang('orders.refund.breadcrumb', ['reference' => $order['public_id']])</a>
+		<a href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
 	</nav>
 
 	<section class="account-section">
@@ -58,7 +58,7 @@
 					<textarea name="message" id="orders-refund-message" rows="6">{{ $message }}</textarea>
 				</div>
 
-				<button type="submit" class="account-btn account-btn--primary">{{ __('orders.refund.submit', ['amount' => $refundAmount]) }}</button>
+				<button type="submit" class="account-btn account-btn--primary checkout-submit">{{ __('orders.refund.submit', ['amount' => \App\Support\Money::amount($refundAmount)]) }}</button>
 			</form>
 		@endif
 	</section>

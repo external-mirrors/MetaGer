@@ -237,6 +237,35 @@
 // App\Http\Controllers\OrderController. Wie die Aufladeseiten: #account-page
 // und .account-section aus account.less tragen den Rahmen, hier steht nur das
 // Nachschlagformular und die Zeilentabelle einer Bestellung.
+
+// Der Weg zurück auf den Bestellseiten ist eine Hierarchie („diese Bestellung“
+// liegt unter „Bestellungen“ liegt unter „Konto“) und keine Notausfahrt wie im
+// Bezahlvorgang — deshalb oben und links statt unten und mittig, mit einem
+// Trenner zwischen den Stufen. Die Bestellseiten benutzten dafür .checkout-nav
+// mit; seit die im Bezahlvorgang an den Fuß gewandert und zentriert ist, wäre
+// eine zentrierte Brotkrume am Kopf dieser Seiten dabei herausgekommen.
+.orders-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+
+  a {
+    color: @text-color-alpha-70;
+
+    &:hover,
+    &:focus-visible {
+      color: @text-color;
+    }
+  }
+
+  a + a::before {
+    content: "·";
+    margin-right: 0.6rem;
+    color: @border-color;
+  }
+}
 .orders-lookup {
   display: grid;
   gap: 0.4rem;
@@ -265,14 +294,17 @@
   }
 }
 
-.orders-detail {
-  padding-bottom: 1.25rem;
-  margin-bottom: 1.25rem;
-  border-bottom: 1px solid @border-color;
-
-  &:last-of-type {
-    border-bottom: 0;
-  }
+// Ein Trennstrich *zwischen* zwei Zahlungen, keiner unter der letzten.
+//
+// Vorher trug jede Zahlung einen Strich unter sich, den `:last-of-type`
+// wieder wegnehmen sollte — nur ist die Zeilengruppe ein <div> und die
+// Knopfreihe darunter auch, also war die letzte Zahlung nie das letzte <div>
+// ihres Typs und behielt ihren Strich. Auf der häufigsten Bestellung, der mit
+// genau einer Zahlung, stand damit ein Trennstrich, der nichts trennte.
+.orders-detail + .orders-detail {
+  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid @border-color;
 }
 
 .orders-lines {

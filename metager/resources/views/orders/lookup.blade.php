@@ -37,7 +37,16 @@
 			</div>
 		</form>
 
-		<a class="account-btn account-btn--quiet" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
 	</section>
+
+	{{--
+		Ein Link und kein Knopf: .account-btn ist `display: flex` und dehnte
+		sich im Raster der Karte über deren volle Breite — der Ausstieg war
+		damit das größte Bedienelement der Seite, größer als „Bestellung
+		anzeigen" daneben.
+	--}}
+	<nav class="checkout-nav">
+		<a class="checkout-back" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
+	</nav>
 </div>
 @endsection

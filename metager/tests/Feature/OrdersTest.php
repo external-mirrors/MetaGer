@@ -172,8 +172,16 @@ class OrdersTest extends TestCase
             ->get("/de-DE/konto/bestellungen/Z1")
             ->assertOk()
             ->assertSee("A1")
-            ->assertSee("9.35 €")
-            ->assertSee("10.00 €")
+            // Lokalisiert (App\Support\Money): der Keyserver liefert "9.35",
+            // die deutsche Seite zeigt "9,35 €" — vorher stand der englische
+            // Dezimalpunkt in derselben Tabelle wie das lokalisierte
+            // "1.000 Token".
+            // Das Leerzeichen vor dem € ist ein geschütztes (U+00A0) — so
+            // setzt es der Intl-Formatter im Deutschen, und so soll es auch
+            // in der Tabelle stehen, damit die Währung nie allein umbricht.
+            ->assertSee("9,35\u{00A0}€")
+            ->assertSee("10,00\u{00A0}€")
+            ->assertSee("1.000")
             ->assertSee(trans("orders.show.thanks"))
             ->assertSee(route("account.orders.confirmation", ["reference" => "Z1"]), false)
             ->assertSee(route("account.orders.refund", ["reference" => "Z1"]), false)

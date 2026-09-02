@@ -9,6 +9,13 @@
 	$order kommt validiert aus OrderHistoryIssuer; wem sie gehört, hat der
 	Controller schon gegen den Cookie-Schlüssel geprüft. Pro Zahlung eine
 	Zeilengruppe (netto / MwSt. / gesamt, plus Wechselkurs bei Fremdwährung),
+	Beträge und Stückzahlen gehen durch App\Support\Money::euro() bzw.
+	Number::format(): der Keyserver liefert sie als „9.35" und „1000", und so
+	standen sie auch auf der Seite — Punkt als Dezimaltrennzeichen und keine
+	Tausendertrennung, auf einer Seite, die in zwölf Sprachen ausgeliefert
+	wird und deren übrige Beträge („10 €", „1.000 Token") längst lokalisiert
+	sind.
+
 	darunter die Auftragsbestätigung als PDF, der Link zur Rechnung
 	(InvoiceNinja, App\Http\Controllers\OrderController::invoice()) und,
 	sofern refund_available zutrifft, der Link zur Erstattung
@@ -21,9 +28,9 @@
 		@include('partials.key-fingerprint')
 	</header>
 
-	<nav class="checkout-nav">
-		<a class="checkout-back" href="{{ $lookupUrl }}">← @lang('orders.show.breadcrumb')</a>
-		<a class="checkout-back" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
+	<nav class="orders-breadcrumb">
+		<a href="{{ $lookupUrl }}">← @lang('orders.show.breadcrumb')</a>
+		<a href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
 	</nav>
 
 	<section class="account-section">
@@ -41,18 +48,18 @@
 					<tbody>
 						<tr>
 							<th scope="row">@lang('orders.show.item')</th>
-							<td class="orders-lines__count">{{ $payment['token_count'] }}</td>
-							<td class="orders-lines__price">{{ $payment['net'] }} €</td>
+							<td class="orders-lines__count">{{ \Illuminate\Support\Number::format($payment['token_count'], locale: app()->getLocale()) }}</td>
+							<td class="orders-lines__price">{{ \App\Support\Money::euro($payment['net']) }}</td>
 						</tr>
 						<tr>
 							<th scope="row">@lang('orders.show.vat', ['rate' => $payment['vat_rate'] + 0])</th>
 							<td></td>
-							<td class="orders-lines__price">{{ $payment['vat'] }} €</td>
+							<td class="orders-lines__price">{{ \App\Support\Money::euro($payment['vat']) }}</td>
 						</tr>
 						<tr class="orders-lines__total">
 							<th scope="row">@lang('orders.show.total')</th>
 							<td></td>
-							<td class="orders-lines__price">{{ $payment['gross'] }} €</td>
+							<td class="orders-lines__price">{{ \App\Support\Money::euro($payment['gross']) }}</td>
 						</tr>
 						@if($payment['converted_currency'] && $payment['converted_currency'] !== 'EUR' && $payment['converted_price'] !== null)
 							<tr class="orders-lines__exchange">

@@ -57,15 +57,15 @@ return [
         'heading' => 'Reembolso',
         'breadcrumb' => 'Pedido :reference',
         'unavailable' => 'Ya no queda saldo reembolsable para este pedido — o bien ya se ha solicitado un reembolso, o bien el método de pago utilizado no admite una solicitud de reembolso a través de este formulario.',
-        'description' => '¿No está satisfecho con su llave? ¡Lo sentimos mucho! Por supuesto, en ese caso le reembolsaremos el importe de la factura. Un reembolso siempre se realiza a la misma cuenta que se utilizó en el pago original. También agradecemos sus críticas.',
-        'partial_note' => 'Ya se ha utilizado parte de su saldo comprado. Por ello, solo podemos reembolsarle <span class="bold">:count</span> de <span class="bold">:total</span> búsquedas.',
+        'description' => '¿No está satisfecho con su llave? Lo sentimos mucho. Por supuesto, en este caso le devolveremos el importe de la factura. El reembolso se realiza siempre en la misma cuenta que se utilizó para el pago original. También nos alegramos de recibir sus críticas.',
+        'partial_note' => 'Nota: Parte del crédito adquirido ya se ha utilizado. Por lo tanto, solo podemos reembolsarte <span class="bold">:count</span> de <span class="bold">:total</span> búsquedas.',
         'message' => [
             'label' => 'Su mensaje (opcional)',
         ],
-        'submit' => 'Solicitar reembolso de :amount €',
+        'submit' => ':amount € Solicitar reembolso',
         'error' => [
             'not_allowed' => 'Ya no es posible un reembolso para este pedido.',
-            'unreachable' => 'Error al enviar su mensaje. Inténtelo de nuevo más tarde.',
+            'unreachable' => 'Error al enviar su mensaje. Vuelva a intentarlo más tarde.',
         ],
     ],
 ];

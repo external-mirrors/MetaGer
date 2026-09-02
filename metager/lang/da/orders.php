@@ -27,7 +27,7 @@ return [
         'exchange_rate' => 'Valutakurs',
         'download_confirmation' => 'Download ordrebekræftelse',
         'request_invoice' => 'Opret faktura',
-        'request_refund' => 'Anmod om refundering',
+        'request_refund' => 'Anmod om refusion',
     ],
 
     'invoice' => [
@@ -54,17 +54,17 @@ return [
     ],
 
     'refund' => [
-        'heading' => 'Refundering',
+        'heading' => 'Tilbagebetaling',
         'breadcrumb' => 'Ordre :reference',
-        'unavailable' => 'Der er ikke længere nogen refunderbar saldo for denne ordre — enten er der allerede anmodet om en refundering, eller også understøtter den anvendte betalingsmetode ikke en refunderingsanmodning via denne formular.',
-        'description' => 'Er du utilfreds med din nøgle? Det er vi meget kede af! Selvfølgelig refunderer vi fakturabeløbet i dette tilfælde. En refundering sker altid til den samme konto, der blev brugt til den oprindelige betaling. Vi modtager også gerne din kritik.',
-        'partial_note' => 'En del af din købte saldo er allerede blevet brugt. Derfor kan vi kun refundere dig <span class="bold">:count</span> ud af <span class="bold">:total</span> søgninger.',
+        'unavailable' => 'Der er ikke længere nogen refusion tilbage for denne ordre — enten er der allerede anmodet om refusion, eller også understøtter den anvendte betalingsmetode ikke en refusionsanmodning via denne formular.',
+        'description' => 'Er du utilfreds med din nøgle? Det er vi meget kede af at høre! Selvfølgelig refunderer vi fakturabeløbet i dette tilfælde. En refundering sker altid til den samme konto, som blev brugt til den oprindelige betaling. Vi er også glade for at modtage din kritik.',
+        'partial_note' => 'Bemærk: En del af din købte kredit er allerede blevet brugt. Derfor kan vi kun refundere dig <span class="bold">:count</span> ud af <span class="bold">:total</span> søgninger.',
         'message' => [
-            'label' => 'Din besked (valgfrit)',
+            'label' => 'Din besked (valgfri)',
         ],
-        'submit' => 'Anmod om refundering af :amount €',
+        'submit' => ':amount € Anmod om refusion',
         'error' => [
-            'not_allowed' => 'En refundering er ikke længere mulig for denne ordre.',
+            'not_allowed' => 'En refusion er ikke længere mulig for denne ordre.',
             'unreachable' => 'Fejl ved afsendelse af din besked. Prøv venligst igen senere.',
         ],
     ],

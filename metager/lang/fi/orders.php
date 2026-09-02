@@ -27,7 +27,7 @@ return [
         'exchange_rate' => 'Valuuttakurssi',
         'download_confirmation' => 'Lataa tilausvahvistus',
         'request_invoice' => 'Luo lasku',
-        'request_refund' => 'Pyydä hyvitystä',
+        'request_refund' => 'Pyydä palautusta',
     ],
 
     'invoice' => [
@@ -54,18 +54,18 @@ return [
     ],
 
     'refund' => [
-        'heading' => 'Hyvitys',
+        'heading' => 'Palautus',
         'breadcrumb' => 'Tilaus :reference',
         'unavailable' => 'Tälle tilaukselle ei ole enää hyvitettävää saldoa — joko hyvitystä on jo pyydetty, tai käytetty maksutapa ei tue hyvityspyyntöä tämän lomakkeen kautta.',
-        'description' => 'Etkö ole tyytyväinen avaimeesi? Olemme siitä pahoillamme! Hyvitämme tietenkin tässä tapauksessa laskun summan. Hyvitys tehdään aina samalle tilille, jota käytettiin alkuperäisessä maksussa. Otamme myös mielellämme vastaan palautettasi.',
-        'partial_note' => 'Osa ostamastasi saldosta on jo käytetty. Voimme siksi hyvittää sinulle vain <span class="bold">:count</span>/<span class="bold">:total</span> hakua.',
+        'description' => 'Oletko tyytymätön avaimeesi? Olemme hyvin pahoillamme siitä! Tietenkin hyvitämme laskun summan tässä tapauksessa. Palautus tehdään aina samalle tilille, jota käytettiin alkuperäisessä maksussa. Otamme mielellämme vastaan myös kritiikkisi.',
+        'partial_note' => 'Huomaa: Osa ostamastasi hyvityksestä on jo käytetty. Siksi voimme hyvittää sinulle vain <span class="bold">:count</span>/<span class="bold">:total</span> hakua.',
         'message' => [
-            'label' => 'Viestisi (valinnainen)',
+            'label' => 'Viestisi (vapaaehtoinen)',
         ],
-        'submit' => 'Pyydä hyvitystä :amount €',
+        'submit' => ':amount € Pyydä palautusta',
         'error' => [
             'not_allowed' => 'Tälle tilaukselle ei ole enää mahdollista saada hyvitystä.',
-            'unreachable' => 'Virhe viestiäsi lähetettäessä. Yritä myöhemmin uudelleen.',
+            'unreachable' => 'Virhe viestin lähettämisessä. Yritä myöhemmin uudelleen.',
         ],
     ],
 ];

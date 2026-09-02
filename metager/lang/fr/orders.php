@@ -57,15 +57,15 @@ return [
         'heading' => 'Remboursement',
         'breadcrumb' => 'Commande :reference',
         'unavailable' => 'Il ne reste plus de solde remboursable pour cette commande — soit un remboursement a déjà été demandé, soit le mode de paiement utilisé ne prend pas en charge une demande de remboursement via ce formulaire.',
-        'description' => 'Vous n\'êtes pas satisfait de votre clé ? Nous en sommes vraiment désolés ! Bien sûr, nous vous rembourserons le montant de la facture dans ce cas. Un remboursement est toujours effectué sur le même compte que celui utilisé lors du paiement initial. Nous sommes également heureux de recevoir vos critiques.',
-        'partial_note' => 'Une partie de votre crédit acheté a déjà été utilisée. Nous ne pouvons donc vous rembourser que <span class="bold">:count</span> recherche(s) sur <span class="bold">:total</span>.',
+        'description' => 'Vous n\'êtes pas satisfait de votre clé ? Nous sommes désolés de l\'apprendre ! Dans ce cas, nous vous remboursons bien entendu le montant de la facture. Le remboursement est toujours effectué sur le même compte que celui utilisé pour le paiement initial. Nous sommes également heureux de recevoir vos critiques.',
+        'partial_note' => 'Remarque : une partie du crédit que vous avez acheté a déjà été utilisée. Par conséquent, nous ne pouvons vous rembourser que <span class="bold">:count</span> sur <span class="bold">:total</span> recherches.',
         'message' => [
             'label' => 'Votre message (facultatif)',
         ],
-        'submit' => 'Demander le remboursement de :amount €',
+        'submit' => ':amount € Demande de remboursement',
         'error' => [
             'not_allowed' => 'Un remboursement n\'est plus possible pour cette commande.',
-            'unreachable' => 'Erreur lors de l\'envoi de votre message. Veuillez réessayer plus tard.',
+            'unreachable' => 'Erreur dans l\'envoi de votre message. Veuillez réessayer plus tard.',
         ],
     ],
 ];

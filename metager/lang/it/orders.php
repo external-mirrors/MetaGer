@@ -57,15 +57,15 @@ return [
         'heading' => 'Rimborso',
         'breadcrumb' => 'Ordine :reference',
         'unavailable' => 'Non è rimasto alcun saldo rimborsabile per questo ordine — o è già stato richiesto un rimborso, oppure il metodo di pagamento utilizzato non supporta una richiesta di rimborso tramite questo modulo.',
-        'description' => 'Non siete soddisfatti della vostra chiave? Ce ne dispiace molto! Naturalmente, in questo caso vi rimborseremo l\'importo della fattura. Un rimborso viene sempre effettuato sullo stesso conto utilizzato per il pagamento originale. Siamo inoltre lieti di ricevere le vostre critiche.',
-        'partial_note' => 'Parte del vostro credito acquistato è già stato utilizzato. Possiamo quindi rimborsarvi solo <span class="bold">:count</span> ricerche su <span class="bold">:total</span>.',
+        'description' => 'Non siete soddisfatti della vostra chiave? Ci dispiace molto sentirlo! Naturalmente, in questo caso rimborseremo l\'importo della fattura. Il rimborso viene sempre effettuato sullo stesso conto utilizzato per il pagamento originale. Siamo inoltre lieti di ricevere le vostre critiche.',
+        'partial_note' => 'Nota: parte del credito acquistato è già stato utilizzato. Pertanto, possiamo rimborsare solo <span class="bold">:count</span> su <span class="bold">:total</span> ricerche.',
         'message' => [
-            'label' => 'Il vostro messaggio (facoltativo)',
+            'label' => 'Messaggio (facoltativo)',
         ],
-        'submit' => 'Richiedi il rimborso di :amount €',
+        'submit' => ':amount € Richiesta di rimborso',
         'error' => [
             'not_allowed' => 'Per questo ordine non è più possibile un rimborso.',
-            'unreachable' => 'Errore durante l\'invio del messaggio. Riprovate più tardi.',
+            'unreachable' => 'Errore nell\'invio del messaggio. Riprovare più tardi.',
         ],
     ],
 ];

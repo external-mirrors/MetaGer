@@ -57,15 +57,15 @@ return [
         'heading' => 'Terugbetaling',
         'breadcrumb' => 'Bestelling :reference',
         'unavailable' => 'Er is geen terugbetaalbaar tegoed meer voor deze bestelling — er is al een terugbetaling aangevraagd, of de gebruikte betaalmethode ondersteunt geen terugbetalingsverzoek via dit formulier.',
-        'description' => 'Bent u niet tevreden met uw sleutel? Dat vinden we heel erg jammer! Uiteraard betalen we in dat geval het factuurbedrag terug. Een terugbetaling gebeurt altijd naar dezelfde rekening die bij de oorspronkelijke betaling is gebruikt. We horen ook graag uw kritiek.',
-        'partial_note' => 'Een deel van uw gekochte tegoed is al gebruikt. Daarom kunnen we u slechts <span class="bold">:count</span> van <span class="bold">:total</span> zoekopdrachten terugbetalen.',
+        'description' => 'Bent u niet tevreden met uw sleutel? Dat vinden wij erg jammer om te horen! Uiteraard betalen wij in dat geval het factuurbedrag terug. Een terugbetaling wordt altijd gedaan naar dezelfde rekening die voor de oorspronkelijke betaling is gebruikt. Ook uw kritiek ontvangen wij graag.',
+        'partial_note' => 'Let op: een deel van uw gekochte tegoed is al gebruikt. Daarom kunnen wij u slechts <span class="bold">:count</span> van <span class="bold">:total</span> zoekopdrachten terugbetalen.',
         'message' => [
             'label' => 'Uw bericht (optioneel)',
         ],
-        'submit' => 'Terugbetaling van :amount € aanvragen',
+        'submit' => ':amount € Terugbetaling aanvragen',
         'error' => [
             'not_allowed' => 'Een terugbetaling is niet meer mogelijk voor deze bestelling.',
-            'unreachable' => 'Fout bij het verzenden van uw bericht. Probeer het later opnieuw.',
+            'unreachable' => 'Fout bij het verzenden van uw bericht. Probeer het later nog eens.',
         ],
     ],
 ];

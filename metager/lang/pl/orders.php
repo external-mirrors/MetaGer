@@ -27,7 +27,7 @@ return [
         'exchange_rate' => 'Kurs wymiany',
         'download_confirmation' => 'Pobierz potwierdzenie zamówienia',
         'request_invoice' => 'Tworzenie faktury',
-        'request_refund' => 'Poproś o zwrot',
+        'request_refund' => 'Poproś o zwrot pieniędzy',
     ],
 
     'invoice' => [
@@ -54,18 +54,18 @@ return [
     ],
 
     'refund' => [
-        'heading' => 'Zwrot',
+        'heading' => 'Zwrot pieniędzy',
         'breadcrumb' => 'Zamówienie :reference',
-        'unavailable' => 'Dla tego zamówienia nie pozostało już żadne saldo podlegające zwrotowi — albo zwrot został już zgłoszony, albo użyta metoda płatności nie obsługuje wniosku o zwrot za pomocą tego formularza.',
-        'description' => 'Nie jesteś zadowolony ze swojego klucza? Bardzo nam przykro! Oczywiście w takim przypadku zwrócimy Ci kwotę faktury. Zwrot jest zawsze dokonywany na to samo konto, które zostało użyte do pierwotnej płatności. Chętnie przyjmiemy również Twoją krytykę.',
-        'partial_note' => 'Część zakupionego przez Ciebie salda została już wykorzystana. Dlatego możemy zwrócić Ci jedynie <span class="bold">:count</span> z <span class="bold">:total</span> wyszukiwań.',
+        'unavailable' => 'Dla tego zamówienia nie pozostało już żadne saldo podlegające zwrotowi — albo zwrot pieniędzy został już zgłoszony, albo użyta metoda płatności nie obsługuje wniosku o zwrot pieniędzy za pomocą tego formularza.',
+        'description' => 'Jesteś niezadowolony ze swojego klucza? Bardzo nam przykro to słyszeć! Oczywiście w takim przypadku zwrócimy kwotę faktury. Zwrot jest zawsze dokonywany na to samo konto, które zostało użyte do pierwotnej płatności. Cieszymy się również z krytyki.',
+        'partial_note' => 'Uwaga: część zakupionych środków została już wykorzystana. W związku z tym możemy zwrócić tylko <span class="bold">:count</span> z <span class="bold">:total</span> wyszukiwania.',
         'message' => [
             'label' => 'Twoja wiadomość (opcjonalnie)',
         ],
-        'submit' => 'Poproś o zwrot :amount €',
+        'submit' => ':amount € Żądanie zwrotu pieniędzy',
         'error' => [
-            'not_allowed' => 'Zwrot dla tego zamówienia nie jest już możliwy.',
-            'unreachable' => 'Błąd podczas wysyłania wiadomości. Spróbuj ponownie później.',
+            'not_allowed' => 'Zwrot pieniędzy dla tego zamówienia nie jest już możliwy.',
+            'unreachable' => 'Błąd wysyłania wiadomości. Spróbuj ponownie później.',
         ],
     ],
 ];

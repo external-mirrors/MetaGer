@@ -74,7 +74,7 @@ return [
         'message' => [
             'label' => 'Your message (optional)',
         ],
-        'submit' => 'Request refund of :amount €',
+        'submit' => ':amount € Request refund',
         'error' => [
             'not_allowed' => 'A refund is no longer possible for this order.',
             'unreachable' => 'Error sending your message. Please try again later.',

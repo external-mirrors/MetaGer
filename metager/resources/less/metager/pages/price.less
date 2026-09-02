@@ -114,6 +114,26 @@
     }
   }
 
+  // Der Weiterweg am Seitenende — „Mein Konto"/„Zur Suche" für einen
+  // angemeldeten Besucher, sonst „Jetzt loslegen"/„Ich habe bereits einen
+  // Schlüssel". Dieselben Knöpfe wie die Guthaben-Aktionen auf /konto
+  // (.account-btn aus parts/account.less), damit die Seite, zwischen der und
+  // dem Konto ein angemeldeter Besucher hin- und herwechselt, gleich aussieht.
+  // .account-btn ist flex: 1 1 0 und braucht einen Flex-Elternteil.
+  .price-next {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 3rem;
+
+    > .account-btn {
+      flex: 0 1 auto;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.95rem;
+    }
+  }
+
   .payment-methods-container {
     list-style: none;
     padding: 0;

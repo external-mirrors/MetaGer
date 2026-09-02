@@ -143,6 +143,48 @@ class KeyPagesNavigationTest extends TestCase
     }
 
     /**
+     * /preise ist keine Sackgasse.
+     *
+     * Die Seite wird von der Seitenleiste, den Landing-Abschnitten, dem
+     * Hilfe-Index und dem Konto aus verlinkt, und wer sie zu Ende gelesen hat,
+     * stand bis zu diesem Test ohne nächsten Schritt da. Für einen Besucher
+     * ohne Schlüssel ist der nächste Schritt der Einstieg in den
+     * Schlüsselvorgang — dieselben zwei Wege wie auf der Startseite.
+     */
+    public function testThePricePageLeadsIntoTheKeyFlowForAVisitorWithoutAKey(): void
+    {
+        $response = $this->get("/preise")->assertOk();
+
+        $response->assertSee('href="' . url("/schluessel-erstellen") . '"', false);
+        // /anmelden trägt ein ?redirect_success wie in parts/landing/how-it-works,
+        // deshalb der Pfad ohne schließendes Anführungszeichen.
+        $response->assertSee('href="' . url("/anmelden") . '?', false);
+        $response->assertSeeText(__("index.landing.howitworks.start"));
+        $response->assertSeeText(__("index.landing.howitworks.login"));
+    }
+
+    /**
+     * Und für einen angemeldeten Besucher der Rückweg ins Konto.
+     *
+     * Der Fall, der die Beschwerde ausgelöst hat: jemand kommt aus /konto auf
+     * /preise, liest, und findet keinen Weg zurück. „Angemeldet" ist hier genau
+     * die Menge, die aus dem Konto gekommen sein kann — die Seite ist
+     * anmeldepflichtig. Die Weberweiterung (temporärer Nutzer) zählt nicht
+     * dazu: sie hat hier kein Konto.
+     */
+    public function testThePricePageLeadsBackToTheAccountForASignedInVisitor(): void
+    {
+        // false: `key` steht in EncryptCookies::$except — derselbe Aufbau wie
+        // AccountPageTest::signedIn().
+        $response = $this->withUnencryptedCookie("key", "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15")
+            ->get("/preise")
+            ->assertOk();
+
+        $response->assertSee('href="' . url("/konto") . '"', false);
+        $response->assertSeeText(__("account.page.heading"));
+    }
+
+    /**
      * Der Schlüsselvorgang ist jetzt vollständig MetaGers eigener — die FAQ
      * verlinkt beide Wege dorthin, nicht mehr auf den Keymanager.
      */

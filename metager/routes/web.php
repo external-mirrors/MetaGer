@@ -1,5 +1,6 @@
 <?php
 
+use App\Landing\KeymanagerLinks;
 use App\Landing\KeyPrice;
 use Illuminate\Support\Facades\Vite;
 use App\Http\Controllers\AccountController;
@@ -274,6 +275,15 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('tiers', KeyPrice::tiers())
             ->with('linkApp', LaravelLocalization::getLocalizedURL(null, "/app"))
             ->with('linkToken', route('anonymous-token'))
+            // Wohin es von hier aus weitergeht. /preise wird von der
+            // Seitenleiste, der Landingpage, dem Hilfe-Index und dem Konto
+            // aus verlinkt und war bis hierher eine Sackgasse: kein Schritt
+            // weiter zum Schlüssel, kein Rückweg für jemanden, der aus dem
+            // Konto kam. Die Blade wählt anhand des Anmeldestands.
+            ->with('linkCreate', KeymanagerLinks::create())
+            ->with('linkLogin', KeymanagerLinks::login(route('startpage')))
+            ->with('linkAccount', KeymanagerLinks::dashboard())
+            ->with('linkSearch', route('startpage'))
             ->with('css', [Vite::asset('resources/less/metager/pages/price.less')]);
     })->name('price');
 

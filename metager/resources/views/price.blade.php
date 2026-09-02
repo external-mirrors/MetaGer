@@ -98,5 +98,37 @@
 			</li>
 		@endforeach
 	</ul>
+
+	{{--
+		Wohin es von hier aus weitergeht.
+
+		Diese Seite wird von der Seitenleiste, den Landing-Abschnitten
+		(how-it-works, benefits), dem Hilfe-Index und dem Konto aus verlinkt und
+		endete bis hierher im Nichts: wer sie zu Ende liest, hatte keinen Schritt
+		weiter zum Schlüssel, und wer aus seinem Konto kam, keinen zurück.
+
+		Angemeldet mit einem echten Schlüssel — nicht die Weberweiterung, die
+		hier kein Konto hat und von /konto ohnehin auf die Token-Seite
+		weitergeleitet würde (App\Http\Controllers\AccountController::show) —
+		heißt: der Besucher hat ein Konto, also dorthin. Sonst der Einstieg in
+		den Schlüsselvorgang, mit denselben Beschriftungen wie
+		parts/landing/how-it-works, damit der Weg gleich benannt ist wie der,
+		den der Besucher auf der Startseite schon gesehen hat.
+
+		Der temporäre Nutzer der Weberweiterung fällt in denselben Zweig wie ein
+		Besucher ohne Schlüssel: /konto ist für ihn kein Ziel, und der generische
+		Einstieg ist die sichere Voreinstellung — er verwaltet seinen Zugang
+		ohnehin im Fenster der Erweiterung.
+	--}}
+	@php($priceKeyUser = \Auth::guard('key')->user())
+	<div class="price-next">
+		@if($priceKeyUser !== null && !$priceKeyUser->temporary)
+			<a class="account-btn account-btn--primary" href="{{ $linkAccount }}">@lang('account.page.heading')</a>
+			<a class="account-btn account-btn--quiet" href="{{ $linkSearch }}">@lang('account.page.actions.search')</a>
+		@else
+			<a class="account-btn account-btn--primary" href="{{ $linkCreate }}">@lang('index.landing.howitworks.start')</a>
+			<a class="account-btn account-btn--quiet" href="{{ $linkLogin }}">@lang('index.landing.howitworks.login')</a>
+		@endif
+	</div>
 </div>
 @endsection

@@ -131,7 +131,12 @@
       font-weight: bold;
     }
 
-    &.account-balance__note--empty {
+    // --empty: „Ihr Guthaben ist aufgebraucht" auf /konto.
+    // --strong: der Dank auf der Landeseite nach geglückter Zahlung
+    // (checkout/returned.blade.php) — dieselbe Behandlung, anderer Anlass,
+    // deshalb ein eigener Name statt der Wiederverwendung von --empty.
+    &.account-balance__note--empty,
+    &.account-balance__note--strong {
       color: @text-color;
       font-weight: bold;
     }
@@ -300,15 +305,31 @@
 }
 
 // Die Zahlungsarten teilen sich .account-tier mit den Paketen oben, brauchen
-// aber eine feste statt einer inhaltsbestimmten Höhe: eine zweizeilige
-// Beschriftung wie "Kredit-/Debitkarte" macht sonst nur ihre eigene
-// Grid-Zeile höher (CSS Grid dehnt jede Kachel einer Zeile auf deren Höhe),
-// und in einem Raster mit mehreren Zeilen sehen die Kacheln dann zufällig
-// unterschiedlich groß aus, statt gleichmäßig.
+// aber eine Mindesthöhe statt der inhaltsbestimmten Höhe: eine zweizeilige
+// Beschriftung wie "Kredit-/Debitkarte" macht sonst nur ihre eigene Grid-Zeile
+// höher (CSS Grid dehnt jede Kachel einer Zeile auf deren Höhe), und in einem
+// Raster mit mehreren Zeilen sehen die Kacheln dann zufällig unterschiedlich
+// groß aus, statt gleichmäßig.
+//
+// `min-height` und nicht mehr `height` samt `overflow: hidden`: seit jede
+// Kachel auch sagt, wann das Guthaben da ist, passt "Sofortüberweisung" plus
+// "Sofort verfügbar" nicht mehr zuverlässig in 7rem — und was nicht passte,
+// wurde vorher stillschweigend abgeschnitten statt umzubrechen.
 .account-tier--method {
-  height: 7rem;
+  min-height: 7.5rem;
   justify-content: center;
-  overflow: hidden;
+  gap: 0.4rem;
+  // Sonst berührt eine lange Beschriftung wie "Sofortüberweisung" auf einem
+  // schmalen Telefon beide Kanten der Kachel.
+  padding: 1rem 0.5rem;
+  // Deutsche Zahlungsartennamen sind lang und zusammengesetzt.
+  // `hyphens` und nicht `overflow-wrap: anywhere`: das trennte
+  // "Sofortüberweisu-/ng" mitten im Wort, weil es nicht nach Silben fragt.
+  // Die Seite trägt ihr `lang`-Attribut (layouts/*.blade.php), also hat der
+  // Browser das Wörterbuch dafür. `break-word` bleibt als Netz für den Fall,
+  // dass er keins hat.
+  hyphens: auto;
+  overflow-wrap: break-word;
 
   .account-tier__icon {
     height: 1.75rem;
@@ -322,8 +343,45 @@
     filter: @invert-state;
   }
 
+  // Zwei Logos bringen ihren eigenen Untergrund mit, weil sie sonst in einem
+  // der beiden Themen verschwinden. Ein Feld und keine Umkehrung: `invert()`
+  // verdreht Verläufe (bancontact hat zwei) und Volltonfarben (SEPA-Blau) in
+  // fremde Markenfarben, und ein Zahlungslogo darf nicht in einer anderen
+  // Farbe dastehen als überall sonst. sofort.svg macht dasselbe seit jeher
+  // selbst, als Teil der Datei.
+  //
+  // Dunkler Grund für eps.svg und bancontact.svg: beide sind weiß auf
+  // transparent gezeichnet und waren im hellen Thema auf der weißen Karte
+  // schlicht unsichtbar — zwei Zahlungsarten ohne Logo neben neun mit. Im
+  // dunklen Thema ist @color-strong-grey die Kartenfarbe selbst, das Feld
+  // verschwindet dort also von allein.
+  .account-tier__icon--plate {
+    box-sizing: content-box;
+    padding: 0.25rem 0.45rem;
+    border-radius: 6px;
+    background-color: @color-strong-grey;
+  }
+
+  // Heller Grund für sepa.svg: einfarbig #005DA0, im dunklen Thema
+  // dunkelblau auf dunkelgrau und damit kaum noch zu erkennen.
+  .account-tier__icon--plate-light {
+    box-sizing: content-box;
+    padding: 0.25rem 0.45rem;
+    border-radius: 6px;
+    background-color: @color-almost-white;
+  }
+
+  .account-tier__label {
+    font-size: 0.95rem;
+    // Die Beschriftung ist die Antwort auf "womit bezahle ich" und muss die
+    // Zeile darunter schlagen, die nur sagt, wann.
+    font-weight: bold;
+    line-height: 1.25;
+  }
+
   .account-tier__note {
     font-size: 0.75rem;
+    line-height: 1.3;
     color: @text-color-alpha-70;
   }
 }

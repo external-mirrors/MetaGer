@@ -101,7 +101,13 @@ class ChargeMicropaymentTest extends TestCase
         $this->signedIn()
             ->get("/de-DE/konto/aufladen/1000/micropayment/prepay")
             ->assertOk()
-            ->assertSee('<input type="email" name="email" id="checkout-micropayment-email" autocomplete="email">', false);
+            // Kein `required`: das ist die Aussage dieses Tests. Nicht mehr
+            // das ganze Tag wörtlich — es trägt seit der Gestaltungsrunde ein
+            // aria-describedby auf den Hinweis darunter, und ein Test, der an
+            // der Attributliste hängt, wäre bei jeder solchen Ergänzung rot,
+            // ohne dass sich das Geprüfte geändert hätte.
+            ->assertSee('name="email" id="checkout-micropayment-email"', false)
+            ->assertDontSee('name="email" id="checkout-micropayment-email" required', false);
     }
 
     public function testLastschriftHasNoEmailField(): void

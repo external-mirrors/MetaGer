@@ -4,14 +4,22 @@
 
 @section('content')
 {{--
-	Micropayment, Schritt zwei: die Zustimmung, und bei "prepay" die
+	Micropayment, Schritt drei: die Zustimmung, und bei "prepay" die
 	optionale E-Mail-Adresse. Von hier aus leitet der Server direkt zur
 	Zahlungsseite bei micropayment weiter (303) — kein JS im Weg, wie beim
 	Barzahlungsformular.
 
 	Die E-Mail ist bewusst nicht required: derselbe Grund, aus dem die
 	spätere Kreditkarten-Zahlart keine erzwingen soll — wer ohne Konto und
-	ohne Mailadresse zahlen will, soll das können.
+	ohne Mailadresse zahlen will, soll das können. Sie sah nur nicht danach
+	aus: ein Pflichtfeld und ein freiwilliges Feld waren hier nicht zu
+	unterscheiden, deshalb trägt die Beschriftung jetzt „(optional)“, wie die
+	freiwilligen Felder des Rechnungsformulars auch.
+
+	**„Sie werden weitergeleitet“ steht über dem Knopf, nicht darunter.** Was
+	beim Klick passiert — die Seite verlassen, bei micropayment bezahlen,
+	zurückkommen — ist die wichtigste Auskunft dieser Seite und stand als
+	letzter Absatz unter dem Knopf, also hinter der Entscheidung.
 --}}
 <div id="checkout-page">
 	<header class="account-head">
@@ -19,12 +27,8 @@
 		@include('partials.key-fingerprint')
 	</header>
 
+	@include('partials.checkout-steps')
 	@include('partials.checkout-summary')
-
-	<nav class="checkout-nav">
-		<a class="checkout-back" href="{{ route('account.checkout', ['amount' => $amount]) }}">← @lang('checkout.page.methods.back')</a>
-		<a class="checkout-back" href="{{ $cancelUrl }}">@lang('checkout.page.cancel')</a>
-	</nav>
 
 	<section class="account-section">
 		@if($error === 'unreachable')
@@ -37,29 +41,27 @@
 			@if($service === 'prepay')
 				<div class="checkout-micropayment__field">
 					<label for="checkout-micropayment-email">@lang('checkout.micropayment.prepay.email.label')</label>
-					<input type="email" name="email" id="checkout-micropayment-email" autocomplete="email">
-					<p class="checkout-micropayment__hint">@lang('checkout.micropayment.prepay.email.description')</p>
+					<input type="email" name="email" id="checkout-micropayment-email" autocomplete="email"
+						aria-describedby="checkout-micropayment-email-hint">
+					<p class="checkout-micropayment__hint" id="checkout-micropayment-email-hint">@lang('checkout.micropayment.prepay.email.description')</p>
 				</div>
 			@endif
 
-			{{-- Enthält ein eigenes <a>, deshalb roh ausgegeben statt mit @lang. --}}
-			<p class="account-section__lede">{!! __('checkout.consent.agb', ['agblink' => route('agb')]) !!}</p>
+			@include('partials.checkout-consent')
 
-			<div class="checkout-consent">
-				<input type="checkbox" name="revocation" id="checkout-revocation" required>
-				<label for="checkout-revocation">{!! __('checkout.consent.label', [
-					'revocation_link' => route('agb'),
-					'refundlink' => route('agb') . '#rueckerstattung',
-				]) !!}</label>
-			</div>
+			{{-- Enthält eigene <a>, deshalb roh ausgegeben statt mit @lang. --}}
+			<p class="checkout-notice">{!! __('checkout.micropayment.privacy', [
+				'link' => $privacyUrl,
+				'link_text' => 'Micropayment',
+			]) !!}</p>
 
-			<button type="submit" class="account-btn account-btn--primary">@lang('checkout.micropayment.submit')</button>
+			<button type="submit" class="account-btn account-btn--primary checkout-submit">@lang('checkout.micropayment.submit')</button>
 		</form>
-
-		<p class="account-section__lede">{!! __('checkout.micropayment.privacy', [
-			'link' => $privacyUrl,
-			'link_text' => 'Micropayment',
-		]) !!}</p>
 	</section>
+
+	<nav class="checkout-nav">
+		<a class="checkout-back" href="{{ route('account.checkout', ['amount' => $amount]) }}">@lang('checkout.page.methods.back')</a>
+		<a class="checkout-back" href="{{ $cancelUrl }}">@lang('checkout.page.cancel')</a>
+	</nav>
 </div>
 @endsection

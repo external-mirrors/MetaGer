@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Zmień ilość',
+        'steps' => [
+            'aria' => 'Doładowanie w trzech krokach',
+            'amount' => 'Ilość',
+            'method' => 'Metoda płatności',
+            'pay' => 'Zapłać',
+        ],
+        'summary' => [
+            'buying' => 'Kupujesz',
+            'after' => 'Środki po doładowaniu',
+            'price' => 'Cena',
+        ],
+        'speed' => [
+            'instant' => 'Dostępne od razu',
+            'transfer' => 'W ciągu 1–3 dni roboczych',
+            'post' => 'Gdy dotrze Twój list',
+        ],
         'methods' => [
             'heading' => 'Wybierz metodę płatności',
             'more' => 'Więcej metod płatności',
             'back' => 'Wybierz inną metodę płatności',
             'cash_note' => 'Anonimowo',
+            'lede' => 'Wybierz sposób płatności. Poza gotówką i przelewem bankowym środki są dostępne od razu po zaksięgowaniu płatności.',
         ],
         'cancel' => 'Powrót do konta',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'Akceptujemy tylko następujące waluty: EUR, USD, CAD, GBP.',
         'currency_translation' => 'Zawsze pobieramy opłaty w EUR. Jeśli wyślesz nam inną walutę, wysłana kwota zostanie przeliczona po dziennym kursie wymiany',
         'no_refund' => 'Ze względu na obowiązujące przepisy dotyczące prania brudnych pieniędzy, zwrot pieniędzy nie jest niestety możliwy. Jednak po zaksięgowaniu przez nas opłaty można wprowadzić wysłany identyfikator płatności w sekcji "Zamówienia", aby uzyskać przegląd zamówienia i/lub poprosić o fakturę.',
+        'how_heading' => 'Jak przebiega płatność gotówką',
+        'address_label' => 'Nasz adres pocztowy',
         'generate' => 'Generowanie identyfikatora płatności',
         'error' => [
             'unreachable' => 'Coś poszło nie tak podczas tworzenia zamówienia. Spróbuj ponownie później.',
@@ -65,7 +84,7 @@ Niemcy',
         'prepay' => [
             'label' => 'Przelew bankowy',
             'email' => [
-                'label' => 'Adres e-mail',
+                'label' => 'Adres e-mail (opcjonalnie)',
                 'description' => 'Na ten adres zostanie wysłana jednorazowa informacja o naszych danych bankowych oraz powiadomienie o zakończeniu płatności.',
             ],
         ],
@@ -128,6 +147,7 @@ Niemcy',
     ],
     'returned' => [
         'heading' => 'Doładowanie zakończone',
+        'pending_heading' => 'Płatność jest przetwarzana',
         'paid' => 'Dziękujemy! Twój klucz został doładowany o :amount tokenów.',
         'next' => 'Twoje środki są dostępne od razu — możesz już dalej wyszukiwać.',
         'details' => 'Zobacz szczegóły zamówienia',

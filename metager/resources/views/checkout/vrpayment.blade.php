@@ -13,6 +13,9 @@
 	mitgibt) — anders als "unreachable"/"consent" ist das keine eigene
 	Fehlermeldung dieser Anwendung, sondern "die Zahlung wurde drüben
 	abgelehnt".
+
+	Wie bei micropayment steht der Weiterleitungshinweis über dem Knopf und
+	nicht darunter — siehe dort.
 --}}
 <div id="checkout-page">
 	<header class="account-head">
@@ -20,12 +23,8 @@
 		@include('partials.key-fingerprint')
 	</header>
 
+	@include('partials.checkout-steps')
 	@include('partials.checkout-summary')
-
-	<nav class="checkout-nav">
-		<a class="checkout-back" href="{{ route('account.checkout', ['amount' => $amount]) }}">← @lang('checkout.page.methods.back')</a>
-		<a class="checkout-back" href="{{ $cancelUrl }}">@lang('checkout.page.cancel')</a>
-	</nav>
 
 	<section class="account-section">
 		@if($error === 'unreachable')
@@ -36,21 +35,19 @@
 			<p class="checkout-consent__error" role="alert">@lang('checkout.vrpayment.error.failed')</p>
 		@endif
 
-		<form method="post" action="{{ route('account.checkout.vrpayment.submit', ['amount' => $amount]) }}">
-			<p class="account-section__lede">{!! __('checkout.consent.agb', ['agblink' => route('agb')]) !!}</p>
+		<form method="post" action="{{ route('account.checkout.vrpayment.submit', ['amount' => $amount]) }}" class="checkout-micropayment">
+			@include('partials.checkout-consent')
 
-			<div class="checkout-consent">
-				<input type="checkbox" name="revocation" id="checkout-revocation" required>
-				<label for="checkout-revocation">{!! __('checkout.consent.label', [
-					'revocation_link' => route('agb'),
-					'refundlink' => route('agb') . '#rueckerstattung',
-				]) !!}</label>
-			</div>
+			{{-- Enthält eigene <a>, deshalb roh ausgegeben statt mit @lang. --}}
+			<p class="checkout-notice">{!! __('checkout.vrpayment.privacy', ['link' => $privacyUrl]) !!}</p>
 
-			<button type="submit" class="account-btn account-btn--primary">@lang('checkout.vrpayment.submit')</button>
+			<button type="submit" class="account-btn account-btn--primary checkout-submit">@lang('checkout.vrpayment.submit')</button>
 		</form>
-
-		<p class="account-section__lede">{!! __('checkout.vrpayment.privacy', ['link' => $privacyUrl]) !!}</p>
 	</section>
+
+	<nav class="checkout-nav">
+		<a class="checkout-back" href="{{ route('account.checkout', ['amount' => $amount]) }}">@lang('checkout.page.methods.back')</a>
+		<a class="checkout-back" href="{{ $cancelUrl }}">@lang('checkout.page.cancel')</a>
+	</nav>
 </div>
 @endsection

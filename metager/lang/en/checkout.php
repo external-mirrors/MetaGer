@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Change amount',
+        'steps' => [
+            'aria' => 'Topping up in three steps',
+            'amount' => 'Amount',
+            'method' => 'Payment method',
+            'pay' => 'Pay',
+        ],
+        'summary' => [
+            'buying' => 'You are buying',
+            'after' => 'Balance afterwards',
+            'price' => 'Price',
+        ],
+        'speed' => [
+            'instant' => 'Available instantly',
+            'transfer' => 'Within 1–3 business days',
+            'post' => 'Once your letter arrives',
+        ],
         'methods' => [
             'heading' => 'Choose payment method',
             'more' => 'More payment methods',
             'back' => 'Choose a different payment method',
             'cash_note' => 'Anonymous',
+            'lede' => 'Choose how you would like to pay. Apart from cash and bank transfer, your balance is ready the moment the payment goes through.',
         ],
         'cancel' => 'Back to account',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'We accept only the following currencies: EUR, USD, CAD, GBP.',
         'currency_translation' => 'We always charge amounts in EUR. If you send us another currency, the amount sent will be converted at the daily exchange rate',
         'no_refund' => 'Due to applicable money laundering laws, a refund or return is unfortunately not possible. However, once the charge has been posted by us, you can enter the sent payment ID under "Orders" to get an order overview and/or request an invoice.',
+        'how_heading' => 'How paying by cash works',
+        'address_label' => 'Our postal address',
         'generate' => 'Generate payment ID',
         'error' => [
             'unreachable' => 'Something went wrong while creating your order. Please try again later.',
@@ -65,7 +84,7 @@ Germany',
         'prepay' => [
             'label' => 'Bank transfer',
             'email' => [
-                'label' => 'E-mail address',
+                'label' => 'E-mail address (optional)',
                 'description' => 'To this address you will be sent one-time information about our bank details and a notification when the payment is completed.',
             ],
         ],
@@ -128,6 +147,7 @@ Germany',
     ],
     'returned' => [
         'heading' => 'Charge complete',
+        'pending_heading' => 'Payment is being processed',
         'paid' => 'Thank you! Your key has been topped up by :amount tokens.',
         'next' => 'Your balance is ready right away — you can keep searching now.',
         'details' => 'View order details',

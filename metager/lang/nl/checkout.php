@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Aantal wijzigen',
+        'steps' => [
+            'aria' => 'Opwaarderen in drie stappen',
+            'amount' => 'Aantal',
+            'method' => 'Betaalmethode',
+            'pay' => 'Betalen',
+        ],
+        'summary' => [
+            'buying' => 'U koopt',
+            'after' => 'Tegoed daarna',
+            'price' => 'Prijs',
+        ],
+        'speed' => [
+            'instant' => 'Meteen beschikbaar',
+            'transfer' => 'Binnen 1–3 werkdagen',
+            'post' => 'Zodra uw brief binnenkomt',
+        ],
         'methods' => [
             'heading' => 'Betaalmethode kiezen',
             'more' => 'Meer betaalmethoden',
             'back' => 'Kies een andere betaalmethode',
             'cash_note' => 'Anoniem',
+            'lede' => 'Kies hoe u wilt betalen. Behalve bij contant en bankoverschrijving is uw tegoed beschikbaar zodra de betaling rond is.',
         ],
         'cancel' => 'Terug naar account',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'We accepteren alleen de volgende valuta: EUR, USD, CAD, GBP.',
         'currency_translation' => 'We rekenen altijd bedragen in EUR. Als je ons een andere valuta stuurt, wordt het verzonden bedrag omgerekend tegen de dagelijkse wisselkoers',
         'no_refund' => 'Vanwege de geldende wetgeving op het gebied van witwaspraktijken is restitutie of retournering helaas niet mogelijk. Zodra de betaling door ons is verzonden, kun je echter onder "Bestellingen" het ID van de verzonden betaling invoeren om een overzicht van de bestelling te krijgen en/of een factuur aan te vragen.',
+        'how_heading' => 'Zo werkt contant betalen',
+        'address_label' => 'Ons postadres',
         'generate' => 'ID betaling genereren',
         'error' => [
             'unreachable' => 'Er is iets misgegaan bij het aanmaken van uw bestelling. Probeer het later nog eens.',
@@ -65,7 +84,7 @@ Duitsland',
         'prepay' => [
             'label' => 'Overschrijving',
             'email' => [
-                'label' => 'E-mailadres',
+                'label' => 'E-mailadres (optioneel)',
                 'description' => 'Naar dit adres wordt eenmalig informatie gestuurd over onze bankgegevens en een melding wanneer de betaling is voltooid.',
             ],
         ],
@@ -128,6 +147,7 @@ Duitsland',
     ],
     'returned' => [
         'heading' => 'Opwaarderen voltooid',
+        'pending_heading' => 'Betaling wordt verwerkt',
         'paid' => 'Bedankt! Uw sleutel is opgewaardeerd met :amount tokens.',
         'next' => 'Uw tegoed is meteen beschikbaar — u kunt nu verder zoeken.',
         'details' => 'Bestelgegevens bekijken',

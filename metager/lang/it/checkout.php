@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Modifica quantità',
+        'steps' => [
+            'aria' => 'Ricarica in tre passaggi',
+            'amount' => 'Quantità',
+            'method' => 'Metodo di pagamento',
+            'pay' => 'Pagare',
+        ],
+        'summary' => [
+            'buying' => 'Stai acquistando',
+            'after' => 'Credito successivo',
+            'price' => 'Prezzo',
+        ],
+        'speed' => [
+            'instant' => 'Disponibile subito',
+            'transfer' => 'Entro 1–3 giorni lavorativi',
+            'post' => 'All\'arrivo della tua lettera',
+        ],
         'methods' => [
             'heading' => 'Scegliere il metodo di pagamento',
             'more' => 'Altri metodi di pagamento',
             'back' => 'Scegli un altro metodo di pagamento',
             'cash_note' => 'Anonimo',
+            'lede' => 'Scegli come vuoi pagare. A parte il contante e il bonifico bancario, il credito è disponibile non appena il pagamento va a buon fine.',
         ],
         'cancel' => 'Torna al conto',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'Accettiamo solo le seguenti valute: EUR, USD, CAD, GBP.',
         'currency_translation' => 'Addebitiamo sempre gli importi in euro. Se ci inviate un\'altra valuta, l\'importo inviato verrà convertito al tasso di cambio giornaliero.',
         'no_refund' => 'A causa delle leggi sul riciclaggio di denaro, purtroppo non è possibile effettuare un rimborso o una restituzione. Tuttavia, una volta che l\'addebito è stato da noi effettuato, è possibile inserire l\'ID del pagamento inviato alla voce "Ordini" per ottenere una panoramica dell\'ordine e/o richiedere una fattura.',
+        'how_heading' => 'Come funziona il pagamento in contanti',
+        'address_label' => 'Il nostro indirizzo postale',
         'generate' => 'Generare l\'ID di pagamento',
         'error' => [
             'unreachable' => 'Qualcosa è andato storto durante la creazione dell\'ordine. Riprovare più tardi.',
@@ -65,7 +84,7 @@ Germania',
         'prepay' => [
             'label' => 'Bonifico bancario',
             'email' => [
-                'label' => 'Indirizzo e-mail',
+                'label' => 'Indirizzo e-mail (facoltativo)',
                 'description' => 'A questo indirizzo verranno inviate una tantum informazioni sulle nostre coordinate bancarie e una notifica quando il pagamento sarà completato.',
             ],
         ],
@@ -128,6 +147,7 @@ Germania',
     ],
     'returned' => [
         'heading' => 'Ricarica completata',
+        'pending_heading' => 'Pagamento in elaborazione',
         'paid' => 'Grazie! La tua chiave è stata ricaricata con :amount token.',
         'next' => 'Il tuo credito è subito disponibile: puoi continuare a cercare ora.',
         'details' => 'Vedi i dettagli dell\'ordine',

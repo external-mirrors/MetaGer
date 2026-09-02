@@ -15,18 +15,19 @@
 		@include('partials.key-fingerprint')
 	</header>
 
+	@include('partials.checkout-steps')
 	@include('partials.checkout-summary')
-
-	<nav class="checkout-nav">
-		<a class="checkout-back" href="{{ route('account.checkout', ['amount' => $amount]) }}">← @lang('checkout.page.methods.back')</a>
-		<a class="checkout-back" href="{{ $cancelUrl }}">@lang('checkout.page.cancel')</a>
-	</nav>
 
 	<section class="account-section">
 		<p class="account-section__lede">@lang('checkout.manual.description')</p>
 		<form method="post" action="{{ route('account.checkout.manual.submit', ['amount' => $amount]) }}">
-			<button type="submit" class="account-btn account-btn--primary">@lang('checkout.manual.submit')</button>
+			<button type="submit" class="account-btn account-btn--primary checkout-submit">@lang('checkout.manual.submit')</button>
 		</form>
 	</section>
+
+	<nav class="checkout-nav">
+		<a class="checkout-back" href="{{ route('account.checkout', ['amount' => $amount]) }}">@lang('checkout.page.methods.back')</a>
+		<a class="checkout-back" href="{{ $cancelUrl }}">@lang('checkout.page.cancel')</a>
+	</nav>
 </div>
 @endsection

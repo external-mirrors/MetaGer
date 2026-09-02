@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Skift beløb',
+        'steps' => [
+            'aria' => 'Opladning i tre trin',
+            'amount' => 'Beløb',
+            'method' => 'Betalingsmetode',
+            'pay' => 'Betal',
+        ],
+        'summary' => [
+            'buying' => 'Du køber',
+            'after' => 'Saldo bagefter',
+            'price' => 'Pris',
+        ],
+        'speed' => [
+            'instant' => 'Tilgængeligt med det samme',
+            'transfer' => 'Inden for 1–3 bankdage',
+            'post' => 'Når dit brev når frem',
+        ],
         'methods' => [
             'heading' => 'Vælg betalingsmetode',
             'more' => 'Flere betalingsmetoder',
             'back' => 'Vælg en anden betalingsmetode',
             'cash_note' => 'Anonymt',
+            'lede' => 'Vælg, hvordan du vil betale. Bortset fra kontant og bankoverførsel er din saldo klar, så snart betalingen er gennemført.',
         ],
         'cancel' => 'Tilbage til kontoen',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'Vi accepterer kun følgende valutaer: EUR, USD, CAD, GBP.',
         'currency_translation' => 'Vi opkræver altid beløb i EUR. Hvis du sender os en anden valuta, omregnes det sendte beløb til dagskursen.',
         'no_refund' => 'På grund af gældende love om hvidvaskning af penge er det desværre ikke muligt at refundere eller returnere. Men når vi har bogført opkrævningen, kan du indtaste det sendte betalings-ID under "Ordrer" for at få en ordreoversigt og/eller anmode om en faktura.',
+        'how_heading' => 'Sådan foregår kontant betaling',
+        'address_label' => 'Vores postadresse',
         'generate' => 'Generer betalings-ID',
         'error' => [
             'unreachable' => 'Noget gik galt under oprettelsen af din ordre. Prøv venligst igen senere.',
@@ -65,7 +84,7 @@ Tyskland',
         'prepay' => [
             'label' => 'Bankoverførsel',
             'email' => [
-                'label' => 'E-mail-adresse',
+                'label' => 'E-mail-adresse (valgfrit)',
                 'description' => 'Til denne adresse vil du få tilsendt engangsoplysninger om vores bankoplysninger og en meddelelse, når betalingen er gennemført.',
             ],
         ],
@@ -128,6 +147,7 @@ Tyskland',
     ],
     'returned' => [
         'heading' => 'Opladning gennemført',
+        'pending_heading' => 'Betalingen behandles',
         'paid' => 'Tak! Din nøgle er blevet opladet med :amount tokens.',
         'next' => 'Din saldo er klar med det samme – du kan søge videre nu.',
         'details' => 'Se ordredetaljer',

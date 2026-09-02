@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Ändra mängd',
+        'steps' => [
+            'aria' => 'Laddning i tre steg',
+            'amount' => 'Mängd',
+            'method' => 'Betalningsmetod',
+            'pay' => 'Betala',
+        ],
+        'summary' => [
+            'buying' => 'Du köper',
+            'after' => 'Saldo efteråt',
+            'price' => 'Pris',
+        ],
+        'speed' => [
+            'instant' => 'Tillgängligt direkt',
+            'transfer' => 'Inom 1–3 bankdagar',
+            'post' => 'När ditt brev kommer fram',
+        ],
         'methods' => [
             'heading' => 'Välj betalningsmetod',
             'more' => 'Fler betalningsmetoder',
             'back' => 'Välj en annan betalningsmetod',
             'cash_note' => 'Anonymt',
+            'lede' => 'Välj hur du vill betala. Förutom kontant och banköverföring är ditt saldo klart så snart betalningen har gått igenom.',
         ],
         'cancel' => 'Tillbaka till kontot',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'Vi accepterar endast följande valutor: EUR, USD, CAD, GBP.',
         'currency_translation' => 'Vi debiterar alltid belopp i EUR. Om du skickar oss en annan valuta, kommer det skickade beloppet att konverteras till den dagliga växelkursen',
         'no_refund' => 'På grund av gällande lagar om penningtvätt är en återbetalning eller retur tyvärr inte möjlig. När avgiften har bokförts av oss kan du dock ange det skickade betalnings-ID:t under "Beställningar" för att få en orderöversikt och/eller begära en faktura.',
+        'how_heading' => 'Så går kontantbetalning till',
+        'address_label' => 'Vår postadress',
         'generate' => 'Skapa betalnings-ID',
         'error' => [
             'unreachable' => 'Något gick fel när vi skapade din beställning. Vänligen försök igen senare.',
@@ -65,7 +84,7 @@ Tyskland',
         'prepay' => [
             'label' => 'Banköverföring',
             'email' => [
-                'label' => 'E-postadress',
+                'label' => 'E-postadress (valfritt)',
                 'description' => 'Till denna adress kommer du att få engångsinformation om våra bankuppgifter och ett meddelande när betalningen är slutförd.',
             ],
         ],
@@ -128,6 +147,7 @@ Tyskland',
     ],
     'returned' => [
         'heading' => 'Uppladdning slutförd',
+        'pending_heading' => 'Betalningen behandlas',
         'paid' => 'Tack! Din nyckel har laddats med :amount tokens.',
         'next' => 'Ditt saldo är tillgängligt direkt – du kan fortsätta söka nu.',
         'details' => 'Visa beställningsdetaljer',

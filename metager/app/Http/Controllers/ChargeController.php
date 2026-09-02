@@ -159,6 +159,7 @@ final class ChargeController extends Controller
         $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
 
         return $this->render("checkout.cash", $request, $key, $amount, [
+            "step" => 3,
             "reference" => null,
             "error" => $error,
         ]);
@@ -227,6 +228,7 @@ final class ChargeController extends Controller
         }
 
         return $this->render("checkout.cash", $request, $key, $amount, [
+            "step" => 3,
             "reference" => [
                 "public_id" => $order["public_id"],
                 "expiration" => Carbon::parse($order["expires_at"]),
@@ -249,7 +251,9 @@ final class ChargeController extends Controller
             return redirect()->to(route("account") . "#charge");
         }
 
-        return $this->render("checkout.manual", $request, $key, $amount, []);
+        return $this->render("checkout.manual", $request, $key, $amount, [
+            "step" => 3,
+        ]);
     }
 
     public function manualSubmit(Request $request, int $amount, ManualChargeIssuer $issuer): RedirectResponse
@@ -300,6 +304,7 @@ final class ChargeController extends Controller
         $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
 
         return $this->render("checkout.micropayment", $request, $key, $amount, [
+            "step" => 3,
             "service" => $service,
             "error" => $error,
             "privacyUrl" => MicropaymentChargeIssuer::PRIVACY_URLS[$service],
@@ -383,6 +388,7 @@ final class ChargeController extends Controller
         $error = in_array($error, ["unreachable", "consent", "vrpayment_failed"], true) ? $error : null;
 
         return $this->render("checkout.vrpayment", $request, $key, $amount, [
+            "step" => 3,
             "error" => $error,
             "privacyUrl" => VRPaymentChargeIssuer::PRIVACY_URL,
         ]);
@@ -511,6 +517,7 @@ final class ChargeController extends Controller
             . "form-action 'self' www.paypal.com";
 
         return $this->render("checkout.paypal", $request, $key, $amount, [
+            "step" => 3,
             "fundingSource" => $fundingSource,
             "clientId" => $config["client_id"],
             "directCardEnabled" => $config["direct_card_enabled"],
@@ -623,6 +630,18 @@ final class ChargeController extends Controller
                 "fingerprint" => $user->getKeyFingerprint(),
                 "amount" => $order["amount"],
                 "paid" => $order["paid"],
+                // Das Ergebnis, wegen dessen der ganze Vorgang stattfand.
+                //
+                // Nur, wenn es die gerade gekaufte Menge schon enthält.
+                // `paid` heißt, dass der Keyserver eine Zahlung zu dieser
+                // Ladung kennt, und er bucht beim Verbuchen der Zahlung gut —
+                // aber KeyUser::getKeyData() ist zehn Sekunden zwischen-
+                // gespeichert, und eine schnelle Rückkehr (Wero) kann darin
+                // landen. Ein Stand von *vor* der Gutschrift, groß gesetzt
+                // unter „Aufladen abgeschlossen", wäre die eine Zahl, die
+                // dieser Vorgang nicht falsch anzeigen darf; im Zweifel nennt
+                // die Seite deshalb nur die gekaufte Menge.
+                "balance" => $this->creditedBalance($user, $order["amount"]),
                 "accountUrl" => route("account"),
                 // Wo die Auftragsbestätigung liegt: auf der Bestelldetailseite,
                 // die diese Nummer nachschlägt. Nur wenn schon bezahlt wurde —
@@ -635,6 +654,21 @@ final class ChargeController extends Controller
                 "startpageUrl" => route("startpage"),
             ])
             ->header("Cache-Control", "no-store, private");
+    }
+
+    /**
+     * Der Kontostand für {@see returned()} — oder null, solange er die gerade
+     * gekaufte Menge noch nicht enthält.
+     *
+     * Die Prüfung ist bewusst „mindestens so groß wie gekauft" und nicht ein
+     * Vergleich mit einem vorher gemerkten Stand: einen vorherigen Stand gibt
+     * es hier nicht, dieser Vorgang kommt von einem anderen Ursprung zurück.
+     */
+    private function creditedBalance(KeyUser $user, float|int $amount): ?float
+    {
+        $balance = $user->getCharge();
+
+        return $balance !== null && $balance >= $amount ? $balance : null;
     }
 
     /**
@@ -670,8 +704,24 @@ final class ChargeController extends Controller
                 // Absicherung, die das Partial dann als „nur Tokenzahl"
                 // rendert statt als „ €".
                 "price" => KeyPrice::tiers()[$amount] ?? null,
+                // Für die „Guthaben danach"-Spalte der Kurzfassung
+                // (partials/checkout-summary). Null, wenn der Keyserver die
+                // Frage gerade nicht beantwortet — dann fällt genau diese
+                // Spalte weg, nicht die ganze Kurzfassung.
+                "currentCharge" => $user->getCharge(),
+                // Wo im Vorgang diese Seite steht (partials/checkout-steps).
+                // Der Standard ist die Zahlweisenwahl; jede einzelne
+                // Zahlweisen-Seite überschreibt ihn mit 3.
+                "step" => 2,
                 "fingerprint" => $user->getKeyFingerprint(),
                 "changeAmountUrl" => route("account") . "#charge",
+                // Der zweite erledigte Schritt der Schrittleiste
+                // (partials/checkout-steps), von einer Zahlweisen-Seite aus:
+                // dieselbe Menge, zurück zur Wahl der Zahlungsart. Dieselbe
+                // Adresse, auf die auch „Andere Zahlungsart wählen" am Fuß
+                // zeigt — eine Brotkrume wiederholt den Weg, den sie
+                // beschreibt, das ist ihre Aufgabe.
+                "methodsUrl" => route("account.checkout", ["amount" => $amount]),
                 // Der Ausstieg — bewusst ohne #charge: das ist "ich will gar
                 // nicht (mehr) aufladen", nicht "ich will ein anderes Paket".
                 "cancelUrl" => route("account"),

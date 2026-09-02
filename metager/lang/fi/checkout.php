@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Muuta määrää',
+        'steps' => [
+            'aria' => 'Lataus kolmessa vaiheessa',
+            'amount' => 'Määrä',
+            'method' => 'Maksutapa',
+            'pay' => 'Maksa',
+        ],
+        'summary' => [
+            'buying' => 'Ostat',
+            'after' => 'Saldo tämän jälkeen',
+            'price' => 'Hinta',
+        ],
+        'speed' => [
+            'instant' => 'Heti käytettävissä',
+            'transfer' => '1–3 arkipäivän kuluessa',
+            'post' => 'Kun kirjeesi saapuu',
+        ],
         'methods' => [
             'heading' => 'Valitse maksutapa',
             'more' => 'Muut maksutavat',
             'back' => 'Valitse toinen maksutapa',
             'cash_note' => 'Anonyymi',
+            'lede' => 'Valitse, miten haluat maksaa. Käteistä ja tilisiirtoa lukuun ottamatta saldo on käytettävissä heti maksun jälkeen.',
         ],
         'cancel' => 'Takaisin tilille',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'Hyväksymme vain seuraavat valuutat: EUR, USD, CAD, GBP.',
         'currency_translation' => 'Veloitamme aina euroina. Jos lähetät meille jonkin muun valuutan, lähetetty summa muunnetaan päivittäisen valuuttakurssin mukaan.',
         'no_refund' => 'Sovellettavien rahanpesulakien vuoksi palautus tai palautus ei valitettavasti ole mahdollista. Kun olemme kuitenkin lähettäneet maksun, voit syöttää lähetetyn maksutunnuksen "Tilaukset"-kohdassa saadaksesi yleiskatsauksen tilauksesta ja/tai pyytää laskun.',
+        'how_heading' => 'Näin käteismaksu toimii',
+        'address_label' => 'Postiosoitteemme',
         'generate' => 'Luo maksutunnus',
         'error' => [
             'unreachable' => 'Jokin meni pieleen tilausta luodessasi. Yritä myöhemmin uudelleen.',
@@ -65,7 +84,7 @@ Saksa',
         'prepay' => [
             'label' => 'Pankkisiirto',
             'email' => [
-                'label' => 'Sähköpostiosoite',
+                'label' => 'Sähköpostiosoite (valinnainen)',
                 'description' => 'Tähän osoitteeseen lähetetään kertaluonteisesti tiedot pankkitiedoistamme ja ilmoitus, kun maksu on suoritettu.',
             ],
         ],
@@ -128,6 +147,7 @@ Saksa',
     ],
     'returned' => [
         'heading' => 'Lataus valmis',
+        'pending_heading' => 'Maksua käsitellään',
         'paid' => 'Kiitos! Avaimesi on ladattu :amount tokenilla.',
         'next' => 'Saldosi on heti käytettävissä – voit jatkaa hakua nyt.',
         'details' => 'Näytä tilauksen tiedot',

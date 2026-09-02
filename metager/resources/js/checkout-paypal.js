@@ -22,6 +22,19 @@ if (container) {
 }
 
 function initializePaypalPayments(container) {
+    // Der Ladehinweis steht `hidden` im Markup und wird hier aufgedeckt, nicht
+    // erst wenn das SDK antwortet. Er lag früher *in* #checkout-paypal, das
+    // bis dahin verborgen ist — „Zahlungsmethode wird geladen" war damit genau
+    // so lange unsichtbar, wie es etwas zu sagen hatte, und blieb eine Seite
+    // ohne Inhalt zurück, wenn das SDK gar nicht antwortete. Hier statt im
+    // Markup sichtbar, damit ein Besucher ohne Javascript nicht „wird geladen"
+    // neben dem <noscript>-Hinweis stehen sieht, dass diese Zahlart Javascript
+    // braucht.
+    const loading = document.getElementById("checkout-paypal-loading");
+    if (loading) {
+        loading.hidden = false;
+    }
+
     const fundingSource = container.dataset.fundingSource;
     const directCardEnabled = container.dataset.directCardEnabled === "1";
 

@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Cambiar cantidad',
+        'steps' => [
+            'aria' => 'Recarga en tres pasos',
+            'amount' => 'Cantidad',
+            'method' => 'Método de pago',
+            'pay' => 'Pagar',
+        ],
+        'summary' => [
+            'buying' => 'Usted compra',
+            'after' => 'Saldo después',
+            'price' => 'Precio',
+        ],
+        'speed' => [
+            'instant' => 'Disponible al instante',
+            'transfer' => 'En 1–3 días laborables',
+            'post' => 'Cuando llegue su carta',
+        ],
         'methods' => [
             'heading' => 'Seleccione el método de pago',
             'more' => 'Más métodos de pago',
             'back' => 'Elegir otro método de pago',
             'cash_note' => 'Anónimo',
+            'lede' => 'Elija cómo desea pagar. Salvo el efectivo y la transferencia bancaria, su saldo estará disponible en cuanto se complete el pago.',
         ],
         'cancel' => 'Volver a la cuenta',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'Sólo aceptamos las siguientes monedas: EUR, USD, CAD, GBP.',
         'currency_translation' => 'Siempre cobramos los importes en EUR. Si nos envía otra moneda, el importe enviado se convertirá al tipo de cambio diario',
         'no_refund' => 'Debido a la legislación aplicable en materia de blanqueo de dinero, lamentablemente no es posible realizar un reembolso o una devolución. No obstante, una vez que hayamos contabilizado el cargo, puede introducir el ID de pago enviado en "Pedidos" para obtener un resumen del pedido y/o solicitar una factura.',
+        'how_heading' => 'Cómo funciona el pago en efectivo',
+        'address_label' => 'Nuestra dirección postal',
         'generate' => 'Generar ID de pago',
         'error' => [
             'unreachable' => 'Algo ha ido mal al crear su pedido. Vuelva a intentarlo más tarde.',
@@ -65,7 +84,7 @@ Alemania',
         'prepay' => [
             'label' => 'Transferencia bancaria',
             'email' => [
-                'label' => 'Correo electrónico',
+                'label' => 'Correo electrónico (opcional)',
                 'description' => 'A esta dirección se le enviará una única vez información sobre nuestros datos bancarios y una notificación cuando se complete el pago.',
             ],
         ],
@@ -128,6 +147,7 @@ Alemania',
     ],
     'returned' => [
         'heading' => 'Recarga completada',
+        'pending_heading' => 'El pago se está procesando',
         'paid' => '¡Gracias! Su clave se ha recargado con :amount tokens.',
         'next' => 'Su saldo está disponible de inmediato: puede seguir buscando ahora.',
         'details' => 'Ver detalles del pedido',

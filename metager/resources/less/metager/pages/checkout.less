@@ -22,30 +22,204 @@
   gap: 1.5rem;
 }
 
+// ── Die Schrittleiste ────────────────────────────────────────────────────────
+// Menge → Zahlungsart → Bezahlen. Vorher sagte keine Seite dieses Vorgangs, wo
+// man steht: die Paketwahl hieß „Guthaben aufladen", die Zahlweisenwahl hieß
+// genauso, und die Seite danach trug nur noch den Namen der Zahlweise.
+//
+// Zahlen (bzw. ein Häkchen für Erledigtes) in einer Scheibe, dazwischen ein
+// Strich, der die Reihenfolge zeichnet — der Strich ist ein ::after am Schritt
+// und nicht ein eigenes Element, damit das Markup eine reine <ol> bleibt.
+// Auf einem Telefon fällt nur die Beschriftung der nicht-aktiven Schritte weg,
+// nicht die Schritte selbst: „2 von 3" bleibt ablesbar, auch wenn „Zahlungsart"
+// dafür keinen Platz hätte.
+.checkout-steps {
+  .checkout-steps__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .checkout-steps__step {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: @text-color-alpha-70;
+
+    // Der Verbindungsstrich zum nächsten Schritt.
+    &:not(:last-child)::after {
+      content: "";
+      width: 1.5rem;
+      height: 1px;
+      background-color: @border-color;
+      margin-left: 0.25rem;
+    }
+  }
+
+  .checkout-steps__link {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: @text-color-alpha-70;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: @text-color;
+      text-decoration: none;
+
+      .checkout-steps__marker {
+        border-color: @metager-orange;
+      }
+    }
+  }
+
+  // Die Scheibe mit der Nummer. Feste Maße statt Innenabstand: eine „1" und
+  // ein „✓" sind unterschiedlich breit, und drei Scheiben verschiedener Größe
+  // nebeneinander sehen aus wie ein Fehler.
+  .checkout-steps__marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid @border-color;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // Erledigt: gefüllt, aber grau — der aktuelle Schritt soll der einzige sein,
+  // der die Markenfarbe trägt.
+  .checkout-steps__step--done .checkout-steps__marker {
+    background-color: @highlight-color-alpha-60;
+    border-color: transparent;
+  }
+
+  .checkout-steps__step--current {
+    color: @text-color;
+    font-weight: bold;
+
+    .checkout-steps__marker {
+      background-color: @metager-orange;
+      border-color: @metager-orange;
+      color: @color-black;
+    }
+  }
+
+  // Schmal wird die Leiste kleiner, nicht wortlos.
+  //
+  // Zuerst stand hier eine Regel, die auf Telefonen alle Beschriftungen außer
+  // der des aktuellen Schritts wegnahm — „2 von 3 bleibt ablesbar". Das war
+  // nie nachgesehen worden: Firefox lässt kein Fenster unter 500px Viewport
+  // zu, und die Aufnahmen, die es hätten zeigen sollen, waren deshalb alle
+  // über der Schwelle. In einem 360px-Rahmen sieht man, was die Regel
+  // wirklich tut — auf einer Zahlweisen-Seite stehen dann zwei nackte Haken
+  // nebeneinander, und seit beide Links sind, führen sie sichtbar
+  // ununterscheidbar an zwei verschiedene Orte.
+  //
+  // Also enger statt leer: kleinere Scheiben, kürzere Striche, kleinere
+  // Schrift. Das reicht im Deutschen für eine Zeile; wo es nicht reicht
+  // („Mode de paiement", „Metoda płatności"), bricht die Leiste um — sie ist
+  // ein flex-wrap. Eine zweite Zeile ist der bessere Preis als ein Schritt,
+  // der seinen Namen nicht mehr nennt.
+  @media (max-width: @screen-mobile-l) {
+    .checkout-steps__list {
+      font-size: 0.75rem;
+      gap: 0.25rem 0.35rem;
+    }
+
+    .checkout-steps__marker {
+      width: 1.25rem;
+      height: 1.25rem;
+      font-size: 0.7rem;
+    }
+
+    .checkout-steps__step:not(:last-child)::after {
+      width: 0.75rem;
+      margin-left: 0.15rem;
+    }
+  }
+}
+
 // ── Die gewählte Menge, kurz ─────────────────────────────────────────────────
 // Keine zweite Paketwahl — die steht auf /konto — nur eine Erinnerung daran,
 // was gerade aufgeladen wird, mit einem Weg zurück.
+//
+// Beschriftete Felder statt dreier nackter Zahlen in einer Zeile: „1.000 Token
+// 10 € Menge ändern" nebeneinander sagte nicht, welche Zahl was ist, und die
+// Zahl, wegen der der Vorgang stattfindet — das Guthaben *danach* — kam gar
+// nicht vor. <dl> und nicht <div>: Beschriftung und Wert sind hier wirklich
+// Paare.
 .checkout-summary {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
+  gap: 0.75rem 1.5rem;
   padding: 1.25rem 1.5rem;
   border: 1px solid @border-color;
   border-radius: 12px;
   background-color: @card-background-color;
 
+  @media (max-width: @screen-mobile-l) {
+    padding: 1.1rem;
+  }
+
+  .checkout-summary__facts {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+  }
+
+  .checkout-summary__fact {
+    display: grid;
+    gap: 0.15rem;
+
+    dt {
+      margin: 0;
+      font-size: 0.75rem;
+      font-weight: normal;
+      color: @text-color-alpha-70;
+    }
+
+    dd {
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
   .checkout-summary__amount {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: bold;
-    font-variant-numeric: tabular-nums;
   }
 
   .checkout-summary__price {
-    font-size: 1.1rem;
-    color: @text-color-alpha-70;
-    font-variant-numeric: tabular-nums;
+    font-size: 1.3rem;
+  }
+
+  // Das Ergebnis, nicht der Preis. Ein getöntes Feld und kein eingefärbter
+  // Text: Orange auf der weißen Karte wäre bei dieser Schriftgröße zu blass,
+  // und die Markenfarbe gehört auf dieser Seite dem Knopf.
+  .checkout-summary__fact--after {
+    padding: 0.35rem 0.75rem;
+    margin: -0.35rem 0;
+    border-radius: 8px;
+    background-color: @highlight-color-alpha-60;
+  }
+
+  .checkout-summary__after {
+    font-size: 1.3rem;
+    font-weight: bold;
   }
 
   .checkout-summary__change {
@@ -63,32 +237,84 @@
 
 // ── Zurück ───────────────────────────────────────────────────────────────────
 // Zwei Wege, die auf der ursprünglichen Kasse im Keymanager fehlten: zurück
-// zur Zahlungswahl (Bar, die Entwicklungs-Zahlungsart — dieselbe Menge,
-// andere Zahlungsart) und ganz zurück zum Konto (jede Seite hier — "ich will
-// gar nicht mehr aufladen", nicht "ich will ein anderes Paket").
+// zur Zahlungswahl (dieselbe Menge, andere Zahlungsart) und ganz zurück zum
+// Konto ("ich will gar nicht mehr aufladen", nicht "ich will ein anderes
+// Paket").
+//
+// Steht jetzt am Fuß der Seite statt zwischen Kurzfassung und Inhalt. Dort
+// schwebte es: zwei blaue Kleinlinks in der Lücke zwischen zwei Karten, ohne
+// Bezug zu einer von beiden, und in derselben Farbe wie die echten Links im
+// Text darunter. Ein Ausstieg gehört ans Ende einer Seite, nicht zwischen die
+// Entscheidung und das, worüber entschieden wird — vorwärts führt die
+// Schrittleiste, zurück führt das hier.
 .checkout-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 1rem;
+  justify-content: center;
+  gap: 0.4rem 1.5rem;
 }
 
 .checkout-back {
   font-size: 0.85rem;
+  color: @text-color-alpha-70;
+
+  &:hover,
+  &:focus-visible {
+    color: @text-color;
+  }
 }
 
 // ── Zustimmung ───────────────────────────────────────────────────────────────
-// Geteilt von Bar und micropayment — beide legen einen Auftrag erst an, wenn
-// das Widerrufsrecht bewusst aufgegeben wurde (lang/*/checkout.php's
-// consent.label).
+// Geteilt von Bar, micropayment, Wero und PayPal (partials/checkout-consent):
+// alle vier legen einen Auftrag erst an, wenn das Widerrufsrecht bewusst
+// aufgegeben wurde (lang/*/checkout.php's consent.label).
+//
+// Der Wortlaut ist rechtlich vorgegeben. Was hier steht, ist die Antwort auf
+// seine Darstellung: er stand auf allen vier Seiten in voller Länge fett, weil
+// general/forms.less jedem `label` `font-weight: bold` gibt — vier bis sechs
+// Zeilen durchgehend fetter Kleintext direkt über dem einzigen Knopf der
+// Seite. Durchgehend fett hebt nichts hervor, es macht nur alles laut.
 .checkout-consent {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
   gap: 0.6rem;
-  font-size: 0.85rem;
 
-  input {
-    margin-top: 0.2rem;
-    flex-shrink: 0;
+  .checkout-consent__agb {
+    margin: 0;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+  }
+
+  // Das Kästchen samt Text in einem eigenen getönten Feld: es ist eine
+  // Bedingung und kein Absatz, und ein getöntes Feld sagt das, ohne zu
+  // schreien.
+  .checkout-consent__box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    background-color: @highlight-color-alpha-60;
+
+    input {
+      flex-shrink: 0;
+      // Das Kontrollkästchen der Vorgabegröße ist rund 13px groß und war das
+      // kleinste Ziel auf einer Seite, die man oft auf einem Telefon
+      // ausfüllt. `accent-color` färbt es in die Markenfarbe, ohne es
+      // nachzubauen — ein nachgebautes Kästchen müsste seine eigene
+      // Tastaturbedienung und seinen eigenen Fokusring mitbringen.
+      width: 1.15rem;
+      height: 1.15rem;
+      margin: 0.1rem 0 0;
+      accent-color: @metager-orange;
+    }
+
+    label {
+      // general/forms.less setzt `label { font-weight: bold }` global.
+      font-weight: normal;
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
   }
 }
 
@@ -101,8 +327,100 @@
   font-size: 0.9rem;
 }
 
+// ── „Was als Nächstes passiert" ──────────────────────────────────────────────
+// Die Weiterleitungshinweise von micropayment, Wero und PayPal. Sie standen
+// als letzter Absatz *unter* dem Knopf — also hinter der Entscheidung, obwohl
+// "Sie verlassen jetzt MetaGer und bezahlen bei X" die wichtigste Auskunft
+// dieser Seiten ist. Jetzt darüber, und mit einer Kante links, die sie vom
+// Fließtext trennt, ohne sie wie einen Fehler aussehen zu lassen.
+.checkout-notice {
+  margin: 0;
+  padding: 0.15rem 0 0.15rem 0.9rem;
+  border-left: 3px solid @border-color;
+  font-size: 0.85rem;
+  color: @text-color-alpha-70;
+}
+
+// Der Ladehinweis auf der PayPal-Seite verschwindet, sobald das SDK da ist
+// (resources/js/checkout-paypal.js). Solange er steht, soll er wie ein
+// Zwischenzustand aussehen und nicht wie ein Absatz.
+.checkout-notice--loading {
+  border-left-color: @metager-orange;
+}
+
+// Der eine Knopf, der eine Seite dieses Vorgangs abschließt. .account-btn ist
+// `display: flex` und dehnt sich damit in einem Raster über die volle Breite —
+// das ist auf der Kontoseite gewollt (zwei gleich breite Knöpfe nebeneinander)
+// und hier nicht: ein Absenden-Knopf so breit wie die Karte sieht aus wie ein
+// Banner.
+.checkout-submit {
+  justify-self: start;
+  align-self: start;
+  width: fit-content;
+}
+
 // ── Barzahlung ───────────────────────────────────────────────────────────────
+// Der Ablauf steht vor der Zustimmung, nicht dahinter — die Anschrift, an die
+// der Brief gehen soll, stand vorher ausschließlich auf der Seite *nach* dem
+// Anlegen des Auftrags.
 .checkout-cash {
+  // Die Anschrift. Vor dem Anlegen des Auftrags ist sie eine Auskunft, danach
+  // eine Anweisung; beide Male dieselbe Karte, damit sie wiedererkennbar
+  // bleibt.
+  .checkout-cash__address-block {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+  }
+
+  .checkout-cash__address-label {
+    margin: 0;
+    // Ohne dies ist es ein <h3> in Vorgabegröße: die Fassung nach dem Anlegen
+    // trägt hier einen ganzen Satz ("Schicken Sie den Brief an folgende
+    // Adresse und notieren Sie sich …"), und der stand als 1.17em-Überschrift
+    // größer da als die Abschnittsüberschrift darüber.
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .checkout-cash__address {
+    margin: 0;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid @border-color;
+    border-radius: 8px;
+    background-color: @card-background-color;
+    font-family: monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: pre-line;
+  }
+
+  // Die fünf Hinweise. Vor der Zustimmung zugeklappt: sie sind vollständig und
+  // bleiben es, aber fünf gleich gewichtete Warnungen zwischen "so geht das"
+  // und "einverstanden" sind das, was diese Seite vorher zu einer Wand gemacht
+  // hat. Nach dem Anlegen des Auftrags stehen sie offen — dann ist der Brief
+  // die nächste Handlung, nicht mehr die Entscheidung.
+  .checkout-cash__notes-details {
+    font-size: 0.9rem;
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      list-style: disclosure-closed;
+    }
+
+    &[open] > summary {
+      list-style: disclosure-open;
+      margin-bottom: 0.6rem;
+    }
+  }
+
+  .checkout-cash__notes-heading {
+    margin: 0 0 0.6rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
   .checkout-cash__notes {
     margin: 0;
     padding-left: 1.2rem;
@@ -132,25 +450,19 @@
     input {
       flex: 1 1 10rem;
       min-width: 0;
-      padding: 0.5rem 0.6rem;
+      padding: 0.6rem 0.7rem;
       border: 1px solid @border-color;
       border-radius: 6px;
       background-color: @input-background;
       color: @input-text;
       font-family: monospace;
-      font-size: 1rem;
+      // Sie wird von Hand auf einen Zettel geschrieben — größer als das
+      // übrige Kleingedruckte, aus demselben Grund, aus dem der Anmeldecode
+      // auf /konto groß gesetzt ist.
+      font-size: 1.3rem;
       font-weight: bold;
+      letter-spacing: 0.05em;
     }
-  }
-
-  .checkout-cash__address {
-    margin: 0;
-    padding: 0.9rem 1rem;
-    border: 1px solid @border-color;
-    border-radius: 8px;
-    background-color: @card-background-color;
-    font-family: monospace;
-    white-space: pre-line;
   }
 
   .checkout-cash__hint {

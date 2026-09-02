@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Alterar quantidade',
+        'steps' => [
+            'aria' => 'Carregamento em três passos',
+            'amount' => 'Quantidade',
+            'method' => 'Método de pagamento',
+            'pay' => 'Pagar',
+        ],
+        'summary' => [
+            'buying' => 'Está a comprar',
+            'after' => 'Saldo depois',
+            'price' => 'Preço',
+        ],
+        'speed' => [
+            'instant' => 'Disponível de imediato',
+            'transfer' => 'Em 1 a 3 dias úteis',
+            'post' => 'Quando a sua carta chegar',
+        ],
         'methods' => [
             'heading' => 'Escolher o método de pagamento',
             'more' => 'Mais métodos de pagamento',
             'back' => 'Escolher outro método de pagamento',
             'cash_note' => 'Anónimo',
+            'lede' => 'Escolha como pretende pagar. Salvo em numerário e transferência bancária, o seu saldo fica disponível assim que o pagamento for concluído.',
         ],
         'cancel' => 'Voltar à conta',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'Aceitamos apenas as seguintes moedas: EUR, USD, CAD, GBP.',
         'currency_translation' => 'Cobramos sempre os montantes em EUR. Se nos enviar outra moeda, o montante enviado será convertido à taxa de câmbio do dia',
         'no_refund' => 'Devido à legislação aplicável em matéria de branqueamento de capitais, infelizmente não é possível um reembolso ou devolução. No entanto, assim que o carregamento tiver sido registado por nós, pode introduzir o identificador de pagamento enviado em "Encomendas" para obter uma visão geral da encomenda e/ou solicitar uma fatura.',
+        'how_heading' => 'Como funciona o pagamento em numerário',
+        'address_label' => 'A nossa morada postal',
         'generate' => 'Gerar identificador de pagamento',
         'error' => [
             'unreachable' => 'Ocorreu um problema ao criar a sua encomenda. Tente novamente mais tarde.',
@@ -65,7 +84,7 @@ Alemanha',
         'prepay' => [
             'label' => 'Transferência bancária',
             'email' => [
-                'label' => 'Endereço de e-mail',
+                'label' => 'Endereço de e-mail (opcional)',
                 'description' => 'Para este endereço enviaremos, uma única vez, informações sobre os nossos dados bancários e uma notificação quando o pagamento for concluído.',
             ],
         ],
@@ -128,6 +147,7 @@ Alemanha',
     ],
     'returned' => [
         'heading' => 'Carregamento concluído',
+        'pending_heading' => 'O pagamento está a ser processado',
         'paid' => 'Obrigado! A sua chave foi carregada com :amount tokens.',
         'next' => 'O seu saldo está disponível de imediato — pode continuar a pesquisar agora.',
         'details' => 'Ver detalhes da encomenda',

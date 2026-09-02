@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Modifier la quantité',
+        'steps' => [
+            'aria' => 'Rechargement en trois étapes',
+            'amount' => 'Quantité',
+            'method' => 'Mode de paiement',
+            'pay' => 'Payer',
+        ],
+        'summary' => [
+            'buying' => 'Vous achetez',
+            'after' => 'Solde ensuite',
+            'price' => 'Prix',
+        ],
+        'speed' => [
+            'instant' => 'Disponible immédiatement',
+            'transfer' => 'Sous 1 à 3 jours ouvrés',
+            'post' => 'À réception de votre courrier',
+        ],
         'methods' => [
             'heading' => 'Choisir le mode de paiement',
             'more' => 'Autres modes de paiement',
             'back' => 'Choisir un autre mode de paiement',
             'cash_note' => 'Anonyme',
+            'lede' => 'Choisissez votre mode de paiement. Hormis les espèces et le virement bancaire, votre solde est disponible dès que le paiement est effectué.',
         ],
         'cancel' => 'Retour au compte',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'Nous n\'acceptons que les devises suivantes : EUR, USD, CAD, GBP.',
         'currency_translation' => 'Nous facturons toujours les montants en EUR. Si vous nous envoyez une autre devise, le montant envoyé sera converti au taux de change du jour',
         'no_refund' => 'En raison des lois applicables en matière de blanchiment d\'argent, un remboursement ou un retour n\'est malheureusement pas possible. Cependant, une fois que le paiement a été comptabilisé par nos soins, vous pouvez saisir l\'identifiant de paiement envoyé dans la rubrique "Commandes" pour obtenir un aperçu de la commande et/ou demander une facture.',
+        'how_heading' => 'Comment se déroule le paiement en espèces',
+        'address_label' => 'Notre adresse postale',
         'generate' => 'Générer l\'identifiant de paiement',
         'error' => [
             'unreachable' => 'Un problème est survenu lors de la création de votre commande. Veuillez réessayer plus tard.',
@@ -65,7 +84,7 @@ Allemagne',
         'prepay' => [
             'label' => 'Virement bancaire',
             'email' => [
-                'label' => 'Adresse électronique',
+                'label' => 'Adresse électronique (facultatif)',
                 'description' => 'À cette adresse, vous recevrez des informations ponctuelles sur nos coordonnées bancaires et une notification lorsque le paiement est effectué.',
             ],
         ],
@@ -128,6 +147,7 @@ Allemagne',
     ],
     'returned' => [
         'heading' => 'Rechargement terminé',
+        'pending_heading' => 'Paiement en cours de traitement',
         'paid' => 'Merci ! Votre clé a été rechargée de :amount jetons.',
         'next' => 'Votre solde est disponible immédiatement : vous pouvez poursuivre vos recherches.',
         'details' => 'Voir les détails de la commande',

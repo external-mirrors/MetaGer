@@ -14,11 +14,28 @@
 return [
     'page' => [
         'change' => 'Canvia la quantitat',
+        'steps' => [
+            'aria' => 'Recàrrega en tres passos',
+            'amount' => 'Quantitat',
+            'method' => 'Mètode de pagament',
+            'pay' => 'Pagar',
+        ],
+        'summary' => [
+            'buying' => 'Comprau',
+            'after' => 'Saldo després',
+            'price' => 'Preu',
+        ],
+        'speed' => [
+            'instant' => 'Disponible a l\'instant',
+            'transfer' => 'En 1–3 dies laborables',
+            'post' => 'Quan arribi la vostra carta',
+        ],
         'methods' => [
             'heading' => 'Trieu el mètode de pagament',
             'more' => 'Més mètodes de pagament',
             'back' => 'Tria un altre mètode de pagament',
             'cash_note' => 'Anònim',
+            'lede' => 'Trieu com voleu pagar. Llevat de l\'efectiu i la transferència bancària, el saldo està disponible tan bon punt es completa el pagament.',
         ],
         'cancel' => 'Tornar al compte',
     ],
@@ -32,6 +49,8 @@ return [
         'accepted_currencies' => 'Només acceptem les monedes següents: EUR, USD, CAD, GBP.',
         'currency_translation' => 'Sempre carreguem imports en EUR. Si ens envieu una altra moneda, l\'import enviat es convertirà al tipus de canvi del dia',
         'no_refund' => 'A causa de la legislació vigent contra el blanqueig de capitals, malauradament no és possible cap reemborsament ni devolució. Ara bé, un cop hàgim registrat la recàrrega, podeu introduir l\'identificador de pagament enviat a «Comandes» per obtenir un resum de la comanda i/o demanar una factura.',
+        'how_heading' => 'Com funciona el pagament en efectiu',
+        'address_label' => 'La nostra adreça postal',
         'generate' => 'Genera un identificador de pagament',
         'error' => [
             'unreachable' => 'Alguna cosa ha anat malament en crear la vostra comanda. Torneu-ho a provar més tard.',
@@ -65,7 +84,7 @@ Alemanya',
         'prepay' => [
             'label' => 'Transferència bancària',
             'email' => [
-                'label' => 'Adreça electrònica',
+                'label' => 'Adreça electrònica (opcional)',
                 'description' => 'A aquesta adreça us enviarem, un sol cop, informació sobre les nostres dades bancàries i un avís quan el pagament s\'hagi completat.',
             ],
         ],
@@ -128,6 +147,7 @@ Alemanya',
     ],
     'returned' => [
         'heading' => 'Recàrrega completada',
+        'pending_heading' => 'El pagament s\'està processant',
         'paid' => 'Gràcies! La vostra clau s\'ha recarregat amb :amount tokens.',
         'next' => 'El vostre saldo ja està disponible: podeu continuar cercant de seguida.',
         'details' => 'Veure els detalls de la comanda',

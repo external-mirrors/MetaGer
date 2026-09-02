@@ -32,11 +32,61 @@
 return [
     'page' => [
         'change' => 'Menge ändern',
+
+        /**
+         * Die Schrittleiste, die über jeder Seite dieses Vorgangs steht.
+         *
+         * Neu: bis dahin sagte keine Seite, wo im Vorgang man steht und wie
+         * viel noch kommt — die Paketwahl hieß „Guthaben aufladen", die
+         * Zahlweisenwahl hieß auch „Guthaben aufladen", und die Seite danach
+         * trug nur noch den Namen der Zahlweise.
+         */
+        'steps' => [
+            'aria' => 'Aufladen in drei Schritten',
+            'amount' => 'Menge',
+            'method' => 'Zahlungsart',
+            'pay' => 'Bezahlen',
+        ],
+
+        /**
+         * Die Zeile in der Kurzfassung, die die eigentliche Frage beantwortet:
+         * nicht „was kostet das", sondern „was habe ich danach". Der Preis
+         * allein sagt das nicht, wenn schon ein Guthaben auf dem Schlüssel
+         * liegt.
+         */
+        'summary' => [
+            'buying' => 'Sie kaufen',
+            'after' => 'Guthaben danach',
+            'price' => 'Preis',
+        ],
+
+        /**
+         * Wann das Guthaben da ist — die Frage, die die Wahl der Zahlungsart
+         * tatsächlich entscheidet und die das Raster vorher nirgends
+         * beantwortete. Alles außer Bargeld und Überweisung bucht der
+         * Keyserver sofort nach der Bestätigung des Zahlungsdienstleisters.
+         *
+         * `transfer` nennt eine Spanne und nicht „nach Ihrer Überweisung":
+         * eine Überweisung braucht bis zu zwei Bankarbeitstage, und
+         * micropayment sieht die Eingänge einmal täglich am Morgen nach —
+         * meist bevor die Bank die Eingänge des Tages einstellt. „Nach Ihrer
+         * Überweisung" klingt nach demselben Tag und ist über ein Wochenende
+         * um mehrere Tage daneben.
+         */
+        'speed' => [
+            'instant' => 'Sofort verfügbar',
+            'transfer' => 'In 1–3 Werktagen',
+            'post' => 'Wenn Ihr Brief ankommt',
+        ],
+
         'methods' => [
             'heading' => 'Zahlungsart wählen',
             'more' => 'Weitere Zahlungsarten',
             'back' => 'Andere Zahlungsart wählen',
             'cash_note' => 'Anonym',
+            // Über dem Raster, damit die Spalte „Sofort verfügbar" nicht
+            // erklärungslos dasteht.
+            'lede' => 'Wählen Sie, wie Sie bezahlen möchten. Bis auf Bargeld und Überweisung steht Ihr Guthaben sofort nach der Zahlung bereit.',
         ],
         'cancel' => 'Zurück zum Konto',
     ],
@@ -50,6 +100,12 @@ return [
         'accepted_currencies' => 'Wir akzeptieren ausschließlich folgende Währungen: EUR, USD, CAD, GBP.',
         'currency_translation' => 'Verrechnet werden Beträge von uns stets in EUR. Wenn Sie uns eine andere Währung zusenden, wird der gesendete Betrag zum tagesaktuellen Wechselkurs umgerechnet.',
         'no_refund' => 'Wegen geltender Geldwäschegesetze ist eine Erstattung oder Rücksendung leider nicht möglich. Sobald die Aufladung von uns verbucht wurde, können Sie aber unter "Bestellungen" die versendete Zahlungs-ID eingeben um eine Auftragsübersicht zu erhalten und/oder eine Rechnung anzufordern.',
+        // Der Ablauf steht jetzt *vor* der Zustimmung, nicht erst danach: wer
+        // hier zustimmt, soll vorher wissen, was er tun muss und wohin der
+        // Brief geht. Die Anschrift stand bis dahin ausschließlich auf der
+        // Seite nach dem Erzeugen der Zahlungs-ID.
+        'how_heading' => 'So läuft die Barzahlung ab',
+        'address_label' => 'Unsere Postanschrift',
         'generate' => 'Zahlungs-ID generieren',
         'error' => [
             'unreachable' => 'Beim Erstellen Ihrer Bestellung ist etwas schief gegangen. Versuchen Sie es bitte später erneut.',
@@ -82,8 +138,8 @@ Postfach 51 01 43
         'prepay' => [
             'label' => 'Überweisung',
             'email' => [
-                'label' => 'E-Mail Addresse',
-                'description' => 'An diese Addresse werden Ihnen einmalig Informationen zu unserer Bankverbindung und eine Benachrichtigung bei Abschluss der Zahlung zugesendet.',
+                'label' => 'E-Mail-Adresse (optional)',
+                'description' => 'An diese Adresse werden Ihnen einmalig Informationen zu unserer Bankverbindung und eine Benachrichtigung bei Abschluss der Zahlung zugesendet.',
             ],
         ],
         'lastschrift' => ['label' => 'Lastschrift'],
@@ -149,6 +205,11 @@ Postfach 51 01 43
 
     'returned' => [
         'heading' => 'Aufladen abgeschlossen',
+        // Eine eigene Überschrift für den unbezahlten Zustand: „Aufladen
+        // abgeschlossen" über „Ihre Zahlung wird noch bearbeitet" widerspricht
+        // sich selbst, und der Widerspruch stand genau dort, wo jemand
+        // nachsieht, ob seine Zahlung angekommen ist.
+        'pending_heading' => 'Zahlung wird bearbeitet',
         'paid' => 'Vielen Dank! Ihr Schlüssel wurde um :amount Token aufgeladen.',
         'next' => 'Ihr Guthaben steht sofort bereit — Sie können direkt weitersuchen.',
         'details' => 'Bestelldetails ansehen',

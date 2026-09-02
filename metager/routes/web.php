@@ -1,14 +1,22 @@
 <?php
 
+use App\Landing\KeymanagerLinks;
+use App\Landing\KeyPrice;
 use Illuminate\Support\Facades\Vite;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AnonymousToken;
+use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\ChargeController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
+use App\Http\Controllers\KeyCreationController;
 use App\Http\Controllers\LangSelector;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\MetaGerSearch;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Pictureproxy;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
@@ -18,6 +26,7 @@ use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\TilesController;
 use App\Http\Controllers\TTSController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\ZitatController;
 use App\Http\Middleware\AuthenticationValidation;
 use App\Http\Middleware\LocalizationRedirect;
@@ -248,6 +257,280 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('title', trans('titles.transparency'))
             ->with('navbarFocus', 'info');
     })->name('transparency');
+
+    /**
+     * Die Seiten, die aus dem Keymanager hierher gezogen sind.
+     *
+     * /preise, /agb und die beiden Hilfeseiten lagen unter /keys; der
+     * Keymanager leitet die alten Pfade dauerhaft hierher weiter
+     * (pass/app/StaticPageRedirects.js). Namen tragen sie, weil der
+     * Bezahlvorgang im anderen Repository und mehrere Blades hier auf sie
+     * verlinken — App\Landing\KeymanagerLinks ist danach nur noch für den
+     * Schlüsselvorgang zuständig.
+     */
+    Route::get('preise', function () {
+        return view('price')
+            ->with('title', trans('titles.price'))
+            ->with('navbarFocus', 'info')
+            ->with('tiers', KeyPrice::tiers())
+            ->with('linkApp', LaravelLocalization::getLocalizedURL(null, "/app"))
+            ->with('linkToken', route('anonymous-token'))
+            // Wohin es von hier aus weitergeht. /preise wird von der
+            // Seitenleiste, der Landingpage, dem Hilfe-Index und dem Konto
+            // aus verlinkt und war bis hierher eine Sackgasse: kein Schritt
+            // weiter zum Schlüssel, kein Rückweg für jemanden, der aus dem
+            // Konto kam. Die Blade wählt anhand des Anmeldestands.
+            ->with('linkCreate', KeymanagerLinks::create())
+            ->with('linkLogin', KeymanagerLinks::login(route('startpage')))
+            ->with('linkAccount', KeymanagerLinks::dashboard())
+            ->with('linkSearch', route('startpage'))
+            ->with('css', [Vite::asset('resources/less/metager/pages/price.less')]);
+    })->name('price');
+
+    Route::get('agb', function () {
+        return view('agb')
+            ->with('title', trans('titles.agb'))
+            ->with('navbarFocus', 'info')
+            ->with('css', [Vite::asset('resources/less/metager/pages/agb.less')]);
+    })->name('agb');
+
+    Route::get('hilfe/schluessel', function () {
+        return view('help.key')
+            ->with('title', trans('titles.help-key'))
+            ->with('navbarFocus', 'hilfe');
+    })->name('key-faq');
+
+    Route::get('hilfe/anonyme-token', function () {
+        return view('help.anonymous-token')
+            ->with('title', trans('titles.anonymous-token'))
+            ->with('navbarFocus', 'hilfe');
+    })->name('anonymous-token');
+
+    /**
+     * Die Anmeldung, aus /keys/key/enter hierher gezogen — Seite und Vorgang.
+     *
+     * Steht bei den anderen umgezogenen Seiten, ist aber die einzige, die nicht
+     * nur Text ist. Was beim Keymanager blieb, ist eine einzige Frage über die
+     * API: was eine Eingabe ist (App\Authentication\KeyResolver).
+     *
+     * Dieselbe Adresse für beide Richtungen, damit das Formular auf sich selbst
+     * zeigt und ein Fehlversuch ohne zweiten URL zurückfindet.
+     *
+     * `login` als Name ist der, auf den Laravels Authenticate-Middleware ohne
+     * weiteres Zutun zeigt. Das ist hier richtig und trotzdem eine Notiz wert:
+     * die Logs-API hat ihre eigene Anmeldung unter `logs:login`, und die beiden
+     * haben nichts miteinander zu tun.
+     */
+    Route::get('anmelden', [LoginController::class, 'show'])->name('login');
+    Route::post('anmelden', [LoginController::class, 'submit'])->name('login.submit');
+
+    /**
+     * Das Erstellen eines Schlüssels, aus /keys/key/create hierher gezogen.
+     *
+     * Der Zwilling der Anmeldung, und derselbe Schnitt: beim Keyserver blieb
+     * eine UUID, die noch niemandem gehört (App\Authentication\KeyIssuer),
+     * alles andere steht hier. Anders als bei /keys/key/enter ist der alte Pfad
+     * vollständig weitergeleitet — auch der Zweig für einen bereits
+     * angemeldeten Besucher, weil diese Seite die Fallunterscheidung selbst
+     * trifft.
+     *
+     * `key-create` und nicht `create`: der Name steht neben `key-faq` und
+     * `anonymous-token` in derselben Tabelle, und was hier erstellt wird, ist
+     * genau eines.
+     */
+    Route::get('schluessel-erstellen', [KeyCreationController::class, 'show'])->name('key-create');
+    Route::post('schluessel-erstellen', [KeyCreationController::class, 'submit'])->name('key-create.submit');
+
+    /**
+     * Das Konto, aus /keys/key/<uuid> hierher gezogen.
+     *
+     * Die dritte Seite des Schlüsselvorgangs und die, bei der der Umzug am
+     * meisten einbringt: die alte Adresse trug den Schlüssel im *Pfad*, also in
+     * der Verlaufsliste, im Referer jeder von dort verlinkten Seite und in
+     * jedem Bildschirmfoto einer Supportanfrage. Diese hier trägt nichts — wer
+     * gemeint ist, steht im Cookie (App\Authentication\KeyAuthGuard).
+     *
+     * `konto` und nicht `dashboard`: es ist die Seite, auf die die Kontokachel
+     * in der Ecke zeigt, und die heißt in jeder Sprache nach dem Konto.
+     */
+    Route::get('konto', [AccountController::class, 'show'])->name('account');
+
+    /**
+     * Der Anmeldecode für den Übertragen-Dialog, im Sekundentakt abgefragt.
+     *
+     * Unter /konto und nicht unter /api, weil er nur dort einen Sinn hat und
+     * weil er den angemeldeten Besucher voraussetzt: welcher Schlüssel gemeint
+     * ist, steht im Cookie. Die entsprechende Route im Keymanager hatte ihn im
+     * Pfad.
+     */
+    Route::get('konto/anmeldecode', [AccountController::class, 'loginCode'])->name('account.logincode');
+
+    /**
+     * Aufladen, der zweite Schritt des Bezahlvorgangs, der aus dem Keymanager
+     * hierher zieht — App\Http\Controllers\ChargeController hat den Grund.
+     * Wie bei /konto trägt keine dieser Adressen den Schlüssel; er kommt aus
+     * dem Cookie.
+     *
+     * `{amount}` ist auf Ziffern beschränkt, nicht weil eine andere Eingabe
+     * hier gefährlich wäre — der Controller prüft ohnehin gegen
+     * App\Landing\KeyPrice::tiers() —, sondern damit ein nicht-numerischer
+     * Wert eine 404 statt einer 400 ist: die Adresse existiert dann schlicht
+     * nicht, so wie /konto/aufladen/aci4T87k7DmMXVLmJ auch für einen
+     * type-juggling-Versuch keine Auskunft geben soll.
+     *
+     * `cash`, die drei Micropayment-Zahlweisen, Wero (vrpayment), die sieben
+     * PayPal-Zahlweisen (SDK-getrieben statt eines einfachen POST-Formulars —
+     * siehe App\Authentication\PayPalChargeIssuer) und die Entwicklungs-
+     * Zahlungsart (nur unter app()->environment('local') erreichbar) laufen
+     * inzwischen alle hier; App\Landing\KeymanagerLinks::checkout() bleibt
+     * nur noch als Infrastruktur für Zahlarten stehen, die künftig
+     * dazukommen.
+     *
+     * Keine eigene Wahl-Seite mehr pro Anbieter: `show()` verlinkt direkt auf
+     * jede einzelne Zahlweise, PayPal und Micropayment eingeschlossen. Wer
+     * bezahlen will, sucht eine Zahlweise, die er kennt — "Micropayment" oder
+     * "PayPal" als Zwischenschritt sagt ihm das nicht. `account.checkout.
+     * micropayment` und `account.checkout.paypal` (ohne fundingSource/service)
+     * gibt es deshalb nicht mehr; alles, was früher dorthin zurückführte
+     * (ungültige Auswahl, nicht erreichbarer Keyserver, "zurück"), führt jetzt
+     * zu `show()` selbst.
+     */
+    Route::get('konto/aufladen/{amount}', [ChargeController::class, 'show'])
+        ->whereNumber('amount')
+        ->name('account.checkout');
+    Route::get('konto/aufladen/{amount}/bar', [ChargeController::class, 'cashShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.cash');
+    Route::post('konto/aufladen/{amount}/bar', [ChargeController::class, 'cashSubmit'])
+        ->whereNumber('amount')
+        ->name('account.checkout.cash.submit');
+    Route::get('konto/aufladen/{amount}/bar/{reference}', [ChargeController::class, 'cashCreated'])
+        ->whereNumber('amount')
+        ->name('account.checkout.cash.created');
+    Route::get('konto/aufladen/{amount}/entwicklung', [ChargeController::class, 'manualShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.manual');
+    Route::post('konto/aufladen/{amount}/entwicklung', [ChargeController::class, 'manualSubmit'])
+        ->whereNumber('amount')
+        ->name('account.checkout.manual.submit');
+    Route::get('konto/aufladen/{amount}/micropayment/{service}', [ChargeController::class, 'micropaymentServiceShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.micropayment.service');
+    Route::post('konto/aufladen/{amount}/micropayment/{service}', [ChargeController::class, 'micropaymentSubmit'])
+        ->whereNumber('amount')
+        ->name('account.checkout.micropayment.submit');
+    Route::get('konto/aufladen/{amount}/vrpayment', [ChargeController::class, 'vrpaymentShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.vrpayment');
+    Route::post('konto/aufladen/{amount}/vrpayment', [ChargeController::class, 'vrpaymentSubmit'])
+        ->whereNumber('amount')
+        ->name('account.checkout.vrpayment.submit');
+    /**
+     * PayPal — die einzige Zahlart, deren Seite vom SDK im Browser getrieben
+     * wird statt von einem einfachen POST-Formular. Sieben Zahlweisen, jede
+     * eine eigene Kachel auf `show()` statt hinter einer eigenen Wahl-Seite;
+     * App\Authentication\PayPalChargeIssuer hat die drei Schritte
+     * (Konfiguration, Anlegen, Einlösen), die resources/js/checkout-paypal.js
+     * in dieser Reihenfolge aufruft.
+     */
+    Route::get('konto/aufladen/{amount}/paypal/{fundingSource}', [ChargeController::class, 'paypalServiceShow'])
+        ->whereNumber('amount')
+        ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')
+        ->name('account.checkout.paypal.service');
+    Route::post('konto/aufladen/{amount}/paypal/{fundingSource}/order/create', [ChargeController::class, 'paypalOrderCreate'])
+        ->whereNumber('amount')
+        ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')
+        ->name('account.checkout.paypal.order.create');
+    Route::post('konto/aufladen/{amount}/paypal/{fundingSource}/order/capture', [ChargeController::class, 'paypalOrderCapture'])
+        ->whereNumber('amount')
+        ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')
+        ->name('account.checkout.paypal.order.capture');
+    /**
+     * Die Rückkehr von einer weiterleitenden Zahlungsart — bewusst ohne
+     * {amount}, die öffentliche Nummer der Ladung reicht, um sie
+     * nachzuschlagen. Micropayment und VR Payment kommen hierher zurück;
+     * PayPal braucht sie nicht — sein Rückweg bleibt im eigenen Ursprung,
+     * die "capture"-Antwort trägt dieselbe Adresse nur als JSON statt als
+     * Weiterleitung.
+     */
+    Route::get('konto/aufladen/abschluss/{reference}', [ChargeController::class, 'returned'])
+        ->name('account.checkout.returned');
+
+    /**
+     * Bestellungen und Rechnungen, aus dem Keymanager (`/keys/key/<uuid>/orders`)
+     * hierher gezogen — App\Http\Controllers\OrderController hat den Grund.
+     * Kein {amount} und kein Schlüssel im Pfad: eine Bestellung wird über ihre
+     * öffentliche Nummer nachgeschlagen, und wem sie gehört, prüft der
+     * Controller gegen den Cookie-Schlüssel.
+     *
+     * `bestellungen` und nicht unter `aufladen`: das Aufladen ist der Kauf und
+     * endet, wenn die Zahlung ankommt; das hier ist der Blick zurück auf eine
+     * abgeschlossene Bestellung. Es ist die Seite, auf die die Kontokachel
+     * „Bestellungen und Rechnungen" zeigt.
+     */
+    Route::get('konto/bestellungen', [OrderController::class, 'lookup'])
+        ->name('account.orders');
+    Route::post('konto/bestellungen', [OrderController::class, 'find'])
+        ->name('account.orders.find');
+    Route::get('konto/bestellungen/{reference}', [OrderController::class, 'show'])
+        ->name('account.orders.show');
+    Route::get('konto/bestellungen/{reference}/auftragsbestaetigung.pdf', [OrderController::class, 'confirmation'])
+        ->name('account.orders.confirmation');
+    Route::get('konto/bestellungen/{reference}/rechnung', [OrderController::class, 'invoice'])
+        ->name('account.orders.invoice');
+    Route::post('konto/bestellungen/{reference}/rechnung', [OrderController::class, 'invoiceRequest'])
+        ->name('account.orders.invoice.request');
+    Route::get('konto/bestellungen/{reference}/rechnung.pdf', [OrderController::class, 'invoiceDownload'])
+        ->name('account.orders.invoice.pdf');
+    Route::get('konto/bestellungen/{reference}/erstattung', [OrderController::class, 'refund'])
+        ->name('account.orders.refund');
+    Route::post('konto/bestellungen/{reference}/erstattung', [OrderController::class, 'refundRequest'])
+        ->name('account.orders.refund.request');
+
+    /**
+     * Gutscheinaktionen, aus dem Keymanager (`/keys/key/<uuid>/campaigns`)
+     * hierher gezogen — App\Http\Controllers\CampaignController hat den
+     * Grund. Eine Liste plus ein Anlegeformular statt einer Detailseite pro
+     * Kampagne; wem eine Kampagne gehört, prüft ausschließlich der Keyserver
+     * gegen den Schlüssel im Pfad, nicht dieser Controller — anders als bei
+     * Bestellungen gibt es hier keinen Schlüssel im Antwortkörper, den man
+     * vergleichen könnte.
+     */
+    Route::get('konto/gutscheinaktionen', [CampaignController::class, 'index'])
+        ->name('account.campaigns');
+    Route::post('konto/gutscheinaktionen', [CampaignController::class, 'store'])
+        ->name('account.campaigns.store');
+    Route::post('konto/gutscheinaktionen/{id}/deaktivieren', [CampaignController::class, 'disable'])
+        ->whereNumber('id')
+        ->name('account.campaigns.disable');
+    Route::post('konto/gutscheinaktionen/{id}/loeschen', [CampaignController::class, 'destroy'])
+        ->whereNumber('id')
+        ->name('account.campaigns.delete');
+    Route::get('konto/gutscheinaktionen/{id}/karten.pdf', [CampaignController::class, 'cardsPdf'])
+        ->whereNumber('id')
+        ->name('account.campaigns.cards');
+
+    /**
+     * Einen Gutscheincode einlösen — aus dem Keymanager (`/keys/c`) hierher
+     * gezogen, die letzte besucherseitige `/keys`-Seite. App\Http\Controllers\
+     * VoucherController hat den Grund und die beiden Einlösewege.
+     *
+     * `/c` und nicht `/gutschein`: kurz, weil eine gedruckte Karte diesen Pfad
+     * von Hand tippbar macht — anders als jede andere umgezogene Route hier,
+     * die deutsch heißt. `/c` beim Keymanager leitet dauerhaft hierher weiter.
+     *
+     * `{code}` und `{token}` bekommen kein `->where()`: ein Code oder Token,
+     * der nicht ins erwartete Format passt, ist eine gültige Anfrage an eine
+     * echte Seite — sie endet in einer übersetzten Fehlermeldung
+     * (`invalid_code`/`invalid_token`), nicht in einer nichtssagenden 404, wie
+     * ein Tippfehler von einer Karte es sonst wäre.
+     */
+    Route::get('c', [VoucherController::class, 'enter'])->name('voucher');
+    Route::post('c', [VoucherController::class, 'submit'])->name('voucher.submit');
+    Route::get('c/campaign/{token}', [VoucherController::class, 'publicTeaser'])->name('voucher.campaign');
+    Route::post('c/campaign/{token}', [VoucherController::class, 'publicRedeem'])->name('voucher.campaign.redeem');
+    Route::get('c/{code}', [VoucherController::class, 'teaser'])->name('voucher.code');
+    Route::post('c/{code}', [VoucherController::class, 'redeem'])->name('voucher.code.redeem');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

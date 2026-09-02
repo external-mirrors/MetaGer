@@ -20,21 +20,9 @@ return [
         'explanation_a' => 'Spróbuj najpierw zainstalować aktualną wtyczkę. Aby ją zainstalować, wystarczy kliknąć link znajdujący się bezpośrednio pod polem wyszukiwania. Twoja przeglądarka powinna już zostać tam wykryta.',
     ],
     'key' => [
-        '5' => 'Alternatywnie można również zeskanować kod QR wyświetlany na <a href = "/keys/key/enter">stronie zarządzania</a>, aby zalogować się za pomocą innego urządzenia.',
-        '6' => 'Ręczne wprowadzenie klucza MetaGer <br>Można również ręcznie wprowadzić klucz na innym urządzeniu.',
-        'colors' => [
-            'title' => 'Kolorowy klucz MetaGer',
-            '1' => 'Aby łatwo rozpoznać, czy wyszukiwanie jest wolne od reklam, nadaliśmy naszym kluczowym symbolom kolory. Poniżej znajdują się objaśnienia odpowiadających im kolorów:',
-            'grey' => 'Grey: Nie skonfigurowano klucza. Korzystasz z bezpłatnego wyszukiwania.',
-            'red' => 'Czerwony: Jeśli symbol klucza jest czerwony, oznacza to, że klucz jest pusty. Wykorzystano wszystkie wyszukiwania bez reklam. Klucz można doładować na stronie zarządzania kluczami.',
-            'green' => 'Zielony: Jeśli symbol klucza jest zielony, oznacza to, że używany jest naładowany klucz.',
-            'yellow' => 'Żółty: Jeśli widzisz żółty przycisk, nadal masz saldo 30 żetonów. Twoje poszukiwania są na wyczerpaniu. Zalecane jest szybkie doładowanie klucza.',
-        ],
         'title' => 'Dodaj klucz MetaGer <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Klucz MetaGer jest automatycznie konfigurowany w przeglądarce i używany. Nie trzeba robić nic więcej. Jeśli chcesz używać klucza MetaGer na innych urządzeniach, istnieje kilka sposobów jego skonfigurowania:',
-        '2' => 'Kod logowania <br>Na <a href = "/keys/key/enter">stronie zarządzania</a> klucza MetaGer można użyć kodu logowania, aby dodać klucz do innego urządzenia. Wystarczy wprowadzić sześciocyfrowy kod numeryczny podczas logowania. Kod logowania może być użyty tylko raz i jest ważny tylko wtedy, gdy okno jest otwarte.',
-        '3' => 'Kopiuj adres URL <br>Gdy jesteś na <a href = "/keys/key/enter">stronie zarządzania</a> klucza MetaGer, istnieje opcja skopiowania adresu URL. Ten adres URL może być użyty do zapisania wszystkich ustawień MetaGer, w tym klucza MetaGer, na innym urządzeniu.',
-        '4' => 'Zapisz plik <br>Kiedy jesteś na <a href = "/keys/key/enter">stronie zarządzania</a> kluczem MetaGer, istnieje opcja zapisania pliku. Spowoduje to zapisanie klucza MetaGer jako pliku. Możesz następnie użyć tego pliku na innym urządzeniu, aby zalogować się za pomocą klucza.',
+        'more' => 'Wszystkie sposoby konfiguracji i więcej pytań o klucz',
     ],
     'multiwordsearch' => [
         'title' => 'Wyszukiwanie wielu słów <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

@@ -1,0 +1,941 @@
+@import "../variables.less";
+
+// /konto/aufladen — Aufladen: Zahlungsart wählen, Bar, micropayment, die
+// Entwicklungs-Zahlungsart.
+//
+// Dieselbe Spalte, dieselben Karten wie pages/account.less — #checkout-page
+// spiegelt #account-page bewusst, und account.less wird auf dieser Seite
+// mitgeladen (App\Http\Controllers\ChargeController::render()), weil
+// partials/key-fingerprint.blade.php genau die Klassen von dort benutzt. Was
+// hier steht, ist nur, was auf dieser Seite neu ist: die Paketkurzfassung
+// oben, das Raster der Zahlungsarten, die geteilte Zustimmung, die
+// Barzahlung mit ihrer Auftragsnummer, und micropayments E-Mail-Feld.
+//
+// checkout/returned.blade.php — die Landeseite nach einer Weiterleitung zu
+// micropayment (und später VR Payment/PayPal) — braucht nichts von hier:
+// #account-page und .account-section aus account.less reichen ihr.
+
+#checkout-page {
+  max-width: 42rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+}
+
+// ── Die Schrittleiste ────────────────────────────────────────────────────────
+// Menge → Zahlungsart → Bezahlen. Vorher sagte keine Seite dieses Vorgangs, wo
+// man steht: die Paketwahl hieß „Guthaben aufladen", die Zahlweisenwahl hieß
+// genauso, und die Seite danach trug nur noch den Namen der Zahlweise.
+//
+// Zahlen (bzw. ein Häkchen für Erledigtes) in einer Scheibe, dazwischen ein
+// Strich, der die Reihenfolge zeichnet — der Strich ist ein ::after am Schritt
+// und nicht ein eigenes Element, damit das Markup eine reine <ol> bleibt.
+// Auf einem Telefon fällt nur die Beschriftung der nicht-aktiven Schritte weg,
+// nicht die Schritte selbst: „2 von 3" bleibt ablesbar, auch wenn „Zahlungsart"
+// dafür keinen Platz hätte.
+.checkout-steps {
+  .checkout-steps__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .checkout-steps__step {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: @text-color-alpha-70;
+
+    // Der Verbindungsstrich zum nächsten Schritt.
+    &:not(:last-child)::after {
+      content: "";
+      width: 1.5rem;
+      height: 1px;
+      background-color: @border-color;
+      margin-left: 0.25rem;
+    }
+  }
+
+  .checkout-steps__link {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: @text-color-alpha-70;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: @text-color;
+      text-decoration: none;
+
+      .checkout-steps__marker {
+        border-color: @metager-orange;
+      }
+    }
+  }
+
+  // Die Scheibe mit der Nummer. Feste Maße statt Innenabstand: eine „1" und
+  // ein „✓" sind unterschiedlich breit, und drei Scheiben verschiedener Größe
+  // nebeneinander sehen aus wie ein Fehler.
+  .checkout-steps__marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid @border-color;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // Erledigt: gefüllt, aber grau — der aktuelle Schritt soll der einzige sein,
+  // der die Markenfarbe trägt.
+  .checkout-steps__step--done .checkout-steps__marker {
+    background-color: @highlight-color-alpha-60;
+    border-color: transparent;
+  }
+
+  .checkout-steps__step--current {
+    color: @text-color;
+    font-weight: bold;
+
+    .checkout-steps__marker {
+      background-color: @metager-orange;
+      border-color: @metager-orange;
+      color: @color-black;
+    }
+  }
+
+  // Schmal wird die Leiste kleiner, nicht wortlos.
+  //
+  // Zuerst stand hier eine Regel, die auf Telefonen alle Beschriftungen außer
+  // der des aktuellen Schritts wegnahm — „2 von 3 bleibt ablesbar". Das war
+  // nie nachgesehen worden: Firefox lässt kein Fenster unter 500px Viewport
+  // zu, und die Aufnahmen, die es hätten zeigen sollen, waren deshalb alle
+  // über der Schwelle. In einem 360px-Rahmen sieht man, was die Regel
+  // wirklich tut — auf einer Zahlweisen-Seite stehen dann zwei nackte Haken
+  // nebeneinander, und seit beide Links sind, führen sie sichtbar
+  // ununterscheidbar an zwei verschiedene Orte.
+  //
+  // Also enger statt leer: kleinere Scheiben, kürzere Striche, kleinere
+  // Schrift. Das reicht im Deutschen für eine Zeile; wo es nicht reicht
+  // („Mode de paiement", „Metoda płatności"), bricht die Leiste um — sie ist
+  // ein flex-wrap. Eine zweite Zeile ist der bessere Preis als ein Schritt,
+  // der seinen Namen nicht mehr nennt.
+  @media (max-width: @screen-mobile-l) {
+    .checkout-steps__list {
+      font-size: 0.75rem;
+      gap: 0.25rem 0.35rem;
+    }
+
+    .checkout-steps__marker {
+      width: 1.25rem;
+      height: 1.25rem;
+      font-size: 0.7rem;
+    }
+
+    .checkout-steps__step:not(:last-child)::after {
+      width: 0.75rem;
+      margin-left: 0.15rem;
+    }
+  }
+}
+
+// ── Die gewählte Menge, kurz ─────────────────────────────────────────────────
+// Keine zweite Paketwahl — die steht auf /konto — nur eine Erinnerung daran,
+// was gerade aufgeladen wird, mit einem Weg zurück.
+//
+// Beschriftete Felder statt dreier nackter Zahlen in einer Zeile: „1.000 Token
+// 10 € Menge ändern" nebeneinander sagte nicht, welche Zahl was ist, und die
+// Zahl, wegen der der Vorgang stattfindet — das Guthaben *danach* — kam gar
+// nicht vor. <dl> und nicht <div>: Beschriftung und Wert sind hier wirklich
+// Paare.
+.checkout-summary {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+
+  @media (max-width: @screen-mobile-l) {
+    padding: 1.1rem;
+  }
+
+  .checkout-summary__facts {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+  }
+
+  .checkout-summary__fact {
+    display: grid;
+    gap: 0.15rem;
+
+    dt {
+      margin: 0;
+      font-size: 0.75rem;
+      font-weight: normal;
+      color: @text-color-alpha-70;
+    }
+
+    dd {
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .checkout-summary__amount {
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+
+  .checkout-summary__price {
+    font-size: 1.3rem;
+  }
+
+  // Das Ergebnis, nicht der Preis. Ein getöntes Feld und kein eingefärbter
+  // Text: Orange auf der weißen Karte wäre bei dieser Schriftgröße zu blass,
+  // und die Markenfarbe gehört auf dieser Seite dem Knopf.
+  .checkout-summary__fact--after {
+    padding: 0.35rem 0.75rem;
+    margin: -0.35rem 0;
+    border-radius: 8px;
+    background-color: @highlight-color-alpha-60;
+  }
+
+  .checkout-summary__after {
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+
+  .checkout-summary__change {
+    font-size: 0.85rem;
+  }
+}
+
+// ── Zahlungsart wählen ───────────────────────────────────────────────────────
+// Dieselben Kacheln wie die Pakete auf /konto (.account-tiers/.account-tier
+// aus account.less), unverändert übernommen und mit Absicht: nur der Name der
+// Zahlungsart steht darauf, keine Beschreibung. Eine Kachel mit einem langen
+// Satz fällt neben den kurzen der anderen auf, und das wird auffälliger, je
+// mehr Zahlungsarten dazukommen — die Entscheidung, welche Zahlungsart, soll
+// hier fallen, nicht die, wie sie im Einzelnen funktioniert.
+
+// ── Zurück ───────────────────────────────────────────────────────────────────
+// Zwei Wege, die auf der ursprünglichen Kasse im Keymanager fehlten: zurück
+// zur Zahlungswahl (dieselbe Menge, andere Zahlungsart) und ganz zurück zum
+// Konto ("ich will gar nicht mehr aufladen", nicht "ich will ein anderes
+// Paket").
+//
+// Steht jetzt am Fuß der Seite statt zwischen Kurzfassung und Inhalt. Dort
+// schwebte es: zwei blaue Kleinlinks in der Lücke zwischen zwei Karten, ohne
+// Bezug zu einer von beiden, und in derselben Farbe wie die echten Links im
+// Text darunter. Ein Ausstieg gehört ans Ende einer Seite, nicht zwischen die
+// Entscheidung und das, worüber entschieden wird — vorwärts führt die
+// Schrittleiste, zurück führt das hier.
+.checkout-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.5rem;
+}
+
+.checkout-back {
+  font-size: 0.85rem;
+  color: @text-color-alpha-70;
+
+  &:hover,
+  &:focus-visible {
+    color: @text-color;
+  }
+}
+
+// ── Zustimmung ───────────────────────────────────────────────────────────────
+// Geteilt von Bar, micropayment, Wero und PayPal (partials/checkout-consent):
+// alle vier legen einen Auftrag erst an, wenn das Widerrufsrecht bewusst
+// aufgegeben wurde (lang/*/checkout.php's consent.label).
+//
+// Der Wortlaut ist rechtlich vorgegeben. Was hier steht, ist die Antwort auf
+// seine Darstellung: er stand auf allen vier Seiten in voller Länge fett, weil
+// general/forms.less jedem `label` `font-weight: bold` gibt — vier bis sechs
+// Zeilen durchgehend fetter Kleintext direkt über dem einzigen Knopf der
+// Seite. Durchgehend fett hebt nichts hervor, es macht nur alles laut.
+.checkout-consent {
+  display: grid;
+  gap: 0.6rem;
+
+  .checkout-consent__agb {
+    margin: 0;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+  }
+
+  // Das Kästchen samt Text in einem eigenen getönten Feld: es ist eine
+  // Bedingung und kein Absatz, und ein getöntes Feld sagt das, ohne zu
+  // schreien.
+  .checkout-consent__box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    background-color: @highlight-color-alpha-60;
+
+    input {
+      flex-shrink: 0;
+      // Das Kontrollkästchen der Vorgabegröße ist rund 13px groß und war das
+      // kleinste Ziel auf einer Seite, die man oft auf einem Telefon
+      // ausfüllt. `accent-color` färbt es in die Markenfarbe, ohne es
+      // nachzubauen — ein nachgebautes Kästchen müsste seine eigene
+      // Tastaturbedienung und seinen eigenen Fokusring mitbringen.
+      width: 1.15rem;
+      height: 1.15rem;
+      margin: 0.1rem 0 0;
+      accent-color: @metager-orange;
+    }
+
+    label {
+      // general/forms.less setzt `label { font-weight: bold }` global.
+      font-weight: normal;
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+.checkout-consent__error {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 6px;
+  background-color: @form-error-background;
+  color: @form-error-color;
+  font-size: 0.9rem;
+}
+
+// ── „Was als Nächstes passiert" ──────────────────────────────────────────────
+// Die Weiterleitungshinweise von micropayment, Wero und PayPal. Sie standen
+// als letzter Absatz *unter* dem Knopf — also hinter der Entscheidung, obwohl
+// "Sie verlassen jetzt MetaGer und bezahlen bei X" die wichtigste Auskunft
+// dieser Seiten ist. Jetzt darüber, und mit einer Kante links, die sie vom
+// Fließtext trennt, ohne sie wie einen Fehler aussehen zu lassen.
+.checkout-notice {
+  margin: 0;
+  padding: 0.15rem 0 0.15rem 0.9rem;
+  border-left: 3px solid @border-color;
+  font-size: 0.85rem;
+  color: @text-color-alpha-70;
+}
+
+// Der Ladehinweis auf der PayPal-Seite verschwindet, sobald das SDK da ist
+// (resources/js/checkout-paypal.js). Solange er steht, soll er wie ein
+// Zwischenzustand aussehen und nicht wie ein Absatz.
+.checkout-notice--loading {
+  border-left-color: @metager-orange;
+}
+
+// Der eine Knopf, der eine Seite dieses Vorgangs abschließt. .account-btn ist
+// `display: flex` und dehnt sich damit in einem Raster über die volle Breite —
+// das ist auf der Kontoseite gewollt (zwei gleich breite Knöpfe nebeneinander)
+// und hier nicht: ein Absenden-Knopf so breit wie die Karte sieht aus wie ein
+// Banner.
+.checkout-submit {
+  justify-self: start;
+  align-self: start;
+  width: fit-content;
+}
+
+// ── Barzahlung ───────────────────────────────────────────────────────────────
+// Der Ablauf steht vor der Zustimmung, nicht dahinter — die Anschrift, an die
+// der Brief gehen soll, stand vorher ausschließlich auf der Seite *nach* dem
+// Anlegen des Auftrags.
+.checkout-cash {
+  // Die Anschrift. Vor dem Anlegen des Auftrags ist sie eine Auskunft, danach
+  // eine Anweisung; beide Male dieselbe Karte, damit sie wiedererkennbar
+  // bleibt.
+  .checkout-cash__address-block {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+  }
+
+  .checkout-cash__address-label {
+    margin: 0;
+    // Ohne dies ist es ein <h3> in Vorgabegröße: die Fassung nach dem Anlegen
+    // trägt hier einen ganzen Satz ("Schicken Sie den Brief an folgende
+    // Adresse und notieren Sie sich …"), und der stand als 1.17em-Überschrift
+    // größer da als die Abschnittsüberschrift darüber.
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .checkout-cash__address {
+    margin: 0;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid @border-color;
+    border-radius: 8px;
+    background-color: @card-background-color;
+    font-family: monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: pre-line;
+  }
+
+  // Die fünf Hinweise. Vor der Zustimmung zugeklappt: sie sind vollständig und
+  // bleiben es, aber fünf gleich gewichtete Warnungen zwischen "so geht das"
+  // und "einverstanden" sind das, was diese Seite vorher zu einer Wand gemacht
+  // hat. Nach dem Anlegen des Auftrags stehen sie offen — dann ist der Brief
+  // die nächste Handlung, nicht mehr die Entscheidung.
+  .checkout-cash__notes-details {
+    font-size: 0.9rem;
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      list-style: disclosure-closed;
+    }
+
+    &[open] > summary {
+      list-style: disclosure-open;
+      margin-bottom: 0.6rem;
+    }
+  }
+
+  .checkout-cash__notes-heading {
+    margin: 0 0 0.6rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .checkout-cash__notes {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+  }
+
+  // Die erzeugte Auftragsnummer, in einer Kachel.
+  .checkout-cash__order {
+    padding: 1.1rem 1.25rem;
+    border-radius: 10px;
+    background-color: @highlight-color-alpha-60;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .checkout-cash__order-id {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+
+    input {
+      flex: 1 1 10rem;
+      min-width: 0;
+      padding: 0.6rem 0.7rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-family: monospace;
+      // Sie wird von Hand auf einen Zettel geschrieben — größer als das
+      // übrige Kleingedruckte, aus demselben Grund, aus dem der Anmeldecode
+      // auf /konto groß gesetzt ist.
+      font-size: 1.3rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  .checkout-cash__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── PayPal ───────────────────────────────────────────────────────────────────
+// #checkout-paypal-payment-button — Smart Buttons, gerendert von PayPal
+// selbst — bekommt dieses helle Feld, #checkout-paypal-card-container und
+// #checkout-paypal-payment-fields nicht: der Unterschied ist, wem die Farbe
+// gehört. Advanced Card Fields und PaymentFields sind eigene Eingabefelder,
+// deren Hintergrund/Textfarbe checkout-paypal.js selbst per `style` setzt
+// (themeColors() dort) — die folgen dem Thema der Seite wie jedes andere
+// Formularfeld auch. Die Buttons dagegen sind PayPals eigenes Widget: nur
+// der Haupt-"PayPal"-Knopf nimmt eine Farbe entgegen (getPaypalCheckoutData
+// setzt "black" im dunklen, "gold" im hellen Thema), die Knöpfe der übrigen
+// Zahlungsarten (z. B. SEPA-Lastschrift) bleiben grundsätzlich hell, ganz
+// gleich welches Thema die Seite hat. Ohne dieses Feld läge ein helles
+// Widget direkt auf der dunklen Karte, wie ein Darstellungsfehler und nicht
+// wie Absicht — deshalb ein eigenes, bewusst helles Feld nur darum.
+.checkout-paypal-widget {
+  // Kein border-radius: die von PayPal gerenderten Knöpfe füllen die Breite
+  // fast randlos und selbst eckig — eine gerundete Karte darum zeigt an den
+  // Ecken dann ihre eigene Rundung neben dem eckigen Knopf, zwei
+  // unabhängige Formen, die nicht zusammenpassen. Ein Rechteck vermeidet
+  // das, statt beide Rundungen aufeinander abzustimmen.
+  padding: 1rem;
+  background-color: @color-almost-white;
+}
+
+// PaymentFields rendert in ein eigenes, grenzenlos transparentes Iframe
+// (PayPal selbst setzt background-color:transparent darauf) — bis dessen
+// eigenes Dokument geladen ist und unser per `style`-Objekt gesetztes
+// Hintergrundgrau tatsächlich anwendet, zeigt sich, was hinter dem Iframe
+// liegt. Ohne eigene Hintergrundfarbe hier ist das die Standardfarbe des
+// umschließenden .account-section — im dunklen Thema also nicht dessen
+// eigene dunkle Kartenfarbe, sondern was auch immer sonst durchscheint —
+// kurz ein heller Fleck genau dort, wo gleich das Formularfeld erscheint.
+#checkout-paypal-payment-fields {
+  background-color: @card-background-color;
+}
+
+// ── Micropayment ─────────────────────────────────────────────────────────────
+// Nur das Formular drumherum — Zustimmung und Fehlermeldung teilt sich
+// micropayment mit Bar (.checkout-consent/.checkout-consent__error oben).
+.checkout-micropayment {
+  display: grid;
+  gap: 1rem;
+
+  .checkout-micropayment__field {
+    display: grid;
+    gap: 0.3rem;
+
+    input {
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 1rem;
+    }
+  }
+
+  .checkout-micropayment__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// Die zwei Wege von der Landeseite weg (App\Http\Controllers\ChargeController::
+// returned()): weitersuchen und zurück zum Konto. Nebeneinander, solange Platz
+// ist, sonst untereinander — wie .checkout-nav.
+.checkout-returned__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+}
+
+// ── Der Weg zurück auf den Unterseiten des Kontos ───────────────────────────
+// Eine Hierarchie („diese Bestellung“ liegt unter „Bestellungen“ liegt unter
+// „Konto“) und keine Notausfahrt wie im Bezahlvorgang — deshalb oben und links
+// statt unten und mittig, mit einem Trenner zwischen den Stufen. Die
+// Bestellseiten benutzten dafür .checkout-nav mit; seit die im Bezahlvorgang an
+// den Fuß gewandert und zentriert ist, wäre eine zentrierte Brotkrume am Kopf
+// dieser Seiten dabei herausgekommen.
+//
+// Hieß .orders-breadcrumb, solange nur die Bestellseiten sie trugen. Die
+// Gutscheinaktionen liegen genauso unter dem Konto und trugen trotzdem die
+// zentrierte .checkout-nav — der Name war der Grund, warum niemand nach ihr
+// gegriffen hat.
+.account-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+
+  a {
+    color: @text-color-alpha-70;
+
+    &:hover,
+    &:focus-visible {
+      color: @text-color;
+    }
+  }
+
+  a + a::before {
+    content: "·";
+    margin-right: 0.6rem;
+    color: @border-color;
+  }
+}
+
+// ── Bestellungen (/konto/bestellungen) ──────────────────────────────────────
+// App\Http\Controllers\OrderController. Wie die Aufladeseiten: #account-page
+// und .account-section aus account.less tragen den Rahmen, hier steht nur das
+// Nachschlagformular und die Zeilentabelle einer Bestellung.
+.orders-lookup {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+
+  .orders-lookup__label {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .orders-lookup__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+
+    input {
+      flex: 1 1 12rem;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 1rem;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+}
+
+// Ein Trennstrich *zwischen* zwei Zahlungen, keiner unter der letzten.
+//
+// Vorher trug jede Zahlung einen Strich unter sich, den `:last-of-type`
+// wieder wegnehmen sollte — nur ist die Zeilengruppe ein <div> und die
+// Knopfreihe darunter auch, also war die letzte Zahlung nie das letzte <div>
+// ihres Typs und behielt ihren Strich. Auf der häufigsten Bestellung, der mit
+// genau einer Zahlung, stand damit ein Trennstrich, der nichts trennte.
+.orders-detail + .orders-detail {
+  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid @border-color;
+}
+
+.orders-lines {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+
+  th,
+  td {
+    padding: 0.4rem 0.25rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  .orders-lines__count,
+  .orders-lines__price {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .orders-lines__total {
+    th,
+    td {
+      border-top: 1px solid @border-color;
+      font-weight: bold;
+    }
+  }
+
+  .orders-lines__exchange {
+    color: @text-color-alpha-70;
+    font-size: 0.9rem;
+  }
+}
+
+// Das Rechnungsformular (InvoiceNinja) — App\Http\Controllers\OrderController::
+// invoice()/invoiceRequest(). Zwei Felder pro Zeile ab genug Breite, sonst
+// gestapelt; Straße/Adresszusatz und PLZ/Ort sitzen bewusst nebeneinander.
+.orders-invoice {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  .orders-invoice__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1rem;
+  }
+
+  .orders-invoice__field {
+    display: grid;
+    gap: 0.3rem;
+
+    label {
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    &.orders-invoice__field--error label {
+      color: @form-error-color;
+    }
+
+    input,
+    textarea {
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 6rem;
+    }
+  }
+}
+
+.orders-invoice__storage {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  color: @text-color-alpha-70;
+}
+
+// Das Erstattungsformular — App\Http\Controllers\OrderController::
+// refund()/refundRequest(). Ein Feld, dieselbe Optik wie .orders-invoice__field.
+.orders-refund__note {
+  font-size: 0.9rem;
+  color: @text-color-alpha-70;
+}
+
+// ── Gutscheinaktionen (/konto/gutscheinaktionen) ────────────────────────────
+// App\Http\Controllers\CampaignController. Eine Liste von Karten (eine pro
+// Kampagne) über einem Anlegeformular, dessen Felder dieselbe Optik wie
+// .orders-invoice__field tragen.
+.campaigns-list {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.campaigns-item {
+  padding: 1.1rem 1.25rem;
+  border: 1px solid @border-color;
+  border-radius: 10px;
+  background-color: @card-background-color;
+  display: grid;
+  gap: 0.6rem;
+
+  .campaigns-item__head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .campaigns-item__name {
+    font-weight: bold;
+  }
+
+  // Bis zu vier kurze Angaben, jede in ihrer eigenen Zelle. Sie standen als
+  // umbrechende Zeile da, nur durch Abstand getrennt, und liefen dabei zu
+  // einem Satz zusammen — „10 Token pro Schlüssel 2 von 10 eingelöst 80 von
+  // 100 Token übrig". Ein Trenner dazwischen behebt das nur halb: die Zeile
+  // bricht um, und dann steht er entweder am Anfang der zweiten Zeile oder
+  // als einzelnes Zeichen am Ende der ersten.
+  //
+  // Als Raster braucht es keinen: zwei Spalten, solange die Karte breit genug
+  // ist, sonst eine, und die Angaben stehen in beiden Fällen untereinander
+  // ausgerichtet statt in einer Reihe, die irgendwo umbricht. Wie viele es
+  // sind, hängt daran, ob der Keyserver Statistik und Ablaufdatum mitliefert
+  // — `auto-fit` kommt mit zwei genauso zurecht wie mit vier.
+  .campaigns-item__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 0.2rem 1.25rem;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .campaigns-item__link {
+    display: grid;
+    gap: 0.3rem;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+
+    .campaigns-item__link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .campaigns-item__link-input {
+      flex: 1 1 14rem;
+      min-width: 0;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 0.9rem;
+    }
+  }
+
+  .campaigns-item__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+
+  // „Karten drucken", „Deaktivieren", „Jetzt löschen" — drei nebengeordnete
+  // Handlungen, die auch so aussehen sollen.
+  //
+  // `align-items: center` statt des voreingestellten `stretch`, weil zwei von
+  // ihnen in einem <form> stecken (POST, damit sie ohne Skript funktionieren)
+  // und eine nicht: gedehnt wurde das <form> auf die Zeilenhöhe, der Knopf
+  // darin blieb inhaltshoch und stand oben in einem zu hohen Kasten — der
+  // freistehende Link daneben war sichtbar höher als seine zwei Nachbarn.
+  .campaigns-item__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  // parts/account.less gibt jedem .account-btn `flex: 1 1 0`, damit sich zwei
+  // Knöpfe in .account-balance__actions eine Zeile gleichmäßig teilen. Hier
+  // ist das falsch, und zwar doppelt: in der Knopfzeile wuchs nur „Karten
+  // drucken (PDF)" auf die halbe Karte, weil die beiden anderen als <form>
+  // und nicht als Knopf im Raster stehen — die nebengeordnete Handlung sah
+  // damit aus wie die Hauptsache. Und neben dem öffentlichen Link nahm der
+  // Kopierknopf dem Feld die Breite weg, in dem der Link ganz zu sehen sein
+  // soll.
+  .campaigns-item__actions .account-btn,
+  .campaigns-item__link-row .account-btn {
+    flex: 0 0 auto;
+  }
+}
+
+// Aktiv/deaktiviert/abgelaufen — dieselbe Dreiteilung wie
+// views/campaign/manage.ejs vorher inline berechnete (Campaign.isActive()
+// gegen disabled_at !== null).
+.campaigns-status {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: bold;
+
+  &.campaigns-status--active {
+    background-color: @metager-orange-alpha-80;
+    color: @color-black;
+  }
+
+  &.campaigns-status--disabled,
+  &.campaigns-status--expired {
+    background-color: @highlight-color-alpha-60;
+    color: @text-color-alpha-70;
+  }
+}
+
+// Das Anlegeformular. Vier Felder, von denen zwei nebeneinander stehen, weil
+// sie zusammen einen Satz ergeben („so viele pro Schlüssel, so viele
+// insgesamt"). Beides — das Nebeneinander und dass es trotzdem ausgerichtet
+// ist — steht unten in .campaigns-create__row.
+.campaigns-create {
+  display: grid;
+  gap: 1rem;
+  // 28rem waren zu schmal für zwei Spalten: „Token pro verschenktem Schlüssel"
+  // bekam darin knapp 13rem und brach dreizeilig um. 34rem geben jeder Spalte
+  // rund 16rem, und mehr als das braucht keines dieser Felder — .account-section
+  // ist 39rem breit, ein Formular über die volle Breite wäre eine Zeile, der
+  // das Auge nicht folgt.
+  max-width: 34rem;
+
+  // Die eigentliche Ausrichtung. Beide Felder haben Beschriftung, Feld und
+  // (nur das rechte) einen Hinweis; als je eigenes Raster stimmten ihre
+  // Zeilenhöhen an keiner Stelle überein, und die zwei Eingabefelder saßen
+  // sichtbar versetzt zueinander. Zwei Ursachen, beide hier behoben:
+  //
+  //   * Die Beschriftungen sind unterschiedlich lang und brechen deshalb bei
+  //     unterschiedlichen Breiten um — eine einzeilige links, eine zweizeilige
+  //     rechts, und das Feld darunter rutscht mit.
+  //   * `align-content` ist im Raster von Haus aus `stretch`: das linke Feld
+  //     ohne Hinweis wurde so hoch wie das rechte mit, indem seine beiden
+  //     Zeilen den Überschuss unter sich aufteilten — die Beschriftung stand
+  //     dann tiefer und das Eingabefeld war höher als sein Gegenüber.
+  //
+  // `subgrid` löst beides in einem: die Felder rechnen ihre Zeilen nicht mehr
+  // selbst, sondern übernehmen die drei Zeilen der Reihe, und die sind für
+  // beide Spalten dieselben. Ohne Unterstützung dafür (siehe @supports unten)
+  // bleibt es beim eigenen Raster, dann aber mit `align-content: start` — die
+  // zweite Ursache ist damit auch dort weg, die erste bleibt.
+  .campaigns-create__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    grid-template-rows: auto auto auto;
+    gap: 0.3rem 1rem;
+  }
+
+  .campaigns-create__field {
+    display: grid;
+    gap: 0.3rem;
+    align-content: start;
+
+    label {
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    input {
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 1rem;
+    }
+  }
+
+  .campaigns-create__hint {
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+
+  // Ein Knopf in einem Raster wird so breit wie die Spalte — hier also so
+  // breit wie das ganze Formular. Dieselbe Falle, die auf der Nachschlagseite
+  // den Ausstieg zum größten Bedienelement gemacht hat.
+  .campaigns-create__submit {
+    justify-self: start;
+  }
+}
+
+@supports (grid-template-rows: subgrid) {
+  // Nur die Felder *in* der Reihe — die beiden einspaltigen Felder darüber und
+  // darunter hängen direkt in .campaigns-create und haben keine Reihe, deren
+  // Zeilen sie übernehmen könnten.
+  //
+  // Der Zeilenabstand kommt dann aus der Reihe (0.3rem) und nicht mehr aus dem
+  // Feld selbst; die Angabe hier bleibt trotzdem stehen, weil sie im
+  // Nicht-subgrid-Fall gilt und beide Werte dieselben sind.
+  .campaigns-create__row > .campaigns-create__field {
+    // Ein Feld belegt alle drei Zeilen der Reihe und gibt sie an Beschriftung,
+    // Eingabefeld und Hinweis weiter. Das linke hat keinen Hinweis und lässt
+    // die dritte Zeile schlicht leer.
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+  }
+}
+

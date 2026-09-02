@@ -31,6 +31,12 @@ return [
             '5' => 'Protezione dei giovani',
             '0' => 'La privacy',
         ],
+        '5' => [
+            '0' => 'La chiave MetaGer',
+            '1' => 'Domande sulla chiave',
+            '2' => 'Token anonimi',
+            '3' => 'Quanto costa la chiave',
+        ],
     ],
     'easy.language' => "per un aiuto semplice",
 ];

@@ -31,6 +31,12 @@ return [
             '4' => 'MetaGer-välityspalvelin',
             '0' => 'Yksityisyys',
         ],
+        '5' => [
+            '0' => 'MetaGer-avain',
+            '1' => 'Kysymyksiä avaimesta',
+            '2' => 'Anonyymit tokenit',
+            '3' => 'Mitä avain maksaa',
+        ],
     ],
     'easy.language' => "helppoa apua varten",
 ];

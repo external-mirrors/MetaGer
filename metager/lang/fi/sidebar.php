@@ -35,4 +35,6 @@ return [
     'toggle' => 'avaa/sulje navigointipalkki',
     'opener' => 'Avaa navigointipalkki',
     'opener_close' => 'Sulje navigointipalkki',
+    'navPrice' => 'Hinnat',
+    'navAgb' => 'Sopimusehdot',
 ];

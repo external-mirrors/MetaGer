@@ -35,4 +35,6 @@ return [
     'toggle' => 'open/close navigation bar',
     'opener' => 'open navigation bar',
     'opener_close' => 'close navigation bar',
+    'navPrice' => 'Prices',
+    'navAgb' => 'Terms and Conditions',
 ];

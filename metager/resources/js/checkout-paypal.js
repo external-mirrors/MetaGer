@@ -1,0 +1,450 @@
+/**
+ * PayPal-Zahlung — Port von pass/resources/js/checkout_paypal.js
+ * (metager-keymanager) auf die eigenen JSON-Ziele dieser Anwendung
+ * (App\Http\Controllers\ChargeController::paypalOrderCreate/Capture). Die
+ * SDK-Logik (Smart Buttons, PaymentFields, Advanced Card Fields) ist
+ * unverändert übernommen; nur woher Konfiguration kommt (data-Attribute
+ * statt versteckte Formularfelder) und wohin `createOrder`/`onApprove`
+ * fetchen (dieselbe Herkunft, nicht der Keymanager) ist neu.
+ *
+ * Läuft nur, wenn #checkout-paypal im Markup steht — checkout/paypal.blade.php
+ * liefert es `hidden`, und dieses Skript deckt es erst auf, sobald das SDK
+ * tatsächlich lädt. Ohne Javascript bleibt es verborgen; siehe die
+ * Erklärung dort.
+ */
+
+import { loadScript } from "@paypal/paypal-js";
+
+const container = document.getElementById("checkout-paypal");
+
+if (container) {
+    initializePaypalPayments(container);
+}
+
+function initializePaypalPayments(container) {
+    // Der Ladehinweis steht `hidden` im Markup und wird hier aufgedeckt, nicht
+    // erst wenn das SDK antwortet. Er lag früher *in* #checkout-paypal, das
+    // bis dahin verborgen ist — „Zahlungsmethode wird geladen" war damit genau
+    // so lange unsichtbar, wie es etwas zu sagen hatte, und blieb eine Seite
+    // ohne Inhalt zurück, wenn das SDK gar nicht antwortete. Hier statt im
+    // Markup sichtbar, damit ein Besucher ohne Javascript nicht „wird geladen"
+    // neben dem <noscript>-Hinweis stehen sieht, dass diese Zahlart Javascript
+    // braucht.
+    const loading = document.getElementById("checkout-paypal-loading");
+    if (loading) {
+        loading.hidden = false;
+    }
+
+    const fundingSource = container.dataset.fundingSource;
+    const directCardEnabled = container.dataset.directCardEnabled === "1";
+
+    const scriptData = {
+        "client-id": container.dataset.clientId,
+        components: ["buttons", "marks", "payment-fields", "funding-eligibility"],
+        "disable-funding": "sofort,ideal",
+        currency: "EUR",
+        // Carries the CSP nonce onto the SDK's own injected <script> tag —
+        // paypal-js recognizes this exact key and applies it as `nonce`,
+        // same convention resources/views/spende/paymentMethod.blade.php
+        // already relies on for its own PayPal script tag.
+        "data-csp-nonce": container.dataset.nonce,
+    };
+
+    if (container.dataset.clientToken) {
+        scriptData["data-client-token"] = container.dataset.clientToken;
+    }
+
+    if (fundingSource !== "paypal") {
+        scriptData["enable-funding"] = fundingSource;
+    }
+
+    if (fundingSource === "card" && directCardEnabled) {
+        scriptData.components = ["card-fields", "funding-eligibility", "buttons"];
+    }
+
+    loadScript(scriptData)
+        .then((paypal) => {
+            if (!paypal.isFundingEligible(fundingSource)) {
+                recordFundingNotEligible(fundingSource);
+                document.location.href = container.dataset.notEligibleUrl;
+                return;
+            }
+
+            container.hidden = false;
+
+            if (fundingSource === "card" && directCardEnabled) {
+                loadCardPayment(paypal, container);
+            } else if (fundingSource === "paypal") {
+                paypal.Buttons(getPaypalCheckoutData(container, null)).render("#checkout-paypal-payment-button");
+            } else {
+                if (needsPaymentFieldsWidget(fundingSource)) {
+                    const paymentFieldsContainer = document.getElementById("checkout-paypal-payment-fields");
+                    if (paymentFieldsContainer) {
+                        paymentFieldsContainer.hidden = false;
+                    }
+
+                    const { backgroundColor, textColor } = themeColors();
+                    paypal
+                        .PaymentFields({
+                            fundingSource,
+                            style: {
+                                input: {
+                                    background: backgroundColor,
+                                    color: textColor,
+                                    "font-size": "16px",
+                                    padding: "0.4rem 0.75rem",
+                                },
+                                body: {
+                                    background: backgroundColor,
+                                    color: textColor,
+                                    padding: 0,
+                                },
+                            },
+                            fields: {},
+                        })
+                        .render("#checkout-paypal-payment-fields");
+                }
+
+                paypal.Buttons(getPaypalCheckoutData(container, fundingSource)).render("#checkout-paypal-payment-button");
+            }
+        })
+        .catch((err) => {
+            console.error("failed to load the PayPal JS SDK script", err);
+        });
+}
+
+/**
+ * PaymentFields renders a funding source's own brand mark/extra input (e.g.
+ * BLIK's 6-digit code field) above its Buttons — "card" has neither: the
+ * button itself already reads "Debit or Credit Card", and any card entry
+ * either goes through loadCardPayment() or PayPal's own hosted checkout.
+ * Asking PaymentFields for "card" anyway doesn't error, it just mounts an
+ * iframe with nothing to show — an empty box the size the layout still
+ * reserves for it.
+ */
+export function needsPaymentFieldsWidget(fundingSource) {
+    return fundingSource !== "card";
+}
+
+/**
+ * Remembers a funding source the SDK itself declined to offer, so a future
+ * visit could skip straight to a known-eligible one — mirrors keymanager's
+ * own bookkeeping in pass/resources/js/checkout_paypal.js, unread by
+ * anything today but kept, since it's cheap and future-proofs a smarter
+ * chooser page later.
+ */
+export function recordFundingNotEligible(fundingSource, storage = localStorage) {
+    let disabledFunding = storage.getItem("funding_not_eligible");
+    disabledFunding = disabledFunding === null ? [] : JSON.parse(disabledFunding);
+    disabledFunding.push(fundingSource);
+    storage.setItem("funding_not_eligible", JSON.stringify(disabledFunding));
+    return disabledFunding;
+}
+
+/**
+ * Maps a rejected `cardFields.submit()` onto one of the card-error element
+ * ids checkout/paypal.blade.php renders (`checkout-paypal-card-error-*`) —
+ * the same three-step fallback as the ported keymanager JS: a processor
+ * response code, then any `.details[]` descriptions, then a "3DS" string
+ * match, then a generic fallback. Pulled out as its own pure function (no
+ * DOM) so the mapping itself is testable without a real CardFields error
+ * shape from a live SDK.
+ *
+ * @returns {{ elementId: string, detailMessages: string[] }}
+ */
+export function mapCardSubmitError(error) {
+    try {
+        const processorResponseCode = error.purchase_units[0].payments.captures[0].processor_response.response_code;
+        return { elementId: `checkout-paypal-card-error-${processorResponseCode}`, detailMessages: [] };
+    } catch {
+        // no processor response code on this error shape
+    }
+
+    if (Array.isArray(error?.details) && error.details.length > 0) {
+        return {
+            elementId: null,
+            detailMessages: error.details.map((detail) => detail.description),
+        };
+    }
+
+    const message = typeof error?.toString === "function" ? error.toString() : String(error);
+    return {
+        elementId: message.includes("3DS") ? "checkout-paypal-card-error-3ds" : "checkout-paypal-card-error-1330",
+        detailMessages: [],
+    };
+}
+
+/**
+ * Whether the *site* is currently dark — not whether the OS is. A visitor
+ * can override the OS with the theme switch (`data-theme` on <html>,
+ * App\AppServiceProvider/resources/less/metager/variables.less), and
+ * `matchMedia("(prefers-color-scheme: dark)")` alone misses that override
+ * entirely: it only answers for the OS. Mirrors variables.less's own two
+ * rules (`:root[data-theme="dark"]`, and system dark unless overridden to
+ * light) instead of re-deriving them differently here.
+ */
+function isDarkTheme() {
+    const chosen = document.documentElement.dataset.theme;
+    if (chosen === "dark") {
+        return true;
+    }
+    if (chosen === "light") {
+        return false;
+    }
+    return Boolean(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+}
+
+/**
+ * Colors for the SDK-styled inputs we fully control (Advanced Card Fields,
+ * PaymentFields) — these are ours to theme, unlike the Buttons widget
+ * (see .checkout-paypal-widget in checkout.less), so they should track the
+ * page's own theme, not a fixed light panel. Read the resolved custom
+ * properties straight off <html> rather than re-deriving light/dark in JS
+ * (isDarkTheme() below still has to do that, but only for the one place —
+ * the PayPal button's own `style.color` — that takes a discrete choice
+ * instead of a CSS value): a custom property is resolved by the browser
+ * against whichever selector actually matched (`[data-theme]` or the
+ * `prefers-color-scheme` media query), so it is correct even where a
+ * JS media-query check alone would miss a manually chosen theme.
+ */
+function themeColors() {
+    const rootStyle = window.getComputedStyle(document.documentElement);
+    const backgroundColor = rootStyle.getPropertyValue("--background-color").trim() || (isDarkTheme() ? "#222" : "#fff");
+    const textColor = rootStyle.getPropertyValue("--text-color").trim() || (isDarkTheme() ? "#fff" : "#000");
+    return { backgroundColor, textColor };
+}
+
+export function getPaypalCheckoutData(container, fundingSource, cardForm = null) {
+    const isDarkMode = isDarkTheme();
+    const directCardEnabled = container.dataset.directCardEnabled === "1";
+
+    const checkoutData = {
+        style: {
+            color: isDarkMode ? "black" : "gold",
+            shape: "rect",
+            label: "paypal",
+            layout: "vertical",
+            height: 50,
+        },
+        fundingSource,
+        onClick: () => {
+            hidePaypalMessage();
+            validateRevocation();
+        },
+        createOrder: () => {
+            return fetch(container.dataset.orderCreateUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json;charset=utf-8" },
+                credentials: "same-origin",
+            })
+                .then((response) => response.json())
+                .then((order) => {
+                    container.dataset.paymentReferenceId = order.payment_reference;
+                    return order.paypal_order_id;
+                });
+        },
+        onCancel: () => {
+            showPaypalMessage(container.dataset.cancelMessage);
+        },
+        onError: (err) => {
+            console.error(err);
+            if (err && err.errors && err.errors.length > 0) {
+                err.errors.forEach((error) => {
+                    if (error.msg) {
+                        showPaypalMessage(error.msg);
+                    }
+                });
+            } else {
+                showPaypalMessage(container.dataset.errorMessage);
+            }
+        },
+        onApprove: () => {
+            return fetch(container.dataset.orderCaptureUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json;charset=utf-8" },
+                credentials: "same-origin",
+                body: JSON.stringify({ payment_reference: container.dataset.paymentReferenceId }),
+            })
+                .then((response) => {
+                    if (response.status !== 200) {
+                        return response.json().then((jsonResponse) => {
+                            throw jsonResponse;
+                        });
+                    }
+                    return response.json();
+                })
+                .then((orderData) => {
+                    if (typeof orderData.redirect_url !== "undefined") {
+                        document.location.href = orderData.redirect_url;
+                    }
+                });
+        },
+        onInit: (data, actions) => {
+            actions.disable();
+            const revocationCheckbox = document.getElementById("checkout-revocation");
+            revocationCheckbox.addEventListener("change", (e) => {
+                if (e.target.checked) {
+                    actions.enable();
+                } else {
+                    actions.disable();
+                }
+            });
+            document.getElementById("checkout-paypal-loading").hidden = true;
+            if (needsPaymentFieldsWidget(fundingSource)) {
+                const paymentFields = document.getElementById("checkout-paypal-payment-fields");
+                if (paymentFields) {
+                    paymentFields.hidden = false;
+                }
+            }
+            const paymentButton = document.getElementById("checkout-paypal-payment-button");
+            if (paymentButton) {
+                paymentButton.hidden = false;
+            }
+            document.getElementById("checkout-paypal-revocation-container").hidden = false;
+        },
+    };
+
+    if (fundingSource === "card" && directCardEnabled) {
+        checkoutData.onCancel = () => {
+            lockForm(false, cardForm);
+            showPaypalMessage(container.dataset.cancelMessage);
+        };
+        checkoutData.onError = () => {
+            lockForm(false, cardForm);
+            showPaypalMessage(container.dataset.errorMessage);
+        };
+    }
+
+    return checkoutData;
+}
+
+function loadCardPayment(paypal, container) {
+    const cardContainer = document.getElementById("checkout-paypal-card-container");
+    const skeleton = document.getElementById("checkout-paypal-card-form-skeleton");
+    const cardForm = skeleton.content.querySelector("#checkout-paypal-card-form").cloneNode(true);
+    cardForm.hidden = true;
+    cardContainer.appendChild(cardForm);
+
+    const { backgroundColor, textColor } = themeColors();
+
+    const cardFieldsOptions = getPaypalCheckoutData(container, "card", cardForm);
+    cardFieldsOptions.style = {
+        body: { padding: 0, background: backgroundColor },
+        input: { background: backgroundColor, color: textColor, "font-size": "16px", padding: "0.4rem 0.75rem" },
+    };
+
+    const cardFields = paypal.CardFields(cardFieldsOptions);
+    if (!cardFields.isEligible()) {
+        showCardError("checkout-paypal-card-error-generic");
+        return;
+    }
+
+    Promise.all([
+        cardFields.NameField({ placeholder: "John Doe" }).render("#checkout-paypal-card-name"),
+        cardFields.NumberField({ placeholder: "4111 1111 1111 1111" }).render("#checkout-paypal-card-number"),
+        cardFields.ExpiryField({ placeholder: "12/23" }).render("#checkout-paypal-card-expiration"),
+        cardFields.CVVField().render("#checkout-paypal-card-cvv"),
+    ]).then(() => {
+        cardForm.hidden = false;
+        document.getElementById("checkout-paypal-loading").hidden = true;
+    });
+
+    cardForm.addEventListener("submit", (event) => {
+        if (!cardForm.checkValidity()) {
+            return;
+        }
+        event.preventDefault();
+        hideCardErrors();
+        lockForm(true, cardForm);
+
+        cardFields
+            .getState()
+            .then((data) => {
+                if (!data.isFormValid) {
+                    showCardError("checkout-paypal-card-error-1330");
+                    return;
+                }
+
+                return cardFields.submit().catch((error) => {
+                    console.error(error);
+                    const { elementId, detailMessages } = mapCardSubmitError(error);
+                    if (elementId) {
+                        showCardError(elementId);
+                    }
+                    if (detailMessages.length > 0) {
+                        const errorsContainer = document.getElementById("checkout-paypal-card-errors");
+                        errorsContainer.hidden = false;
+                        for (const description of detailMessages) {
+                            const errorElement = document.createElement("div");
+                            errorElement.className = "checkout-consent__error";
+                            errorElement.textContent = description;
+                            errorsContainer.appendChild(errorElement);
+                        }
+                    }
+                });
+            })
+            .finally(() => {
+                lockForm(false, cardForm);
+            });
+    });
+}
+
+function validateRevocation() {
+    const revocationCheckbox = document.getElementById("checkout-revocation");
+    if (!revocationCheckbox.checkValidity()) {
+        revocationCheckbox.reportValidity();
+    }
+}
+
+function showCardError(elementId) {
+    const errorsContainer = document.getElementById("checkout-paypal-card-errors");
+    if (!errorsContainer) {
+        return;
+    }
+    errorsContainer.hidden = false;
+    const errorElement = document.getElementById(elementId) || document.getElementById("checkout-paypal-card-error-generic");
+    if (errorElement) {
+        errorElement.hidden = false;
+    }
+}
+
+function hideCardErrors() {
+    const errorsContainer = document.getElementById("checkout-paypal-card-errors");
+    if (errorsContainer) {
+        errorsContainer.hidden = true;
+        errorsContainer.querySelectorAll(".checkout-consent__error").forEach((el) => {
+            el.hidden = true;
+        });
+    }
+    hidePaypalMessage();
+}
+
+function lockForm(lock, cardForm) {
+    const submitButton = cardForm.querySelector("#checkout-paypal-card-submit");
+    const formElements = cardForm.querySelectorAll("input, select, textarea, button");
+    if (!submitButton) {
+        return;
+    }
+
+    formElements.forEach((el) => {
+        el.disabled = lock;
+    });
+    submitButton.classList.toggle("loading", lock);
+}
+
+function showPaypalMessage(message) {
+    const msgDiv = document.getElementById("checkout-paypal-message");
+    if (msgDiv) {
+        msgDiv.textContent = message;
+        msgDiv.hidden = false;
+        msgDiv.scrollIntoView({ behavior: "smooth" });
+    }
+}
+
+function hidePaypalMessage() {
+    const msgDiv = document.getElementById("checkout-paypal-message");
+    if (msgDiv) {
+        msgDiv.textContent = "";
+        msgDiv.hidden = true;
+    }
+}

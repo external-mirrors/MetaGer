@@ -7,6 +7,7 @@ use App\Models\Authorization\LogsAuthGuard;
 use App\Models\Authorization\LogsUser;
 use App\Models\Logs\LogsAccountProvider;
 use App\Localization\MetaGerLocalization;
+use App\Routing\CookieCarryingUrlGenerator;
 use App\Support\Browser;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 use App\Support\UpstreamUserAgent;
@@ -24,6 +25,56 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         config(["app.locale" => "default"]);
+
+        /**
+         * Swap in CookieCarryingUrlGenerator so `route()` and `url()` keep a
+         * cookie-blind visitor's key on every generated link. See its
+         * docblock for why a generator subclass rather than a formatting
+         * hook: there is no query-string equivalent of `formatPathUsing`.
+         *
+         * First in `boot()`, deliberately, and not next to
+         * `formatPathUsing` below where it reads more naturally: the
+         * `forceScheme` and `formatPathUsing` calls a few lines down each
+         * resolve 'url' through the `\URL` facade the moment they run. Doing
+         * that before this registration would build and cache the
+         * *original* `UrlGenerator` first, apply `forceScheme` to that
+         * instance, and then have this `singleton()` call throw the cached
+         * instance away — leaving the fresh CookieCarryingUrlGenerator every
+         * later call actually uses never forceScheme'd at all, so
+         * `/es-ES/lang` came out `http://` on an environment that requires
+         * `https://`. Registering the binding before anything else touches
+         * `url` means whichever call resolves it first builds this class.
+         *
+         * Mirrors `Illuminate\Routing\RoutingServiceProvider::registerUrlGenerator()`'s
+         * own singleton factory, class swapped — with one deliberate
+         * difference: that factory's `$app->instance('routes', $routes)` is
+         * dropped. It exists there to publish the route collection the
+         * *first* time 'url' is ever built, during core framework bootstrap.
+         * By the time this runs, that has already happened — 'routes' is
+         * already bound to this exact object — and calling `instance()`
+         * again on an already-bound abstract fires its `rebinding()`
+         * listeners. One such listener, registered by that same provider's
+         * `extend('url', ...)`, resolves 'url' again to call `setRoutes()`
+         * on it — which, while this factory is still on the stack building
+         * 'url' for the first time under the new class, sends the container
+         * straight back into this same closure. Every request-bound console
+         * command hit that as an immediate stack overflow.
+         *
+         * That provider's `extend('url', ...)` — the session/key resolvers
+         * `signedRoute()` needs — still runs afterward regardless: container
+         * extenders are keyed by abstract name and are untouched by this
+         * rebind.
+         */
+        $this->app->singleton('url', function ($app) {
+            return new CookieCarryingUrlGenerator(
+                $app['router']->getRoutes(),
+                $app->rebinding('request', function ($app, $request) {
+                    $app['url']->setRequest($request);
+                }),
+                $app['config']['app.asset_url']
+            );
+        });
+
         if (Request::getHost() !== "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" && (app()->environment("production") || app()->environment("development"))) {
             \URL::forceScheme("https");
         }
@@ -59,6 +110,7 @@ class AppServiceProvider extends ServiceProvider
 
             return $prefix === "" ? $path : $prefix . $path;
         });
+
         \Prometheus\Storage\Redis::setDefaultOptions(
             [
                 'host' => config("database.redis.default.host"),
@@ -120,5 +172,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LocaleContext::class, function ($app): LocaleContext {
             return $app->bound("request") ? LocaleContext::resolve($app["request"]) : LocaleContext::neutral();
         });
+
+        // One instance per request, mutated by SettingsController's POST
+        // handlers as they queue/forget cookies, and read by both
+        // CookieCarryingUrlGenerator::route() and CookieSupport::carryIntoUrl()
+        // — see SettingsCarry's own docblock for why a shared singleton
+        // rather than each deriving its own list from the request.
+        $this->app->singleton(\App\Http\SettingsCarry::class);
     }
 }

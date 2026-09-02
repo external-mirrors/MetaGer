@@ -9,6 +9,13 @@
 #   docker compose --profile test up -d      adds selenium, for the dusk suite
 #   docker compose --profile tools up node   runs the asset watcher
 #
+# `assets` is not behind a profile: fpm and nginx both depend on it completing
+# successfully, so a plain `docker compose up` always builds
+# public/build/manifest.json before either one starts, however stale or
+# missing it was on disk. It is a one-shot `npm run build`, not the watcher —
+# that stays the `node` service under `tools`, for iterating with `npm run
+# watch` or `npm test` running.
+#
 # `docker compose run` starts a profiled service without naming its profile, so
 # the one-shot invocations in CLAUDE.md keep working unchanged:
 #
@@ -30,6 +37,9 @@ services:
       target: ${APP_ENV}
     pull_policy: never
     restart: unless-stopped
+    depends_on:
+      assets:
+        condition: service_completed_successfully
     networks:
       - metager
     volumes:
@@ -46,8 +56,12 @@ services:
       target: ${APP_ENV}
     restart: unless-stopped
     depends_on:
-      - fpm
-      - reverb
+      assets:
+        condition: service_completed_successfully
+      fpm:
+        condition: service_started
+      reverb:
+        condition: service_started
     networks:
       - metager
     volumes:
@@ -148,6 +162,28 @@ services:
     volumes:
       - ./metager:/metager/metager_app
       - composer_cache:/composer_cache
+
+  # One-shot asset build that fpm and nginx depend on (see the note at the top
+  # of this file). Always the `production` Dockerfile target — build-then-exit
+  # — regardless of local APP_ENV, because `depends_on: condition:
+  # service_completed_successfully` needs the container to actually exit 0;
+  # the `development` target runs `npm run watch` and never would.
+  assets:
+    build:
+      context: ./
+      dockerfile: build/node/Dockerfile
+      target: production
+    pull_policy: never
+    restart: "no"
+    environment:
+      # Source maps stay on for a local build regardless of target — see the
+      # same setting on `node` below.
+      APP_ENV: local
+    networks:
+      - metager
+    volumes:
+      - ./metager:/home/node/metager
+      - node_cache:/home/node/.npm
 
   node:
     build:

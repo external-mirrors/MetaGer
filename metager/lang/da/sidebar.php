@@ -35,4 +35,6 @@ return [
     'toggle' => 'Åbn/luk navigationslinjen',
     'opener' => 'Åbn navigationslinjen',
     'opener_close' => 'Luk navigationslinjen',
+    'navPrice' => 'Priser',
+    'navAgb' => 'Forretningsbetingelser',
 ];

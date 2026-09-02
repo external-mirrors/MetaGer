@@ -35,4 +35,20 @@ return [
     'settings' => 'Definições',
     'index' => 'MetaGer: Pesquisa e localização protegidas pela privacidade',
     'lang-selector' => 'Seleção da língua',
+    'price' => 'Preços - MetaGer',
+    'agb' => 'Condições gerais - MetaGer',
+    'help-key' => 'A chave MetaGer - MetaGer',
+    'anonymous-token' => 'Tokens anónimos - MetaGer',
+    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
+    // die Logs-API, nicht der Schlüssel.
+    'login' => 'Iniciar sessão - MetaGer',
+    'key-create' => 'Criar uma chave - MetaGer',
+
+    // The account page, moved here from /keys/key/<uuid>.
+    'account' => 'A minha conta – MetaGer',
+    'checkout' => 'Carregar saldo – MetaGer',
+    'orders' => 'Encomendas – MetaGer',
+    'campaigns' => 'Campanhas de vales – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Resgatar o seu vale – MetaGer',
 ];

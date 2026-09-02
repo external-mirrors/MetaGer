@@ -1,6 +1,6 @@
 <?php
 return [
-    'four-reasons' => 'Neljä syytä käyttää MetaGeriä',
+    'four-reasons' => 'Kuka on MetaGerin takana?',
     'privacy' => [
         'image' => [
             'alt' => 'lukko',

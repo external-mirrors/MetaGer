@@ -7,7 +7,7 @@ return [
         'title' => 'Diversité et liberté',
         'p' => 'MetaGer protège contre la censure en combinant les résultats de plusieurs moteurs de recherche. Nos algorithmes sont transparents et accessibles à tous. Notre code source est libre.',
     ],
-    'four-reasons' => 'Quatre raisons d\'utiliser MetaGer',
+    'four-reasons' => 'Qui est derrière MetaGer ?',
     'privacy' => [
         'image' => [
             'alt' => 'serrure',

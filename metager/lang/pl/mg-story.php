@@ -1,7 +1,7 @@
 <?php
 return [
     'btn-data-protection' => 'Polityka prywatności',
-    'four-reasons' => 'Cztery powody, dla których warto korzystać z MetaGer',
+    'four-reasons' => 'Kto stoi za MetaGer?',
     'privacy' => [
         'image' => [
             'alt' => 'blokada',

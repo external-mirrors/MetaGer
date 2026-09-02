@@ -23,22 +23,10 @@ return [
         "2" => "Example: You are looking for a new car, but definitely not a BMW. Your input would be:",
         "1" => "If you want to exclude search results in MetaGer that contain specific words (exclusion words / stopwords), you can do so by prefixing these words with a minus sign.",
     ],
-    "key"    => [
+    "key" => [
         "title" => 'Add MetaGer Key <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         "1" => 'The MetaGer key is automatically set up in your browser and used. You don\'t need to do anything else. If you want to use the MetaGer key on other devices, there are several ways to set up the MetaGer key:',
-        "2"=>'Login Code <br>On the <a href = "/keys/key/enter">management page</a> of the MetaGer key, you can use the login code to add your key to another device. Simply enter the six-digit number code when logging in. The login code can only be used once and is only valid as long as the window is open.',
-        "3"=>'Copy URL <br>When you are on the <a href = "/keys/key/enter">management page</a> of the MetaGer key, there is an option to copy a URL. This URL can be used to save all MetaGer settings, including the MetaGer key, on another device.',
-        '4'=>'Save File <br>When you are on the <a href = "/keys/key/enter">management page</a> of the MetaGer key, there is an option to save a file. This saves your MetaGer key as a file. You can then use this file on another device to log in with your key.',
-        '5'=>'Scan QR Code <br>Alternatively, you can also scan the QR code displayed on the <a href = "/keys/key/enter">management page</a> to log in with another device.',
-        '6'=>'Manually Enter MetaGer Key <br>You can also manually enter the key on another device.',
-        'colors'=> [
-            'title'=>'Colored MetaGer Key',
-            '1'=>'To easily recognize whether you are searching ad-free, we have given our key symbol colors. Below are explanations for the corresponding colors:',
-            'grey'=>'Grey: You have not set up a key. You are using the free search.',
-            'red'=>'Red: If your key symbol is red, it means this key is empty. You have used up all ad-free searches. You can recharge the key on the key management page.',
-            'green'=>'Green: If your key symbol is green, then you are using a charged key.',
-            'yellow'=>'Yellow: If you see a yellow key, you still have a balance of 30 tokens. Your searches are running out. It is recommended to recharge the key soon.',
-        ],
+        'more' => 'All the ways to set it up, and more questions about the key',
     ],
     "multiwordsearch" => [
         "title" => 'Multi-Word Search <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

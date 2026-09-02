@@ -23,22 +23,10 @@ return [
         "2" => "Exemple: busqueu un cotxe nou, però en cap cas un BMW. La vostra consulta seria:",
         "1" => "Si voleu excloure de MetaGer els resultats que continguin paraules concretes (paraules d'exclusió), podeu fer-ho posant un signe menys davant d'aquestes paraules.",
     ],
-    "key"    => [
+    "key" => [
         "title" => 'Afegir la clau de MetaGer <a title="Per a l\'ajuda fàcil, feu clic aquí" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         "1" => 'La clau de MetaGer es configura i es fa servir automàticament al vostre navegador. No cal que feu res més. Si voleu fer servir la clau de MetaGer en altres dispositius, hi ha diverses maneres de configurar-la:',
-        "2"=>'Codi d\'inici de sessió <br>A la <a href = "/keys/key/enter">pàgina de gestió</a> de la clau de MetaGer podeu fer servir el codi d\'inici de sessió per afegir la clau a un altre dispositiu. Només cal que introduïu el codi numèric de sis xifres en iniciar la sessió. El codi d\'inici de sessió només es pot fer servir un cop i només és vàlid mentre la finestra estigui oberta.',
-        "3"=>'Copia l\'URL <br>Quan sou a la <a href = "/keys/key/enter">pàgina de gestió</a> de la clau de MetaGer, hi ha l\'opció de copiar un URL. Aquest URL es pot fer servir per desar tota la configuració de MetaGer, inclosa la clau, en un altre dispositiu.',
-        '4'=>'Desa un fitxer <br>Quan sou a la <a href = "/keys/key/enter">pàgina de gestió</a> de la clau de MetaGer, hi ha l\'opció de desar un fitxer. Això desa la vostra clau de MetaGer com a fitxer. Després podeu fer servir aquest fitxer en un altre dispositiu per iniciar la sessió amb la vostra clau.',
-        '5'=>'Escaneja el codi QR <br>Alternativament, també podeu escanejar el codi QR que es mostra a la <a href = "/keys/key/enter">pàgina de gestió</a> per iniciar la sessió amb un altre dispositiu.',
-        '6'=>'Introdueix la clau de MetaGer manualment <br>També podeu introduir la clau manualment en un altre dispositiu.',
-        'colors'=> [
-            'title'=>'La clau de MetaGer en colors',
-            '1'=>'Perquè pugueu reconèixer fàcilment si esteu cercant sense publicitat, hem donat colors al símbol de la clau. A continuació trobareu què vol dir cada color:',
-            'grey'=>'Gris: no heu configurat cap clau. Feu servir la cerca gratuïta.',
-            'red'=>'Vermell: si el símbol de la clau és vermell, vol dir que la clau és buida. Heu esgotat totes les cerques sense publicitat. Podeu recarregar la clau a la pàgina de gestió de claus.',
-            'green'=>'Verd: si el símbol de la clau és verd, vol dir que feu servir una clau amb saldo.',
-            'yellow'=>'Groc: si veieu la clau groga, us queda un saldo de 30 fitxes. Les vostres cerques s\'estan acabant. És recomanable recarregar la clau aviat.',
-        ],
+        'more' => 'Totes les maneres de configurar-la i més preguntes sobre la clau',
     ],
     "multiwordsearch" => [
         "title" => 'Cerca de diverses paraules <a title="Per a l\'ajuda fàcil, feu clic aquí" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

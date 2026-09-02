@@ -13,6 +13,8 @@ return [
         'backup' => 'Còpia de seguretat i restabliment',
     ],
     'resetDescription' => 'Elimina totes les opcions d\'aquesta pàgina i retorna MetaGer als valors predeterminats.',
+    'resetAll' => 'Restableix tots els focus',
+    'resetAllDescription' => 'Esborra totes les opcions de tots els focus —selecció de motors, filtres i llistes negres incloses— no només aquesta pàgina.',
     'text' => [
         '1' => 'Per desar la vostra configuració de cerca fem servir galetes que no permeten identificar-vos personalment. Es desen en text pla al vostre navegador.',
         '2' => 'A sota podeu veure tots els cercadors disponibles per a aquest focus. Els podeu activar o desactivar fent clic al nom.',

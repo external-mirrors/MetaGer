@@ -49,24 +49,17 @@
 		<h4>{!! trans('help/help-functions.bang.2') !!}</h4>	
 		<p>{!! trans('help/help-functions.bang.3') !!}</p>	
 	</section>
+	{{-- Der Anker bleibt: der Hilfe-Index und mehrere Sprachdateien verlinken
+	     ihn. Der Inhalt ist auf einen Einstieg zusammengeschrumpft — die vier
+	     Einrichtungswege standen wortgleich auch in der FAQ des Keymanagers,
+	     die jetzt /hilfe/schluessel ist, und zwei Stellen, die dasselbe
+	     erklären, driften auseinander. Der Abschnitt „Farbiger MetaGer
+	     Schlüssel“ ist ganz weg: er beschrieb das Schlüsselsymbol in der
+	     Suchleiste, das die Kontopille ersetzt hat. --}}
 	<section id="h-keyexplain" class="card">
 		<h3>{!! trans('help/help-functions.key.title') !!}</h3>
 		<p>{!! trans('help/help-functions.key.1') !!}</p>
-		<ul>
-			<li>{!! trans('help/help-functions.key.2') !!}</li>
-			<li>{!! trans('help/help-functions.key.3') !!}</li>
-			<li>{!! trans('help/help-functions.key.4') !!}</li>
-			<li>{!! trans('help/help-functions.key.5') !!}</li>
-			<li>{!! trans('help/help-functions.key.6') !!}</li>
-		</ul>
-		<h4>{!! trans('help/help-functions.key.colors.title') !!}</h4>
-		<p>{!! trans('help/help-functions.key.colors.1') !!}</p>
-		<ul>
-			<li>{!! trans('help/help-functions.key.colors.grey') !!}</li>
-			<li>{!! trans('help/help-functions.key.colors.green') !!}</li>
-			<li>{!! trans('help/help-functions.key.colors.yellow') !!}</li>
-			<li>{!! trans('help/help-functions.key.colors.red') !!}</li>
-		</ul>
+		<p><a href="{{ route('key-faq') }}">{{ trans('help/help-functions.key.more') }}</a></p>
 	</section>
 	<section id="h-selist" class="card">
 		<h3>{!! trans('help/help-functions.selist.title') !!}</h3>

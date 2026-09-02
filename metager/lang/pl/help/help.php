@@ -31,6 +31,12 @@ return [
             '5' => 'Ochrona młodzieży',
             '0' => 'Prywatność',
         ],
+        '5' => [
+            '0' => 'Klucz MetaGer',
+            '1' => 'Pytania o klucz',
+            '2' => 'Anonimowe tokeny',
+            '3' => 'Ile kosztuje klucz',
+        ],
     ],
     'easy.language' => "dla łatwej pomocy",
 ];

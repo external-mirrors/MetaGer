@@ -1,0 +1,74 @@
+@import "../variables.less";
+
+// /agb — Vertragstext.
+//
+// Die alte Seite (public/styles/agb.less im Keymanager) hatte genau eine
+// Regel, und die galt einem `details#revocation`, das die Ansicht seit
+// Längerem nicht mehr ausgab. Hier steht stattdessen, was ein nummerierter
+// Vertragstext braucht: erkennbare Gliederung und eine Zeilenlänge, die man
+// lesen kann.
+
+#agb {
+  max-width: 46rem;
+  margin: 0 auto;
+
+  > section {
+    margin-top: 2rem;
+
+    // Ein Ankersprung aus dem Bezahlvorgang darf nicht unter der
+    // Navigationsleiste landen.
+    scroll-margin-top: 5rem;
+
+    > h2 {
+      font-size: 1.3rem;
+      counter-reset: agb-paragraph;
+    }
+
+    > ol {
+      list-style: none;
+      padding-left: 2.2rem;
+
+      > li {
+        position: relative;
+        margin: 0.75rem 0;
+        counter-increment: agb-paragraph;
+        scroll-margin-top: 5rem;
+
+        &::before {
+          content: counter(agb-paragraph) ".";
+          position: absolute;
+          left: -2.2rem;
+          width: 1.9rem;
+          text-align: right;
+          color: @text-color-alpha-60;
+          font-variant-numeric: tabular-nums;
+        }
+      }
+    }
+  }
+
+  // Der ungezählte Listenpunkt, der eine Aufzählung innerhalb einer Klausel
+  // trägt: kein Zähler, keine Nummer, kein Einzug daneben.
+  .agb-sublist-item {
+    counter-increment: none;
+
+    &::before {
+      content: none;
+    }
+  }
+
+  .agb-sublist {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.5rem 0 0.75rem;
+
+    > li {
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .agb-date {
+    margin-top: 2.5rem;
+    color: @text-color-alpha-70;
+  }
+}

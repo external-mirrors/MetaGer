@@ -80,7 +80,7 @@
           </div>
         </div>
         <div class="sidebar-account__actions">
-          <a class="btn account-btn account-btn--primary" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+          <a class="btn account-btn account-btn--primary" href="{{ App\Landing\KeymanagerLinks::dashboard() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
             @if($sidebarState === \App\Authentication\KeyState::FULL)
               @lang('account.sidebar.manage')
             @else
@@ -90,15 +90,30 @@
           {{-- Keeps its id: resources/js/accountBreadcrumb.js clears the
                returning-user flag on it, and the webextension's own
                contentScripts/keys.js needs a stable hook to catch a logout and
-               drop the master key from extension storage. --}}
-          <a class="btn account-btn account-btn--quiet" id="sidebar-key-remove" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/remove?url=" . urlencode(App\Localization::currentFullUrl())) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.logout')</a>
+               drop the master key from extension storage.
+
+               The return URL goes through KeymanagerLinks::remove() rather
+               than App\Localization::currentFullUrl() directly, because a
+               visitor who just entered their key is standing on `?key=<uuid>`
+               and handing that straight back logs them in again. --}}
+          <a class="btn account-btn account-btn--quiet" id="sidebar-key-remove" href="{{ App\Landing\KeymanagerLinks::remove() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.logout')</a>
         </div>
       @endif
     @else
       <div class="sidebar-account__lede">@lang('account.sidebar.logged_out')</div>
+      {{-- Both go through App\Landing\KeymanagerLinks, which re-emits the
+           MetaGer app's callback markers. The app opens the landing page in a
+           Custom Tab, and the landing page is now this page — which has a menu
+           the keymanager's own page did not. A visitor who signs in from here
+           rather than from the button in the hero must not lose the handback,
+           or the key they create never reaches the app.
+
+           "Create" used to point at /keys. That was the landing page; /keys now
+           redirects here, so the old target sent people back where they came
+           from. --}}
       <div class="sidebar-account__actions">
-        <a class="btn account-btn account-btn--primary" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.login')</a>
-        <a class="btn account-btn account-btn--quiet" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.create')</a>
+        <a class="btn account-btn account-btn--primary" href="{{ App\Landing\KeymanagerLinks::login() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.login')</a>
+        <a class="btn account-btn account-btn--quiet" href="{{ App\Landing\KeymanagerLinks::create() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.create')</a>
       </div>
     @endif
   </div>
@@ -110,6 +125,16 @@
       </a>
     </li>
     <hr>
+    {{-- Die eine Frage, die ein abgemeldeter Besucher hat und die die
+         Startseite nicht beantwortet. Erste Ebene, kein Untermenü: in der
+         Navigation des Keymanagers stand „Preis“ ebenfalls ganz oben, und die
+         Seite ist mit /keys/cost von dort hierher gezogen. --}}
+    <li>
+      <a href="{{ route('price') }}" id="navigationPrice" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+      <img src="/img/svg-icons/price-icon.svg" alt="" aria-hidden="true" id="sidebar-img-price">
+        <span>{{ trans('sidebar.navPrice') }}</span>
+      </a>
+    </li>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/datenschutz/") }}" id="navigationPrivacy" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/svg-icons/lock.svg" alt="" aria-hidden="true" id="sidebar-img-lock"> 
@@ -157,7 +182,7 @@
         <span>{{ trans('sidebar.nav2') }}</span>
       </a>
     </li>
-    @if (App\Localization::getLanguage() === "de")
+    @if (App\Support\MembershipOffer::isAdvertised())
     <li>
       <a href="{{ route('membership_form') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/svg-icons/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-member"> 
@@ -194,6 +219,12 @@
           </li>
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/impressum/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav8') }}</a>
+          </li>
+          {{-- Rechtliches steht beisammen: die AGB für die Token-Aufladung
+               lagen als /keys/agb im Keymanager und waren aus MetaGers
+               Navigation gar nicht erreichbar. --}}
+          <li>
+            <a href="{{ route('agb') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.navAgb') }}</a>
           </li>
         </ul>
       </details>

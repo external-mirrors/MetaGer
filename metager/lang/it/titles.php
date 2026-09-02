@@ -35,4 +35,20 @@ return [
         'admin' => "Log Admin - MetaGer",
         'overview' => 'Registri - MetaGer',
     ],
+    'price' => 'Prezzi - MetaGer',
+    'agb' => 'Condizioni generali - MetaGer',
+    'help-key' => 'La chiave MetaGer - MetaGer',
+    'anonymous-token' => 'Token anonimi - MetaGer',
+    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
+    // die Logs-API, nicht der Schlüssel.
+    'login' => 'Accedere - MetaGer',
+    'key-create' => 'Creare una chiave - MetaGer',
+
+    // The account page, moved here from /keys/key/<uuid>.
+    'account' => 'Il mio account – MetaGer',
+    'checkout' => 'Ricaricare il credito – MetaGer',
+    'orders' => 'Ordini – MetaGer',
+    'campaigns' => 'Campagne di buoni – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Riscatta il tuo buono – MetaGer',
 ];

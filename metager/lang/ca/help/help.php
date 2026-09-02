@@ -32,5 +32,11 @@ return [
             '5' => 'Protecció de menors',
             '0' => 'Privadesa',
         ],
+        '5' => [
+            '0' => 'La clau MetaGer',
+            '1' => 'Preguntes sobre la clau',
+            '2' => 'Tokens anònims',
+            '3' => 'Què costa la clau',
+        ],
     ],
 ];

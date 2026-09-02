@@ -31,6 +31,12 @@ return [
             '5' => 'Jeugdbescherming',
             '0' => 'Privacy',
         ],
+        '5' => [
+            '0' => 'De MetaGer-sleutel',
+            '1' => 'Vragen over de sleutel',
+            '2' => 'Anonieme tokens',
+            '3' => 'Wat de sleutel kost',
+        ],
     ],
     'easy.language' => "voor eenvoudige hulp",
 ];

@@ -63,6 +63,31 @@ class AccountVisibilityTest extends TestCase
     }
 
     /**
+     * The pill does not tell anyone the mark is their key.
+     *
+     * It used to: "My account – key 123456", which is the one sentence most
+     * likely to make someone type those six characters into the sign-in form.
+     * Doing that landed them in an empty phantom account, because six
+     * characters were accepted as a legacy key and MD5-folded into a fresh UUID
+     * (resolve_legacy_short_key in the keymanager's pass/routes/key.js now
+     * refuses it). The wording is the other half of that fix: the mark is the
+     * *end* of the key, and saying so costs two words.
+     */
+    public function testThePillCallsTheMarkTheEndOfTheKeyAndNotTheKey(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/")->assertOk();
+
+        $response->assertSee(
+            __("account.pill.aria", ["fingerprint" => "123456", "charge" => 142]),
+            false
+        );
+        $response->assertDontSee("Schlüssel 123456", false);
+        $response->assertDontSee("key 123456", false);
+    }
+
+    /**
      * The search bar carries nothing but the search.
      *
      * The key indicator inside it is gone from every page — see finding 13 in
@@ -128,13 +153,53 @@ class AccountVisibilityTest extends TestCase
         // its content script is what reveals it and answers the click.
         $response->assertSee('id="account-extension-settings" hidden>', false);
 
-        // And the pill goes to the same place. It leads to /keys/key/enter in
-        // every other state, which is exactly the page this visitor must not be
-        // sent to: they have no key to enter, and entering one here would hand
-        // us the identity the anonymous token exists to keep from us.
+        // And the pill goes to the same place. It leads to the account page in
+        // every other state, which is exactly where this visitor must not be
+        // sent: they have no key of ours to manage, and entering one here would
+        // hand us the identity the anonymous token exists to keep from us.
         $response->assertSee('data-extension-settings', false);
-        $response->assertSee('/keys/help/anonymous-token', false);
-        $response->assertDontSee('/keys/key/enter', false);
+        $response->assertSee(url("/hilfe/anonyme-token"), false);
+        $response->assertDontSee(route('account'), false);
+    }
+
+    /**
+     * The exhausted-key alert, for a webextension visitor whose anonymous
+     * tokens are spent. It used to offer "top up now" pointing at the key
+     * dashboard — but an anonymous visitor holds no key of ours to top up,
+     * and the link only ever redirected on to the anonymous-token help
+     * page. It now mirrors the pill's anonymous state: the extension's own
+     * settings, with the help page as the no-script fallback.
+     */
+    public function testTheExhaustedAlertPointsAWebextensionVisitorToTheExtension(): void
+    {
+        $this->signInAs("aaaaaaaa-bbbb-cccc-dddd-eeeeee999999", 0.0, temporary: true);
+
+        $response = $this->withHeader("tokenauthorization", "empty")->get("/")->assertOk();
+
+        $response->assertSee('id="account-empty-alert"', false);
+        $response->assertSeeText(__("account.empty.message_anonymous"));
+        $response->assertDontSeeText(__("account.empty.action"));
+        $response->assertSeeText(__("account.sidebar.extension_settings"));
+        // The alert's action carries the extension hook and the help-page
+        // fallback, the same pair the pill uses in this state.
+        $response->assertSee('class="account-empty-alert__action"', false);
+        $response->assertSee('href="' . route('anonymous-token') . '"', false);
+        $response->assertSee('data-extension-settings', false);
+    }
+
+    /**
+     * The same alert for a real key with a spent balance is unchanged: it
+     * still says "top up" and still points at the key dashboard.
+     */
+    public function testTheExhaustedAlertStillOffersATopUpForARealKey(): void
+    {
+        $this->signInAs(self::KEY, 0.0);
+
+        $response = $this->get("/")->assertOk();
+
+        $response->assertSee('id="account-empty-alert"', false);
+        $response->assertSeeText(__("account.empty.action"));
+        $response->assertDontSee('data-extension-settings', false);
     }
 
     /**
@@ -149,8 +214,101 @@ class AccountVisibilityTest extends TestCase
         $response = $this->get("/")->assertOk();
 
         $response->assertSee('id="account-pill"', false);
-        $response->assertSee('/keys/key/enter', false);
+        $response->assertSee(route('account'), false);
         $response->assertDontSee('data-extension-settings', false);
+    }
+
+    /**
+     * Logging out has to log the user out — including from the URL they are on.
+     *
+     * Reported as "the logout button removes the cookie but I still land on an
+     * authenticated version of the landing page". Entering a key redirects to
+     * `<page>?key=<uuid>` so the guard picks it up on the next request, and
+     * `KeyAuthGuard` reads the query string ahead of the cookie. The sidebar
+     * built its logout link out of the URL as it arrived, so the round trip
+     * cleared the cookie and handed the credential straight back — a second
+     * unassisted load did log the user out, which is why it read as the
+     * cookie "not sticking" rather than as a link carrying a key.
+     *
+     * The merged startpage is what made it visible: signed in and signed out
+     * used to differ by a pill, and now they are two different pages.
+     *
+     * The return URL is checked against a value built from `config("app.url")`
+     * and the locale prefix directly, not by calling `url("/")` in this test —
+     * this dispatch's own `?key=` (with no cookie backing it) is exactly the
+     * shape App\Routing\CookieCarryingUrlGenerator now carries the key
+     * forward for, so `url("/")` called after it no longer returns a clean
+     * URL.
+     *
+     * The logout link's own `key=` parameter is expected to carry the key
+     * now too — this dispatch is cookie-blind, and `KeymanagerLinks::remove()`
+     * is `self::url()` like every other link in that file, which now carries
+     * for exactly this visitor (CookieSupport::carryIntoUrl(), reached via
+     * MetaGerLocalization::getLocalizedURL()). What must stay clean
+     * regardless is the `url=` parameter's own value — the page logout
+     * returns to — which `KeymanagerLinks::remove()` strips on purpose; see
+     * its docblock.
+     */
+    public function testLoggingOutDoesNotHandTheKeyBackThroughTheReturnUrl(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/?key=" . self::KEY)->assertOk();
+
+        $logout = $this->logoutHref($response->getContent());
+
+        $this->assertNotNull($logout, "the signed-in startpage renders no logout link");
+        $this->assertStringContainsString("/keys/key/remove", $logout);
+        $this->assertSame(config("app.url") . "/", $this->returnUrlOf($logout));
+    }
+
+    /** Everything else about the page the user was on survives the round trip. */
+    public function testTheLogoutLinkKeepsTheRestOfTheUrlItReturnsTo(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/meta/settings?focus=web&key=" . self::KEY)->assertOk();
+
+        $logout = $this->logoutHref($response->getContent());
+
+        $returnUrl = $this->returnUrlOf($logout);
+        $this->assertStringContainsString("/meta/settings", $returnUrl);
+        $this->assertStringContainsString("focus=web", $returnUrl);
+        $this->assertStringNotContainsString(self::KEY, $returnUrl);
+    }
+
+    /**
+     * The locale prefix is part of "the page the user was on" too.
+     *
+     * Same reason as testLoggingOutDoesNotHandTheKeyBackThroughTheReturnUrl
+     * for not comparing against `url("/")` directly here.
+     */
+    public function testTheLogoutLinkReturnsToTheLocalePrefixedPage(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/ca-ES/?key=" . self::KEY)->assertOk();
+
+        $logout = $this->logoutHref($response->getContent());
+
+        $this->assertStringContainsString("/ca-ES/keys/key/remove", $logout);
+        $this->assertSame(config("app.url") . "/ca-ES", $this->returnUrlOf($logout));
+    }
+
+    /** The `href` of `#sidebar-key-remove`, or null when the page has none. */
+    private function logoutHref(string $html): ?string
+    {
+        return preg_match('/id="sidebar-key-remove" href="([^"]*)"/', $html, $matches)
+            ? html_entity_decode($matches[1])
+            : null;
+    }
+
+    /** The `url` query parameter's decoded value — the page logout returns to. */
+    private function returnUrlOf(string $logout): ?string
+    {
+        parse_str((string) parse_url($logout, PHP_URL_QUERY), $params);
+
+        return $params["url"] ?? null;
     }
 
     /**
@@ -233,7 +391,11 @@ class AccountVisibilityTest extends TestCase
         $response = $this->get("/")->assertOk();
 
         $response->assertSee("startpage-login-btn", false);
-        $response->assertSee("/keys/key/enter", false);
+        // /anmelden and not /keys/key/enter: the sign-in page is a MetaGer
+        // route since it moved out of the keymanager. The old path still
+        // answers, and is where that page's form posts to, but a link for a
+        // signed-out visitor pointing at it would only redirect here.
+        $response->assertSee("/anmelden", false);
         $response->assertSeeText(__("index.searchbar-replacement.have_key"));
         $response->assertSeeText(__("index.searchbar-replacement.first_time"));
 

@@ -35,4 +35,20 @@ return [
         "overview" => 'Registres – MetaGer',
         "login" => "Inici de sessió – MetaGer",
     ],
+    'price' => 'Preus – MetaGer',
+    'agb' => 'Condicions generals – MetaGer',
+    'help-key' => 'La clau MetaGer – MetaGer',
+    'anonymous-token' => 'Tokens anònims – MetaGer',
+    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
+    // die Logs-API, nicht der Schlüssel.
+    'login' => 'Inici de sessió – MetaGer',
+    'key-create' => 'Crea una clau – MetaGer',
+
+    // The account page, moved here from /keys/key/<uuid>.
+    'account' => 'El meu compte – MetaGer',
+    'checkout' => 'Recarregar saldo – MetaGer',
+    'orders' => 'Comandes – MetaGer',
+    'campaigns' => 'Campanyes de val – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Bescanvieu el vostre val – MetaGer',
 ];

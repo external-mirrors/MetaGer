@@ -35,4 +35,6 @@ return [
     'nav25' => 'MetaGer App',
     'nav1' => 'Pesquisar',
     'nav3' => 'Privacidade',
+    'navPrice' => 'Preços',
+    'navAgb' => 'Condições gerais',
 ];

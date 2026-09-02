@@ -29,19 +29,7 @@ return [
     'key' => [
         'title' => 'Tilføj MetaGer-nøgle <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'MetaGer-nøglen oprettes automatisk i din browser og bruges. Du behøver ikke at gøre noget andet. Hvis du vil bruge MetaGer-nøglen på andre enheder, er der flere måder at konfigurere MetaGer-nøglen på:',
-        '2' => 'Login-kode <br>På <a href = "/keys/key/enter">administrationssiden</a> for MetaGer-nøglen kan du bruge login-koden til at tilføje din nøgle til en anden enhed. Du skal blot indtaste den sekscifrede talkode, når du logger ind. Login-koden kan kun bruges én gang og er kun gyldig, så længe vinduet er åbent.',
-        '3' => 'Kopier URL <br>Når du er på <a href = "/keys/key/enter">administrationssiden</a> for MetaGer-nøglen, er der mulighed for at kopiere en URL. Denne URL kan bruges til at gemme alle MetaGer-indstillinger, inklusive MetaGer-nøglen, på en anden enhed.',
-        '4' => 'Gem fil <br>Når du er på <a href = "/keys/key/enter">administrationssiden</a> for MetaGer-nøglen, er der mulighed for at gemme en fil. Dette gemmer din MetaGer-nøgle som en fil. Du kan derefter bruge denne fil på en anden enhed til at logge ind med din nøgle.',
-        '5' => 'Scan QR-kode <br>Alternativt kan du også scanne den QR-kode, der vises på <a href = "/keys/key/enter">administrationssiden</a> for at logge ind med en anden enhed.',
-        '6' => 'Indtast MetaGer-nøglen manuelt <br>Du kan også indtaste nøglen manuelt på en anden enhed.',
-        'colors' => [
-            'title' => 'Farvet MetaGer-nøgle',
-            '1' => 'For nemt at kunne se, om du søger uden reklamer, har vi givet vores nøglesymboler farver. Nedenfor er forklaringer på de tilsvarende farver:',
-            'grey' => 'Grå: Du har ikke oprettet en nøgle. Du bruger den gratis søgning.',
-            'red' => 'Rød: Hvis dit nøglesymbol er rødt, betyder det, at denne nøgle er tom. Du har opbrugt alle reklamefri søgninger. Du kan genoplade nøglen på siden til administration af nøgler.',
-            'green' => 'Grøn: Hvis dit nøglesymbol er grønt, bruger du en opladet nøgle.',
-            'yellow' => 'Gul: Hvis du ser en gul nøgle, har du stadig en saldo på 30 poletter. Dine søgninger er ved at løbe ud. Det anbefales at genoplade nøglen snart.',
-        ],
+        'more' => 'Alle måder at opsætte den på og flere spørgsmål om nøglen',
     ],
     'multiwordsearch' => [
         'title' => 'Søgning på flere ord <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

@@ -35,4 +35,6 @@ return [
     'toggle' => 'obre/tanca la barra de navegació',
     'opener' => 'obre la barra de navegació',
     'opener_close' => 'tanca la barra de navegació',
+    'navPrice' => 'Preus',
+    'navAgb' => 'Condicions generals',
 ];

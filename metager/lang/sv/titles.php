@@ -35,4 +35,20 @@ return [
         'overview' => 'Loggar - MetaGer',
         'login' => "Loggar Admin - MetaGer",
     ],
+    'price' => 'Priser - MetaGer',
+    'agb' => 'Allmänna villkor - MetaGer',
+    'help-key' => 'MetaGer-nyckeln - MetaGer',
+    'anonymous-token' => 'Anonyma tokens - MetaGer',
+    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
+    // die Logs-API, nicht der Schlüssel.
+    'login' => 'Logga in - MetaGer',
+    'key-create' => 'Skapa nyckel - MetaGer',
+
+    // The account page, moved here from /keys/key/<uuid>.
+    'account' => 'Mitt konto – MetaGer',
+    'checkout' => 'Fyll på saldo – MetaGer',
+    'orders' => 'Beställningar – MetaGer',
+    'campaigns' => 'Presentkortskampanjer – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Lös in ditt presentkort – MetaGer',
 ];

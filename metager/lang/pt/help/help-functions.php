@@ -28,21 +28,9 @@ return [
         '2' => "Se isto não for suficiente para si, tem duas opções para tornar a sua pesquisa mais precisa:",
     ],
     'key' => [
-        '4' => 'Guardar ficheiro <br>Quando se encontra na <a href = "/keys/key/enter">página de gestão</a> da chave MetaGer, existe uma opção para guardar um ficheiro. Isto guarda a sua chave MetaGer como um ficheiro. Pode então utilizar este ficheiro noutro dispositivo para iniciar sessão com a sua chave.',
-        'colors' => [
-            'red' => 'Vermelho: Se o símbolo da chave for vermelho, significa que esta chave está vazia. Utilizou todas as pesquisas sem anúncios. Pode recarregar a chave na página de gestão de chaves.',
-            'yellow' => 'Amarela: Se vires uma tecla amarela, significa que ainda tens um saldo de 30 fichas. As tuas pesquisas estão a esgotar-se. Recomenda-se que recarregue a chave em breve.',
-            'grey' => 'Cinzento: Não definiu uma chave. Está a utilizar a pesquisa livre.',
-            '1' => 'Para reconhecer facilmente se está a pesquisar sem anúncios, atribuímos cores aos nossos símbolos principais. Abaixo estão as explicações para as cores correspondentes:',
-            'title' => 'Chave MetaGer colorida',
-            'green' => 'Verde: Se o símbolo da tecla estiver verde, significa que está a utilizar uma tecla carregada.',
-        ],
         'title' => 'Adicionar chave MetaGer <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        '5' => 'Digitalizar o código QR <br>Alternativamente, também pode digitalizar o código QR apresentado na <a href = "/keys/key/enter">página de gestão</a> para iniciar sessão com outro dispositivo.',
-        '2' => 'Código de login <br>Na <a href = "/keys/key/enter">página de gestão</a> da chave MetaGer, pode utilizar o código de login para adicionar a sua chave a outro dispositivo. Basta introduzir o código numérico de seis dígitos ao iniciar a sessão. O código de acesso só pode ser utilizado uma vez e só é válido enquanto a janela estiver aberta.',
-        '6' => 'Introduzir manualmente a chave MetaGer <br>Também pode introduzir manualmente a chave noutro dispositivo.',
-        '3' => 'Copiar URL <br>Quando se encontra na <a href = "/keys/key/enter">página de gestão</a> da chave MetaGer, existe uma opção para copiar um URL. Este URL pode ser utilizado para guardar todas as definições do MetaGer, incluindo a chave MetaGer, noutro dispositivo.',
         '1' => 'A chave MetaGer é automaticamente configurada no seu browser e utilizada. Não precisa de fazer mais nada. Se pretender utilizar a chave MetaGer noutros dispositivos, existem várias formas de configurar a chave MetaGer:',
+        'more' => 'Todas as formas de a configurar e mais perguntas sobre a chave',
     ],
     'exactsearch' => [
         'example' => [

@@ -35,4 +35,6 @@ return [
     'toggle' => 'Navigationsleiste öffnen/schließen',
     'opener' => 'Navigationsleiste öffnen',
     'opener_close' => 'Navigationsleiste schließen',
+    'navPrice' => 'Preise',
+    'navAgb' => 'AGB',
 ];

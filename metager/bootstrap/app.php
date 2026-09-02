@@ -51,6 +51,15 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\TrimStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             TrustProxies::class,
+            // Validates the incoming `Host` against App\Support\AppHosts (the
+            // pattern set lives in App\Http\Middleware\TrustHosts::hosts()).
+            // After TrustProxies, because a forwarded host is only trustworthy
+            // once the proxy headers are; before ResolveLocale, which reads the
+            // host to decide the locale. Named here rather than switched on via
+            // $middleware->trustHosts(): that flag is only consulted while
+            // Laravel builds its default global stack, and this `use([...])`
+            // replaces that stack wholesale.
+            \App\Http\Middleware\TrustHosts::class,
             // After TrustProxies, because the locale decision still reads the
             // host and the host is only trustworthy once the proxy headers
             // have been. Before route matching, because it strips the locale
@@ -88,6 +97,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \App\Http\Middleware\LocalizationRedirect::class,
+            \App\Http\Middleware\StripKeyOnceCookieConfirmed::class,
         ]);
         $middleware->appendToGroup("api", [
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',

@@ -20,21 +20,9 @@ return [
         'explanation_a' => 'Yritä ensin asentaa nykyinen lisäosa. Asenna se klikkaamalla linkkiä suoraan hakukentän alapuolella. Selaimesi pitäisi olla jo havaittu siellä.',
     ],
     'key' => [
-        '4' => 'Tallenna tiedosto <br>Kun olet MetaGer-avaimen <a href = "/keys/key/enter">hallintasivulla</a>, siellä on mahdollisuus tallentaa tiedosto. Tämä tallentaa MetaGer-avaimen tiedostoksi. Voit sitten käyttää tätä tiedostoa toisessa laitteessa kirjautuaksesi sisään avaimellasi.',
-        '5' => 'Skannaa QR-koodi <br>Vaihtoehtoisesti voit myös skannata <a href = "/keys/key/enter">hallintasivulla</a> näkyvän QR-koodin ja kirjautua sisään toisella laitteella.',
-        '6' => 'MetaGer-avaimen syöttäminen manuaalisesti <br>Voit syöttää avaimen myös manuaalisesti toisella laitteella.',
-        'colors' => [
-            'title' => 'Värillinen MetaGer-avain',
-            '1' => 'Jotta voit helposti tunnistaa, etsitkö mainoksetonta sivustoa, olemme antaneet keskeisille symboleillemme värit. Alla on selitykset vastaaville väreille:',
-            'grey' => 'Harmaa: Et ole asettanut avainta. Käytät vapaata hakua.',
-            'red' => 'Punainen: Jos näppäinsymboli on punainen, se tarkoittaa, että näppäin on tyhjä. Olet käyttänyt kaikki mainoksettomat haut. Voit ladata avaimen uudelleen avainten hallintasivulla.',
-            'green' => 'Vihreä: Jos näppäinsymboli on vihreä, käytät ladattua näppäintä.',
-            'yellow' => 'Keltainen: Jos näet keltaisen avaimen, sinulla on vielä 30 merkkiä saldona. Hakusi ovat loppumassa. On suositeltavaa ladata avain pian uudelleen.',
-        ],
         'title' => 'Lisää MetaGer Key <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'MetaGer-avain asetetaan automaattisesti selaimeesi ja sitä käytetään. Sinun ei tarvitse tehdä mitään muuta. Jos haluat käyttää MetaGer-avainta muissa laitteissa, MetaGer-avain voidaan määrittää usealla eri tavalla:',
-        '2' => 'Kirjautumiskoodi <br>MetaGer-avaimen <a href = "/keys/key/enter">hallintasivulla</a> voit käyttää kirjautumiskoodia lisätäksesi avaimesi toiseen laitteeseen. Kirjoita yksinkertaisesti kuusinumeroinen numerokoodi kirjautumisen yhteydessä. Kirjautumiskoodia voi käyttää vain kerran, ja se on voimassa vain niin kauan kuin ikkuna on auki.',
-        '3' => 'Kopioi URL-osoite <br>Kun olet MetaGer-avaimen <a href = "/keys/key/enter">hallintasivulla</a>, siellä on mahdollisuus kopioida URL-osoite. Tätä URL-osoitetta voidaan käyttää kaikkien MetaGer-asetusten, myös MetaGer-avaimen, tallentamiseen toiseen laitteeseen.',
+        'more' => 'Kaikki käyttöönottotavat ja lisää kysymyksiä avaimesta',
     ],
     'multiwordsearch' => [
         'title' => 'Monisanahaku <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

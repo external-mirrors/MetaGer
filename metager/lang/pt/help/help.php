@@ -29,6 +29,12 @@ return [
             '0' => 'Funções e dicas úteis',
             '1' => 'Funções de pesquisa',
         ],
+        '5' => [
+            '0' => 'A chave MetaGer',
+            '1' => 'Perguntas sobre a chave',
+            '2' => 'Tokens anónimos',
+            '3' => 'Quanto custa a chave',
+        ],
     ],
     'achtung' => 'Aviso! A estrutura e a funcionalidade do nosso sítio Web estão sujeitas a constantes desenvolvimentos e alterações. Tentamos atualizar as nossas páginas de ajuda o mais rapidamente possível, mas não podemos evitar erros temporários.',
     'easy.language' => "para uma ajuda fácil",

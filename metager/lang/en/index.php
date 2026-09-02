@@ -31,8 +31,7 @@ return [
     'adfree' => 'MetaGer ad-free',
     'searchbar-replacement' => [
         'tagline' => 'Open Source. Ad-Free. Anonymous.',
-        'hook' => "The search engine that doesn't track you.",
-        'message' => 'Your key is your access – no account, no email address. Your balance and settings hang off it.',
+        'message' => 'Your key is your access – no account, no email address. Only your balance hangs off it.',
         'have_key' => 'Log in with my key',
         'first_time' => 'First time here?',
         'start' => 'Set up a key',
@@ -48,5 +47,72 @@ return [
         "login_code_error" => "The entered login code was not valid. Hint: Login Codes are only valid while visible on another device!",
         "payment_id_error" => "You've entered a payment id which is not a correct key. Your key is 36 characters long.",
         "login" => "Log in",
-    ]
+    ],
+    // The landing page shown to a visitor without a key: hero, "how it works",
+    // and the five benefit cards. It came from the keymanager's own root page
+    // (pass/views/index.ejs, pass/lang/*/index.json), which /keys used to serve
+    // and which now redirects here.
+    //
+    // Placeholders are Laravel's :name, not i18next's {{name}}, and the links
+    // are passed in from parts/landing/* so the locale prefix and the /keys
+    // paths stay in one place.
+    'landing' => [
+        'title' => 'Search and browse the web without being watched',
+        'description' => 'MetaGer respects your privacy and lets you browse any website anonymously too.',
+        'advantages' => [
+            'ads' => 'No ads',
+            'tracking' => 'No tracking',
+            'logging' => 'No logging',
+            'compromise' => 'No compromises',
+        ],
+        'calltoaction' => 'How it works',
+        'benefits' => [
+            'browsing' => [
+                'heading' => 'Not just anonymous search — anonymous browsing too',
+                'description' => 'With your MetaGer key you can also open any website in a private browser that runs securely on our servers, not on your device. Websites can\'t see who you are or where you\'re browsing from, and everything is automatically deleted once your session ends. No installation, no setup — just open and go.',
+                'fingerprinting' => 'Fingerprinting',
+                'tracking' => 'Tracking',
+            ],
+            'ads' => [
+                'heading' => 'No advertisements',
+                'description' => 'Ads and privacy rarely mix. That\'s why there is no advertising at MetaGer whatsoever, so we can protect your privacy without compromise.',
+                'ads' => 'Advertising',
+                'tracking' => 'Tracking links',
+            ],
+            'logging' => [
+                'heading' => 'No logging',
+                'description' => 'Searching the internet usually leaves a trail of data behind. We don\'t need to keep any of it: our search engine is built so that fighting spam doesn\'t require logs. You also won\'t run into a single captcha on our site, even when using a VPN.',
+                'logging' => 'Logging',
+            ],
+            'compromise' => [
+                'heading' => 'No compromises',
+                'description' => 'Instead of an account tied to your personal data, you simply get a randomly generated key, no name or email required. Choose from several <a href=":linkPaymentMethods">payment methods</a>, including fully anonymous cash payment. With our <a href=":linkApp">Android app</a> or browser extension, you can even prove that your searches stay anonymous using <a href=":linkToken">anonymous tokens</a>.',
+                'compromise' => 'Personal data',
+            ],
+            'efficiency' => [
+                'heading' => 'Search more efficiently',
+                'description' => 'Find what you\'re looking for, faster. When helpful, we add clear deep links, relevant news and videos right into your search results. Our image search draws on additional sources too.',
+            ],
+        ],
+        'howitworks' => [
+            'heading' => 'How it works',
+            'steps' => [
+                [
+                    'heading' => 'Your key is generated automatically',
+                    'description' => 'Your MetaGer key is generated automatically. No sign-up, no personal details needed. It\'s the only thing you need to use MetaGer.',
+                ],
+                [
+                    'heading' => 'Activate your access',
+                    'description' => 'A one-time <a href=":linkCost">payment</a> adds credit to your key, which we call token. This activates ad-free, tracking-free search and anonymous browsing, plus all current and future MetaGer features. About 500 token (€5) usually lasts around 2 months.',
+                    'membership' => 'Note: members of our non-profit association <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> can use MetaGer at no extra cost. <a href=":linkMembership" target="_blank">Become a member now</a>',
+                ],
+                [
+                    'heading' => 'Use MetaGer everywhere',
+                    'description' => 'Use the same key on as many devices as you like, or share it with friends and family. Just open MetaGer on any device, enter your key, and you\'re ready to search — or browse anonymously.',
+                ],
+            ],
+            'start' => 'Get started',
+            'login' => 'I already have a key',
+        ],
+    ],
 ];

@@ -62,7 +62,7 @@
 
 > [Firefox]({{ $plugin_firefox_url }}) | [Chrome]({{ $plugin_chrome_url }}) | [Edge]({{ $plugin_edge_url }})
 
-@lang("membership/mails/welcome_mail.key.description_fourth", ["anonymous_token_link" => url("/keys/help/anonymous-token")])\
+@lang("membership/mails/welcome_mail.key.description_fourth", ["anonymous_token_link" => route('anonymous-token')])\
 @lang("membership/mails/welcome_mail.key.description_fifth")\
 @lang("membership/mails/welcome_mail.key.description_sixth")
 

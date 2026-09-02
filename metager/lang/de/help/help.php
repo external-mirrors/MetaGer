@@ -32,5 +32,11 @@ return [
             '4' => 'MetaGer Widget',
             '5' => 'MetaGer Maps',
         ],
+        '5' => [
+            '0' => 'Der MetaGer-Schlüssel',
+            '1' => 'Fragen zum Schlüssel',
+            '2' => 'Anonyme Token',
+            '3' => 'Was der Schlüssel kostet',
+        ],
     ],
 ];

@@ -11,6 +11,7 @@
         @foreach ($data['sumas'] as $name => $suma)
             @if ($suma->configuration->disabled === false)
                 <form action="{{ route('disableEngine') }}" method="post" class="pill-form">
+                    @include('parts.carry-key')
                     <input type="hidden" name="suma" value="{{ $name }}">
                     <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
@@ -28,6 +29,7 @@
                         (in_array(\App\Models\DisabledReason::USER_CONFIGURATION, $suma->configuration->disabledReasons) || in_array(\App\Models\DisabledReason::SUMAS_DEFAULT_CONFIGURATION, $suma->configuration->disabledReasons)) &&
                         sizeof($suma->configuration->disabledReasons) === 1)
                     <form action="{{ route('enableEngine') }}" method="post" class="pill-form">
+                        @include('parts.carry-key')
                         <input type="hidden" name="suma" value="{{ $name }}">
                         <input type="hidden" name="focus" value="{{ $fokus }}">
                         <input type="hidden" name="url" value="{{ $url }}">
@@ -85,6 +87,7 @@
     <h3 class="block-title" id="{{ $fokus }}-filter">@lang('settings.header.3')</h3>
     <p class="help">@lang('settings.text.3')</p>
     <form action="{{ route('enableFilter') }}" method="post" class="form filter-form">
+        @include('parts.carry-key')
         <input type="hidden" name="focus" value="{{ $fokus }}">
         <input type="hidden" name="url" value="{{ $url }}">
         <div class="filter-grid">
@@ -118,6 +121,7 @@
     <h3 class="block-title" id="{{ $fokus }}-bl">@lang('settings.header.4')</h3>
     <p class="help">@lang('settings.text.4')</p>
     <form action="{{ route('newBlacklist', ['fokus' => $fokus, 'url' => $url]) }}" method="post">
+        @include('parts.carry-key')
         <input type="hidden" name="url" value="{{ $url }}">
         <input type="hidden" name="focus" value="{{ $fokus }}">
         <label class="field-label" for="{{ $fokus }}-blacklist">@lang('settings.address') ({{ sizeof($data['blacklist']) }}) </label>

@@ -115,6 +115,40 @@ class SettingsPageHeaderSettingsTest extends TestCase
         $response = $this->get("/meta/settings?focus=web")->assertOk();
 
         $response->assertDontSee(__("settings.reset"), false);
+        $response->assertDontSee(__("settings.resetAll"), false);
+    }
+
+    /**
+     * The "reset every focus" button (`removeAllSettings`) went missing from
+     * the settings page in a 2023 redesign — the route and handler stayed,
+     * only the way in was gone. It sits next to the per-focus reset and
+     * clears settings across every focus, so it renders under the same
+     * "something is set" condition.
+     */
+    #[Test]
+    public function renders_the_reset_every_focus_button_when_a_setting_is_set(): void
+    {
+        $response = $this->withHeader("web_blpage", self::BLOCKED)
+            ->get("/meta/settings?focus=web")
+            ->assertOk();
+
+        $response->assertSee(__("settings.resetAll"), false);
+        $response->assertSee(route("removeAllSettings"), false);
+    }
+
+    /**
+     * A blacklist that lives only in another focus still counts — the button
+     * is page-wide, and $settingActive now folds in every focus's
+     * hasCustomSettings, not just the current one's engine/filter state.
+     */
+    #[Test]
+    public function renders_the_reset_every_focus_button_for_a_setting_in_another_focus(): void
+    {
+        $response = $this->withHeader("nachrichten_blpage", self::BLOCKED)
+            ->get("/meta/settings?focus=web")
+            ->assertOk();
+
+        $response->assertSee(__("settings.resetAll"), false);
     }
 
     /**

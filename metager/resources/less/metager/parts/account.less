@@ -281,12 +281,31 @@
 // the app — settings, donation, membership — and a great many lines of the theme
 // snapshot with them. That is its own commit.
 .account-btn {
+  // flex, not the block a plain <a>/<button> would default to: a row with a
+  // sibling whose label wraps to two lines (e.g. "Guthaben aufladen" next to
+  // "Zur Suche") stretches every button in the row to that height, and a
+  // block element's single line of text stays pinned to its top padding edge
+  // rather than re-centring in the extra space — text-align only ever
+  // centred it horizontally. align-items centres the (possibly wrapped)
+  // label vertically too.
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1 1 0;
   min-width: 0;
   padding: 6px 10px;
   border: 1px solid transparent;
   border-radius: 4px;
   font-family: inherit;
+  // Wie font-family: der UA-Stylesheet gibt einem <button> eigene Werte, die
+  // ein <a> von der Seite erbt — hier `line-height: normal` gegen die 1.428
+  // des Bodys. Beide tragen dieselbe Klasse und standen deshalb, wo sie in
+  // einer Reihe nebeneinander auftauchen, verschieden hoch da: auf den
+  // Gutscheinaktionen ist „Karten drucken (PDF)" ein Link und „Deaktivieren"
+  // ein Knopf, und der Link war fünf Pixel höher als sein Nachbar. Ein
+  // ausgeschriebenes Verhältnis nimmt beiden die Herkunft ab und gilt für
+  // jede Schriftgröße, die eine Seite dieser Klasse sonst noch gibt.
+  line-height: 1.4;
   font-size: 0.8rem;
   text-align: center;
   text-decoration: none;
@@ -421,7 +440,9 @@
   gap: 0.55rem;
   width: 100%;
   max-width: 600px;
-  margin: 0.6rem auto 0;
+  // Top spacing is #search-wrapper-notices's gap now, not this element's own
+  // margin — it used to be the row's only occupant.
+  margin: 0 auto;
   padding: 0.5rem 0.7rem;
   border: 1px solid @metager-orange;
   border-radius: 4px;

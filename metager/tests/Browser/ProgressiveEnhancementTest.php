@@ -29,7 +29,7 @@ class ProgressiveEnhancementTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit("/de-DE")
                 ->assertTitle(trans("titles.index", [], "de"))
-                ->assertSee(trans("mg-story.privacy.title", [], "de"));
+                ->assertSee(trans("index.landing.title", [], "de"));
         });
     }
 
@@ -63,19 +63,125 @@ class ProgressiveEnhancementTest extends DuskTestCase
             //
             // Asserted rather than clicked. /keys is not a MetaGer route — nginx
             // proxies "^(/.*)?/keys" to the keymanager service — so following the
-            // link leaves the application under test, and its answer (today a 301
-            // to /de-DE/keys/) is that service's business, not this suite's.
-            // Clicking through without JavaScript is covered below, on a page
-            // MetaGer actually serves.
-            $this->assertStringEndsWith(
-                "/de-DE/keys",
+            // link leaves the application under test, and its answer is that
+            // service's business, not this suite's. Clicking through without
+            // JavaScript is covered below, on a page MetaGer actually serves.
+            //
+            // Es zeigt seit dem vierten Umzugsschritt auf MetaGers eigene
+            // Seite. /keys/key/create antwortet weiterhin, aber nur noch mit
+            // einer Weiterleitung hierher — und /keys, worauf es davor zeigte,
+            // ist inzwischen genau diese Seite.
+            $this->assertStringContainsString(
+                "/de-DE/schluessel-erstellen",
                 $browser->attribute("#searchbar-replacement a.startpage-create-link", "href")
             );
 
+            // Anmelden zeigt seit dem dritten Umzugsschritt auf MetaGers eigene
+            // /anmelden. /keys/key/enter antwortet weiterhin — mit Schlüssel ist
+            // es der Weg zum Konto —, aber für einen abgemeldeten Besucher wäre
+            // der alte Pfad nur eine Weiterleitung hierher.
             $this->assertStringContainsString(
-                "/de-DE/keys/key/enter",
+                "/de-DE/anmelden",
                 $browser->attribute("#searchbar-replacement a.startpage-login-btn", "href")
             );
+        });
+    }
+
+    /**
+     * Die Anmeldeseite ohne Javascript.
+     *
+     * Sie ist der einzige Ort auf der Seite, an dem ein Besucher etwas eingibt,
+     * das über einen Klick hinausgeht, und sie hat drei Wege hinein — getippter
+     * Schlüssel, Sicherungsdatei, Kamera. Zwei davon müssen ohne Javascript
+     * funktionieren, und der dritte darf nicht angeboten werden.
+     *
+     * Ein Feature-Test sieht das `hidden`-Attribut im Quelltext; was er nicht
+     * sieht, ist, ob resources/js/login.js es entfernt hat — und genau das ist
+     * hier die Aussage. Ohne Javascript bleibt es stehen.
+     */
+    public function testTheLoginPageWorksWithoutJavascript(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/de-DE/anmelden")
+                ->assertTitle(trans("titles.login", [], "de"))
+                // Das Feld ist type="text" und nicht type="password": die alte
+                // Seite deckte es per Javascript beim Fokus auf, hier tippte
+                // man seinen Schlüssel also blind.
+                ->assertAttribute("#login-key", "type", "text")
+                ->assertVisible(".login-submit")
+                // Das Dateifeld bleibt sichtbar, statt hinter einem Label zu
+                // stecken: nur so nennt der Browser die gewählte Datei von
+                // selbst, und das ist genau das, was hier kein Skript tun kann.
+                ->assertVisible("#login-file")
+                // Und der Kamera-Scanner wird nicht angeboten. Ein Knopf, der
+                // ohne Javascript nichts tut, ist schlechter als keiner.
+                ->assertMissing("#login-qr");
+
+            // Ein echtes Formular an eine echte Adresse, nicht ein Skripthaken:
+            // ohne beides käme die Eingabe nirgendwo an. Die Adresse ist die
+            // Seite selbst, seit auch der Vorgang hier liegt.
+            $this->assertStringContainsString(
+                "/de-DE/anmelden",
+                $browser->attribute("#login-form", "action")
+            );
+            $this->assertSame("post", strtolower($browser->attribute("#login-form", "method")));
+        });
+    }
+
+    /**
+     * Die Seite zum Erstellen ohne Javascript.
+     *
+     * Sie ist die einzige Seite, deren Markup *nicht* den Zustand zeigt, den
+     * ein Besucher mit Javascript zuerst sieht: der Schlüssel steht schon da,
+     * und resources/js/key-create.js blendet ihn wieder weg und stellt den
+     * Knopf davor. Das ist die richtige Richtung — ohne Skript fehlt die
+     * Nachfrage, nicht der Schlüssel —, aber sie ist auch die, die man beim
+     * Umbauen versehentlich umdreht, und dann liefert die Seite ohne Javascript
+     * nichts als einen Knopf, der nichts tut.
+     *
+     * Ein Feature-Test sieht `data-state="ready"` im Quelltext. Was er nicht
+     * sieht, ist, ob das Feld darunter tatsächlich sichtbar ist: die Zustände
+     * hängen an CSS-Regeln zu diesem Attribut, und eine falsche Regel versteckt
+     * genau das, was hier stehen bleiben muss.
+     */
+    public function testTheKeyCreationPageWorksWithoutJavascript(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/de-DE/schluessel-erstellen")
+                ->assertTitle(trans("titles.key-create", [], "de"))
+                // Der Schlüssel ist da und lesbar.
+                ->assertVisible("#new-key")
+                // Und der Weg weiter ist da. Ohne ihn wäre der Schlüssel
+                // sichtbar und trotzdem unbenutzbar.
+                ->assertVisible(".create-continue__button")
+                // Der Knopf, der ohne Javascript nur zeigen würde, was schon
+                // dasteht, wird nicht angeboten.
+                ->assertMissing("#key-create-start")
+                // Ebenso wenig die Kopierknöpfe: ohne Zwischenablage täten sie
+                // nichts, und die Felder daneben lassen sich von Hand
+                // markieren.
+                ->assertMissing(".create-key__copy");
+
+            $key = $browser->value("#new-key");
+            $this->assertMatchesRegularExpression(
+                "/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/",
+                $key,
+                "Ohne Javascript steht im Feld kein Schlüssel — dann hat die Seite nichts hergegeben."
+            );
+
+            // Was im Feld steht, ist auch das, was abgeschickt wird. Zwei
+            // verschiedene Werte hier wären ein Besucher mit einem Schlüssel
+            // auf dem Zettel und einem anderen im Konto.
+            $this->assertSame(
+                $key,
+                $browser->attribute(".create-continue input[name=key]", "value")
+            );
+
+            $this->assertStringContainsString(
+                "/de-DE/schluessel-erstellen",
+                $browser->attribute(".create-continue", "action")
+            );
+            $this->assertSame("post", strtolower($browser->attribute(".create-continue", "method")));
         });
     }
 
@@ -151,6 +257,125 @@ class ProgressiveEnhancementTest extends DuskTestCase
                 ->clickLink("Widget")
                 ->waitForLocation("/de-DE/widget")
                 ->assertTitle(trans("titles.widget", [], "de"));
+        });
+    }
+
+    /**
+     * Das Konto ohne Javascript.
+     *
+     * Es ist die Seite mit den meisten Bequemlichkeiten und deshalb die, bei
+     * der am leichtesten etwas *nur* mit Skript funktioniert. Zwei Dinge dürfen
+     * ohne fehlen — die Kopierknöpfe und der Dialog für ein weiteres Gerät —,
+     * und alles andere muss stehen: das Guthaben, die Verfallsdaten, die
+     * Pakete, der QR-Code, das Lesezeichen. Wer sein Cookie gleich verliert,
+     * braucht genau die letzten beiden.
+     *
+     * Ein Feature-Test sieht das `hidden`-Attribut im Quelltext; was er nicht
+     * sieht, ist, ob resources/js/account.js es entfernt hat — und genau das
+     * ist hier die Aussage.
+     *
+     * Der Keyserver antwortet in dieser Umgebung nicht, das Guthaben ist also
+     * unbekannt. Das ist kein Mangel des Tests, sondern der schwierigere Fall:
+     * er zeigt, dass die Wege zurück zum Schlüssel gerade dann stehen, wenn
+     * sonst nichts geht.
+     */
+    public function testTheAccountPageWorksWithoutJavascript(): void
+    {
+        $key = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
+
+        $this->browse(function (Browser $browser) use ($key) {
+            // false: `key` steht in EncryptCookies::$except, weil auch der
+            // Keymanager unter demselben Host es lesen können muss.
+            $browser->visit("/de-DE")
+                ->addCookie("key", $key, null, [], false)
+                ->visit("/de-DE/konto")
+                ->assertTitle(trans("titles.account", [], "de"))
+
+                // Die Kennung des Kontos — dieselbe Marke wie in der Ecke.
+                ->assertVisible(".account-head .account-mark")
+
+                // Der Schlüssel selbst — immer sichtbar, kein Skript nötig.
+                // Das Anmeldeformular fragt in erster Linie nach ihm, und wer
+                // auf einem Gerät ohne Kamera sitzt, hat sonst nichts
+                // einzugeben.
+                ->assertVisible("#account-key")
+
+                // Und die beiden Wege, ihn mitzunehmen.
+                ->assertVisible(".account-save__qr img")
+                ->assertVisible("#restore-url")
+
+                // Und die Pakete, die aus verlinkten Kacheln bestehen und
+                // deshalb ohne Skript vollständig benutzbar sind.
+                ->assertVisible(".account-tier")
+
+                // Die beiden Bequemlichkeiten werden nicht angeboten: ein
+                // Kopierknopf ohne Zwischenablage täte nichts, und einen
+                // Anmeldecode kann nur eine Abfrage holen.
+                ->assertMissing(".account-save__button[data-copies]")
+                ->assertMissing("#account-transfer-open");
+
+            $this->assertSame(
+                $key,
+                $browser->value("#account-key"),
+                "Im Feld steht nicht der Schlüssel — dann kann ihn "
+                    . "niemand ins Anmeldeformular des zweiten Geräts eintippen."
+            );
+
+            // Der Lesezeichen-URL trägt den Schlüssel — er ist der Weg zurück,
+            // und ohne ihn wäre das Feld eine leere Geste.
+            $this->assertStringContainsString(
+                "key=" . $key,
+                $browser->value("#restore-url"),
+                "Der Lesezeichen-URL führt nicht zum Schlüssel — dann führt er nirgendwohin."
+            );
+
+            // Und der Weg zum Aufladen ist ein echter Link, kein Skripthaken.
+            $this->assertStringContainsString(
+                "/konto/aufladen/",
+                $browser->attribute(".account-tier", "href")
+            );
+        });
+    }
+
+    /**
+     * PayPal ist die einzige Zahlart in diesem Vorgang, die ein SDK im
+     * Browser braucht — checkout/index.blade.php bietet ihre Kachel deshalb
+     * ohne Javascript gar nicht erst an (`hidden`, aufgedeckt erst von
+     * resources/js/account.js), statt zu einer Seite zu führen, deren
+     * SDK-Bausteine nie funktionieren. Diese Prüfung hier ist der Grund,
+     * warum das `hidden`-Attribut nicht ausreicht: eine ererbte
+     * `display`-Regel könnte es überstimmen — genau das prüft ein
+     * Feature-Test nicht, nur eine echte Layout-Engine.
+     */
+    /**
+     * Sieben Kacheln, eine pro PayPal-Zahlweise (checkout/index.blade.php),
+     * nicht eine einzige mehr hinter einer eigenen Wahl-Seite — jede von
+     * ihnen muss ohne Javascript unsichtbar bleiben, nicht nur die erste.
+     * Und die anderen acht Kacheln (Bargeld, Wero, drei Micropayment-
+     * Zahlweisen, die Entwicklungs-Zahlart lokal ausgenommen) müssen
+     * trotzdem sichtbar sein — sonst zeigt "nichts hat .checkout-paypal-tile"
+     * auch dann grün, wenn versehentlich die ganze Liste verschwunden ist.
+     */
+    public function testThePaypalTilesStayHiddenWithoutJavascript(): void
+    {
+        $key = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
+
+        $this->browse(function (Browser $browser) use ($key) {
+            $browser->visit("/de-DE")
+                ->addCookie("key", $key, null, [], false)
+                ->visit("/de-DE/konto/aufladen/1000")
+                ->assertVisible(".account-tier")
+                ->assertMissing(".checkout-paypal-tile");
+
+            $this->assertCount(
+                7,
+                $browser->elements(".checkout-paypal-tile"),
+                "es sollen alle sieben PayPal-Kacheln im Markup stehen, nur unsichtbar"
+            );
+
+            foreach (["/bar", "/vrpayment", "/micropayment/prepay", "/micropayment/lastschrift", "/micropayment/directbanking"] as $path) {
+                $browser->assertVisible("a.account-tier[href*=\"$path\"]");
+            }
         });
     }
 }

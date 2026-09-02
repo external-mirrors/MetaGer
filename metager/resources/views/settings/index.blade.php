@@ -40,6 +40,7 @@
 
             <div class="rows">
                 <form action="{{ route('enableSetting') }}" method="post" class="form setting-form" id="suggest-settings">
+                    @include('parts.carry-key')
                     <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
 
@@ -99,6 +100,7 @@
                 </form>
 
                 <form action="{{ route('enableSetting') }}" method="post" class="form setting-form" id="more-settings">
+                    @include('parts.carry-key')
                     <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
 
@@ -160,9 +162,18 @@
                 <div class="danger-row">
                     <p class="help">@lang('settings.resetDescription')</p>
                     <form action="{{ route('deleteSettings', ['fokus' => $fokus, 'url' => $url]) }}" method="post">
+                        @include('parts.carry-key')
                         <input type="hidden" name="url" value="{{ $url }}">
                         <input type="hidden" name="focus" value="{{ $fokus }}">
                         <button type="submit" class="btn btn-sm btn-danger">@lang('settings.reset')</button>
+                    </form>
+                </div>
+                <div class="danger-row">
+                    <p class="help">@lang('settings.resetAllDescription')</p>
+                    <form action="{{ route('removeAllSettings', ['url' => $url]) }}" method="post">
+                        @include('parts.carry-key')
+                        <input type="hidden" name="url" value="{{ $url }}">
+                        <button type="submit" class="btn btn-sm btn-danger">@lang('settings.resetAll')</button>
                     </form>
                 </div>
             @endif

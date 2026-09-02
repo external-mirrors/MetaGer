@@ -1,0 +1,748 @@
+@import "../variables.less";
+
+// /konto — das Konto.
+//
+// Lag als /keys/key/<uuid> im Keymanager und sah aus wie der Keymanager: eine
+// eigene Navigation, eigene Farbvariablen, ein QR-Code als erstes Element der
+// Seite. Die Seite steht jetzt im MetaGer-Layout, benutzt dessen Tokens und ist
+// die dritte Schwester von pages/login.less und pages/key-create.less —
+// dieselbe Spaltenbreite, dieselben Karten, dieselben Abstände, damit der Weg
+// „anmelden, erstellen, verwalten“ nicht zwischen drei Gestaltungen springt.
+//
+// Vier Entscheidungen, die nicht aus der alten Seite kommen:
+//
+// **Eine Spalte, in jeder Breite.** Es gibt keinen Umbruch zwischen einer
+// Telefon- und einer Bildschirmfassung, nur Kacheln, die sich innerhalb ihres
+// Abschnitts umlegen. Die alte Seite hatte ein Raster, das über etwa 900px
+// zweispaltig wurde, und die Reihenfolge der Abschnitte war dann eine andere als
+// darunter — was auf einem Telefon zuoberst stand, stand daneben in der zweiten
+// Spalte.
+//
+// **Die Zahl ist die Überschrift.** `clamp()` statt einer festen Größe: 3rem auf
+// einem schmalen Telefon, 4.5rem auf einem Bildschirm, und dazwischen mit der
+// Breite. Vier Ziffern müssen in jeder Größe in eine Zeile passen, deshalb
+// `font-variant-numeric: tabular-nums` — proportionale Ziffern lassen die Zahl
+// beim Nachladen springen.
+//
+// **Der Zustand färbt den Rahmen, nicht die Zahl.** Ein leeres Guthaben ist eine
+// Warnung und keine Fehlermeldung; die Zahl selbst muss in jedem Zustand gleich
+// gut lesbar bleiben. Dieselbe Regel, der auch parts/account.less folgt: ein
+// Rahmen ist ein Versprechen.
+//
+// **Kein zweites Orange.** Die Seite hat genau eine Hauptaktion — aufladen —,
+// und die trägt die Markenfarbe. Alles andere ist umrandet.
+
+#account-page {
+  // Breiter als die Anmeldeseite (30rem): dort geht es um ein Feld, hier um ein
+  // Raster aus sechs Paketen, das darunter zu einer Spalte zusammenfiele.
+  max-width: 42rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+}
+
+// ── Kopf: wer bin ich ────────────────────────────────────────────────────────
+.account-head {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  text-align: center;
+
+  .page-title {
+    font-size: 1.8rem;
+    margin: 0;
+  }
+
+  .account-head__id {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.9rem;
+    color: @text-color-alpha-70;
+  }
+
+  // Etwas größer als in der Kontokachel: hier ist die Marke nicht nur eine
+  // Erinnerung, sondern die Antwort auf „welches Konto ist das“.
+  .account-mark {
+    width: 24px;
+    height: 24px;
+  }
+
+  .account-head__fingerprint {
+    // Die sechs Zeichen sind hexadezimal und werden verglichen, nicht gelesen.
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Das Guthaben ─────────────────────────────────────────────────────────────
+.account-balance {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+
+  @media (max-width: @screen-mobile-l) {
+    padding: 1.5rem 1.1rem;
+  }
+
+  // Der Zustand steht im Rahmen. `full` bekommt keine eigene Regel — alles in
+  // Ordnung ist kein Signal.
+  &.account-balance--low {
+    border-color: @account-low-color;
+  }
+
+  &.account-balance--empty {
+    border-color: @metager-orange;
+    background-color: @account-alert-background;
+  }
+
+  .account-balance__figure {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .account-balance__number {
+    font-size: clamp(3rem, 12vw, 4.5rem);
+    line-height: 1;
+    font-weight: bold;
+    // Sonst springt die Zahl in der Breite, sobald sich eine Ziffer ändert.
+    font-variant-numeric: tabular-nums;
+  }
+
+  .account-balance__unit {
+    font-size: 1.1rem;
+    color: @text-color-alpha-70;
+  }
+
+  .account-balance__note {
+    margin: 0;
+    font-size: 0.9rem;
+    color: @text-color-alpha-70;
+
+    &.account-balance__note--low {
+      color: @account-low-color;
+      font-weight: bold;
+    }
+
+    // --empty: „Ihr Guthaben ist aufgebraucht" auf /konto.
+    // --strong: der Dank auf der Landeseite nach geglückter Zahlung
+    // (checkout/returned.blade.php) — dieselbe Behandlung, anderer Anlass,
+    // deshalb ein eigener Name statt der Wiederverwendung von --empty.
+    &.account-balance__note--empty,
+    &.account-balance__note--strong {
+      color: @text-color;
+      font-weight: bold;
+    }
+  }
+
+  .account-balance__unknown {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 6px;
+    background-color: @form-error-background;
+    color: @form-error-color;
+    font-size: 0.9rem;
+  }
+
+  .account-balance__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+}
+
+// ── Die Verfallsdaten ────────────────────────────────────────────────────────
+// Ein <details> und kein Tooltip: die alte Seite hängte die Liste an ein
+// Fragezeichen mit `:hover`, und auf einem Telefon gibt es nichts, worauf man
+// zeigen kann.
+.account-expiry {
+  font-size: 0.85rem;
+  color: @text-color-alpha-70;
+  max-width: 100%;
+
+  &.account-expiry--single {
+    margin: 0;
+  }
+
+  .account-expiry__summary {
+    cursor: pointer;
+    display: grid;
+    gap: 0.15rem;
+    justify-items: center;
+
+    &::marker {
+      // Das Dreieck sitzt neben einer zentrierten Zeile und zieht sie aus der
+      // Mitte; der Hinweis darunter sagt ohnehin, dass es hier mehr gibt.
+      content: "";
+    }
+  }
+
+  .account-expiry__hint {
+    text-decoration: underline dotted;
+  }
+
+  .account-expiry__list {
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Abschnitte ───────────────────────────────────────────────────────────────
+.account-section {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+  // Ohne das laufen die Kacheln und das readonly-Feld über den Rand ihrer
+  // eigenen Karte hinaus: Rasterelemente schrumpfen nicht unter ihren Inhalt.
+  min-width: 0;
+
+  @media (max-width: @screen-mobile-l) {
+    padding: 1.1rem;
+  }
+
+  .account-section__heading {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .account-section__lede {
+    margin: 0;
+    font-size: 0.9rem;
+    color: @text-color-alpha-70;
+  }
+
+  .account-section__more {
+    font-size: 0.85rem;
+    justify-self: start;
+  }
+}
+
+// Wenn gerade nicht aufgeladen werden kann. Getönt und nicht gerahmt: ein
+// Hinweis, kein Bedienelement — dieselbe Behandlung wie der „Sie hatten schon
+// einmal einen?“-Kasten auf der Seite zum Erstellen.
+.account-blocked {
+  margin: 0;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  background-color: @highlight-color-alpha-60;
+  font-size: 0.9rem;
+}
+
+// Die Mitgliedschaft als Alternative zum Token-Paket, unter den Kacheln.
+// Bewusst keine weitere Kachel: sie ist kein zusätzliches Paket in derselben
+// Reihe, sondern der Weg daran vorbei. Dieselbe getönte Fläche wie
+// .account-blocked und aus demselben Grund — ein Hinweis, kein Bedienelement.
+// Gerendert nur auf der deutschen Oberfläche (App\Support\MembershipOffer).
+.account-membership {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  background-color: @highlight-color-alpha-60;
+
+  .account-membership__heading {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .account-membership__text {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .account-membership__action {
+    font-size: 0.85rem;
+  }
+}
+
+// ── Die Pakete ───────────────────────────────────────────────────────────────
+.account-tiers {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  // Kein `repeat(3, …)`: die Zahl der Pakete kommt vom Keyserver
+  // (App\Landing\KeyPrice) und ist keine Gestaltungsentscheidung.
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.75rem;
+
+  // Die PayPal-Kachel (checkout/index.blade.php) steht `hidden` im Markup,
+  // bis resources/js/account.js sie aufdeckt. Ein Grid-Kind hat kein
+  // eigenes display, das [hidden] überstimmen könnte — aber .account-btn in
+  // parts/account.less hatte genau dieses Problem mit einem anderen
+  // Elternelement, deshalb steht die Regel hier explizit statt sich auf die
+  // UA-Vorgabe zu verlassen.
+  li[hidden] {
+    display: none;
+  }
+}
+
+.account-tier {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  padding: 1rem 0.75rem;
+  border: 1px solid @border-color;
+  border-radius: 10px;
+  text-align: center;
+  color: @text-color;
+  text-decoration: none;
+
+  // Ohne dies gewinnt die UA-Regel für besuchte Links (a:visited, Spezifität
+  // 0,1,1) gegen die Klasse hier (0,1,0) — genau das Orange, das @link im
+  // dunklen Thema ist. .account-tier:visited liegt bei 0,2,0 und gewinnt.
+  &:visited {
+    color: @text-color;
+  }
+
+  &:hover,
+  &:focus-visible {
+    border-color: @metager-orange;
+    text-decoration: none;
+    color: @text-color;
+  }
+
+  .account-tier__amount {
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .account-tier__price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// Die Zahlungsarten teilen sich .account-tier mit den Paketen oben, brauchen
+// aber eine Mindesthöhe statt der inhaltsbestimmten Höhe: eine zweizeilige
+// Beschriftung wie "Kredit-/Debitkarte" macht sonst nur ihre eigene Grid-Zeile
+// höher (CSS Grid dehnt jede Kachel einer Zeile auf deren Höhe), und in einem
+// Raster mit mehreren Zeilen sehen die Kacheln dann zufällig unterschiedlich
+// groß aus, statt gleichmäßig.
+//
+// `min-height` und nicht mehr `height` samt `overflow: hidden`: seit jede
+// Kachel auch sagt, wann das Guthaben da ist, passt "Sofortüberweisung" plus
+// "Sofort verfügbar" nicht mehr zuverlässig in 7rem — und was nicht passte,
+// wurde vorher stillschweigend abgeschnitten statt umzubrechen.
+.account-tier--method {
+  min-height: 7.5rem;
+  justify-content: center;
+  gap: 0.4rem;
+  // Sonst berührt eine lange Beschriftung wie "Sofortüberweisung" auf einem
+  // schmalen Telefon beide Kanten der Kachel.
+  padding: 1rem 0.5rem;
+  // Deutsche Zahlungsartennamen sind lang und zusammengesetzt.
+  // `hyphens` und nicht `overflow-wrap: anywhere`: das trennte
+  // "Sofortüberweisu-/ng" mitten im Wort, weil es nicht nach Silben fragt.
+  // Die Seite trägt ihr `lang`-Attribut (layouts/*.blade.php), also hat der
+  // Browser das Wörterbuch dafür. `break-word` bleibt als Netz für den Fall,
+  // dass er keins hat.
+  hyphens: auto;
+  overflow-wrap: break-word;
+
+  .account-tier__icon {
+    height: 1.75rem;
+    width: auto;
+    max-width: 100%;
+  }
+
+  // Für einfarbige Icons (z. B. das Briefsymbol, die Kreditkarte): dieselbe
+  // Umkehrung, die auch die Quicktipps-Icons im dunklen Thema tragen.
+  .account-tier__icon--invert {
+    filter: @invert-state;
+  }
+
+  // Zwei Logos bringen ihren eigenen Untergrund mit, weil sie sonst in einem
+  // der beiden Themen verschwinden. Ein Feld und keine Umkehrung: `invert()`
+  // verdreht Verläufe (bancontact hat zwei) und Volltonfarben (SEPA-Blau) in
+  // fremde Markenfarben, und ein Zahlungslogo darf nicht in einer anderen
+  // Farbe dastehen als überall sonst. sofort.svg macht dasselbe seit jeher
+  // selbst, als Teil der Datei.
+  //
+  // Dunkler Grund für eps.svg und bancontact.svg: beide sind weiß auf
+  // transparent gezeichnet und waren im hellen Thema auf der weißen Karte
+  // schlicht unsichtbar — zwei Zahlungsarten ohne Logo neben neun mit. Im
+  // dunklen Thema ist @color-strong-grey die Kartenfarbe selbst, das Feld
+  // verschwindet dort also von allein.
+  .account-tier__icon--plate {
+    box-sizing: content-box;
+    padding: 0.25rem 0.45rem;
+    border-radius: 6px;
+    background-color: @color-strong-grey;
+  }
+
+  // Heller Grund für sepa.svg: einfarbig #005DA0, im dunklen Thema
+  // dunkelblau auf dunkelgrau und damit kaum noch zu erkennen.
+  .account-tier__icon--plate-light {
+    box-sizing: content-box;
+    padding: 0.25rem 0.45rem;
+    border-radius: 6px;
+    background-color: @color-almost-white;
+  }
+
+  .account-tier__label {
+    font-size: 0.95rem;
+    // Die Beschriftung ist die Antwort auf "womit bezahle ich" und muss die
+    // Zeile darunter schlagen, die nur sagt, wann.
+    font-weight: bold;
+    line-height: 1.25;
+  }
+
+  .account-tier__note {
+    font-size: 0.75rem;
+    line-height: 1.3;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Zugang sichern ───────────────────────────────────────────────────────────
+//
+// Ein Stapel, keine Kachelreihe. Vorher standen die Wege in
+// `repeat(auto-fit, minmax(12rem, 1fr))` nebeneinander, und das kostete
+// dreierlei: bei drei Spalten fiel der vierte Weg allein in eine zweite Reihe;
+// jeder Hinweissatz wurde in einer 12rem schmalen Spalte zu vier flatternden
+// Zeilen, zusammen sechzehn; und der Schlüssel — der Grund, aus dem es diesen
+// Abschnitt gibt — stand als einer von vier Gleichen in einem Feld, das ihn
+// hinter Zeichen zwanzig abschnitt.
+//
+// Untereinander bekommt jeder Hinweis die volle Breite der Karte und wird ein
+// bis zwei Zeilen; der Schlüssel steht ganz da; und die Reihenfolge ist
+// dieselbe, die ein Telefon ohnehin erzwingt. Der Abschnitt wird dabei nicht
+// höher, sondern niedriger — die sechzehn Hinweiszeilen waren das Meiste daran.
+.account-save {
+  display: grid;
+  gap: 1.1rem;
+}
+
+// Getrennt durch eine Haarlinie und nicht durch einen Rahmen: die Karte des
+// Abschnitts ist schon eine Fläche, eine zweite darin wäre eine Schachtel in
+// der Schachtel. Der Abstand ist oben und unten derselbe, damit die Linie
+// mittig zwischen zwei Wegen sitzt und nicht am nächsten klebt.
+.account-save__option + .account-save__option {
+  padding-top: 1.1rem;
+  border-top: 1px solid @border-color;
+}
+
+.account-save__option {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  // Dieselbe Falle wie in .account-section: ein Rasterelement schrumpft nicht
+  // unter seinen Inhalt, und der Inhalt hier ist ein Feld mit einem langen URL.
+  min-width: 0;
+
+  // `display: grid` schlägt das, was `hidden` sonst tut. Ohne diese Regel
+  // stünde der Weg „weiteres Gerät“ auch ohne Skript da — mitsamt dem Knopf,
+  // den es dann nicht gibt.
+  &[hidden] {
+    display: none;
+  }
+
+  .account-save__label {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  // Feld und Knopf in einer Zeile. Der Knopf ist `hidden`, solange es keine
+  // Zwischenablage gibt — ein ausgeblendetes Flex-Element belegt keinen Platz,
+  // das Feld nimmt dann die ganze Zeile.
+  .account-save__control {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .account-save__input {
+    // 21rem trägt sechsunddreißig Zeichen in Monospace: unterhalb davon bricht
+    // der Knopf in die nächste Zeile, statt dass das Feld den Schlüssel
+    // abschneidet.
+    flex: 1 1 21rem;
+    min-width: 0;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid @border-color;
+    border-radius: 6px;
+    background-color: @input-background;
+    color: @input-text;
+    font-size: 0.8rem;
+  }
+
+  // Ein Schlüssel wird abgetippt und Zeichen für Zeichen verglichen.
+  .account-save__input--key {
+    font-family: monospace;
+    font-size: 0.9rem;
+
+    // Auf einem schmalen Telefon passen sechsunddreißig Zeichen bei 0.9rem
+    // nicht in die Karte. Kleiner gesetzt stehen sie ganz da — und ganz da ist
+    // mehr wert als groß: dieses Feld ist die einzige Stelle, an der jemand
+    // ohne Kamera und ohne Zwischenablage an seinen Schlüssel kommt.
+    @media (max-width: @screen-mobile-l) {
+      font-size: 0.72rem;
+    }
+  }
+
+  .account-save__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// Derselbe Schlüssel als Bild: der Text links, das Bild rechts. Die
+// DOM-Reihenfolge ist Überschrift, Satz, Bild — der Satz erklärt das Bild, also
+// steht er davor, und das Raster stellt es nur daneben.
+.account-save__option--qr {
+  grid-template-columns: 1fr auto;
+  // Die dritte Zeile ist leer und nimmt den Rest: das Bild ist höher als
+  // Überschrift und Satz zusammen, und ein Element, das über zwei Zeilen läuft,
+  // verteilt den Überschuss sonst gleichmäßig auf beide — der Satz stünde dann
+  // eine halbe Bildhöhe unter seiner Überschrift.
+  grid-template-rows: auto auto 1fr;
+  column-gap: 1.25rem;
+  align-items: start;
+
+  .account-save__label {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .account-save__hint {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .account-save__qr {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+
+  // Nebeneinander bliebe unter @screen-mobile-l für den Satz eine Spalte von
+  // wenigen Zeichen übrig. Dann untereinander, Bild zuletzt.
+  @media (max-width: @screen-mobile-l) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+
+    .account-save__label {
+      grid-row: auto;
+    }
+
+    .account-save__hint {
+      grid-row: auto;
+    }
+
+    .account-save__qr {
+      grid-column: 1;
+      grid-row: auto;
+    }
+  }
+}
+
+.account-save__qr {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: center;
+  color: @text-color;
+
+  img {
+    // Der QR-Code braucht einen hellen Grund, um lesbar zu bleiben — im
+    // Dunkelmodus ebenso, wo die Karte fast schwarz ist.
+    background-color: white;
+    padding: 6px;
+    border-radius: 6px;
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: @screen-mobile-l) {
+    justify-items: start;
+  }
+}
+
+// Die Beschriftung unter dem Bild. Der ganze Block ist ein Link, also muss sie
+// wie einer aussehen — aber nicht wie eine zweite Überschrift: der Erbfall aus
+// dem Layout setzt Links in dieser Karte fett.
+.account-save__action {
+  font-size: 0.85rem;
+  font-weight: normal;
+  text-decoration: underline;
+}
+
+// Nicht in .account-save__option verschachtelt: derselbe Knopf sitzt auf der
+// Barzahlungsseite neben der Zahlungs-ID (checkout/cash.blade.php), wo es kein
+// .account-save__option gibt — verschachtelt blieb er dort ein nackter
+// Systemknopf.
+.account-save__button {
+  justify-self: start;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid @border-color;
+  border-radius: 6px;
+  background-color: transparent;
+  color: @text-color;
+  font-size: 0.85rem;
+  cursor: pointer;
+  // Sonst zerreißt „Schlüssel kopieren“ neben einem schmalen Feld in zwei
+  // Zeilen und macht die Zeile höher als das Feld daneben.
+  white-space: nowrap;
+
+  &:hover,
+  &:focus-visible {
+    border-color: @metager-orange;
+  }
+}
+
+// ── Weiteres ─────────────────────────────────────────────────────────────────
+.account-more {
+  .account-more__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .account-more__logout {
+    display: grid;
+    gap: 0.15rem;
+    margin-top: 0.4rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid @border-color;
+  }
+
+  .account-more__hint {
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Knöpfe ───────────────────────────────────────────────────────────────────
+.account-btn {
+  // flex, not inline-block: .account-balance__actions can hold this button
+  // alone next to "Guthaben aufladen", whose label wraps to two lines and
+  // stretches the row to match — an inline-block's line box stays pinned to
+  // the top padding edge in the extra height, so a one-line neighbour like
+  // "Zur Suche" only ever looked centred horizontally, never vertically.
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: none;
+  }
+
+  &.account-btn--primary {
+    background-color: @metager-orange;
+    color: @color-black;
+
+    &:hover,
+    &:focus-visible {
+      background-color: @metager-orange-alpha-80-darker;
+      color: @color-black;
+    }
+  }
+
+  &.account-btn--quiet {
+    border-color: @border-color;
+    background-color: transparent;
+    color: @text-color;
+
+    &:hover,
+    &:focus-visible {
+      border-color: @metager-orange;
+      color: @text-color;
+    }
+  }
+
+  // A destructive action (deleting a campaign) — quiet's own outline, but
+  // in the same color as a form error, so it reads as "be careful" rather
+  // than as just another neutral choice next to it.
+  &.account-btn--danger {
+    border-color: @form-error-color;
+    background-color: transparent;
+    color: @form-error-color;
+
+    &:hover,
+    &:focus-visible {
+      background-color: @form-error-background;
+    }
+  }
+}
+
+// ── Der Dialog für ein weiteres Gerät ────────────────────────────────────────
+.account-dialog {
+  max-width: 26rem;
+  padding: 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+  color: @text-color;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .account-dialog__title {
+    margin: 0 0 0.75rem;
+    font-size: 1.2rem;
+  }
+
+  .account-dialog__text,
+  .account-dialog__note {
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    color: @text-color-alpha-70;
+  }
+
+  .account-dialog__note {
+    font-size: 0.8rem;
+  }
+
+  // Der Code wird abgetippt, oft von einem Bildschirm auf ein Telefon. Groß,
+  // gesperrt und mit Ziffern gleicher Breite, damit sich beim Lesen keine Stelle
+  // verschiebt.
+  .account-dialog__code {
+    margin: 0 0 1rem;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .account-dialog__failed {
+    margin: 0 0 1rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 6px;
+    background-color: @form-error-background;
+    color: @form-error-color;
+    font-size: 0.9rem;
+  }
+}

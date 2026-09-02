@@ -99,6 +99,11 @@
 			@if (isset($error))
 				<div class="alert alert-danger" role="alert">{{ $error }}</div>
 			@endif
+			{{-- The startpage renders this itself, positioned inside #search-wrapper's
+			     grid instead of here — see parts/cookie-notice.blade.php. --}}
+			@if (($page ?? '') !== 'startpage')
+				@include('parts.cookie-notice')
+			@endif
 			@yield('content')
 		</main>
 	</div>

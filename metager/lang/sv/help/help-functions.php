@@ -44,19 +44,7 @@ return [
     'key' => [
         'title' => 'Lägg till MetaGer-nyckel <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'MetaGer-nyckeln installeras automatiskt i din webbläsare och används. Du behöver inte göra något annat. Om du vill använda MetaGer-nyckeln på andra enheter finns det flera sätt att konfigurera MetaGer-nyckeln:',
-        '2' => 'Inloggningskod <br>På <a href = "/keys/key/enter">hanteringssidan</a> för MetaGer-nyckeln kan du använda inloggningskoden för att lägga till din nyckel till en annan enhet. Ange helt enkelt den sexsiffriga koden när du loggar in. Inloggningskoden kan bara användas en gång och är bara giltig så länge fönstret är öppet.',
-        '3' => 'Kopiera URL <br> När du är på <a href = "/keys/key/enter">hanteringssidan</a> för MetaGer-nyckeln finns det ett alternativ att kopiera en URL. Denna URL kan användas för att spara alla MetaGer-inställningar, inklusive MetaGer-nyckeln, på en annan enhet.',
-        '4' => 'Spara fil <br> När du är på <a href = "/keys/key/enter">hanteringssidan</a> för MetaGer-nyckeln, finns det ett alternativ för att spara en fil. Detta sparar din MetaGer-nyckel som en fil. Du kan sedan använda den här filen på en annan enhet för att logga in med din nyckel.',
-        '5' => 'Skanna QR-kod <br>Alternativt kan du också skanna QR-koden som visas på <a href = "/keys/key/enter">hanteringssidan</a> för att logga in med en annan enhet.',
-        '6' => 'Ange MetaGer-nyckel manuellt <br>Du kan också ange nyckeln manuellt på en annan enhet.',
-        'colors' => [
-            'title' => 'Färgad MetaGer-nyckel',
-            '1' => 'För att du enkelt ska kunna se om du söker annonsfritt har vi gett våra nyckelsymboler färger. Nedan finns förklaringar till motsvarande färger:',
-            'grey' => 'Grå: Du har inte ställt in en nyckel. Du använder den fria sökningen.',
-            'red' => 'Röd: Om din nyckelsymbol är röd betyder det att nyckeln är tom. Du har använt upp alla annonsfria sökningar. Du kan ladda nyckeln på sidan för nyckelhantering.',
-            'green' => 'Grön: Om nyckelsymbolen är grön använder du en laddad nyckel.',
-            'yellow' => 'Gul: Om du ser en gul nyckel har du fortfarande ett saldo på 30 tokens. Dina sökningar håller på att ta slut. Vi rekommenderar att du laddar upp nyckeln snart.',
-        ],
+        'more' => 'Alla sätt att ställa in den och fler frågor om nyckeln',
     ],
     'exactsearch' => [
         'title' => 'Exakt sökning <a title="For easy help, click here" href="/hilfe/easy-language/functions#exactsearch"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

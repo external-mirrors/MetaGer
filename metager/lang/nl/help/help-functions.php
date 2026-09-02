@@ -20,21 +20,9 @@ return [
         'explanation_a' => 'Probeer eerst de huidige plugin te installeren. Om te installeren klik je gewoon op de link direct onder het zoekvak. Je browser zou daar al gedetecteerd moeten zijn.',
     ],
     'key' => [
-        '5' => 'Scan QR Code <br>Als alternatief kunt u ook de QR-code scannen die wordt weergegeven op de <a href = "/keys/key/enter">beheerpagina</a> om in te loggen met een ander apparaat.',
-        '6' => 'MetaGer sleutel handmatig invoeren <br>U kunt de sleutel ook handmatig invoeren op een ander apparaat.',
-        'colors' => [
-            '1' => 'Om gemakkelijk te herkennen of je reclamevrij zoekt, hebben we onze belangrijkste symboolkleuren gegeven. Hieronder vind je uitleg over de bijbehorende kleuren:',
-            'grey' => 'Grijs: Je hebt geen sleutel ingesteld. U gebruikt de gratis zoekfunctie.',
-            'red' => 'Rood: Als je sleutelsymbool rood is, betekent dit dat deze sleutel leeg is. Je hebt alle advertentievrije zoekopdrachten opgebruikt. Je kunt de sleutel opnieuw opladen op de sleutelbeheerpagina.',
-            'green' => 'Groen: Als je sleutelsymbool groen is, gebruik je een opgeladen sleutel.',
-            'yellow' => 'Geel: Als je een gele sleutel ziet, heb je nog een saldo van 30 tokens. Je zoekopdrachten raken op. Het is aan te raden om de sleutel snel op te laden.',
-            'title' => 'Gekleurde MetaGer-sleutel',
-        ],
         'title' => 'MetaGer-sleutel toevoegen <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'De MetaGer sleutel wordt automatisch ingesteld in je browser en gebruikt. Je hoeft verder niets te doen. Als je de MetaGer-sleutel op andere apparaten wilt gebruiken, zijn er verschillende manieren om de MetaGer-sleutel in te stellen:',
-        '2' => 'Inlogcode <br>Op de <a href = "/keys/key/enter">beheerpagina</a> van de MetaGer sleutel, kun je de inlogcode gebruiken om je sleutel toe te voegen aan een ander apparaat. Voer gewoon de zescijferige cijfercode in wanneer je inlogt. De inlogcode kan maar één keer worden gebruikt en is alleen geldig zolang het venster geopend is.',
-        '3' => 'URL kopiëren <br>Wanneer je op de <a href = "/keys/key/enter">beheerpagina</a> van de MetaGer sleutel bent, is er een optie om een URL te kopiëren. Deze URL kan worden gebruikt om alle MetaGer instellingen, inclusief de MetaGer sleutel, op te slaan op een ander apparaat.',
-        '4' => 'Bestand opslaan <br>Wanneer je op de <a href = "/keys/key/enter">beheerpagina</a> van de MetaGer sleutel bent, is er een optie om een bestand op te slaan. Dit slaat je MetaGer sleutel op als een bestand. Je kunt dit bestand dan op een ander apparaat gebruiken om in te loggen met je sleutel.',
+        'more' => 'Alle manieren om hem in te stellen en meer vragen over de sleutel',
     ],
     'multiwordsearch' => [
         'title' => 'Zoeken op meerdere woorden <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

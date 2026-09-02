@@ -31,6 +31,12 @@ return [
             '5' => 'Skydd av ungdomar',
             '0' => 'Integritet',
         ],
+        '5' => [
+            '0' => 'MetaGer-nyckeln',
+            '1' => 'Frågor om nyckeln',
+            '2' => 'Anonyma tokens',
+            '3' => 'Vad nyckeln kostar',
+        ],
     ],
     'easy.language' => "för enkel hjälp",
 ];

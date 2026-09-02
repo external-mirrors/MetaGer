@@ -34,7 +34,7 @@
     account in its own popup.
 
     Which is also where the pill goes in that state. Everywhere else it leads to
-    /keys/key/enter, because that is where the account is managed — but a user
+    /konto, because that is where the account is managed — but a user
     who is signed in anonymously has no key to enter and would not want to enter
     it here if they had: handing it to us is the one thing the arrangement exists
     to avoid. The extension is the only party that can show that account, so the
@@ -50,8 +50,10 @@
     is not guaranteed to run. It points at the page explaining what an anonymous
     token is, which is the best answer this site can give without the extension.
   --}}
-  @php($accountHref = $accountAnonymous ? "/keys/help/anonymous-token" : "/keys/key/enter")
-  <a href="{{ LaravelLocalization::getLocalizedURL(null, $accountHref) }}"
+  @php($accountHref = $accountAnonymous
+    ? route('anonymous-token')
+    : App\Landing\KeymanagerLinks::dashboard())
+  <a href="{{ $accountHref }}"
     id="account-pill"
     @if($accountAnonymous) data-extension-settings @endif
     class="account-pill account-pill--{{ $accountDensity }} @if($accountAnonymous) account-pill--anonymous @else account-pill--{{ strtolower($accountState->name) }} @endif {{ $class ?? '' }}"

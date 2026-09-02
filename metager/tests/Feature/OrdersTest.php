@@ -505,10 +505,32 @@ class OrdersTest extends TestCase
                 "message" => "Bitte erstatten, danke.",
             ]);
 
-        $response->assertRedirect(route("account.orders.refund", ["reference" => "Z1"]));
+        $response->assertRedirect(route("account.orders.refund", ["reference" => "Z1", "requested" => 1]));
 
         Http::assertSent(fn ($request) => str_contains($request->url(), "/refund")
             && $request["message"] === "Bitte erstatten, danke.");
+    }
+
+    /**
+     * The redirect target after a successful submit is the same GET page a
+     * stale/already-refunded visit reaches — both show refund_available:
+     * false. Without `?requested=1` distinguishing them, a user who just
+     * successfully asked for a refund would read the same "nothing to do
+     * here" wording an unrelated, unavailable order would show.
+     */
+    public function testTheRedirectAfterASuccessfulRefundShowsASuccessMessageNotTheGenericUnavailableOne(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order([
+                "payments" => [array_merge($this->order()["payments"][0], ["refund_available" => false, "refund_token_count" => 0])],
+            ])),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/erstattung?requested=1")
+            ->assertOk()
+            ->assertSee(trans("orders.refund.success"))
+            ->assertDontSee(trans("orders.refund.unavailable"));
     }
 
     /**
@@ -526,7 +548,7 @@ class OrdersTest extends TestCase
         $this->signedIn()
             ->withHeader("Origin", config("app.url"))
             ->post("/de-DE/konto/bestellungen/Z1/erstattung", ["message" => ""])
-            ->assertRedirect(route("account.orders.refund", ["reference" => "Z1"]));
+            ->assertRedirect(route("account.orders.refund", ["reference" => "Z1", "requested" => 1]));
     }
 
     public function testSubmittingTheRefundFormShowsAKeyserverRefusal(): void

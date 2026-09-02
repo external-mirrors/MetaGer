@@ -57,6 +57,7 @@ return [
         'heading' => 'Reemborsament',
         'breadcrumb' => 'Comanda :reference',
         'unavailable' => 'No queda saldo reemborsable per a aquesta comanda — o bé ja s\'ha sol·licitat un reemborsament, o bé el mètode de pagament utilitzat no admet una sol·licitud de reemborsament mitjançant aquest formulari.',
+        'success' => 'La vostra sol·licitud ens ha arribat correctament. La tramitarem al més aviat possible. Segons el mètode de pagament, poden passar uns dies abans que el reemborsament sigui visible als vostres moviments.',
         'description' => 'No esteu satisfets amb la vostra clau? Ens sap molt de greu! És clar que en aquest cas us reemborsarem l\'import de la factura. El reemborsament sempre es fa al mateix compte que es va fer servir per al pagament original. També ens agradarà rebre les vostres crítiques.',
         'partial_note' => 'Nota: ja heu fet servir part del saldo comprat. Per això només us podem reemborsar <span class="bold">:count</span> de <span class="bold">:total</span> cerques.',
         'message' => [

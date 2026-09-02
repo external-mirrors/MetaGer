@@ -57,6 +57,7 @@ return [
         'heading' => 'Återbetalning',
         'breadcrumb' => 'Beställning :reference',
         'unavailable' => 'Det finns inget återbetalningsbart saldo kvar för denna beställning — antingen har en återbetalning redan begärts, eller så stöder den använda betalningsmetoden inte en återbetalningsbegäran via detta formulär.',
+        'success' => 'Din förfrågan har skickats till oss. Vi kommer att behandla den så snart som möjligt. Beroende på betalningsmetod kan det ta några dagar innan en återbetalning syns i din försäljning.',
         'description' => 'Är du missnöjd med din nyckel? Det var tråkigt att höra! Naturligtvis kommer vi att återbetala fakturabeloppet i detta fall. En återbetalning görs alltid till samma konto som användes för den ursprungliga betalningen. Vi tar också gärna emot din kritik.',
         'partial_note' => 'Observera: en del av din köpta kredit har redan använts. Därför kan vi endast återbetala <span class="bold">:count</span> av <span class="bold">:total</span> sökningar.',
         'message' => [

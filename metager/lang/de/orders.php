@@ -69,6 +69,7 @@ return [
         'heading' => 'Erstattung',
         'breadcrumb' => 'Auftrag :reference',
         'unavailable' => 'Für diese Bestellung gibt es kein erstattungsfähiges Guthaben mehr — entweder wurde bereits eine Erstattung angefragt, oder die verwendete Zahlungsart unterstützt keine Erstattungsanfrage über dieses Formular.',
+        'success' => 'Ihre Anfrage wurde uns erfolgreich zugestellt. Wir bearbeiten diese so schnell wie möglich. Je nach Zahlungsmethode kann es einige Tage dauern, bis eine Erstattung in Ihren Umsätzen sichtbar wird.',
         'description' => 'Sind Sie unzufrieden mit Ihrem Schlüssel? Das bedauern wir sehr! Selbstverständlich erstatten wir Ihnen in diesem Fall den Rechnungsbetrag. Eine Erstattung erfolgt stets auf das gleiche Konto, welches bei der ursprünglichen Zahlung verwendet wurde. Gerne nehmen wir auch Ihre Kritik entgegen.',
         'partial_note' => 'Ein Teil Ihres gekauften Guthabens wurde bereits verbraucht. Wir können Ihnen deshalb lediglich <span class="bold">:count</span> von <span class="bold">:total</span> Suchanfragen erstatten.',
         'message' => [

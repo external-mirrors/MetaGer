@@ -57,6 +57,7 @@ return [
         'heading' => 'Palautus',
         'breadcrumb' => 'Tilaus :reference',
         'unavailable' => 'Tälle tilaukselle ei ole enää hyvitettävää saldoa — joko hyvitystä on jo pyydetty, tai käytetty maksutapa ei tue hyvityspyyntöä tämän lomakkeen kautta.',
+        'success' => 'Pyyntösi on lähetetty meille onnistuneesti. Käsittelemme sen mahdollisimman pian. Maksutavasta riippuen voi kestää muutaman päivän ennen kuin hyvitys näkyy myynnissäsi.',
         'description' => 'Oletko tyytymätön avaimeesi? Olemme hyvin pahoillamme siitä! Tietenkin hyvitämme laskun summan tässä tapauksessa. Palautus tehdään aina samalle tilille, jota käytettiin alkuperäisessä maksussa. Otamme mielellämme vastaan myös kritiikkisi.',
         'partial_note' => 'Huomaa: Osa ostamastasi hyvityksestä on jo käytetty. Siksi voimme hyvittää sinulle vain <span class="bold">:count</span>/<span class="bold">:total</span> hakua.',
         'message' => [

@@ -57,6 +57,7 @@ return [
         'heading' => 'Reembolso',
         'breadcrumb' => 'Pedido :reference',
         'unavailable' => 'Ya no queda saldo reembolsable para este pedido — o bien ya se ha solicitado un reembolso, o bien el método de pago utilizado no admite una solicitud de reembolso a través de este formulario.',
+        'success' => 'Su solicitud nos ha sido enviada correctamente. La tramitaremos lo antes posible. Dependiendo del método de pago, pueden pasar unos días antes de que el reembolso sea visible en tus ventas.',
         'description' => '¿No está satisfecho con su llave? Lo sentimos mucho. Por supuesto, en este caso le devolveremos el importe de la factura. El reembolso se realiza siempre en la misma cuenta que se utilizó para el pago original. También nos alegramos de recibir sus críticas.',
         'partial_note' => 'Nota: Parte del crédito adquirido ya se ha utilizado. Por lo tanto, solo podemos reembolsarte <span class="bold">:count</span> de <span class="bold">:total</span> búsquedas.',
         'message' => [

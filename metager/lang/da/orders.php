@@ -57,6 +57,7 @@ return [
         'heading' => 'Tilbagebetaling',
         'breadcrumb' => 'Ordre :reference',
         'unavailable' => 'Der er ikke længere nogen refusion tilbage for denne ordre — enten er der allerede anmodet om refusion, eller også understøtter den anvendte betalingsmetode ikke en refusionsanmodning via denne formular.',
+        'success' => 'Din anmodning er blevet sendt til os. Vi vil behandle den så hurtigt som muligt. Afhængigt af betalingsmetoden kan det tage et par dage, før en refusion er synlig i dit salg.',
         'description' => 'Er du utilfreds med din nøgle? Det er vi meget kede af at høre! Selvfølgelig refunderer vi fakturabeløbet i dette tilfælde. En refundering sker altid til den samme konto, som blev brugt til den oprindelige betaling. Vi er også glade for at modtage din kritik.',
         'partial_note' => 'Bemærk: En del af din købte kredit er allerede blevet brugt. Derfor kan vi kun refundere dig <span class="bold">:count</span> ud af <span class="bold">:total</span> søgninger.',
         'message' => [

@@ -57,6 +57,7 @@ return [
         'heading' => 'Zwrot pieniędzy',
         'breadcrumb' => 'Zamówienie :reference',
         'unavailable' => 'Dla tego zamówienia nie pozostało już żadne saldo podlegające zwrotowi — albo zwrot pieniędzy został już zgłoszony, albo użyta metoda płatności nie obsługuje wniosku o zwrot pieniędzy za pomocą tego formularza.',
+        'success' => 'Twoje zgłoszenie zostało do nas pomyślnie wysłane. Przetworzymy je tak szybko, jak to możliwe. W zależności od metody płatności może minąć kilka dni, zanim zwrot będzie widoczny w sprzedaży.',
         'description' => 'Jesteś niezadowolony ze swojego klucza? Bardzo nam przykro to słyszeć! Oczywiście w takim przypadku zwrócimy kwotę faktury. Zwrot jest zawsze dokonywany na to samo konto, które zostało użyte do pierwotnej płatności. Cieszymy się również z krytyki.',
         'partial_note' => 'Uwaga: część zakupionych środków została już wykorzystana. W związku z tym możemy zwrócić tylko <span class="bold">:count</span> z <span class="bold">:total</span> wyszukiwania.',
         'message' => [

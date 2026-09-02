@@ -62,6 +62,7 @@ return [
         'heading' => 'Reembolso',
         'breadcrumb' => 'Encomenda :reference',
         'unavailable' => 'Já não existe saldo reembolsável para esta encomenda — ou já foi pedido um reembolso, ou o método de pagamento utilizado não suporta um pedido de reembolso através deste formulário.',
+        'success' => 'O seu pedido foi enviado com sucesso. Iremos processá-lo o mais rapidamente possível. Consoante o método de pagamento, pode demorar alguns dias até o reembolso ser visível nos seus movimentos.',
         'description' => 'Não está satisfeito com a sua chave? Lamentamos muito! Nesse caso, reembolsaremos naturalmente o valor da fatura. Um reembolso é sempre feito para a mesma conta utilizada no pagamento original. Também agradecemos a sua crítica.',
         'partial_note' => 'Parte do seu saldo adquirido já foi utilizada. Por isso, só podemos reembolsar-lhe <span class="bold">:count</span> de <span class="bold">:total</span> pesquisas.',
         'message' => [

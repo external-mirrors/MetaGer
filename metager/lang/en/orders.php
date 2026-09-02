@@ -69,6 +69,7 @@ return [
         'heading' => 'Refund',
         'breadcrumb' => 'Order :reference',
         'unavailable' => 'There is no refundable balance left for this order — either a refund has already been requested, or the payment method used does not support a refund request through this form.',
+        'success' => 'Your request has been successfully sent to us. We will process it as soon as possible. Depending on the payment method, it may take a few days before a refund is visible in your sales.',
         'description' => 'Are you dissatisfied with your key? We are very sorry to hear that! Of course, we will refund the invoice amount in this case. A refund is always made to the same account that was used for the original payment. We are also happy to receive your feedback.',
         'partial_note' => 'Part of your purchased credit has already been used. We can therefore only refund you <span class="bold">:count</span> of <span class="bold">:total</span> searches.',
         'message' => [

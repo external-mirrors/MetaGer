@@ -235,7 +235,17 @@ final class OrderController extends Controller
         ]);
     }
 
-    /** Formular für die Erstattung (Zammad-Ticket + Guthaben-Rückbuchung). */
+    /**
+     * Formular für die Erstattung (Zammad-Ticket + Guthaben-Rückbuchung).
+     *
+     * `?requested=1` unterscheidet "gerade erfolgreich abgeschickt" von "hier
+     * gibt es ohnehin nichts (mehr) zu erstatten" — beide Zustände sehen für
+     * refund_available identisch aus (kein erstattungsfähiges Guthaben mehr),
+     * aber der erste ist ein Erfolg, kein Fehler. Ein Query-Parameter statt
+     * Session, weil `StartSession` für `web`-Routen entfernt ist (keine
+     * Session hier, siehe {@see \App\Http\Controllers\ChargeController}s
+     * Rückkehr-Links für dasselbe Muster).
+     */
     public function refund(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
     {
         [, $key, $redirect] = $this->resolveKey($request, route("account.orders.show", ["reference" => $reference]));
@@ -257,6 +267,7 @@ final class OrderController extends Controller
             "refundAvailable" => $order["payments"][0]["refund_available"],
             "refundTokenCount" => $order["payments"][0]["refund_token_count"],
             "refundAmount" => $order["payments"][0]["refund_amount"],
+            "justRequested" => $request->query("requested") === "1",
             "message" => "",
             "error" => null,
         ]);
@@ -288,7 +299,7 @@ final class OrderController extends Controller
 
         if ($result["ok"]) {
             return redirect()
-                ->to(route("account.orders.refund", ["reference" => $order["public_id"]]))
+                ->to(route("account.orders.refund", ["reference" => $order["public_id"], "requested" => 1]))
                 ->header("Cache-Control", "no-store, private");
         }
 
@@ -297,6 +308,7 @@ final class OrderController extends Controller
             "refundAvailable" => $order["payments"][0]["refund_available"],
             "refundTokenCount" => $order["payments"][0]["refund_token_count"],
             "refundAmount" => $order["payments"][0]["refund_amount"],
+            "justRequested" => false,
             "message" => $message,
             "error" => $result["error"],
         ]);

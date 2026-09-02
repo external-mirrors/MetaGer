@@ -49,4 +49,6 @@ return [
     'checkout' => 'Fyll på saldo – MetaGer',
     'orders' => 'Beställningar – MetaGer',
     'campaigns' => 'Presentkortskampanjer – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Lös in ditt presentkort – MetaGer',
 ];

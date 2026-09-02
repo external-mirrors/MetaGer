@@ -143,17 +143,18 @@ class KeyPagesNavigationTest extends TestCase
     }
 
     /**
-     * Der Schlüsselvorgang bleibt vorerst im Keymanager, und die FAQ verlinkt
-     * ihn — mit den Callback-Markern der App, wie jeder andere Link dorthin.
+     * Der Schlüsselvorgang ist jetzt vollständig MetaGers eigener — die FAQ
+     * verlinkt beide Wege dorthin, nicht mehr auf den Keymanager.
      */
-    public function testTheKeyFaqStillLinksTheKeymanagerForTheKeyFlow(): void
+    public function testTheKeyFaqLinksTheOwnKeyFlow(): void
     {
         $response = $this->get("/hilfe/schluessel")->assertOk();
 
-        // /anmelden statt /keys/key/enter: die Anmeldeseite ist seit dem
-        // dritten Umzugsschritt eine MetaGer-Route. Der Gutschein-Einlöser
-        // unter /keys/c ist es nicht und bleibt vorerst dort.
+        // /anmelden und /c sind seit dem vierten Umzugsschritt beide
+        // MetaGer-Routen; /keys/c ist nur noch eine dauerhafte Weiterleitung
+        // (App\Landing\KeymanagerLinks::voucher()).
         $response->assertSee("/anmelden", false);
-        $response->assertSee("/keys/c", false);
+        $response->assertSee("/c", false);
+        $response->assertDontSee("/keys/c", false);
     }
 }

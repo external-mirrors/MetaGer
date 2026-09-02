@@ -207,10 +207,10 @@ final class LoginController extends Controller
 
         return match ($answer["result"]) {
             KeyResolver::KEY => $this->signIn($request, $answer["key"], $callback, $redirectSuccess),
-            // Der Gutschein wird auf der Kampagnenseite des Keymanagers
-            // eingelöst; die kennt die Kampagne, das Budget und die Bremse
-            // dafür. Hier ist nur bekannt, dass die Eingabe einer war.
-            KeyResolver::VOUCHER => redirect()->away(KeymanagerLinks::voucher($answer["code"])),
+            // Der Gutschein wird auf /c eingelöst (App\Http\Controllers\
+            // VoucherController); die kennt die Kampagne, das Budget und die
+            // Bremse dafür. Hier ist nur bekannt, dass die Eingabe einer war.
+            KeyResolver::VOUCHER => redirect()->to(KeymanagerLinks::voucher($answer["code"])),
             KeyResolver::UNREACHABLE
                 => $this->back($callback, $redirectSuccess, "keyserver_unreachable", $entered),
             default => $this->back($callback, $redirectSuccess, $answer["error"], $entered),

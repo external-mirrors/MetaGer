@@ -25,6 +25,7 @@ use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\TilesController;
 use App\Http\Controllers\TTSController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\ZitatController;
 use App\Http\Middleware\AuthenticationValidation;
 use App\Http\Middleware\LocalizationRedirect;
@@ -498,6 +499,28 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
     Route::get('konto/gutscheinaktionen/{id}/karten.pdf', [CampaignController::class, 'cardsPdf'])
         ->whereNumber('id')
         ->name('account.campaigns.cards');
+
+    /**
+     * Einen Gutscheincode einlösen — aus dem Keymanager (`/keys/c`) hierher
+     * gezogen, die letzte besucherseitige `/keys`-Seite. App\Http\Controllers\
+     * VoucherController hat den Grund und die beiden Einlösewege.
+     *
+     * `/c` und nicht `/gutschein`: kurz, weil eine gedruckte Karte diesen Pfad
+     * von Hand tippbar macht — anders als jede andere umgezogene Route hier,
+     * die deutsch heißt. `/c` beim Keymanager leitet dauerhaft hierher weiter.
+     *
+     * `{code}` und `{token}` bekommen kein `->where()`: ein Code oder Token,
+     * der nicht ins erwartete Format passt, ist eine gültige Anfrage an eine
+     * echte Seite — sie endet in einer übersetzten Fehlermeldung
+     * (`invalid_code`/`invalid_token`), nicht in einer nichtssagenden 404, wie
+     * ein Tippfehler von einer Karte es sonst wäre.
+     */
+    Route::get('c', [VoucherController::class, 'enter'])->name('voucher');
+    Route::post('c', [VoucherController::class, 'submit'])->name('voucher.submit');
+    Route::get('c/campaign/{token}', [VoucherController::class, 'publicTeaser'])->name('voucher.campaign');
+    Route::post('c/campaign/{token}', [VoucherController::class, 'publicRedeem'])->name('voucher.campaign.redeem');
+    Route::get('c/{code}', [VoucherController::class, 'teaser'])->name('voucher.code');
+    Route::post('c/{code}', [VoucherController::class, 'redeem'])->name('voucher.code.redeem');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

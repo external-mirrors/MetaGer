@@ -43,4 +43,56 @@ return [
             'unreachable' => 'De actie kon op dit moment niet worden aangemaakt. Probeer het later opnieuw.',
         ],
     ],
+
+    /**
+     * /c — App\Http\Controllers\VoucherController.
+     */
+    'redeem' => [
+        'enter' => [
+            'heading' => 'Voucher inwisselen',
+            'description' => 'Heb je een vouchercode ontvangen voor gratis MetaGer-zoekopdrachten? Voer hem hier in om je persoonlijke MetaGer-sleutel te krijgen.',
+            'label' => 'Je vouchercode',
+            'submit' => 'Code inwisselen',
+            'invalid_code' => 'Deze code is ongeldig. Controleer je invoer.',
+            'rate_limited' => 'Te veel pogingen. Probeer het later opnieuw.',
+        ],
+        'teaser' => [
+            'heading' => 'Jouw MetaGer-cadeau',
+            'tokens' => 'Tokens',
+            'description' => 'Deze code geeft je een eigen MetaGer-sleutel met :tokens tokens - zoek reclamevrij en zonder getrackt te worden op het web.',
+            'validity' => 'De sleutel is :days dagen geldig na inwisseling.',
+            'submit' => 'Sleutel ophalen',
+        ],
+        'redeemed' => [
+            'heading' => 'Hier is je MetaGer-sleutel!',
+            'description' => 'Je nieuwe sleutel bevat :tokens tokens.',
+            'save' => [
+                'heading' => '1. Sla je sleutel op',
+                'description' => 'Je sleutel is je inlog - hij wordt alleen hier getoond en kan niet worden hersteld. Sla hem op in je wachtwoordmanager, download de QR-code of print deze pagina.',
+            ],
+            'copy_key' => 'Sleutel kopiëren',
+            'validity' => 'De sleutel is geldig tot :date.',
+            'use' => [
+                'heading' => '2. Begin met zoeken',
+                'description' => 'Open deze link om de sleutel in je browser te activeren. Voeg hem toe aan je favorieten om ingelogd te blijven.',
+            ],
+            'copy_url' => 'Link kopiëren',
+            'start_searching' => 'Nu beginnen met zoeken',
+            'to_account' => 'Naar mijn account',
+            'qr_alt' => 'QR-code voor de sleutel',
+            'no_cookies' => 'Deze browser lijkt geen cookies te bewaren. Bewaar in plaats daarvan de sleutel of de QR-code hierboven.',
+        ],
+        'error' => [
+            'heading' => 'Dit is niet gelukt',
+            'invalid_code' => 'Deze code bestaat niet. Controleer je invoer.',
+            'invalid_token' => 'Deze link is ongeldig of verlopen.',
+            'already_redeemed' => 'Deze code is al ingewisseld.',
+            'campaign_inactive' => 'Deze actie is beëindigd. De code kan niet meer worden ingewisseld.',
+            'budget_exhausted' => 'Alle cadeaus van deze actie zijn al uitgedeeld.',
+            'rate_limited' => 'Te veel pogingen. Probeer het later opnieuw.',
+            'unreachable' => 'De voucher kon op dit moment niet worden ingewisseld. Probeer het later opnieuw.',
+            'unknown' => 'Er is een onverwachte fout opgetreden. Probeer het later opnieuw.',
+            'retry' => 'Voer een code in',
+        ],
+    ],
 ];

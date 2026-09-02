@@ -43,4 +43,56 @@ return [
             'unreachable' => 'Não foi possível criar a campanha neste momento. Tente novamente mais tarde.',
         ],
     ],
+
+    /**
+     * /c — App\Http\Controllers\VoucherController.
+     */
+    'redeem' => [
+        'enter' => [
+            'heading' => 'Resgatar o seu vale',
+            'description' => 'Recebeu um código de vale para pesquisas gratuitas no MetaGer? Introduza-o aqui para obter a sua chave MetaGer pessoal.',
+            'label' => 'O seu código de vale',
+            'submit' => 'Resgatar código',
+            'invalid_code' => 'Este código não é válido. Verifique os dados introduzidos.',
+            'rate_limited' => 'Demasiadas tentativas. Tente novamente mais tarde.',
+        ],
+        'teaser' => [
+            'heading' => 'O seu presente MetaGer',
+            'tokens' => 'Tokens',
+            'description' => 'Este código dá-lhe a sua própria chave MetaGer carregada com :tokens tokens - pesquise na web sem publicidade e sem ser rastreado.',
+            'validity' => 'A chave é válida durante :days dias após o resgate.',
+            'submit' => 'Obter a minha chave',
+        ],
+        'redeemed' => [
+            'heading' => 'Aqui está a sua chave MetaGer!',
+            'description' => 'A sua nova chave está carregada com :tokens tokens.',
+            'save' => [
+                'heading' => '1. Guarde a sua chave',
+                'description' => 'A sua chave é o seu início de sessão - só é mostrada aqui e não pode ser recuperada. Guarde-a no seu gestor de palavras-passe, transfira o código QR ou imprima esta página.',
+            ],
+            'copy_key' => 'Copiar chave',
+            'validity' => 'A chave é válida até :date.',
+            'use' => [
+                'heading' => '2. Comece a pesquisar',
+                'description' => 'Abra este link para ativar a chave no seu navegador. Guarde-o nos marcadores para continuar com sessão iniciada.',
+            ],
+            'copy_url' => 'Copiar link',
+            'start_searching' => 'Começar a pesquisar agora',
+            'to_account' => 'Ir para a minha conta',
+            'qr_alt' => 'Código QR da chave',
+            'no_cookies' => 'Este navegador não parece guardar cookies. Guarde antes a chave ou o código QR acima.',
+        ],
+        'error' => [
+            'heading' => 'Isto não funcionou',
+            'invalid_code' => 'Este código não existe. Verifique os dados introduzidos.',
+            'invalid_token' => 'Este link é inválido ou expirou.',
+            'already_redeemed' => 'Este código já foi resgatado.',
+            'campaign_inactive' => 'Esta campanha terminou. O código já não pode ser resgatado.',
+            'budget_exhausted' => 'Todos os presentes desta campanha já foram distribuídos.',
+            'rate_limited' => 'Demasiadas tentativas. Tente novamente mais tarde.',
+            'unreachable' => 'Não foi possível resgatar o vale neste momento. Tente novamente mais tarde.',
+            'unknown' => 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            'retry' => 'Introduzir um código',
+        ],
+    ],
 ];

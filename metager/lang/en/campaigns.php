@@ -53,4 +53,59 @@ return [
             'unreachable' => 'The campaign could not be created right now. Please try again later.',
         ],
     ],
+
+    /**
+     * /c — App\Http\Controllers\VoucherController. Wording ported verbatim
+     * from the keymanager's `campaign.json` (`enter`/`teaser`/`redeemed`/
+     * `error`), except `redeemed.to_account` and `redeemed.qr_alt`, which
+     * were not their own keys there.
+     */
+    'redeem' => [
+        'enter' => [
+            'heading' => 'Redeem your voucher',
+            'description' => 'You received a voucher code for free MetaGer searches? Enter it here to get your personal MetaGer key.',
+            'label' => 'Your voucher code',
+            'submit' => 'Redeem code',
+            'invalid_code' => 'This code is not valid. Please check your input.',
+            'rate_limited' => 'Too many attempts. Please try again later.',
+        ],
+        'teaser' => [
+            'heading' => 'Your MetaGer gift',
+            'tokens' => 'Tokens',
+            'description' => 'This code gives you your own MetaGer key charged with :tokens tokens - search the web ad-free and without being tracked.',
+            'validity' => 'The key is valid for :days days after redemption.',
+            'submit' => 'Get my key',
+        ],
+        'redeemed' => [
+            'heading' => 'Here is your MetaGer key!',
+            'description' => 'Your new key is charged with :tokens tokens.',
+            'save' => [
+                'heading' => '1. Save your key',
+                'description' => 'Your key is your login - it is only shown here and cannot be recovered. Save it in your password manager, download the QR code or print this page.',
+            ],
+            'copy_key' => 'Copy key',
+            'validity' => 'The key is valid until :date.',
+            'use' => [
+                'heading' => '2. Start searching',
+                'description' => 'Open this link to activate the key in your browser. Bookmark it to stay logged in.',
+            ],
+            'copy_url' => 'Copy link',
+            'start_searching' => 'Start searching now',
+            'to_account' => 'Go to my account',
+            'qr_alt' => 'QR code for the key',
+            'no_cookies' => 'This browser does not seem to keep cookies. Save the key or the QR code above instead.',
+        ],
+        'error' => [
+            'heading' => 'This did not work',
+            'invalid_code' => 'This code does not exist. Please check your input.',
+            'invalid_token' => 'This link is invalid or has expired.',
+            'already_redeemed' => 'This code has already been redeemed.',
+            'campaign_inactive' => 'This campaign has ended. The code can no longer be redeemed.',
+            'budget_exhausted' => 'All gifts of this campaign have been given out already.',
+            'rate_limited' => 'Too many attempts. Please try again later.',
+            'unreachable' => 'The voucher could not be redeemed right now. Please try again later.',
+            'unknown' => 'An unexpected error occurred. Please try again later.',
+            'retry' => 'Enter a code',
+        ],
+    ],
 ];

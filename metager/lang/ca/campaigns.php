@@ -43,4 +43,59 @@ return [
             'unreachable' => 'Ara mateix no s\'ha pogut crear la campanya. Torneu-ho a provar més tard.',
         ],
     ],
+
+    /**
+     * /c — App\Http\Controllers\VoucherController. Redactat calcat del
+     * `campaign.json` del keymanager (`enter`/`teaser`/`redeemed`/`error`),
+     * excepte `redeemed.to_account` i `redeemed.qr_alt`, que allà no eren
+     * claus pròpies.
+     */
+    'redeem' => [
+        'enter' => [
+            'heading' => 'Bescanvieu el vostre val',
+            'description' => 'Heu rebut un codi de val per a cerques gratuïtes a MetaGer? Introduïu-lo aquí per obtenir la vostra clau personal de MetaGer.',
+            'label' => 'El vostre codi de val',
+            'submit' => 'Bescanvia el codi',
+            'invalid_code' => 'Aquest codi no és vàlid. Reviseu el que heu escrit.',
+            'rate_limited' => 'Massa intents. Torneu-ho a provar més tard.',
+        ],
+        'teaser' => [
+            'heading' => 'El vostre regal de MetaGer',
+            'tokens' => 'Fitxes',
+            'description' => 'Aquest codi us dona una clau de MetaGer pròpia carregada amb :tokens fitxes: cerqueu al web sense publicitat i sense que us rastregin.',
+            'validity' => 'La clau és vàlida durant :days dies des del bescanvi.',
+            'submit' => 'Vull la meva clau',
+        ],
+        'redeemed' => [
+            'heading' => 'Aquí teniu la vostra clau de MetaGer!',
+            'description' => 'La vostra clau nova està carregada amb :tokens fitxes.',
+            'save' => [
+                'heading' => '1. Deseu la vostra clau',
+                'description' => 'La clau és el vostre accés: només es mostra aquí i no es pot recuperar. Deseu-la al gestor de contrasenyes, baixeu el codi QR o imprimiu aquesta pàgina.',
+            ],
+            'copy_key' => 'Copia la clau',
+            'validity' => 'La clau és vàlida fins al :date.',
+            'use' => [
+                'heading' => '2. Comenceu a cercar',
+                'description' => 'Obriu aquest enllaç per activar la clau al vostre navegador. Deseu-lo a les adreces d\'interès per mantenir la sessió iniciada.',
+            ],
+            'copy_url' => 'Copia l\'enllaç',
+            'start_searching' => 'Comença a cercar ara',
+            'to_account' => 'Ves al meu compte',
+            'qr_alt' => 'Codi QR per a la clau',
+            'no_cookies' => 'Sembla que aquest navegador no desa galetes. Deseu la clau o el codi QR de dalt.',
+        ],
+        'error' => [
+            'heading' => 'Això no ha funcionat',
+            'invalid_code' => 'Aquest codi no existeix. Reviseu el que heu escrit.',
+            'invalid_token' => 'Aquest enllaç no és vàlid o ha caducat.',
+            'already_redeemed' => 'Aquest codi ja s\'ha bescanviat.',
+            'campaign_inactive' => 'Aquesta campanya s\'ha acabat. El codi ja no es pot bescanviar.',
+            'budget_exhausted' => 'Tots els regals d\'aquesta campanya ja s\'han repartit.',
+            'rate_limited' => 'Massa intents. Torneu-ho a provar més tard.',
+            'unreachable' => 'Ara mateix no s\'ha pogut bescanviar el val. Torneu-ho a provar més tard.',
+            'unknown' => 'S\'ha produït un error inesperat. Torneu-ho a provar més tard.',
+            'retry' => 'Introduïu un codi',
+        ],
+    ],
 ];

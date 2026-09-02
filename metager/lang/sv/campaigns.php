@@ -43,4 +43,56 @@ return [
             'unreachable' => 'Kampanjen kunde inte skapas just nu. Försök igen senare.',
         ],
     ],
+
+    /**
+     * /c — App\Http\Controllers\VoucherController.
+     */
+    'redeem' => [
+        'enter' => [
+            'heading' => 'Lös in ditt presentkort',
+            'description' => 'Har du fått en presentkortskod för gratis MetaGer-sökningar? Ange den här för att få din personliga MetaGer-nyckel.',
+            'label' => 'Din presentkortskod',
+            'submit' => 'Lös in kod',
+            'invalid_code' => 'Den här koden är inte giltig. Kontrollera det du har angett.',
+            'rate_limited' => 'För många försök. Försök igen senare.',
+        ],
+        'teaser' => [
+            'heading' => 'Din MetaGer-present',
+            'tokens' => 'Tokens',
+            'description' => 'Den här koden ger dig en egen MetaGer-nyckel laddad med :tokens tokens - sök på webben utan reklam och utan spårning.',
+            'validity' => 'Nyckeln är giltig i :days dagar efter inlösen.',
+            'submit' => 'Hämta min nyckel',
+        ],
+        'redeemed' => [
+            'heading' => 'Här är din MetaGer-nyckel!',
+            'description' => 'Din nya nyckel är laddad med :tokens tokens.',
+            'save' => [
+                'heading' => '1. Spara din nyckel',
+                'description' => 'Din nyckel är din inloggning - den visas bara här och kan inte återställas. Spara den i din lösenordshanterare, ladda ner QR-koden eller skriv ut den här sidan.',
+            ],
+            'copy_key' => 'Kopiera nyckel',
+            'validity' => 'Nyckeln är giltig till och med :date.',
+            'use' => [
+                'heading' => '2. Börja söka',
+                'description' => 'Öppna den här länken för att aktivera nyckeln i din webbläsare. Bokmärk den för att förbli inloggad.',
+            ],
+            'copy_url' => 'Kopiera länk',
+            'start_searching' => 'Börja söka nu',
+            'to_account' => 'Gå till mitt konto',
+            'qr_alt' => 'QR-kod för nyckeln',
+            'no_cookies' => 'Den här webbläsaren verkar inte spara cookies. Spara i stället nyckeln eller QR-koden ovan.',
+        ],
+        'error' => [
+            'heading' => 'Det här fungerade inte',
+            'invalid_code' => 'Den här koden finns inte. Kontrollera det du har angett.',
+            'invalid_token' => 'Den här länken är ogiltig eller har gått ut.',
+            'already_redeemed' => 'Den här koden har redan lösts in.',
+            'campaign_inactive' => 'Den här kampanjen har avslutats. Koden kan inte längre lösas in.',
+            'budget_exhausted' => 'Alla presenter från den här kampanjen har redan delats ut.',
+            'rate_limited' => 'För många försök. Försök igen senare.',
+            'unreachable' => 'Presentkortet kunde inte lösas in just nu. Försök igen senare.',
+            'unknown' => 'Ett oväntat fel inträffade. Försök igen senare.',
+            'retry' => 'Ange en kod',
+        ],
+    ],
 ];

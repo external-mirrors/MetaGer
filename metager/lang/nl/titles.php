@@ -49,4 +49,6 @@ return [
     'checkout' => 'Saldo opladen – MetaGer',
     'orders' => 'Bestellingen – MetaGer',
     'campaigns' => 'Voucheracties – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Voucher inwisselen – MetaGer',
 ];

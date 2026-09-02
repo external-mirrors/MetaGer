@@ -49,4 +49,6 @@ return [
     'checkout' => 'Ricaricare il credito – MetaGer',
     'orders' => 'Ordini – MetaGer',
     'campaigns' => 'Campagne di buoni – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Riscatta il tuo buono – MetaGer',
 ];

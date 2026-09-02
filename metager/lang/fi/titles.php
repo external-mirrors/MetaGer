@@ -49,4 +49,6 @@ return [
     'checkout' => 'Lataa saldoa – MetaGer',
     'orders' => 'Tilaukset – MetaGer',
     'campaigns' => 'Lahjakorttikampanjat – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Lunasta lahjakorttisi – MetaGer',
 ];

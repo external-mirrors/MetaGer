@@ -83,10 +83,10 @@ class CampaignsTest extends TestCase
     /**
      * The public link is meant to be pasted somewhere else — it must not
      * carry the visitor's own browsing locale, and it must point at the
-     * keymanager's redemption path with the campaign's public token.
-     * Regression coverage for exactly the bug `url()` would reintroduce:
-     * `AppServiceProvider`'s `URL::formatPathUsing` stamps every `url()`
-     * call with the current request's locale prefix.
+     * redemption path with the campaign's public token. Regression coverage
+     * for exactly the bug `url()`/`route()` would reintroduce:
+     * `AppServiceProvider`'s `URL::formatPathUsing` stamps every one of their
+     * calls with the current request's locale prefix.
      */
     public function testThePublicLinkCarriesNoLocalePrefix(): void
     {
@@ -100,8 +100,8 @@ class CampaignsTest extends TestCase
         $this->signedIn()
             ->get("https://metager.org/pl-PL/konto/gutscheinaktionen")
             ->assertOk()
-            ->assertSee("https://metager.org/keys/c/campaign/TESTTOKEN", false)
-            ->assertDontSee("/pl-PL/keys/c/campaign", false);
+            ->assertSee("https://metager.org/c/campaign/TESTTOKEN", false)
+            ->assertDontSee("/pl-PL/c/campaign", false);
     }
 
     /**
@@ -130,7 +130,7 @@ class CampaignsTest extends TestCase
         $this->signedIn()
             ->get("https://metager.de/de-DE/konto/gutscheinaktionen")
             ->assertOk()
-            ->assertSee("https://metager.de/keys/c/campaign/TESTTOKEN", false)
+            ->assertSee("https://metager.de/c/campaign/TESTTOKEN", false)
             ->assertDontSee("nginx:8080");
     }
 
@@ -154,8 +154,8 @@ class CampaignsTest extends TestCase
         $this->signedIn()
             ->get("http://" . self::ONION . "/de-DE/konto/gutscheinaktionen")
             ->assertOk()
-            ->assertSee("https://metager.de/keys/c/campaign/TESTTOKEN", false)
-            ->assertDontSee(self::ONION . "/keys/c/campaign", false);
+            ->assertSee("https://metager.de/c/campaign/TESTTOKEN", false)
+            ->assertDontSee(self::ONION . "/c/campaign", false);
     }
 
     /**

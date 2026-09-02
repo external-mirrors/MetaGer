@@ -11,17 +11,17 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
  *
  * `/keys` ist keine MetaGer-Route: nginx reicht sie an den Keymanager weiter.
  * Was der noch besitzt, schrumpft mit jedem Umzugsschritt — inzwischen ist es
- * nur noch das Abmelden, das Einlösen von Gutscheincodes und die API.
- * Erklärt, angemeldet, erstellt und verwaltet wird hier.
+ * nur noch das Abmelden und die API. Erklärt, angemeldet, erstellt, verwaltet
+ * und eingelöst wird hier.
  *
  * Diese Datei ist deshalb keine Sammlung von `/keys`-URLs mehr, sondern die
- * Antwort auf „welcher Link im Schlüsselvorgang geht wohin“ — und die Hälfte
- * der Antworten lautet inzwischen: auf eine MetaGer-Route.
+ * Antwort auf „welcher Link im Schlüsselvorgang geht wohin“ — und die meisten
+ * Antworten lauten inzwischen: auf eine MetaGer-Route.
  *
  *   {@see login()}, {@see create()}, {@see account()}, {@see dashboard()},
- *   {@see accountForVisitor()}   MetaGer-Routen
+ *   {@see accountForVisitor()}, {@see voucher()}   MetaGer-Routen
  *
- *   {@see remove()}, {@see voucher()}, {@see keyApi()}   noch drüben
+ *   {@see remove()}, {@see keyApi()}   noch drüben
  *
  * Dass die MetaGer-Routen hier stehen, obwohl sie `route()` nur weiterreichen,
  * hat einen Grund: jeder Aufrufer erreicht sie über dieselben zwei Marker
@@ -282,22 +282,17 @@ final class KeymanagerLinks
     }
 
     /**
-     * Redeeming a voucher code — the campaign pages, which stay here.
+     * Redeeming a voucher code — MetaGer's own `/c`.
      *
-     * The last of the reader-facing `/keys` paths still linked from a MetaGer
-     * page: the key FAQ explains what to do with a promotional card. It moves
-     * in step 3 with the rest of the key flow.
-     */
-    /**
-     * `$code` is optional — the key FAQ links here with none, to the generic
-     * redemption page. Takes it as a parameter rather than leaving it to the
-     * caller to append (as `LoginController` used to): `self::url()` can now
-     * return a URL carrying `?key=...` for a cookie-blind visitor, and
-     * `voucher() . "/" . $code` worked only because it never had one before —
-     * appending a path segment after a query string is not a URL.
+     * This used to be `/keys/c`, and every reader-facing `/keys` path is gone
+     * with it. `$code` is optional — the key FAQ links here with none, to the
+     * generic entry page ({@see \App\Http\Controllers\VoucherController::enter()});
+     * given one, it goes straight to that code's preview
+     * ({@see \App\Http\Controllers\VoucherController::teaser()}), exactly as
+     * a printed card's QR code does.
      */
     public static function voucher(?string $code = null): string
     {
-        return self::url("/c" . ($code === null ? "" : "/" . urlencode($code)));
+        return $code === null ? route("voucher") : route("voucher.code", ["code" => $code]);
     }
 }

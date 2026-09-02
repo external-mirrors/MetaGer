@@ -178,16 +178,16 @@ class LoginSubmitTest extends TestCase
     }
 
     /**
-     * Ein Gutscheincode geht auf die Kampagnenseite des Keymanagers. Die kennt
-     * die Kampagne, ihr Budget und ihre eigene Bremse; hier ist nur bekannt,
-     * dass die Eingabe einer war.
+     * Ein Gutscheincode geht auf /c (App\Http\Controllers\VoucherController).
+     * Die kennt die Kampagne, ihr Budget und ihre eigene Bremse; hier ist nur
+     * bekannt, dass die Eingabe einer war.
      */
-    public function testAVoucherGoesToTheCampaignPage(): void
+    public function testAVoucherGoesToTheVoucherPage(): void
     {
         $this->keyserverAnswers(["result" => "voucher", "code" => "ABCDEFGH1J"]);
 
         $this->submit(["key" => "abcd-efgh-ij"])
-            ->assertRedirectContains("/de-DE/keys/c/ABCDEFGH1J");
+            ->assertRedirectContains("/de-DE/c/ABCDEFGH1J");
     }
 
     /**

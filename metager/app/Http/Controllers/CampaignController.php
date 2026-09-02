@@ -29,8 +29,9 @@ use Illuminate\Support\Facades\Vite;
  * wie bei jedem `/key/:key/...`-Schreibzugriff: MetaGer hat `$key` bereits
  * gegen das Cookie geprüft, bevor es hier ankommt.
  *
- * **Nicht hier:** die OIDC-geschützte Admin-Oberfläche und der öffentliche
- * Einlöseweg (`/c/...`) — beide bleiben auf dem Keymanager.
+ * **Nicht hier:** die OIDC-geschützte Admin-Oberfläche bleibt auf dem
+ * Keymanager. Der öffentliche Einlöseweg ist es nicht mehr —
+ * {@see \App\Http\Controllers\VoucherController} hat ihn, unter `/c`.
  */
 final class CampaignController extends Controller
 {
@@ -171,12 +172,17 @@ final class CampaignController extends Controller
      * is the origin the visitor is actually on instead, and carries the onion
      * exception with it.
      *
+     * `/c/campaign/…` — not `route("voucher.campaign", …)` — for the same
+     * reason `url()`/`route()` are avoided above: the recipient's locale is
+     * not the creator's, and a MetaGer route name still runs through
+     * `URL::formatPathUsing` regardless of `$origin`.
+     *
      * @param list<array<string, mixed>> $campaigns
      * @return list<array<string, mixed>>
      */
     private function withPublicLinks(array $campaigns, string $origin): array
     {
-        $base = $origin . "/keys/c/campaign/";
+        $base = $origin . "/c/campaign/";
 
         return array_map(
             fn (array $campaign) => $campaign + ["public_link" => $base . urlencode((string) $campaign["public_token"])],

@@ -49,4 +49,6 @@ return [
     'checkout' => 'Recharger le solde – MetaGer',
     'orders' => 'Commandes – MetaGer',
     'campaigns' => 'Campagnes de bons – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Utiliser votre bon – MetaGer',
 ];

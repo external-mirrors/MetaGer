@@ -49,4 +49,6 @@ return [
     'checkout' => 'Recargar saldo – MetaGer',
     'orders' => 'Pedidos – MetaGer',
     'campaigns' => 'Campañas de vales – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Canjea tu vale – MetaGer',
 ];

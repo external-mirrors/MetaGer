@@ -53,4 +53,59 @@ return [
             'unreachable' => 'Die Kampagne konnte gerade nicht angelegt werden. Bitte versuche es später erneut.',
         ],
     ],
+
+    /**
+     * /c — App\Http\Controllers\VoucherController. Wortlaut aus dem
+     * Keymanager (`campaign.json`, `enter`/`teaser`/`redeemed`/`error`), bis
+     * auf `redeemed.to_account` und `redeemed.qr_alt`, die dort nicht als
+     * eigener Schlüssel standen.
+     */
+    'redeem' => [
+        'enter' => [
+            'heading' => 'Gutschein einlösen',
+            'description' => 'Du hast einen Gutschein-Code für kostenlose MetaGer-Suchen erhalten? Gib ihn hier ein, um deinen persönlichen MetaGer-Schlüssel zu bekommen.',
+            'label' => 'Dein Gutscheincode',
+            'submit' => 'Code einlösen',
+            'invalid_code' => 'Dieser Code ist ungültig. Bitte überprüfe deine Eingabe.',
+            'rate_limited' => 'Zu viele Versuche. Bitte versuche es später erneut.',
+        ],
+        'teaser' => [
+            'heading' => 'Dein MetaGer-Geschenk',
+            'tokens' => 'Token',
+            'description' => 'Mit diesem Code erhältst du einen eigenen MetaGer-Schlüssel mit :tokens Token - suche werbefrei und ohne Tracking im Web.',
+            'validity' => 'Der Schlüssel ist nach dem Einlösen :days Tage gültig.',
+            'submit' => 'Schlüssel abholen',
+        ],
+        'redeemed' => [
+            'heading' => 'Hier ist dein MetaGer-Schlüssel!',
+            'description' => 'Dein neuer Schlüssel ist mit :tokens Token aufgeladen.',
+            'save' => [
+                'heading' => '1. Schlüssel speichern',
+                'description' => 'Dein Schlüssel ist dein Login - er wird nur hier angezeigt und kann nicht wiederhergestellt werden. Speichere ihn im Passwortmanager, lade den QR-Code herunter oder drucke diese Seite aus.',
+            ],
+            'copy_key' => 'Schlüssel kopieren',
+            'validity' => 'Der Schlüssel ist gültig bis :date.',
+            'use' => [
+                'heading' => '2. Lossuchen',
+                'description' => 'Öffne diesen Link, um den Schlüssel in deinem Browser zu aktivieren. Speichere ihn als Lesezeichen, um angemeldet zu bleiben.',
+            ],
+            'copy_url' => 'Link kopieren',
+            'start_searching' => 'Jetzt lossuchen',
+            'to_account' => 'Zu meinem Konto',
+            'qr_alt' => 'QR-Code für den Schlüssel',
+            'no_cookies' => 'Dieser Browser scheint keine Cookies zu speichern. Sichere dir stattdessen den Schlüssel oder den QR-Code oben.',
+        ],
+        'error' => [
+            'heading' => 'Das hat nicht geklappt',
+            'invalid_code' => 'Diesen Code gibt es nicht. Bitte überprüfe deine Eingabe.',
+            'invalid_token' => 'Dieser Link ist ungültig oder abgelaufen.',
+            'already_redeemed' => 'Dieser Code wurde bereits eingelöst.',
+            'campaign_inactive' => 'Diese Aktion ist beendet. Der Code kann nicht mehr eingelöst werden.',
+            'budget_exhausted' => 'Alle Geschenke dieser Aktion wurden bereits vergeben.',
+            'rate_limited' => 'Zu viele Versuche. Bitte versuche es später erneut.',
+            'unreachable' => 'Der Gutschein konnte gerade nicht eingelöst werden. Bitte versuche es später erneut.',
+            'unknown' => 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später erneut.',
+            'retry' => 'Code eingeben',
+        ],
+    ],
 ];

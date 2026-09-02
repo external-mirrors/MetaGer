@@ -1,0 +1,467 @@
+@import "../variables.less";
+
+// /c — einen Gutschein einlösen.
+//
+// Vier Seiten in einer Datei: der Code (voucher/enter), was drin ist
+// (voucher/teaser), der Schlüssel (voucher/redeemed) und der Fall, dass es
+// nicht ging (voucher/error). Sie sind nacheinander dieselbe Seite — wer den
+// Code eintippt, sieht zwei Bildschirme später den Schlüssel —, und zwischen
+// zwei Schritten desselben Weges darf sich die Spalte nicht verschieben.
+// Deshalb tragen alle vier dieselbe id und unterscheiden sich nur in einer
+// Modifikator-Klasse, die hier bis auf eine Zeile gar nicht vorkommt.
+//
+// Lag als /keys/c im Keymanager, mit dessen eigener Navigation, eigenen
+// Farbvariablen und einer Geschenkkarte in einem Verlauf aus zwei Orangetönen.
+// Die Seiten stehen jetzt im MetaGer-Layout und sind die Geschwister von
+// pages/login.less und pages/key-create.less: dieselbe 30rem-Spalte, dieselbe
+// Karte, dieselben Abstände. Was hier steht, ist nur, was diese vier Seiten
+// zusätzlich brauchen.
+//
+// Drei Entscheidungen, die nicht aus den alten Seiten kommen:
+//
+// **Die Geschenkkarte ist getönt und nicht orange.** Ein Verlauf über die
+// halbe Seite in der Markenfarbe lässt den Knopf darunter, der die einzige
+// Handlung der Seite ist, wie eine Fußnote aussehen. Die Zahl trägt das
+// Gewicht jetzt über ihre Größe; die Markenfarbe gehört dem Knopf.
+//
+// **Der Schlüssel steht vor dem QR-Code.** Auf redeemed.ejs stand der QR-Code
+// ganz oben, noch vor der Überschrift „Schlüssel sichern“ — ein Bild ohne
+// Zusammenhang, bevor irgendwo stand, was es ist. Erst das Feld, das man
+// abschreiben kann, dann das Bild, das man speichern kann.
+//
+// **Kein zweites Orange.** Wie auf den Geschwisterseiten: genau eine
+// Hauptaktion trägt die Markenfarbe, alles andere ist umrandet.
+
+#voucher-page {
+  // Wie auf der Anmeldeseite: ein Schlüssel hat 36 Zeichen, und breiter als
+  // das will diese Spalte nirgends sein.
+  max-width: 30rem;
+  margin: 0 auto;
+
+  .page-title {
+    // Kleiner als die 2.5em der Klasse: über einer 30rem-Spalte wäre das eine
+    // Überschrift, die breiter sein will als die Seite unter ihr.
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// ── Vor- und Nachsätze ───────────────────────────────────────────────────────
+.voucher-lede {
+  margin: 0 0 1.5rem;
+  text-align: center;
+  color: @text-color-alpha-70;
+}
+
+.voucher-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: @text-color-alpha-70;
+}
+
+// ── Die Karte ────────────────────────────────────────────────────────────────
+// Ein Rahmen ist ein Versprechen (siehe parts/account.less): Kästen lesen sich
+// als Bedienelemente, und beide, die es hier gibt, sind eins — das Formular
+// mit dem Codefeld und der Block mit dem frischen Schlüssel.
+.voucher-card {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+  // Ohne das laufen die readonly-Felder über den Rand ihrer eigenen Karte
+  // hinaus: Rasterelemente schrumpfen nicht unter ihren Inhalt, und ein URL
+  // hat keine einzige Stelle zum Umbrechen.
+  min-width: 0;
+
+  @media (max-width: @screen-mobile-l) {
+    padding: 1.1rem;
+  }
+
+  .voucher-card__error {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 6px;
+    background-color: @form-error-background;
+    color: @form-error-color;
+    font-size: 0.9rem;
+  }
+}
+
+// ── Das Codefeld ─────────────────────────────────────────────────────────────
+.voucher-field {
+  display: grid;
+  gap: 0.35rem;
+
+  .voucher-field__label {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .voucher-field__input {
+    width: 100%;
+    padding: 0.7rem 0.75rem;
+    border: 1px solid @border-color;
+    border-radius: 6px;
+    background-color: @input-background;
+    color: @input-text;
+    // Ein Code wird von einer Karte abgelesen und Zeichen für Zeichen
+    // abgetippt. Dafür ist die Schrift da, in der jedes Zeichen gleich breit
+    // ist — und in der sich 0 und O unterscheiden lassen.
+    font-family: monospace;
+    font-size: 1.1rem;
+    // Weiter auseinander als im Schlüsselfeld: es sind nur zehn Zeichen in
+    // drei Gruppen (4-4-2), und der Platz dafür ist da.
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    // Das Skript schreibt groß mit; ohne Skript tut es der Browser, und die
+    // abgeschickte Eingabe ist davon unberührt.
+    text-transform: uppercase;
+
+    &::placeholder {
+      color: @text-color-alpha-50;
+      letter-spacing: 0.12em;
+      text-transform: none;
+    }
+
+    &:focus-visible {
+      border-color: @metager-orange;
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+}
+
+// ── Die Hauptaktion ──────────────────────────────────────────────────────────
+.voucher-submit {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid @metager-orange;
+  border-radius: 6px;
+  background-color: @metager-orange;
+  // Nicht @text-color: der Grund ist in beiden Paletten orange, also muss die
+  // Schrift darauf in beiden dieselbe sein. Dasselbe Argument wie bei den
+  // Preiskacheln in pages/price.less.
+  color: @color-white;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid @text-color;
+    outline-offset: 2px;
+  }
+}
+
+// ── Die Geschenkkarte ────────────────────────────────────────────────────────
+// Das Einzige, weswegen jemand auf der Teaser-Seite ist: was der Gutschein
+// wert ist. Getönt statt orange (siehe oben), und die Zahl so groß, dass sie
+// aus zwei Metern zu lesen ist — sie wird gezeigt, nicht gelesen.
+.voucher-gift {
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.75rem 1.25rem;
+  border-radius: 12px;
+  background-color: @highlight-color-alpha-60;
+
+  .voucher-gift__campaign {
+    // Der Name der Aktion. Klein und gedämpft: er beantwortet „von wem ist
+    // der?“, und wer die Karte in der Hand hält, hat ihn dort schon gelesen.
+    margin-bottom: 0.35rem;
+    font-size: 0.8rem;
+    text-align: center;
+    color: @text-color-alpha-70;
+  }
+
+  .voucher-gift__amount {
+    font-size: 3.5rem;
+    font-weight: bold;
+    line-height: 1;
+    // Eine Zahl, die als Zahl gelesen wird; die Ziffern sollen gleich breit
+    // sein, damit sie nicht wie gesetzter Text aussieht.
+    font-variant-numeric: tabular-nums;
+
+    @media (max-width: @screen-mobile-l) {
+      font-size: 2.75rem;
+    }
+  }
+
+  .voucher-gift__label {
+    font-size: 1rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// Das Formular auf der Teaser-Seite ist ein einzelner Knopf; es braucht den
+// Abstand, den sonst die Karte mitbringt.
+.voucher-form {
+  display: grid;
+  margin-top: 1.5rem;
+}
+
+// ── Die Kennung des neuen Kontos ─────────────────────────────────────────────
+// Marke und die letzten sechs Zeichen, genau wie sie von hier an in der Ecke
+// jeder Seite stehen (parts/account.less, global über metager.less geladen —
+// hier wird nur die Größe gesetzt). Etwas größer als dort: hier wird sie zum
+// ersten Mal gezeigt und soll gemerkt werden, dort wird sie wiedererkannt.
+.voucher-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+
+  .account-mark {
+    width: 28px;
+    height: 28px;
+    flex: none;
+  }
+
+  .voucher-identity__code {
+    font-weight: bold;
+    // Sechs Hexzeichen, die verglichen und nicht gelesen werden.
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Die beiden Schritte auf der Seite nach dem Einlösen ──────────────────────
+// Getrennt durch eine Linie und nicht durch zwei Karten: es ist ein Weg mit
+// zwei Stationen, und zwei Karten machen daraus zwei Angebote, zwischen denen
+// man wählt.
+.voucher-step {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+
+  & + .voucher-step {
+    padding-top: 1.25rem;
+    border-top: 1px solid @border-color;
+  }
+
+  .voucher-step__heading {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .voucher-step__text {
+    margin: 0;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Der Schlüssel und die Adresse zum Aufheben ───────────────────────────────
+// Zwei Felder mit demselben Aufbau: ein readonly-Feld und ein Kopierknopf, der
+// ohne Zwischenablage gar nicht erst auftaucht. Der Knopf steht unter dem Feld
+// und nicht daneben — daneben müsste das Feld für die Beschriftung Platz
+// lassen, und die ist in zwölf Sprachen unterschiedlich lang.
+.voucher-key,
+.voucher-url {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: start;
+  min-width: 0;
+}
+
+.voucher-key__label,
+.voucher-url__label {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.voucher-key__input,
+.voucher-url__input {
+  width: 100%;
+  // Ein 100 % breites Feld in einer Rasterspalte misst sich trotzdem an seinem
+  // Inhalt, und der Inhalt ist hier eine Zeichenfolge ohne eine einzige Stelle
+  // zum Umbrechen.
+  min-width: 0;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid @border-color;
+  border-radius: 6px;
+  background-color: @input-background;
+  color: @input-text;
+  font-family: monospace;
+
+  &:focus-visible {
+    border-color: @metager-orange;
+    outline: 2px solid @metager-orange;
+    outline-offset: 1px;
+  }
+}
+
+.voucher-key__input {
+  // Wie im Anmeldefeld: eine Zeichenfolge, die Zeichen für Zeichen mit einer
+  // Vorlage verglichen wird, gehört in eine Schrift mit gleich breiten Zeichen.
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+
+  // 36 einfarbige Zeichen sind in einem 30rem-Feld knapp und darunter zu
+  // breit. Kleiner werden ist besser als abgeschnitten werden.
+  @media (max-width: 26rem) {
+    font-size: 0.8rem;
+  }
+}
+
+.voucher-url__input {
+  padding: 0.45rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.voucher-key__copy,
+.voucher-url__copy {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid @border-color;
+  border-radius: 4px;
+  background-color: transparent;
+  color: @text-color;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+
+  // Steht `hidden` in der Vorlage: ohne Zwischenablage wäre er ein Knopf, der
+  // nichts tut, und das Feld daneben lässt sich von Hand markieren. Ohne diese
+  // Regel gewönne das display oben und der Knopf stünde für jeden da.
+  &[hidden] {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid @metager-orange;
+    outline-offset: 1px;
+  }
+}
+
+// ── Der QR-Code ──────────────────────────────────────────────────────────────
+// Bild und Herunterladen in einem: der ganze Block ist der Link, und sein
+// Alternativtext ist zugleich seine Beschriftung.
+.voucher-qr {
+  justify-self: center;
+  display: block;
+  text-decoration: none;
+
+  > img {
+    display: block;
+    width: 160px;
+    height: 160px;
+    // Ein QR-Code ist schwarz auf weiß und bleibt es auch im dunklen Thema —
+    // ohne diesen Grund stünden die dunklen Module auf der dunklen Karte.
+    background-color: @color-white;
+    padding: 6px;
+    border-radius: 4px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid @metager-orange;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+// ── Wenn dieser Browser keine Cookies behält ─────────────────────────────────
+// Wiegt hier schwerer als auf der Seite zum Erstellen: Wer einen Gutschein
+// einlöst, hat einen Schlüssel bekommen, den er nirgends abgeholt hat.
+.voucher-no-cookies {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 6px;
+  background-color: @form-error-background;
+  color: @form-error-color;
+  font-size: 0.8rem;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+// ── Weiter ───────────────────────────────────────────────────────────────────
+// „Jetzt suchen“ ist die Hauptaktion und trägt die Markenfarbe; „zum Konto“
+// steht daneben und ist umrandet. Beide sind Links und keine Knöpfe: sie
+// führen irgendwohin, sie verbrauchen nichts.
+.voucher-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  > a {
+    flex: 1 1 12rem;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .voucher-actions__primary {
+    border-color: @metager-orange;
+    background-color: @metager-orange;
+    color: @color-white;
+
+    &:hover,
+    &:focus-visible,
+    &:visited {
+      background-color: @metager-orange-alpha-80-darker;
+      color: @color-white;
+      text-decoration: none;
+    }
+  }
+
+  .voucher-actions__quiet {
+    border-color: @border-color;
+    background-color: @background-color;
+    color: @text-color;
+
+    &:hover,
+    &:focus-visible,
+    &:visited {
+      border-color: @metager-orange;
+      color: @text-color;
+      text-decoration: none;
+    }
+  }
+}
+
+// ── Wenn es nicht ging ───────────────────────────────────────────────────────
+.voucher-error {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 6px;
+  background-color: @form-error-background;
+  color: @form-error-color;
+  font-size: 0.95rem;
+}
+
+// Kein Knopf: es geht zurück auf die Seite, auf der der Code eingetippt wird,
+// und dorthin führt ein Link. Umrandet, weil die Fehlerseite keine Handlung
+// hat, die die Markenfarbe verdient — sie hat nur einen Weg zurück.
+.voucher-retry {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid @border-color;
+  border-radius: 8px;
+  background-color: @background-color;
+  color: @text-color;
+  font-size: 0.95rem;
+  font-weight: bold;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible,
+  &:visited {
+    border-color: @metager-orange;
+    color: @text-color;
+    text-decoration: none;
+  }
+}

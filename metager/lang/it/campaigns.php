@@ -43,4 +43,56 @@ return [
             'unreachable' => 'Al momento non è stato possibile creare la campagna. Riprova più tardi.',
         ],
     ],
+
+    /**
+     * /c — App\Http\Controllers\VoucherController.
+     */
+    'redeem' => [
+        'enter' => [
+            'heading' => 'Riscatta il tuo buono',
+            'description' => 'Hai ricevuto un codice buono per ricerche gratuite su MetaGer? Inseriscilo qui per ottenere la tua chiave MetaGer personale.',
+            'label' => 'Il tuo codice buono',
+            'submit' => 'Riscatta codice',
+            'invalid_code' => 'Questo codice non è valido. Controlla i dati inseriti.',
+            'rate_limited' => 'Troppi tentativi. Riprova più tardi.',
+        ],
+        'teaser' => [
+            'heading' => 'Il tuo regalo MetaGer',
+            'tokens' => 'Token',
+            'description' => 'Questo codice ti dà una tua chiave MetaGer caricata con :tokens token - cerca sul web senza pubblicità e senza essere tracciato.',
+            'validity' => 'La chiave è valida per :days giorni dopo il riscatto.',
+            'submit' => 'Ottieni la mia chiave',
+        ],
+        'redeemed' => [
+            'heading' => 'Ecco la tua chiave MetaGer!',
+            'description' => 'La tua nuova chiave è caricata con :tokens token.',
+            'save' => [
+                'heading' => '1. Salva la tua chiave',
+                'description' => 'La tua chiave è il tuo accesso - viene mostrata solo qui e non può essere recuperata. Salvala nel tuo gestore di password, scarica il codice QR o stampa questa pagina.',
+            ],
+            'copy_key' => 'Copia chiave',
+            'validity' => 'La chiave è valida fino al :date.',
+            'use' => [
+                'heading' => '2. Inizia a cercare',
+                'description' => 'Apri questo link per attivare la chiave nel tuo browser. Aggiungilo ai preferiti per rimanere connesso.',
+            ],
+            'copy_url' => 'Copia link',
+            'start_searching' => 'Inizia a cercare ora',
+            'to_account' => 'Vai al mio account',
+            'qr_alt' => 'Codice QR per la chiave',
+            'no_cookies' => 'Questo browser non sembra conservare i cookie. Salva invece la chiave o il codice QR qui sopra.',
+        ],
+        'error' => [
+            'heading' => 'Non ha funzionato',
+            'invalid_code' => 'Questo codice non esiste. Controlla i dati inseriti.',
+            'invalid_token' => 'Questo link non è valido o è scaduto.',
+            'already_redeemed' => 'Questo codice è già stato riscattato.',
+            'campaign_inactive' => 'Questa campagna è terminata. Il codice non può più essere riscattato.',
+            'budget_exhausted' => 'Tutti i regali di questa campagna sono già stati distribuiti.',
+            'rate_limited' => 'Troppi tentativi. Riprova più tardi.',
+            'unreachable' => 'Al momento non è stato possibile riscattare il buono. Riprova più tardi.',
+            'unknown' => 'Si è verificato un errore imprevisto. Riprova più tardi.',
+            'retry' => 'Inserisci un codice',
+        ],
+    ],
 ];

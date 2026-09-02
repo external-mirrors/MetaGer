@@ -50,4 +50,6 @@ return [
     'checkout' => 'Guthaben aufladen – MetaGer',
     'orders' => 'Bestellungen – MetaGer',
     'campaigns' => 'Gutscheinaktionen – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Gutschein einlösen – MetaGer',
 ];

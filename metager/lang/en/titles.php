@@ -49,4 +49,6 @@ return [
     'checkout' => 'Top up balance – MetaGer',
     'orders' => 'Orders – MetaGer',
     'campaigns' => 'Voucher campaigns – MetaGer',
+    // Gutschein einlösen — /c, aus dem Keymanager (/keys/c).
+    'voucher' => 'Redeem your voucher – MetaGer',
 ];

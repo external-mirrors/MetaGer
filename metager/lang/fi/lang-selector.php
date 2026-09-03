@@ -17,6 +17,7 @@ return [
         'pl' => 'puola',
         'fr' => 'ranska',
         'pt' => 'Portugues',
+        'ca' => 'katalaani',
     ],
     'h1' => [
         '1' => 'Kielen valinta',

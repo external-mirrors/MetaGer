@@ -39,6 +39,10 @@ return [
             'title' => 'Dados de contacto',
             'description' => 'A seguir está o nome (Vor- und Nachname) e o endereço de correio eletrónico do utilizador. Estes dados são utilizados por nós para responder às suas questões e para as enviar para outros endereços.',
         ],
+        'error' => [
+            'title' => 'Relatório de erro (rastreio da pilha)',
+            'description' => 'Quando ocorre um erro técnico na nossa aplicação, é gerada automaticamente uma descrição do erro, juntamente com um rastreio da pilha. Isto permite-nos identificar em que ponto do código-fonte ocorreu o erro, para que possamos corrigi-lo.',
+        ],
     ],
     'data' => [
         'referrer' => 'o referenciador que enviou',
@@ -52,6 +56,7 @@ return [
         'contact' => 'Dados de contacto',
         'message' => 'Mensagem',
         'payment' => 'Dados de pagamento',
+        'error' => 'Relatório de erros',
     ],
     'base' => [
         'title' => 'Base jurídica do tratamento',
@@ -177,4 +182,21 @@ return [
         'description' => 'Enquanto associação sem fins lucrativos, estamos empenhados no livre acesso ao conhecimento. Como sabemos que a investigação livre não é compatível com a vigilância em massa, também levamos muito a sério a proteção de dados. Sempre processámos apenas os dados absolutamente necessários para o funcionamento dos nossos serviços. A proteção de dados é sempre a nossa norma. Não utilizamos a definição de perfis, ou seja, a criação automática de perfis de utilizador.',
     ],
     'title' => 'política de privacidade',
+    'monitoring' => [
+        'title' => 'Rastreio de erros e monitorização de aplicações',
+        'description' => 'Para garantir a fiabilidade dos nossos serviços, utilizamos a ferramenta de rastreio de erros de código aberto GlitchTip, tanto no backend como no frontend das nossas aplicações. O GlitchTip funciona exclusivamente na nossa própria infraestrutura; nenhum dado é partilhado com, nem transmitido a, qualquer fornecedor externo de análise ou monitorização.',
+        'collected' => [
+            'title' => 'Que dados são gerados',
+            'description' => 'Quando ocorre um erro na nossa aplicação web ou nos nossos servidores, recolhemos automaticamente:',
+            'error' => 'Uma descrição do erro e um rastreio da pilha que identifique o local afetado no código.',
+            'useragent' => 'Tipo de navegador, sistema operativo e tipo aproximado de dispositivo, determinados a partir do seu agente de utilizador.',
+            'url' => 'O endereço (URL) da página ou função onde ocorreu o erro.',
+        ],
+        'not_collected' => [
+            'title' => 'Que dados não são gerados',
+            'description' => 'O seu endereço IP é removido antes de ser transmitido ao GlitchTip e nunca chega ao sistema. Não associamos os relatórios de erro a nenhum indivíduo ou conta de utilizador – nem mesmo no caso de utilizadores que tenham iniciado sessão. Além disso, não recolhemos palavras-passe, dados de pagamento nem o conteúdo de quaisquer formulários ou mensagens que envie através dos nossos serviços.',
+        ],
+        'retention' => 'Armazenamos os relatórios de erros durante 30 dias; depois, são automaticamente eliminados.',
+        'base' => 'A base jurídica para este tratamento é o nosso interesse legítimo em prestar os nossos serviços de forma fiável e segura (art. 6.º, n.º 1, alínea f) do RGPD).',
+    ],
 ];

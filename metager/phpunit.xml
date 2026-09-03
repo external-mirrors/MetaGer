@@ -47,5 +47,16 @@
              Without this override that DSN leaks into the test run, and every
              exception-throwing test reports a live event. -->
         <env name="SENTRY_LARAVEL_DSN" value="" force="true"/>
+        <!-- No broadcaster in the test run. KeyUser::getKeyData() dispatches a
+             KeyChanged (ShouldBroadcast) on every keyserver charge read, and with
+             QUEUE_CONNECTION=sync that broadcast runs inline. A developer's local
+             .env points REVERB_HOST at the compose network so the reverb container
+             gets real traffic during `artisan serve`; that host leaks into the test
+             run and every account/charge page render fires a live broadcast. CI has
+             no .env, so REVERB_HOST is empty and the Pusher client builds
+             "https://:443" — MalformedUriException, 500, and the whole
+             account/charge feature suite red. Forced for the same reason as the DSN
+             above: the neutral value has to win over whatever .env carries. -->
+        <env name="BROADCAST_CONNECTION" value="null" force="true"/>
     </php>
 </phpunit>

@@ -103,6 +103,10 @@ return [
             'description' => 'Det meddelande som du anger här kommer att överföras till oss och användas för att behandla din begäran.',
         ],
         'title' => 'Beskrivning av resulterande data',
+        'error' => [
+            'title' => 'Felrapport (stacktrace)',
+            'description' => 'När ett tekniskt fel uppstår i vår applikation genereras automatiskt en felbeskrivning tillsammans med en stacktrace. Detta visar oss var i källkoden felet inträffade, så att vi kan åtgärda det.',
+        ],
     ],
     'base' => [
         'title' => 'Rättslig grund för behandling',
@@ -157,6 +161,7 @@ return [
         'gps' => 'Uppgifter om plats',
         'optional' => 'valfri',
         'unused' => 'Kommer inte att sparas eller delas.',
+        'error' => 'Felrapport',
     ],
     'title' => 'Integritetspolicy',
     'introduction' => 'För maximal transparens listar vi vilka uppgifter vi samlar in från dig och hur vi använder dem. Skyddet av dina uppgifter är viktigt för oss och det borde det vara för dig också. <strong>Vänligen läs detta uttalande noggrant; det ligger i ditt intresse.</strong>',
@@ -176,5 +181,22 @@ return [
     'hosting' => [
         'title' => 'Värdskap',
         'description' => 'Våra tjänster administreras av oss, SUMA-EV, och drivs på hårdvara som hyrs av Hetzner Online GmbH.',
+    ],
+    'monitoring' => [
+        'title' => 'Feluppföljning och applikationsövervakning',
+        'description' => 'För att säkerställa tillförlitligheten i våra tjänster använder vi det öppen källkodsbaserade felspårningsverktyget GlitchTip, både i backend- och frontend-delen av våra applikationer. GlitchTip körs uteslutande på vår egen infrastruktur; inga data delas med eller överförs till någon extern leverantör av analys- eller övervakningstjänster.',
+        'collected' => [
+            'title' => 'Vilka uppgifter genereras?',
+            'description' => 'När ett fel uppstår i vår webbapplikation eller på våra servrar samlar vi automatiskt in följande:',
+            'error' => 'En felbeskrivning och ett stacktrace som identifierar den berörda platsen i koden.',
+            'useragent' => 'Webbläsartyp, operativsystem och ungefärlig enhetstyp, fastställda utifrån din användaragent.',
+            'url' => 'Adressen (URL) till den sida eller funktion där felet inträffade.',
+        ],
+        'not_collected' => [
+            'title' => 'Vilka uppgifter genereras inte',
+            'description' => 'Din IP-adress raderas innan den överförs till GlitchTip och når därför aldrig systemet. Vi kopplar inte felrapporter till någon enskild person eller något användarkonto – inte ens för inloggade användare. Vi samlar inte heller in lösenord, betalningsuppgifter eller innehållet i formulär eller meddelanden som du skickar via våra tjänster.',
+        ],
+        'retention' => 'Vi lagrar felrapporter i 30 dagar; därefter raderas de automatiskt.',
+        'base' => 'Den rättsliga grunden för denna behandling är vårt berättigade intresse av att driva våra tjänster på ett tillförlitligt och säkert sätt (artikel 6.1 f i GDPR).',
     ],
 ];

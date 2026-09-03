@@ -18,6 +18,7 @@ return [
         'pl' => 'Polski',
         'fr' => 'Francuski',
         'pt' => 'portugalski',
+        'ca' => 'kataloński',
     ],
     'h1' => [
         '1' => 'Wybór języka',

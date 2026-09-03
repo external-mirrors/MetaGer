@@ -113,4 +113,6 @@ return [
         'total' => 'We rekenen <strong>:cost Token</strong> per zoekopdracht met de huidige instellingen.',
         'minimum' => 'Opmerking: De minimale kosten per zoekopdracht zijn <strong>:min Token</strong> per zoekopdracht.',
     ],
+    'resetAll' => 'Alle focus instellingen resetten',
+    'resetAllDescription' => 'Hiermee worden alle instellingen in alle categorieën gewist — inclusief motorkeuzes, filters en zwarte lijsten — en niet alleen op deze pagina.',
 ];

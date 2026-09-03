@@ -39,6 +39,10 @@ return [
             'name' => 'Max Mustermann, mail@example.com',
             'card' => 'Ultime cifre del numero della carta di credito',
         ],
+        'error' => [
+            'title' => 'Segnalazione di errore (traccia dello stack)',
+            'description' => 'Quando si verifica un errore tecnico nella nostra applicazione, viene generata automaticamente una descrizione dell\'errore accompagnata da una traccia dello stack. Questo ci permette di individuare il punto del codice sorgente in cui si è verificato l\'errore, in modo da poterlo correggere.',
+        ],
     ],
     'base' => [
         'title' => 'Base giuridica del trattamento',
@@ -98,6 +102,7 @@ return [
         'optional' => 'opzionale',
         'message' => 'Messaggio',
         'unused' => 'Non verrà salvato o condiviso.',
+        'error' => 'Segnalazione di errore',
     ],
     'principles' => [
         'description' => 'Come associazione senza scopo di lucro, ci impegniamo per il libero accesso alla conoscenza. Poiché sappiamo che la libera ricerca non è compatibile con la sorveglianza di massa, prendiamo molto sul serio anche la protezione dei dati. Abbiamo sempre trattato solo i dati assolutamente necessari per il funzionamento dei nostri servizi. La protezione dei dati è sempre il nostro standard. Non effettuiamo profilazione, ossia la creazione automatica di profili di utenti.',
@@ -176,5 +181,22 @@ return [
     'responsible_party' => [
         'title' => 'Persone responsabili e di contatto',
         'description' => 'MetaGer e i servizi correlati sono gestiti da <a href="https://suma-ev.de">SUMA-EV</a>, che è anche l\'autore di questa dichiarazione. In questa dichiarazione, per "noi" si intende generalmente SUMA-EV. I nostri dati di contatto sono riportati nel nostro <a href=":link_impress">Imprint</a>. Possiamo essere contattati via e-mail utilizzando il nostro modulo di contatto <a href=":link_contact"></a> .',
+    ],
+    'monitoring' => [
+        'title' => 'Monitoraggio degli errori e delle applicazioni',
+        'description' => 'Per garantire l\'affidabilità dei nostri servizi, utilizziamo lo strumento open source di tracciamento degli errori GlitchTip, sia nel backend che nel frontend delle nostre applicazioni. GlitchTip opera esclusivamente sulla nostra infrastruttura; nessun dato viene condiviso con o trasmesso a fornitori terzi di servizi di analisi o monitoraggio.',
+        'collected' => [
+            'title' => 'Quali dati vengono generati',
+            'description' => 'Quando si verifica un errore nella nostra applicazione web o sui nostri server, raccogliamo automaticamente:',
+            'error' => 'Una descrizione dell\'errore e una traccia dello stack che identifichi la posizione interessata nel codice.',
+            'useragent' => 'Tipo di browser, sistema operativo e tipo approssimativo di dispositivo, determinati in base all\'user agent dell\'utente.',
+            'url' => 'L\'indirizzo (URL) della pagina o della funzione in cui si è verificato l\'errore.',
+        ],
+        'not_collected' => [
+            'title' => 'Quali dati non vengono generati',
+            'description' => 'Il tuo indirizzo IP viene rimosso prima ancora di essere trasmesso a GlitchTip e non raggiunge mai il sistema. Non associamo le segnalazioni di errore a nessuna persona fisica né a nessun account utente, nemmeno nel caso di utenti che hanno effettuato l\'accesso. Inoltre, non raccogliamo password, dati di pagamento né il contenuto di eventuali moduli o messaggi inviati tramite i nostri servizi.',
+        ],
+        'retention' => 'Conserviamo i rapporti sugli errori per 30 giorni; successivamente vengono eliminati automaticamente.',
+        'base' => 'La base giuridica di tale trattamento è il nostro legittimo interesse a garantire un funzionamento affidabile e sicuro dei nostri servizi (art. 6, comma 1, lettera f) del GDPR).',
     ],
 ];

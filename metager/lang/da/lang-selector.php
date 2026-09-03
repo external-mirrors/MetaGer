@@ -13,6 +13,7 @@ return [
         'pl' => 'Polsk',
         'fr' => 'Fransk',
         'pt' => 'Portugisisk',
+        'ca' => 'katalansk',
     ],
     'h1' => [
         '1' => 'Valg af sprog',

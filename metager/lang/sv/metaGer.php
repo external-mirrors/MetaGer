@@ -146,6 +146,7 @@ return [
             'ct' => 'Kinesiska (Taiwan)',
             'name' => 'Språk',
             'ppt' => 'Portugisiska (Portugal)',
+            'caes' => 'Katalanska (Spanien)',
         ],
         'sort' => [
             'priceascending' => 'Pris (stigande)',

@@ -112,6 +112,10 @@ return [
             'title' => 'Bericht',
             'description' => 'Het bericht dat u hier invoert, wordt naar ons verzonden en gebruikt om uw verzoek te verwerken.',
         ],
+        'error' => [
+            'title' => 'Foutrapport (stacktrace)',
+            'description' => 'Wanneer er een technische fout optreedt in onze applicatie, wordt er automatisch een foutbeschrijving samen met een stacktrace gegenereerd. Hieruit blijkt waar in de broncode de fout is opgetreden, zodat we deze kunnen verhelpen.',
+        ],
     ],
     'base' => [
         'description' => 'De rechtsgrondslag voor de verwerking van uw persoonlijk identificeerbare gegevens is ofwel Art. 6 (1) (a) GDPR als u toestemming geeft voor de verwerking door gebruik te maken van onze diensten, of Art. 6 (1) (f) GDPR als de verwerking noodzakelijk is om onze legitieme belangen te beschermen, of een andere rechtsgrondslag als we je daarvan apart op de hoogte stellen.',
@@ -166,6 +170,7 @@ return [
         'preferences' => 'Gebruikersvoorkeuren',
         'contact' => 'Contactgegevens',
         'message' => 'Bericht',
+        'error' => 'Foutrapport',
     ],
     'title' => 'privacybeleid',
     'principles' => [
@@ -176,5 +181,22 @@ return [
         'title' => 'Wijzigingen in deze Verklaring',
         'description' => 'Net als onze aanbiedingen is ook deze gegevensbeschermingsverklaring voortdurend aan verandering onderhevig. Lees ze daarom regelmatig opnieuw.',
         'date' => 'Deze versie van ons privacybeleid is gedateerd: :date',
+    ],
+    'monitoring' => [
+        'title' => 'Foutopsporing en applicatiebewaking',
+        'description' => 'Om de betrouwbaarheid van onze diensten te waarborgen, maken we gebruik van de open-source tool voor foutregistratie GlitchTip, zowel in de backend als in de frontend van onze applicaties. GlitchTip draait uitsluitend op onze eigen infrastructuur; er worden geen gegevens gedeeld met of verzonden naar externe aanbieders van analyse- of monitoringdiensten.',
+        'collected' => [
+            'title' => 'Welke gegevens worden gegenereerd?',
+            'description' => 'Wanneer er een fout optreedt in onze webapplicatie of op onze servers, verzamelen we automatisch:',
+            'error' => 'Een foutbeschrijving en een stacktrace waarmee de betreffende plaats in de code kan worden geïdentificeerd.',
+            'useragent' => 'Browsertype, besturingssysteem en het geschatte type apparaat, afgeleid uit uw user-agent.',
+            'url' => 'Het adres (URL) van de pagina of functie waar de fout is opgetreden.',
+        ],
+        'not_collected' => [
+            'title' => 'Welke gegevens worden niet gegenereerd',
+            'description' => 'Je IP-adres wordt verwijderd voordat het naar GlitchTip wordt verzonden en komt dus nooit in het systeem terecht. We koppelen foutrapporten niet aan een specifieke persoon of gebruikersaccount – zelfs niet voor ingelogde gebruikers. Ook verzamelen we geen wachtwoorden, betalingsgegevens of de inhoud van formulieren of berichten die je via onze diensten verstuurt.',
+        ],
+        'retention' => 'We bewaren foutrapporten 30 dagen; daarna worden ze automatisch verwijderd.',
+        'base' => 'De rechtsgrondslag voor deze verwerking is ons gerechtvaardigd belang bij het betrouwbaar en veilig aanbieden van onze diensten (art. 6, lid 1, onder f), AVG).',
     ],
 ];

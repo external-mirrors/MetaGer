@@ -13,6 +13,7 @@ return [
         'pl' => 'Pools',
         'fr' => 'Frans',
         'pt' => 'Portugees',
+        'ca' => 'Catalaans',
     ],
     'h1' => [
         '1' => 'Taalkeuze',

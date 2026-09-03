@@ -122,6 +122,7 @@ return [
             'sa' => 'Spaans (Argentinië)',
             'sc' => 'Spaans (Chili)',
             'ppt' => 'Portugees (Portugal)',
+            'caes' => 'Catalaans (Spanje)',
         ],
         'sort' => [
             'priceascending' => 'Prijs (oplopend)',

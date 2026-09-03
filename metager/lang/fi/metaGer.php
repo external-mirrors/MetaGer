@@ -117,6 +117,7 @@ return [
             'ct' => 'Kiinalainen (Taiwan)',
             'name' => 'Kieli',
             'ppt' => 'portugali (Portugali)',
+            'caes' => 'Katalania (Espanja)',
         ],
         'sort' => [
             'priceascending' => 'Hinta (nouseva)',

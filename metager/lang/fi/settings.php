@@ -113,4 +113,6 @@ return [
         'total' => 'Veloitamme <strong>:cost Token</strong> per hakukysely nykyisillä asetuksilla.',
         'minimum' => 'Huomautus: Vähimmäiskustannus hakua kohden on <strong>:min Token</strong> per haku.',
     ],
+    'resetAll' => 'Nollaa kaikki tarkennukset',
+    'resetAllDescription' => 'Tyhjentää kaikki asetukset kaikista ryhmistä — mukaan lukien moottorivaihtoehdot, suodattimet ja mustat listat — ei pelkästään tältä sivulta.',
 ];

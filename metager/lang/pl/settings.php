@@ -113,4 +113,6 @@ return [
         'total' => 'Pobieramy opłatę <strong>:cost Token</strong> za zapytanie wyszukiwania z bieżącymi ustawieniami.',
         'minimum' => 'Uwaga: Minimalny koszt wyszukiwania to <strong>:min Token</strong> na wyszukiwanie.',
     ],
+    'resetAll' => 'Zresetuj wszystkie punkty ostrości',
+    'resetAllDescription' => 'Usuwa wszystkie ustawienia we wszystkich obszarach — w tym opcje silnika, filtry i czarne listy — a nie tylko na tej stronie.',
 ];

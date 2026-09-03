@@ -13,6 +13,7 @@ return [
         'pl' => 'Polacco',
         'fr' => 'Francese',
         'pt' => 'Portoghese',
+        'ca' => 'catalano',
     ],
     'h1' => [
         '1' => 'Selezione della lingua',

@@ -4,6 +4,7 @@ import {
     formatKey,
     isSubmittable,
 } from "./login/keyInput";
+import { maskKeyFieldWhileUnfocused } from "./login/maskKeyField";
 
 /**
  * The sign-in page, enhanced.
@@ -12,9 +13,11 @@ import {
  * and the form posts it; the file input is a plain file input; the "no key yet"
  * link is a link. What this file adds is the grouping of the digits as they are
  * typed, a message when what is in the field cannot be a key, a check before
- * signing in to a key with nothing on it — and the one control that cannot
- * exist without JavaScript, the camera scanner, which is therefore the one
- * control the page renders hidden and this file reveals.
+ * signing in to a key with nothing on it, the masking of the key field so the
+ * browser's own password manager will remember it (login/maskKeyField.js) — and
+ * the one control that cannot exist without JavaScript, the camera scanner,
+ * which is therefore the one control the page renders hidden and this file
+ * reveals.
  *
  * The messages are read off data attributes rather than written here. They are
  * translated, and the page is served in twelve languages.
@@ -68,6 +71,8 @@ function reviewKeyField() {
 }
 
 function enhanceKeyField() {
+    maskKeyFieldWhileUnfocused(input);
+
     input.addEventListener("input", () => {
         const raw = input.value;
         const formatted = formatKey(raw);

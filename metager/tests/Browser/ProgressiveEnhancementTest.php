@@ -104,9 +104,11 @@ class ProgressiveEnhancementTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit("/de-DE/anmelden")
                 ->assertTitle(trans("titles.login", [], "de"))
-                // Das Feld ist type="text" und nicht type="password": die alte
-                // Seite deckte es per Javascript beim Fokus auf, hier tippte
-                // man seinen Schlüssel also blind.
+                // Das Feld bleibt type="text": mit Javascript macht
+                // resources/js/login/maskKeyField.js daraus type="password"
+                // (aufgedeckt beim Fokus), damit der Passwortspeicher greift —
+                // ohne Javascript steht es sichtbar da, sonst tippte man hier
+                // blind.
                 ->assertAttribute("#login-key", "type", "text")
                 ->assertVisible(".login-submit")
                 // Das Dateifeld bleibt sichtbar, statt hinter einem Label zu

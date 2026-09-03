@@ -35,10 +35,20 @@
 				Javascript tippte man seinen Schlüssel also blind. Ein Schlüssel wird
 				von einem Zettel oder einem zweiten Bildschirm abgelesen; ihn dabei
 				nicht sehen zu können ist der sichere Weg zum Tippfehler.
+
+				autocomplete="current-password" und nicht "off": das alte Feld im
+				Keymanager war type="password", also bot jeder Passwortspeicher von
+				sich aus an, den Schlüssel abzulegen und beim nächsten Mal wieder
+				einzusetzen. Mit "off" fiel das weg — die Rückmeldung, die diese
+				Zeile wiederherstellt. Der Token genügt Bitwarden, KeePassXC und
+				1Password; der browsereigene Speicher will zusätzlich ein echtes
+				Passwortfeld sehen, deshalb macht resources/js/login/maskKeyField.js
+				daraus wieder type="password" (und deckt es beim Fokus auf), sobald
+				Javascript läuft. Ohne Javascript trägt der Token allein.
 			--}}
 			<input class="login-field__input" type="text" name="key" id="login-key"
 				value="{{ $prefill }}" placeholder="@lang('login.key.placeholder')"
-				autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+				autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"
 				aria-describedby="login-key-hint" autofocus>
 			<p class="login-field__hint" id="login-key-hint">@lang('login.key.hint')</p>
 			{{--

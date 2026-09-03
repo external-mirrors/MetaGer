@@ -243,6 +243,34 @@ class LoginPageTest extends TestCase
     }
 
     /**
+     * Das Schlüsselfeld lädt einen Passwortspeicher ein, den Schlüssel zu
+     * merken.
+     *
+     * Das alte Feld im Keymanager war type="password", also bot jeder
+     * Browser und jeder Passwortspeicher von sich aus an, den Schlüssel
+     * abzulegen und wieder einzusetzen. Der Neubau kam als type="text" mit
+     * autocomplete="off" — und ein Nutzer meldete genau das als Verlust:
+     * „wo speichere ich den Schlüssel wieder einmalig ab“. autocomplete=
+     * "current-password" ist der Token, der das zurückholt; dass ein Browser
+     * daraufhin auch tatsächlich fragt, ist Browserverhalten und hier nicht
+     * prüfbar — diese Zusicherung hält nur die Zeile fest, die es ermöglicht,
+     * gegen ein erneutes autocomplete="off".
+     */
+    public function testTheKeyFieldInvitesAPasswordManager(): void
+    {
+        $response = $this->get("/de-DE/anmelden")->assertOk();
+
+        preg_match('/<input[^>]*id="login-key"[^>]*>/', $response->getContent(), $field);
+        $this->assertNotEmpty($field, "Das Schlüsselfeld steht nicht mehr auf der Seite.");
+
+        // type="text" bleibt: ohne Javascript sieht ein Besucher nur so, was er
+        // tippt. resources/js/login/maskKeyField.js macht daraus type="password".
+        $this->assertStringContainsString('type="text"', $field[0]);
+        $this->assertStringContainsString('autocomplete="current-password"', $field[0]);
+        $this->assertStringNotContainsString('autocomplete="off"', $field[0]);
+    }
+
+    /**
      * Nichts davon in einen Cache. Die Seite hängt am Schlüssel-Cookie, und im
      * Fehlerfall steht in ihrer Query, was jemand eben eingetippt hat.
      */

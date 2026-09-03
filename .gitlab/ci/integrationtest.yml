@@ -17,6 +17,13 @@
     CACHE_STORE: array
     SESSION_DRIVER: array
     QUEUE_CONNECTION: sync
+    # Same reason: phpunit.xml sets this too and `php artisan optimize` bakes it out.
+    # KeyUser::getKeyData() dispatches KeyChanged (ShouldBroadcast) on every keyserver
+    # charge read, QUEUE_CONNECTION=sync runs that broadcast inline, and the copied-in
+    # .env leaves REVERB_HOST empty — so the Pusher client builds "https://:443",
+    # MalformedUriException, and every account and charge page render 500s. Discard
+    # broadcasts here; the deployed pod the browsertest job points at keeps its real one.
+    BROADCAST_CONNECTION: "null"
     # Not every Redis call goes through the cache. SchedulerHeartbeat reads the stamp with
     # Redis::get, and the search path will block on Redis::brpop, so an array cache store
     # does not make the suite Redis-free — it only hides which parts still need one. Point

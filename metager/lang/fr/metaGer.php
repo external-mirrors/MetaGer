@@ -58,6 +58,7 @@ return [
             'ct' => 'Chinois (Taiwan)',
             'name' => 'Langue',
             'ppt' => 'Portugais (Portugal)',
+            'caes' => 'Catalan (Espagne)',
         ],
         'noFilter' => 'Tous',
         'reset' => 'Réinitialiser le filtre',

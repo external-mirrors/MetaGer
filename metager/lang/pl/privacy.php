@@ -117,6 +117,10 @@ return [
             'title' => 'Wiadomość',
             'description' => 'Wiadomość wprowadzona tutaj zostanie przesłana do nas i wykorzystana do przetworzenia żądania.',
         ],
+        'error' => [
+            'title' => 'Raport o błędzie (ślad stosu)',
+            'description' => 'Gdy w naszej aplikacji wystąpi błąd techniczny, automatycznie generowany jest opis błędu wraz ze śladem stosu. Dzięki temu wiemy, w którym miejscu kodu źródłowego wystąpił błąd, co pozwala nam go naprawić.',
+        ],
     ],
     'base' => [
         'title' => 'Podstawa prawna przetwarzania',
@@ -176,5 +180,23 @@ return [
         'gps' => 'Dane lokalizacji',
         'optional' => 'opcjonalny',
         'unused' => 'Nie będą zapisywane ani udostępniane.',
+        'error' => 'Raport o błędach',
+    ],
+    'monitoring' => [
+        'collected' => [
+            'useragent' => 'Typ przeglądarki, system operacyjny oraz przybliżony typ urządzenia, określone na podstawie informacji zawartych w agencie użytkownika.',
+            'url' => 'Adres (URL) strony lub funkcji, w której wystąpił błąd.',
+            'title' => 'Jakie dane są generowane',
+            'description' => 'W przypadku wystąpienia błędu w naszej aplikacji internetowej lub na naszych serwerach automatycznie gromadzimy następujące dane:',
+            'error' => 'Opis błędu oraz ślad stosu wskazujący miejsce w kodzie, w którym wystąpił błąd.',
+        ],
+        'not_collected' => [
+            'title' => 'Jakie dane nie są generowane',
+            'description' => 'Twój adres IP jest usuwany, zanim zostanie przesłany do serwisu GlitchTip, i nigdy nie trafia do systemu. Nie łączymy zgłoszeń błędów z żadną osobą ani kontem użytkownika – nawet w przypadku zalogowanych użytkowników. Nie gromadzimy również haseł, danych dotyczących płatności ani treści formularzy lub wiadomości przesyłanych za pośrednictwem naszych usług.',
+        ],
+        'retention' => 'Raporty o błędach przechowujemy przez 30 dni; następnie są one automatycznie usuwane.',
+        'base' => 'Podstawą prawną tego przetwarzania danych jest nasz uzasadniony interes polegający na niezawodnym i bezpiecznym świadczeniu naszych usług (art. 6 ust. 1 lit. f) RODO).',
+        'title' => 'Śledzenie błędów i monitorowanie aplikacji',
+        'description' => 'Aby zapewnić niezawodność naszych usług, korzystamy z narzędzia do śledzenia błędów typu open source o nazwie GlitchTip, zarówno w części backendowej, jak i frontendowej naszych aplikacji. GlitchTip działa wyłącznie na naszej własnej infrastrukturze; żadne dane nie są udostępniane ani przekazywane żadnym zewnętrznym dostawcom usług analitycznych lub monitorujących.',
     ],
 ];

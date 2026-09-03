@@ -47,5 +47,19 @@
              Without this override that DSN leaks into the test run, and every
              exception-throwing test reports a live event. -->
         <env name="SENTRY_LARAVEL_DSN" value="" force="true"/>
+        <!-- No broadcaster in the test run. KeyUser::getKeyData() dispatches a
+             KeyChanged (ShouldBroadcast) on every keyserver charge read, and with
+             QUEUE_CONNECTION=sync that broadcast runs inline — so every account and
+             charge page render fires a live broadcast at whatever REVERB_HOST a
+             developer's local .env points at the compose network. Discard it.
+             Forced for the same reason as the DSN above: the neutral value has to
+             win over whatever .env carries.
+
+             This line only covers the local run. CI does `php artisan optimize`,
+             which bakes .env into the config cache where env() is never read again,
+             so the CI value is set as a job variable in
+             .gitlab/ci/integrationtest.yml instead — same as CACHE_STORE and the
+             rest. -->
+        <env name="BROADCAST_CONNECTION" value="null" force="true"/>
     </php>
 </phpunit>

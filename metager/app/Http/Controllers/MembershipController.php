@@ -15,6 +15,7 @@ use App\Models\Membership\MembershipApplication;
 use App\Models\Membership\MembershipPaymentPaypal;
 use App\Models\Membership\PayPal;
 use App\Rules\IBANValidator;
+use App\Support\MembershipFee;
 use Arr;
 use Artisan;
 use Cache;
@@ -91,7 +92,11 @@ class MembershipController extends Controller
                 } elseif ($request->input("edit", "") === "membership-fee") {
                     $application = $application->editable();
                     $request_data["application_id"] = $application->id;
-                    if (in_array($application->amount, [(float) "10.00", (float) "15.00", (float) "20.00"])) {
+                    // Ob der bisherige Beitrag einem Vorschlag entspricht oder
+                    // in das Wunschbetragsfeld gehört. Welche Vorschläge das
+                    // sind, hängt an der Art der Mitgliedschaft — eine Firma
+                    // bekommt andere als eine Person, siehe MembershipFee.
+                    if (in_array($application->amount, MembershipFee::forApplication($application)->presetValues())) {
                         $request_data["amount"] = number_format($application->amount, 2);
                     } elseif ($application->amount !== null) {
                         $request_data["amount"] = "custom";
@@ -229,17 +234,13 @@ class MembershipController extends Controller
             ],
         ]);
 
-        $min_amount = 5;
-        if ($application !== null) {
-            if ($application->contact !== null)
-                $min_amount = 2.5;
-            else if ($application->company !== null) {
-                if ($application->company->employees === "20-199")
-                    $min_amount = 100;
-                elseif ($application->company->employees === ">200")
-                    $min_amount = 200;
-            }
-        }
+        // Mindestbeitrag und Vorschläge sind dieselbe Entscheidung und stehen
+        // deshalb an einer Stelle. Vorher war das eine if-Kette hier und eine
+        // Whitelist zwanzig Zeilen weiter unten, die sich für Firmen
+        // widersprachen — App\Support\MembershipFee erklärt, wie.
+        $fee = MembershipFee::forApplication($application);
+        $min_amount = $fee->minimum();
+        $presets = $fee->presets();
 
         $validator->sometimes("title", ['exclude_if:type,company', 'required', 'in:Frau,Herr,Neutral'], function (Fluent $input) use ($application) {
             return ($application === null || ($application->contact === null && $application->company === null)) && $input->type === "person";
@@ -261,11 +262,11 @@ class MembershipController extends Controller
         });
         $validator->sometimes("amount", [
             "required",
-            function ($attribute, $value, $fail) use ($min_amount) {
+            function ($attribute, $value, $fail) use ($min_amount, $presets) {
                 $numeric_value = (float) $value;
                 if ($value !== "custom" && $numeric_value < $min_amount) {
                     $fail(__("validation.min.numeric", ["attribute" => $attribute, "min" => $min_amount]));
-                } elseif (!in_array($value, ["10.00", "15.00", "20.00", "custom"])) {
+                } elseif (!in_array($value, [...$presets, "custom"])) {
                     $fail(__("validation.in", ["attribute" => $attribute]));
                 }
             }

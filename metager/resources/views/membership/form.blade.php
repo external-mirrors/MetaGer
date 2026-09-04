@@ -128,8 +128,18 @@
     $amount = $application !== null && $application->amount !== null ? $application->amount : request()->input("amount", null);
     if($amount === "custom") $amount = request()->input("custom-amount");
     if($amount !== null) $amount = floatval($amount);
+
+    // Mindestbeitrag und Vorschläge kommen aus derselben Quelle wie die
+    // Validierung in MembershipController::submitMembershipForm. Sie standen
+    // hier als drei fest verdrahtete Radiobuttons, und die Validierung ließ
+    // ebenso fest verdrahtet nur diese drei Beträge durch — für eine Firma
+    // schlug das Formular damit drei Beträge vor, die es selbst zurückwies.
+    $fee = \App\Support\MembershipFee::forApplication($application);
+    $feePresets = $fee->presets();
+    $feeMinimum = $fee->minimum();
+    $isCompany = $application !== null && $application->company !== null;
     @endphp
-    <div id="membership-fee" @if(!$visible)class="disabled"@endif>
+    <div id="membership-fee" @if(!$visible)class="disabled"@endif data-min-amount="{{ $feeMinimum }}">
         <h3>2. Ihr monatlicher Mitgliedsbeitrag
             @if($visible && !$editable)
             <a href="{{  route("membership_form", array_merge(Request::all(), [Request::route("application_id")], ["edit" => "membership-fee"])) }}">Bearbeiten</a>
@@ -146,30 +156,35 @@
                 <div class="error">{{ $error }}</div>
             @endforeach
         @endif
-        <div class="input-group @if(!$editable)disabled @endif " >
-            <input type="radio" name="amount" id="amount-10" value="10.00" @if($amount === null ||
-                $amount == 10 )checked @endif @if(!$editable)disabled @endif required />
-            <label for="amount-10">10€</label>
-        </div>
+        @if($isCompany)
+        {{-- Wonach sich der Beitrag einer Firma richtet. Die Größenklasse hat
+             der Antrag im ersten Schritt schon angegeben, der Beitrag ergibt
+             sich daraus — ohne diesen Satz wirken die Beträge willkürlich. --}}
+        <div id="membership-fee-company">Für Ihre Größenklasse sieht unsere <a
+                href="https://suma-ev.de/beitragsordnung/" target="_blank">Beitragsordnung</a> einen
+            Mitgliedsbeitrag ab <span>{{ number_format($feeMinimum, 0, ",", ".") }}€</span> im Monat vor.</div>
+        @endif
+        @foreach($feePresets as $preset)
         <div class="input-group @if(!$editable)disabled @endif ">
-            <input type="radio" name="amount" id="amount-15" value="15.00" @if($amount == 15
-                )checked @endif @if(!$editable)disabled @endif required />
-            <label for="amount-15">15€</label>
+            <input type="radio" name="amount" id="amount-{{ str_replace(".", "-", $preset) }}" value="{{ $preset }}"
+                @if(($amount === null && $loop->first) || $amount === (float) $preset)checked @endif @if(!$editable)disabled @endif required />
+            <label for="amount-{{ str_replace(".", "-", $preset) }}">{{ number_format((float) $preset, 0, ",", ".") }}€</label>
         </div>
-        <div class="input-group @if(!$editable)disabled @endif ">
-            <input type="radio" name="amount" id="amount-20" value="20.00" @if($amount == 20
-                )checked @endif @if(!$editable)disabled @endif required />
-            <label for="amount-20">20€</label>
-        </div>
+        @endforeach
         <div class="input-group custom @if(!$editable)disabled @endif ">
-            <input type="radio" name="amount" id="amount-custom" value="custom" @if(!in_array($amount, [null, (float)"10.00", (float)"15.00", (float)"20.00"]))checked @endif @if(!$editable)disabled @endif required />
+            <input type="radio" name="amount" id="amount-custom" value="custom" @if($amount !== null && !in_array($amount, $fee->presetValues()))checked @endif @if(!$editable)disabled @endif required />
             <label for="amount-custom">Wunschbetrag</label>
             <input type="text" name="custom-amount" id="amount-custom-value" inputmode="numeric"
-                value="{{ $amount }}" placeholder="10,00€" @if(!$editable)disabled @endif />
+                value="{{ $amount }}" placeholder="{{ number_format($feeMinimum, 2, ",", ".") }}€" @if(!$editable)disabled @endif />
         </div>
         @if($editable)
+        {{-- Die Ermäßigung ist ein Recht natürlicher Personen; eine Firma kann
+             keinen Nachweis über ein geringes Einkommen führen, und ihr
+             Mindestbeitrag ist ohnehin ein anderer als die 5€, die hier
+             stünden. --}}
+        @if(!$isCompany)
         <div id="reduction-container" class="hidden">
-            <div>Der Mindestbeitrag beträgt monatlich <span>5€</span>. Wenn Sie <a href="https://suma-ev.de/beitragsordnung/" target="_blank">Anspruch auf einen reduzierten Beitrag</a> haben, laden Sie bitte nachfolgend einen geeigneten Nachweis zusammen mit Ihrem Antrag hoch.</div>
+            <div>Der Mindestbeitrag beträgt monatlich <span>{{ number_format(\App\Support\MembershipFee::PERSON_MINIMUM, 0, ",", ".") }}€</span>. Wenn Sie <a href="https://suma-ev.de/beitragsordnung/" target="_blank">Anspruch auf einen reduzierten Beitrag</a> haben, laden Sie bitte nachfolgend einen geeigneten Nachweis zusammen mit Ihrem Antrag hoch.</div>
             @if(isset($errors) && $errors->has("reduction"))
                 @foreach($errors->get("reduction") as $error)
                     <div class="error">{{ $error }}</div>
@@ -180,6 +195,7 @@
                 <input type="file" name="reduction" id="reduction">
             </div>
         </div>
+        @endif
         <button type="submit" class="btn btn-primary" autofocus>Weiter</button>
         @endif
         @endif

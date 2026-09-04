@@ -173,9 +173,22 @@
 
       >h3,
       >div.error,
+      >div#membership-fee-company,
       div#reduction-container,
       >button[type=submit] {
         grid-column: span 4;
+      }
+
+      // Woher der Betrag kommt. Steht über den Vorschlägen, weil drei
+      // dreistellige Beträge ohne diesen Satz wie ein Fehler aussehen.
+      >div#membership-fee-company {
+        font-size: 0.9rem;
+        color: @color-light-grey;
+
+        >span {
+          font-weight: 700;
+          color: @text-color;
+        }
       }
 
       @media (max-width: 385px) {
@@ -183,6 +196,7 @@
 
         >h3,
         >div.error,
+        >div#membership-fee-company,
         div#reduction-container,
         >button[type=submit] {
           grid-column: span 2;

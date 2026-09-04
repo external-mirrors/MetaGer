@@ -21,10 +21,28 @@ document.querySelectorAll("input[name=payment-method]").forEach((input) => {
   document.querySelector("#amount-custom-value")?.addEventListener("change", validateAmount);
   document.querySelectorAll('input[type=radio][name=amount]').forEach(element => {
     element.addEventListener("change", e => {
-      document.querySelector("#reduction-container").classList.add("hidden");
+      // Der Nachweis-Kasten steht nur im Formular einer natürlichen Person:
+      // eine Firma hat keinen ermäßigten Beitrag, sondern einen eigenen
+      // Mindestbeitrag. Ohne das Fragezeichen war der Beitragsschritt einer
+      // Firma nach dem ersten Klick tot.
+      document.querySelector("#reduction-container")?.classList.add("hidden");
     });
   });
 })();
+
+/**
+ * Der Mindestbeitrag dieses Formulars.
+ *
+ * Er hängt an der Art der Mitgliedschaft — 2,50 € für eine Person, deutlich
+ * mehr für eine Firma — und wird deshalb vom Blade aus App\Support\MembershipFee
+ * mitgegeben statt hier verdrahtet. Ohne das Attribut bleibt es bei 2,50, dem
+ * niedrigsten Wert, den die Validierung kennt: raten soll das Skript nicht.
+ */
+function minimumAmount() {
+  let container = document.querySelector("#membership-fee");
+  let minimum = parseFloat(container?.dataset.minAmount);
+  return isNaN(minimum) ? 2.5 : minimum;
+}
 
 function validateAmount() {
   let amount_element = document.querySelector("input[name=amount]:checked");
@@ -38,7 +56,7 @@ function validateAmount() {
     value = parseFloat(value);
   }
   if (isNaN(value)) {
-    document.querySelector("#reduction-container").classList.add("hidden");
+    document.querySelector("#reduction-container")?.classList.add("hidden");
     custom_amount_element.value = "";
     return
   };
@@ -47,8 +65,9 @@ function validateAmount() {
     custom_amount_element.value = value;
   }
 
-  if (value < 2.5) {
-    custom_amount_element.value = 2.5;
+  let minimum = minimumAmount();
+  if (value < minimum) {
+    custom_amount_element.value = minimum;
   }
 
   if (document.querySelector("input[name=type]").value == "company") return;

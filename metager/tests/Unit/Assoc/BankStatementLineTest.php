@@ -3,8 +3,8 @@
 namespace Tests\Unit\Assoc;
 
 use App\Models\Assoc\BankStatementLine;
+use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
-use App\Models\Assoc\Household;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concerns\UsesInMemorySqlite;
@@ -37,9 +37,9 @@ class BankStatementLineTest extends TestCase
 
     public function testMatchedResolvesToTheDebitWhenMatchedTypeIsDebit(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
         $debit = Debit::create([
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "account_holder" => "Familie Lovelace",
@@ -64,9 +64,9 @@ class BankStatementLineTest extends TestCase
 
     public function testMatchedResolvesToTheRecurContributionWhenMatchedTypeIsRecurContribution(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
         $recur = RecurContribution::create([
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "amount" => "10.00",

@@ -6,7 +6,7 @@
     <div class="card">
         <h1>
             @if($type === "contact")
-                {{ $payer->first_name }} {{ $payer->last_name }}
+                {{ $payer->name() }}
             @else
                 {{ $payer->name }}
             @endif

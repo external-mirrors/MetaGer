@@ -6,7 +6,6 @@ use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\DonationReceipt;
-use App\Models\Assoc\Household;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use Mpdf\Mpdf;
@@ -85,12 +84,11 @@ class DonationReceiptPdf
         ];
     }
 
-    private function payerName(Contact|Company|Household|null $payer): string
+    private function payerName(Contact|Company|null $payer): string
     {
         return match (true) {
-            $payer instanceof Contact => trim("{$payer->first_name} {$payer->last_name}"),
+            $payer instanceof Contact => $payer->name(),
             $payer instanceof Company => $payer->name,
-            $payer instanceof Household => $payer->household_name,
             default => "",
         };
     }

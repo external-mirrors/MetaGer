@@ -6,7 +6,6 @@ use App\Assoc\CiviCrmImporter;
 use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
-use App\Models\Assoc\Household;
 use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Database\Schema\Blueprint;
@@ -232,6 +231,11 @@ class CiviCrmImporterTest extends TestCase
         $this->assertSame('Berlin', $contact->city);
     }
 
+    /**
+     * CiviCRM's "Household" contact type was never an actual multi-person
+     * household here — see Contact's docblock — so it imports as a Contact
+     * with display_name set, not a separate entity.
+     */
     public function testImportsAnOrganizationAndAHousehold(): void
     {
         $orgId = $this->civicrm('civicrm_contact')->insertGetId(['contact_type' => 'Organization', 'organization_name' => 'Analytical Engines Ltd']);
@@ -240,7 +244,9 @@ class CiviCrmImporterTest extends TestCase
         (new CiviCrmImporter())->import();
 
         $this->assertSame('Analytical Engines Ltd', Company::where('civicrm_id', $orgId)->firstOrFail()->name);
-        $this->assertSame('Familie Lovelace', Household::where('civicrm_id', $householdId)->firstOrFail()->household_name);
+        $household = Contact::where('civicrm_id', $householdId)->firstOrFail();
+        $this->assertSame('Familie Lovelace', $household->display_name);
+        $this->assertNull($household->first_name);
     }
 
     public function testDeletedContactsAreSkipped(): void
@@ -273,7 +279,7 @@ class CiviCrmImporterTest extends TestCase
 
         $debit = Debit::where('civicrm_id', $debitId)->firstOrFail();
         $this->assertSame('donation', $debit->source);
-        $this->assertTrue($debit->household->is(Household::where('civicrm_id', $householdId)->firstOrFail()));
+        $this->assertTrue($debit->contact->is(Contact::where('civicrm_id', $householdId)->firstOrFail()));
         $this->assertSame('GENODEF1S01', $debit->bic);
         $this->assertSame('25.00', $debit->amount);
     }

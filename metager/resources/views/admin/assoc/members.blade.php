@@ -5,7 +5,6 @@
 @section('content')
     <div class="card">
         <h1>Mitglieder</h1>
-        <p><a href="{{ route('assoc_admin_households') }}">Haushalte ansehen</a></p>
 
         <h2>Personen</h2>
         <table>
@@ -22,7 +21,7 @@
                     <tr>
                         <td>
                             <a href="{{ route('assoc_admin_member', ['type' => 'contact', 'id' => $contact->id]) }}">
-                                {{ $contact->first_name . " " . $contact->last_name }}
+                                {{ $contact->name() }}
                             </a>
                         </td>
                         <td>{{ $contact->email }}</td>

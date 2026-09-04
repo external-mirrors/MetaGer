@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
-use App\Models\Assoc\Household;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -15,8 +14,13 @@ class AssocController extends Controller
 {
     public function members(): Response
     {
+        // COALESCE, not plain orderBy("last_name") — a contact with only
+        // display_name set (see the assoc_contacts migration) has null
+        // first_name/last_name, which would otherwise cluster them at one
+        // end of the list regardless of what their name actually is.
         $contacts = Contact::with("membership")
-            ->orderBy("last_name")->orderBy("first_name")
+            ->orderByRaw("COALESCE(last_name, display_name)")
+            ->orderByRaw("COALESCE(first_name, '')")
             ->paginate(50, ["*"], "contacts_page")
             ->withQueryString();
         $companies = Company::with("membership")
@@ -44,26 +48,6 @@ class AssocController extends Controller
             "title" => "Mitglied",
             "type" => $type,
             "payer" => $payer,
-        ]));
-    }
-
-    public function households(): Response
-    {
-        $households = Household::orderBy("household_name")->paginate(50);
-
-        return response(view("admin.assoc.households", [
-            "title" => "Haushalte",
-            "households" => $households,
-        ]));
-    }
-
-    public function household(string $id): Response
-    {
-        $household = Household::with(["debits", "recurContributions"])->findOrFail($id);
-
-        return response(view("admin.assoc.household", [
-            "title" => "Haushalt",
-            "household" => $household,
         ]));
     }
 }

@@ -36,8 +36,6 @@ Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], '
     Route::post("membership/deny", [MembershipController::class, "adminDeny"])->name("membership_admin_deny");
     Route::get("assoc/members", [AssocController::class, "members"])->name("assoc_admin_members");
     Route::get("assoc/members/{type}/{id}", [AssocController::class, "member"])->name("assoc_admin_member");
-    Route::get("assoc/households", [AssocController::class, "households"])->name("assoc_admin_households");
-    Route::get("assoc/households/{id}", [AssocController::class, "household"])->name("assoc_admin_household");
     Route::get("assoc/bank-statements", [BankStatementController::class, "index"])->name("assoc_admin_bank_statements");
     Route::get("assoc/bank-statements/{id}", [BankStatementController::class, "show"])->name("assoc_admin_bank_statement");
     Route::post("assoc/bank-statements/{id}/match", [BankStatementController::class, "match"])->name("assoc_admin_bank_statement_match");

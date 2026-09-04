@@ -11,10 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $civicrm_id
  * @property string|null $contact_id
  * @property string|null $company_id
- * @property string|null $household_id
  * @property Contact|null $contact
  * @property Company|null $company
- * @property Household|null $household
  * @property string $source
  * @property string $iban
  * @property string|null $bic
@@ -32,7 +30,7 @@ class RecurContribution extends Model
 
     protected $table = "assoc_recur_contributions";
 
-    protected $fillable = ["civicrm_id", "contact_id", "company_id", "household_id", "source", "iban", "bic", "account_holder", "amount", "mandate", "mandate_date", "frequency", "active", "next_due_date"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "source", "iban", "bic", "account_holder", "amount", "mandate", "mandate_date", "frequency", "active", "next_due_date"];
 
     protected $casts = [
         "amount" => "decimal:2",
@@ -49,10 +47,5 @@ class RecurContribution extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, "company_id");
-    }
-
-    public function household(): BelongsTo
-    {
-        return $this->belongsTo(Household::class, "household_id");
     }
 }

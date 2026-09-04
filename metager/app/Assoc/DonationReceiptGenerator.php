@@ -6,7 +6,6 @@ use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\DonationReceipt;
-use App\Models\Assoc\Household;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
@@ -66,13 +65,9 @@ class DonationReceiptGenerator
      * Returns null rather than an empty receipt when there is nothing
      * outstanding for that payer+source.
      */
-    public function generateForPayer(Contact|Company|Household $payer, string $source): ?DonationReceipt
+    public function generateForPayer(Contact|Company $payer, string $source): ?DonationReceipt
     {
-        $column = match (true) {
-            $payer instanceof Contact => "contact_id",
-            $payer instanceof Company => "company_id",
-            $payer instanceof Household => "household_id",
-        };
+        $column = $payer instanceof Contact ? "contact_id" : "company_id";
 
         $debits = Debit::where($column, $payer->id)
             ->where("source", $source)
@@ -140,7 +135,7 @@ class DonationReceiptGenerator
     {
         return Debit::where("status", "executed")
             ->whereNull("donation_receipt_id")
-            ->with(["contact", "company", "household"])
+            ->with(["contact", "company"])
             ->get();
     }
 
@@ -152,7 +147,7 @@ class DonationReceiptGenerator
 
     private function payerKey(Debit $debit): string
     {
-        return $debit->contact_id ?? $debit->company_id ?? $debit->household_id;
+        return $debit->contact_id ?? $debit->company_id;
     }
 
     /**
@@ -168,7 +163,6 @@ class DonationReceiptGenerator
         $receipt = DonationReceipt::create([
             "contact_id" => $first->contact_id,
             "company_id" => $first->company_id,
-            "household_id" => $first->household_id,
             "year" => $year,
             "total_amount" => $this->sumAmounts($debits),
             "source" => $first->source,

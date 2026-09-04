@@ -12,10 +12,9 @@ return new class extends Migration {
     {
         Schema::create('assoc_donation_receipts', function (Blueprint $table) {
             $table->uuid('id')->primary(true);
-            // Exactly one of these three is set.
+            // Exactly one of these two is set.
             $table->uuid("contact_id")->nullable()->references("id")->on("assoc_contacts");
             $table->uuid("company_id")->nullable()->references("id")->on("assoc_companies");
-            $table->uuid("household_id")->nullable()->references("id")->on("assoc_households");
             $table->unsignedSmallInteger("year");
             $table->decimal("total_amount", 10, 2);
             $table->dateTime("generated_at")->nullable();

@@ -7,7 +7,6 @@ use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\DonationReceipt;
-use App\Models\Assoc\Household;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -82,14 +81,13 @@ class DonationReceiptController extends Controller
         return redirect()->back();
     }
 
-    private function findPayer(string $type, string $id): Contact|Company|Household
+    private function findPayer(string $type, string $id): Contact|Company
     {
-        abort_unless(in_array($type, ["contact", "company", "household"], true), 404);
+        abort_unless(in_array($type, ["contact", "company"], true), 404);
 
         return match ($type) {
             "contact" => Contact::findOrFail($id),
             "company" => Company::findOrFail($id),
-            "household" => Household::findOrFail($id),
         };
     }
 }

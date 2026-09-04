@@ -21,7 +21,7 @@ return new class extends Migration {
         // Mitgliedsbeitrag_bescheinigen contact-level settings, collapsed from two
         // independent fields into one — see CiviCrmImporter::importContacts() for
         // how a contact where the two disagreed is resolved.
-        foreach (["assoc_contacts", "assoc_companies", "assoc_households"] as $table) {
+        foreach (["assoc_contacts", "assoc_companies"] as $table) {
             Schema::table($table, function (Blueprint $table) {
                 $table->enum("donation_receipt_preference", ["never", "immediate", "annual"])->nullable();
             });
@@ -57,7 +57,7 @@ return new class extends Migration {
         Schema::table("assoc_donation_receipts", function (Blueprint $table) {
             $table->dropColumn("source");
         });
-        foreach (["assoc_contacts", "assoc_companies", "assoc_households"] as $table) {
+        foreach (["assoc_contacts", "assoc_companies"] as $table) {
             Schema::table($table, function (Blueprint $table) {
                 $table->dropColumn("donation_receipt_preference");
             });

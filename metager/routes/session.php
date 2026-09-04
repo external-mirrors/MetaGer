@@ -45,6 +45,8 @@ Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], '
     Route::get("assoc/donation-receipts", [DonationReceiptController::class, "index"])->name("assoc_admin_donation_receipts");
     Route::get("assoc/donation-receipts/{id}/download", [DonationReceiptController::class, "download"])->name("assoc_admin_donation_receipt_download");
     Route::post("assoc/debits/{debitId}/generate-receipt", [DonationReceiptController::class, "generate"])->name("assoc_admin_debit_generate_receipt");
+    Route::post("assoc/payers/{type}/{id}/generate-receipt", [DonationReceiptController::class, "generateForPayer"])->name("assoc_admin_payer_generate_receipt");
+    Route::post("assoc/payers/{type}/{id}/donation-receipt-preference", [DonationReceiptController::class, "updatePreference"])->name("assoc_admin_payer_update_preference");
     Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');

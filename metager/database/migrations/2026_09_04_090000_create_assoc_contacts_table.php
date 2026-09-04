@@ -22,7 +22,6 @@ return new class extends Migration {
             $table->string("postal_code")->nullable();
             $table->string("city")->nullable();
             $table->string("country")->nullable();
-            $table->string("mastodon_id")->nullable();
             $table->timestamps();
         });
     }

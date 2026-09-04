@@ -88,6 +88,7 @@
 
         @include('admin.assoc._debits', ['debits' => $payer->debits])
         @include('admin.assoc._recur_contributions', ['recurContributions' => $payer->recurContributions])
+        @include('admin.assoc._donation_receipt_settings', ['payer' => $payer, 'payerType' => $type])
 
         <p><a href="{{ route('assoc_admin_members') }}">&laquo; Zurück zur Mitgliederliste</a></p>
     </div>

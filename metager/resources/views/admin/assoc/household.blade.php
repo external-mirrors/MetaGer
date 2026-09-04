@@ -15,6 +15,7 @@
 
         @include('admin.assoc._debits', ['debits' => $household->debits])
         @include('admin.assoc._recur_contributions', ['recurContributions' => $household->recurContributions])
+        @include('admin.assoc._donation_receipt_settings', ['payer' => $household, 'payerType' => 'household'])
 
         <p><a href="{{ route('assoc_admin_households') }}">&laquo; Zurück zur Haushaltsliste</a></p>
     </div>

@@ -151,6 +151,15 @@ class DonationReceiptGeneratorTest extends TestCase
         $this->assertCount(0, $receipts);
     }
 
+    public function testAPayerWithNoPreferenceGetsNoAutomaticReceiptByDefault(): void
+    {
+        $contact = $this->contact();
+        $this->debit($contact);
+
+        $this->assertCount(0, $this->generator()->generateImmediate());
+        $this->assertCount(0, $this->generator()->generateAnnualBatch(2026));
+    }
+
     public function testEffectivePreferenceFallsBackToTheConfiguredDefault(): void
     {
         config(["assoc.donation_receipt_default_preference" => "immediate"]);
@@ -160,6 +169,42 @@ class DonationReceiptGeneratorTest extends TestCase
         $receipts = $this->generator()->generateImmediate();
 
         $this->assertCount(1, $receipts);
+    }
+
+    public function testGenerateForPayerFoldsAllOutstandingDebitsOfOneSourceIntoOneReceipt(): void
+    {
+        $contact = $this->contact();
+        $old = $this->debit($contact, ["amount" => "5.00", "due_date" => "2024-03-01", "end_to_end_reference" => "E2E-a"]);
+        $recent = $this->debit($contact, ["amount" => "7.00", "due_date" => "2026-01-15", "end_to_end_reference" => "E2E-b"]);
+        $dues = $this->debit($contact, ["source" => "membership", "amount" => "20.00", "end_to_end_reference" => "E2E-c"]);
+
+        $receipt = $this->generator()->generateForPayer($contact, "donation");
+
+        $this->assertNotNull($receipt);
+        $this->assertSame("12.00", (string) $receipt->total_amount);
+        $this->assertSame(2026, $receipt->year);
+        $this->assertSame($receipt->id, $old->fresh()->donation_receipt_id);
+        $this->assertSame($receipt->id, $recent->fresh()->donation_receipt_id);
+        $this->assertNull($dues->fresh()->donation_receipt_id);
+    }
+
+    public function testGenerateForPayerReturnsNullWhenNothingIsOutstanding(): void
+    {
+        $contact = $this->contact();
+
+        $receipt = $this->generator()->generateForPayer($contact, "donation");
+
+        $this->assertNull($receipt);
+    }
+
+    public function testGenerateForPayerIgnoresThePayersPreference(): void
+    {
+        $contact = $this->contact(["donation_receipt_preference" => "never"]);
+        $this->debit($contact);
+
+        $receipt = $this->generator()->generateForPayer($contact, "donation");
+
+        $this->assertNotNull($receipt);
     }
 
     public function testGenerateAnnualBatchOnlyIncludesUnreceiptedDebits(): void

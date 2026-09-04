@@ -104,4 +104,48 @@ class DonationReceiptAdminTest extends TestCase
 
         $response->assertOk();
     }
+
+    public function testGeneratingAReceiptForAPayerFoldsAllOutstandingDebitsOfThatSource(): void
+    {
+        $contact = $this->contact();
+        $this->debit($contact, ["amount" => "5.00", "end_to_end_reference" => "E2E-a"]);
+        $this->debit($contact, ["amount" => "7.00", "end_to_end_reference" => "E2E-b"]);
+
+        $response = $this->post("/admin/assoc/payers/contact/{$contact->id}/generate-receipt", ["source" => "donation"]);
+
+        $response->assertRedirect();
+        $receipt = DonationReceipt::sole();
+        $this->assertSame("12.00", (string) $receipt->total_amount);
+    }
+
+    public function testGeneratingAReceiptForAPayerRejectsAnInvalidSource(): void
+    {
+        $contact = $this->contact();
+
+        $this->post("/admin/assoc/payers/contact/{$contact->id}/generate-receipt", ["source" => "bogus"])
+            ->assertStatus(422);
+    }
+
+    public function testUpdatingAPayersDonationReceiptPreference(): void
+    {
+        $contact = $this->contact();
+
+        $response = $this->post("/admin/assoc/payers/contact/{$contact->id}/donation-receipt-preference", [
+            "donation_receipt_preference" => "immediate",
+        ]);
+
+        $response->assertRedirect();
+        $this->assertSame("immediate", $contact->fresh()->donation_receipt_preference);
+    }
+
+    public function testClearingAPayersDonationReceiptPreferenceFallsBackToTheDefault(): void
+    {
+        $contact = $this->contact(["donation_receipt_preference" => "annual"]);
+
+        $this->post("/admin/assoc/payers/contact/{$contact->id}/donation-receipt-preference", [
+            "donation_receipt_preference" => "",
+        ]);
+
+        $this->assertNull($contact->fresh()->donation_receipt_preference);
+    }
 }

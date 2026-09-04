@@ -42,6 +42,23 @@ class RecurContributionTest extends TestCase
         $this->assertTrue($recur->fresh()->active);
     }
 
+    public function testBicAndAccountHolderAreNullableAndPreservedWhenPresent(): void
+    {
+        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $recur = RecurContribution::create(array_merge($this->baseAttributes(), [
+            "household_id" => $household->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+            "frequency" => "monthly",
+            "bic" => "GENODEF1S01",
+            "account_holder" => "Familie Lovelace",
+        ]));
+
+        $reloaded = $recur->fresh();
+        $this->assertSame("GENODEF1S01", $reloaded->bic);
+        $this->assertSame("Familie Lovelace", $reloaded->account_holder);
+    }
+
     public function testAMandateMustBeUnique(): void
     {
         $household = Household::create(["household_name" => "Familie Lovelace"]);

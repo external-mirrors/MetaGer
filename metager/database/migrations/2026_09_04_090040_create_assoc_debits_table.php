@@ -25,6 +25,10 @@ return new class extends Migration {
             $table->uuid("household_id")->nullable()->references("id")->on("assoc_households");
             $table->enum("source", ["membership", "donation"]);
             $table->string("iban");
+            // Nullable: SEPA generation only needs a BIC for non-SEPA-area IBANs,
+            // and civicrm_debit.bic is itself not required — preserved from the
+            // source rather than derived, so it stays whatever was captured then.
+            $table->string("bic")->nullable();
             $table->string("account_holder");
             $table->decimal("amount", 10, 2);
             // Not unique: a SEPA mandate is reused for every collection made

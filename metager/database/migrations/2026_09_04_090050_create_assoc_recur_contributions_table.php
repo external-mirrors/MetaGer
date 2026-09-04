@@ -24,6 +24,9 @@ return new class extends Migration {
             $table->uuid("household_id")->nullable()->references("id")->on("assoc_households");
             $table->enum("source", ["membership", "donation"]);
             $table->string("iban");
+            // Nullable, same reasoning as assoc_debits.bic.
+            $table->string("bic")->nullable();
+            $table->string("account_holder")->nullable();
             $table->decimal("amount", 10, 2);
             // Unlike assoc_debits.mandate, this one is legitimately unique: a
             // RecurContribution is the recurring arrangement itself, one mandate

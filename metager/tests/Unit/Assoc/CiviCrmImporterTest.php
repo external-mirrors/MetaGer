@@ -137,6 +137,42 @@ class CiviCrmImporterTest extends TestCase
             $table->string('key_46', 36)->nullable();
             $table->dateTime('next_charge_47')->nullable();
         });
+
+        // civicrm_custom_group/civicrm_custom_field are CiviCRM core schema
+        // (stable across installs), unlike the value tables above — the
+        // "Bescheinigungen" group's own table/column names were never seen in
+        // a production dump (unlike Beitrag/Mastodon/MetaGer_Key), so
+        // CiviCrmImporter::importDonationReceiptPreferences() resolves them
+        // from this metadata at import time instead of hardcoding a guess.
+        Schema::connection('civicrm')->create('civicrm_custom_group', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('table_name');
+        });
+        Schema::connection('civicrm')->create('civicrm_custom_field', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('custom_group_id');
+            $table->string('name');
+            $table->string('column_name');
+        });
+    }
+
+    private function setUpBescheinigungenFixture(): void
+    {
+        $groupId = $this->civicrm('civicrm_custom_group')->insertGetId([
+            'name' => 'Bescheinigungen',
+            'table_name' => 'civicrm_value_bescheinigungen_20',
+        ]);
+        $this->civicrm('civicrm_custom_field')->insert([
+            ['custom_group_id' => $groupId, 'name' => 'Spende_bescheinigen', 'column_name' => 'spende_bescheinigen_60'],
+            ['custom_group_id' => $groupId, 'name' => 'Mitgliedsbeitrag_bescheinigen', 'column_name' => 'mitgliedsbeitrag_bescheinigen_61'],
+        ]);
+        Schema::connection('civicrm')->create('civicrm_value_bescheinigungen_20', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('entity_id');
+            $table->string('spende_bescheinigen_60')->nullable();
+            $table->string('mitgliedsbeitrag_bescheinigen_61')->nullable();
+        });
     }
 
     /**
@@ -491,5 +527,76 @@ class CiviCrmImporterTest extends TestCase
 
         $this->assertSame(1, Contact::count());
         $this->assertSame('Byron', Contact::where('civicrm_id', $contactId)->firstOrFail()->last_name);
+    }
+
+    public function testDonationReceiptPreferenceIsImportedFromTheContactLevelCustomField(): void
+    {
+        $this->setUpBescheinigungenFixture();
+        $contactId = $this->civicrm('civicrm_contact')->insertGetId(['contact_type' => 'Individual', 'first_name' => 'Ada', 'last_name' => 'Lovelace']);
+        $this->civicrm('civicrm_value_bescheinigungen_20')->insert([
+            'entity_id' => $contactId,
+            'spende_bescheinigen_60' => '2', // Sofort
+            'mitgliedsbeitrag_bescheinigen_61' => '2', // Sofort
+        ]);
+
+        (new CiviCrmImporter())->import();
+
+        $this->assertSame('immediate', Contact::where('civicrm_id', $contactId)->firstOrFail()->donation_receipt_preference);
+    }
+
+    public function testDonationReceiptPreferenceMapsNiemalsAndJaehrlich(): void
+    {
+        $this->setUpBescheinigungenFixture();
+        $neverId = $this->civicrm('civicrm_contact')->insertGetId(['contact_type' => 'Individual', 'first_name' => 'A', 'last_name' => 'A']);
+        $annualId = $this->civicrm('civicrm_contact')->insertGetId(['contact_type' => 'Individual', 'first_name' => 'B', 'last_name' => 'B']);
+        $this->civicrm('civicrm_value_bescheinigungen_20')->insert([
+            ['entity_id' => $neverId, 'spende_bescheinigen_60' => '1', 'mitgliedsbeitrag_bescheinigen_61' => '1'],
+            ['entity_id' => $annualId, 'spende_bescheinigen_60' => '3', 'mitgliedsbeitrag_bescheinigen_61' => '3'],
+        ]);
+
+        (new CiviCrmImporter())->import();
+
+        $this->assertSame('never', Contact::where('civicrm_id', $neverId)->firstOrFail()->donation_receipt_preference);
+        $this->assertSame('annual', Contact::where('civicrm_id', $annualId)->firstOrFail()->donation_receipt_preference);
+    }
+
+    public function testDonationReceiptPreferenceIsNullWhenNeitherFieldIsSet(): void
+    {
+        $this->setUpBescheinigungenFixture();
+        $contactId = $this->civicrm('civicrm_contact')->insertGetId(['contact_type' => 'Individual', 'first_name' => 'Ada', 'last_name' => 'Lovelace']);
+        $this->civicrm('civicrm_value_bescheinigungen_20')->insert(['entity_id' => $contactId]);
+
+        (new CiviCrmImporter())->import();
+
+        $this->assertNull(Contact::where('civicrm_id', $contactId)->firstOrFail()->donation_receipt_preference);
+    }
+
+    public function testDonationReceiptPreferencePrefersTheDonationSettingAndCountsTheConflict(): void
+    {
+        $this->setUpBescheinigungenFixture();
+        $contactId = $this->civicrm('civicrm_contact')->insertGetId(['contact_type' => 'Individual', 'first_name' => 'Ada', 'last_name' => 'Lovelace']);
+        $this->civicrm('civicrm_value_bescheinigungen_20')->insert([
+            'entity_id' => $contactId,
+            'spende_bescheinigen_60' => '2', // Sofort
+            'mitgliedsbeitrag_bescheinigen_61' => '3', // Jährlich — disagrees
+        ]);
+
+        $counts = (new CiviCrmImporter())->import();
+
+        $this->assertSame('immediate', Contact::where('civicrm_id', $contactId)->firstOrFail()->donation_receipt_preference);
+        $this->assertSame(1, $counts['donation_receipt_preference_conflicts']);
+    }
+
+    public function testDonationReceiptPreferenceImportDoesNothingWhenTheGroupDoesNotExist(): void
+    {
+        // No setUpBescheinigungenFixture() — the custom group was never
+        // created via CiviCRM's UI in this (fixture) install, or its name
+        // doesn't match "Bescheinigungen" exactly. Import must not throw.
+        $contactId = $this->civicrm('civicrm_contact')->insertGetId(['contact_type' => 'Individual', 'first_name' => 'Ada', 'last_name' => 'Lovelace']);
+
+        $counts = (new CiviCrmImporter())->import();
+
+        $this->assertNull(Contact::where('civicrm_id', $contactId)->firstOrFail()->donation_receipt_preference);
+        $this->assertSame(0, $counts['donation_receipt_preferences']);
     }
 }

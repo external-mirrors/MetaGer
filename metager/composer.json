@@ -20,6 +20,7 @@
         "matomo/device-detector": "^6.3",
         "mcamara/laravel-localization": "^2.4",
         "mlocati/ip-lib": "^1.22",
+        "mpdf/mpdf": "^8.3",
         "nesbot/carbon": "^3.0",
         "predis/predis": "^3.2",
         "promphp/prometheus_client_php": "^2.14",

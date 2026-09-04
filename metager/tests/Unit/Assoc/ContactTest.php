@@ -50,7 +50,6 @@ class ContactTest extends TestCase
             "interval" => "annual",
             "amount" => "17.00",
             "payment_method" => "banktransfer",
-            "status" => "okay",
         ]);
 
         $this->assertTrue($contact->membership()->first()->is($membership));

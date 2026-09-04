@@ -9,11 +9,14 @@ use App\Models\Assoc\Household;
 use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Reads de.suma-ev.donation-debit's tables (civicrm_contact/civicrm_debit/
  * civicrm_recur_contribution/civicrm_membership plus its Beitrag/Mastodon/
- * MetaGer_Key custom-value tables, on the `civicrm` connection —
+ * MetaGer_Key custom-value tables, and de.suma-ev.bescheinigungen's
+ * "Bescheinigungen" custom group — resolved dynamically, see
+ * importDonationReceiptPreferences() — on the `civicrm` connection —
  * config/database.php) and upserts them into the assoc_* tables, matched by
  * civicrm_id so a re-run updates rather than duplicates. Never writes to the
  * civicrm connection.
@@ -25,11 +28,12 @@ class CiviCrmImporter
     }
 
     /**
-     * @return array{contacts: int, companies: int, households: int, memberships: int, debits: int, recur_contributions: int}
+     * @return array{contacts: int, companies: int, households: int, memberships: int, debits: int, recur_contributions: int, donation_receipt_preferences: int, donation_receipt_preference_conflicts: int}
      */
     public function import(): array
     {
         $payers = $this->importContacts();
+        $preferences = $this->importDonationReceiptPreferences($payers);
 
         return [
             "contacts" => $payers->where("type", "contact")->count(),
@@ -38,7 +42,104 @@ class CiviCrmImporter
             "memberships" => $this->importMemberships($payers),
             "debits" => $this->importDebits($payers),
             "recur_contributions" => $this->importRecurContributions($payers),
+            "donation_receipt_preferences" => $preferences["updated"],
+            "donation_receipt_preference_conflicts" => $preferences["conflicts"],
         ];
+    }
+
+    /**
+     * Migrates CiviCRM's contact-level Bescheinigungen.Spende_bescheinigen /
+     * Mitgliedsbeitrag_bescheinigen (Niemals/Sofort/Jährlich, values 1/2/3 —
+     * see Bescheinigungen/Spendenbescheinigung.php's $bescheinigenValues)
+     * onto the single assoc_contacts/companies/households.donation_receipt_preference
+     * column this schema has instead of two independent settings.
+     *
+     * The "Bescheinigungen" custom group's table/column names were never
+     * confirmed against a production dump the way Beitrag/Mastodon/
+     * MetaGer_Key were (see this class's docblock) — it was created through
+     * CiviCRM's admin UI, not shipped in extension code, so nothing in the
+     * repository records its generated names. Resolved here from CiviCRM's
+     * own civicrm_custom_group/civicrm_custom_field metadata instead of
+     * guessing a table name: that metadata is core CiviCRM schema, stable
+     * across installs, so this works regardless of which numeric suffix the
+     * install actually generated. A missing group or fields is reported as
+     * zero preferences imported rather than failing the whole import — the
+     * rest of the data (contacts, debits, memberships) doesn't depend on it.
+     *
+     * When a contact's two settings disagree, the donation-side one wins —
+     * arbitrary, since nothing said this needed choosing, but it's this
+     * column's namesake and it's counted so a real conflict is visible
+     * rather than silently resolved.
+     *
+     * @param \Illuminate\Support\Collection<int, array{type: string, id: string}> $payers
+     * @return array{updated: int, conflicts: int}
+     */
+    private function importDonationReceiptPreferences(\Illuminate\Support\Collection $payers): array
+    {
+        // civicrm_custom_group/civicrm_custom_field are core CiviCRM schema
+        // and always exist against a real install, but not every test
+        // fixture in this suite models the full schema (ImportCiviCrmCommandTest's
+        // doesn't) — treated the same as "group not found" rather than a
+        // hard failure, since the rest of the import doesn't depend on it.
+        if (!Schema::connection($this->connection)->hasTable("civicrm_custom_group")) {
+            return ["updated" => 0, "conflicts" => 0];
+        }
+
+        $group = DB::connection($this->connection)->table("civicrm_custom_group")
+            ->where("name", "Bescheinigungen")
+            ->first();
+        if ($group === null) {
+            return ["updated" => 0, "conflicts" => 0];
+        }
+
+        $fields = DB::connection($this->connection)->table("civicrm_custom_field")
+            ->where("custom_group_id", $group->id)
+            ->whereIn("name", ["Spende_bescheinigen", "Mitgliedsbeitrag_bescheinigen"])
+            ->get()
+            ->keyBy("name");
+        $donationField = $fields->get("Spende_bescheinigen");
+        $duesField = $fields->get("Mitgliedsbeitrag_bescheinigen");
+        if ($donationField === null && $duesField === null) {
+            return ["updated" => 0, "conflicts" => 0];
+        }
+
+        $select = ["entity_id"];
+        if ($donationField !== null) {
+            $select[] = "{$donationField->column_name} as donation_pref";
+        }
+        if ($duesField !== null) {
+            $select[] = "{$duesField->column_name} as dues_pref";
+        }
+
+        $preferenceValues = [1 => "never", 2 => "immediate", 3 => "annual"];
+        $updated = 0;
+        $conflicts = 0;
+
+        foreach (DB::connection($this->connection)->table($group->table_name)->select($select)->get() as $row) {
+            $payer = $payers->get($row->entity_id);
+            if ($payer === null) {
+                continue;
+            }
+
+            $donationPreference = isset($row->donation_pref) ? ($preferenceValues[(int) $row->donation_pref] ?? null) : null;
+            $duesPreference = isset($row->dues_pref) ? ($preferenceValues[(int) $row->dues_pref] ?? null) : null;
+            $preference = $donationPreference ?? $duesPreference;
+            if ($preference === null) {
+                continue;
+            }
+            if ($donationPreference !== null && $duesPreference !== null && $donationPreference !== $duesPreference) {
+                $conflicts++;
+            }
+
+            match ($payer["type"]) {
+                "contact" => Contact::where("id", $payer["id"])->update(["donation_receipt_preference" => $preference]),
+                "company" => Company::where("id", $payer["id"])->update(["donation_receipt_preference" => $preference]),
+                "household" => Household::where("id", $payer["id"])->update(["donation_receipt_preference" => $preference]),
+            };
+            $updated++;
+        }
+
+        return ["updated" => $updated, "conflicts" => $conflicts];
     }
 
     /**

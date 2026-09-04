@@ -78,6 +78,33 @@ class ChargeVRPaymentTest extends TestCase
             ->assertSee(route("account.checkout.vrpayment.submit", ["amount" => 1000]), false);
     }
 
+    /**
+     * Wie bei micropayment (siehe ChargeMicropaymentTest): die Seite trägt
+     * eine eigene CSP, deren `form-action` den VR-Payment-Host zulässt, sonst
+     * blockieren Chrome/Safari die 303-Weiterleitung des Formulars auf die
+     * Zahlungsseite. Geprüft wird der Controller-Vertrag, nicht der Browser.
+     *
+     * Der Host `*.vr-payment.de` ist abgeleitet, nicht beobachtet: das
+     * vrpayment-SDK spricht `gateway.vr-payment.de` an und die vorhandenen
+     * Tests hier setzen `checkout.vr-payment.de` als Zahlungsseite voraus.
+     * Sollte Wero trotz dieses Fixes hängen bleiben, ist der echte Host der
+     * erste Prüfpunkt.
+     */
+    public function testThePageWidensFormActionForTheRedirectToVRPayment(): void
+    {
+        $this->keyserverKnows();
+
+        $csp = $this->signedIn()
+            ->get("/de-DE/konto/aufladen/1000/vrpayment")
+            ->assertOk()
+            ->headers->get("Content-Security-Policy");
+
+        $this->assertNotNull($csp);
+        $this->assertMatchesRegularExpression('/form-action[^;]*\bvr-payment\.de\b/', $csp);
+        $this->assertStringContainsString("worker-src 'self' blob:", $csp);
+        $this->assertStringContainsString("scripts.zdv.uni-mainz.de", $csp);
+    }
+
     public function testSubmittingWithoutConsentIsRefused(): void
     {
         $this->keyserverKnows();

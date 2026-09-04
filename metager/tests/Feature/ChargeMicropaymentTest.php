@@ -91,6 +91,41 @@ class ChargeMicropaymentTest extends TestCase
             ->assertSee(route("account.checkout.micropayment.submit", ["amount" => 1000, "service" => "prepay"]), false);
     }
 
+    /**
+     * Die Zustimmungsseite trägt eine eigene CSP, deren `form-action` den
+     * micropayment-Host einschließt. Ohne sie gilt die nginx-Standard-CSP
+     * (`form-action 'self' metager.org metager.de`), und Chrome/Safari
+     * blockieren dann die 303-Weiterleitung des Formulars auf die gesiegelte
+     * Zahlungsseite — der Bug, wegen dessen SEPA-Lastschrift und
+     * Sofortüberweisung im Konto ins Leere liefen.
+     *
+     * Geprüft wird der Vertrag des Controllers, nicht der Browser: die
+     * nginx-Standard-CSP, die ohne diesen Header gälte, ist aus einem
+     * PHP-Test heraus nicht sichtbar, und Firefox (Dusk) würde den Fehler
+     * ohnehin nicht zeigen.
+     */
+    public function testTheServicePageWidensFormActionForTheRedirectToMicropayment(): void
+    {
+        $this->keyserverKnows();
+
+        // Eine Zahlweise genügt: der `->header()`-Aufruf in
+        // micropaymentServiceShow hängt nicht am Service. Mehrere
+        // $this->get() in einem Testkörper gehen nicht — ResolveLocale
+        // streift das `/de-DE` nur beim ersten ab (siehe CLAUDE.md).
+        $csp = $this->signedIn()
+            ->get("/de-DE/konto/aufladen/1000/micropayment/lastschrift")
+            ->assertOk()
+            ->headers->get("Content-Security-Policy");
+
+        $this->assertNotNull($csp);
+        $this->assertMatchesRegularExpression('/form-action[^;]*\bmicropayment\.de\b/', $csp);
+        // Der Header ersetzt die ganze Policy — die übrigen Direktiven der
+        // nginx-Vorgabe müssen mitkommen, sonst bricht auf dieser Seite
+        // etwas Unbeteiligtes.
+        $this->assertStringContainsString("worker-src 'self' blob:", $csp);
+        $this->assertStringContainsString("scripts.zdv.uni-mainz.de", $csp);
+    }
+
     public function testPrepayOffersTheOptionalEmailField(): void
     {
         $this->keyserverKnows();

@@ -308,7 +308,7 @@ final class ChargeController extends Controller
             "service" => $service,
             "error" => $error,
             "privacyUrl" => MicropaymentChargeIssuer::PRIVACY_URLS[$service],
-        ]);
+        ])->header("Content-Security-Policy", $this->redirectingProviderCsp("https://*.micropayment.de https://micropayment.de"));
     }
 
     public function micropaymentSubmit(Request $request, int $amount, string $service, MicropaymentChargeIssuer $issuer): RedirectResponse
@@ -391,7 +391,7 @@ final class ChargeController extends Controller
             "step" => 3,
             "error" => $error,
             "privacyUrl" => VRPaymentChargeIssuer::PRIVACY_URL,
-        ]);
+        ])->header("Content-Security-Policy", $this->redirectingProviderCsp("https://*.vr-payment.de https://vr-payment.de"));
     }
 
     public function vrpaymentSubmit(Request $request, int $amount, VRPaymentChargeIssuer $issuer): RedirectResponse
@@ -797,6 +797,46 @@ final class ChargeController extends Controller
     private function weroAvailable(Request $request): bool
     {
         return !AppHosts::isOnion($request->getHost());
+    }
+
+    /**
+     * Die Standard-CSP, die build/nginx/configuration/nginx.conf (der `map`
+     * für `$csp`) jeder Seite ohne eigene Policy mitgibt — hier wörtlich
+     * wiederholt, weil ein selbst gesetzter `Content-Security-Policy`-Header
+     * die ganze Policy *ersetzt*, nicht ergänzt. Muss mit nginx.conf Zeile für
+     * Zeile gleichlaufen; {@see redirectingProviderCsp()} erweitert daran nur
+     * `form-action`.
+     */
+    private const NGINX_DEFAULT_CSP = "default-src 'self'; script-src 'self'; script-src-elem 'self'; script-src-attr 'self'; worker-src 'self' blob:; style-src 'self'; style-src-elem 'self'; style-src-attr 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self' metager.org metager.de";
+
+    /**
+     * Die Standard-CSP mit einem um $providerHosts erweiterten `form-action`.
+     *
+     * micropayment ({@see micropaymentServiceShow()}) und VR Payment
+     * ({@see vrpaymentShow()}) beantworten ihr Zustimmungs-Formular mit einer
+     * Weiterleitung (303, {@see micropaymentSubmit()}/{@see vrpaymentSubmit()})
+     * auf die eigene, gesiegelte Zahlungsseite des Anbieters. Chrome und Safari
+     * prüfen `form-action` gegen *jede* Weiterleitung, die einem Formular-POST
+     * folgt — steht der Anbieter-Host nicht in `form-action`, blockiert der
+     * Browser den Sprung, der POST endet mit 303 und der Vorgang bleibt auf der
+     * Zustimmungsseite stehen. Genau das war der Grund, aus dem SEPA-Lastschrift
+     * und Sofortüberweisung im Konto nicht funktionierten. Firefox prüft
+     * `form-action` bei Weiterleitungen nicht — deshalb fiel es weder lokal noch
+     * im Dusk-Lauf auf, die beide Firefox fahren.
+     *
+     * Ohne diesen Header gälte die nginx-Standard-CSP; deren `form-action 'self'
+     * metager.org metager.de` kennt keinen Zahlungsanbieter. Der Header hier
+     * ersetzt sie für diese eine Seite — nginx setzt seinen `$csp` nur, wenn die
+     * Antwort keinen eigenen mitbringt (der `map` in nginx.conf hat für den
+     * nicht-leeren Fall keinen Zweig und damit keinen Wert).
+     */
+    private function redirectingProviderCsp(string $providerHosts): string
+    {
+        return str_replace(
+            "form-action 'self' metager.org metager.de",
+            "form-action 'self' metager.org metager.de " . $providerHosts,
+            self::NGINX_DEFAULT_CSP,
+        );
     }
 
     /**

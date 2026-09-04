@@ -91,6 +91,29 @@ class DebitTest extends TestCase
         $this->assertSame("S1", $second->fresh()->mandate);
     }
 
+    /**
+     * assoc:import-civicrm re-runs need this to upsert rather than duplicate.
+     */
+    public function testCivicrmIdMustBeUniqueWhenPresent(): void
+    {
+        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        Debit::create(array_merge($this->baseAttributes(), [
+            "household_id" => $household->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+            "civicrm_id" => 42,
+        ]));
+
+        $this->expectException(QueryException::class);
+        Debit::create(array_merge($this->baseAttributes(), [
+            "household_id" => $household->id,
+            "amount" => "10.00",
+            "mandate" => "S2",
+            "end_to_end_reference" => "E2E-2",
+            "civicrm_id" => 42,
+        ]));
+    }
+
     public function testStatusDefaultsToPending(): void
     {
         $household = Household::create(["household_name" => "Familie Lovelace"]);

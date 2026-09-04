@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property string $id
+ * @property int|null $civicrm_id
  * @property string $name
  * @property string|null $contact_person_id
  * @property Contact|null $contactPerson
@@ -25,7 +26,7 @@ class Company extends Model
 
     protected $table = "assoc_companies";
 
-    protected $fillable = ["name", "contact_person_id", "street", "postal_code", "city", "country", "tax_id"];
+    protected $fillable = ["civicrm_id", "name", "contact_person_id", "street", "postal_code", "city", "country", "tax_id"];
 
     public function contactPerson(): BelongsTo
     {

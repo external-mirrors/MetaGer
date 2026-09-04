@@ -15,6 +15,10 @@ return new class extends Migration {
         // Civi\Api4\Action\Debit\MetaGerDonation for the donation side.
         Schema::create('assoc_debits', function (Blueprint $table) {
             $table->uuid('id')->primary(true);
+            // Set only for rows brought in by assoc:import-civicrm — the
+            // civicrm_debit.id from de.suma-ev.donation-debit, so re-running the
+            // importer upserts instead of duplicating.
+            $table->unsignedInteger("civicrm_id")->nullable()->unique();
             // Exactly one of these three is set.
             $table->uuid("contact_id")->nullable()->references("id")->on("assoc_contacts");
             $table->uuid("company_id")->nullable()->references("id")->on("assoc_companies");

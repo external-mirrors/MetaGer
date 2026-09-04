@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property string $id
+ * @property int|null $civicrm_id
  * @property string $first_name
  * @property string $last_name
  * @property string $email
@@ -24,7 +25,7 @@ class Contact extends Model
 
     protected $table = "assoc_contacts";
 
-    protected $fillable = ["first_name", "last_name", "email", "street", "postal_code", "city", "country", "mastodon_id"];
+    protected $fillable = ["civicrm_id", "first_name", "last_name", "email", "street", "postal_code", "city", "country", "mastodon_id"];
 
     public function membership(): HasOne
     {

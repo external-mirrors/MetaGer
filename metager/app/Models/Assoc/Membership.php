@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
+ * @property int|null $civicrm_id
  * @property string|null $contact_id
  * @property string|null $company_id
  * @property Contact|null $contact
@@ -15,6 +16,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $membership_type
  * @property bool $reduced
  * @property string $interval
+ * @property string $amount
+ * @property string $payment_method
+ * @property string|null $payment_reference
+ * @property string|null $paypal_vault_id
+ * @property \Carbon\Carbon|null $join_date
  * @property string $status
  * @property \Carbon\Carbon|null $start_date
  * @property \Carbon\Carbon|null $end_date
@@ -27,10 +33,12 @@ class Membership extends Model
 
     protected $table = "assoc_memberships";
 
-    protected $fillable = ["contact_id", "company_id", "membership_type", "reduced", "interval", "status", "start_date", "end_date", "renewed_at", "key_id"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "status", "start_date", "end_date", "renewed_at", "key_id"];
 
     protected $casts = [
         "reduced" => "boolean",
+        "amount" => "decimal:2",
+        "join_date" => "date",
         "start_date" => "date",
         "end_date" => "date",
         "renewed_at" => "date",

@@ -20,7 +20,7 @@ class ImportCiviCrm extends Command
      *
      * @var string
      */
-    protected $description = 'Imports contacts, debits and recur contributions from CiviCRM into assoc_*. Re-runnable: matches existing rows by civicrm_id.';
+    protected $description = 'Imports contacts, memberships, debits and recur contributions from CiviCRM into assoc_*. Re-runnable: matches existing rows by civicrm_id.';
 
     public function handle(CiviCrmImporter $importer): int
     {

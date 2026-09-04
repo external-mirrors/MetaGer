@@ -76,6 +76,46 @@ class ImportCiviCrmCommandTest extends TestCase
             $table->string('frequency');
             $table->date('next_debit')->nullable();
         });
+        Schema::connection('civicrm')->create('civicrm_membership_type', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('duration_unit');
+            $table->unsignedInteger('duration_interval')->nullable();
+        });
+        Schema::connection('civicrm')->create('civicrm_membership', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('contact_id');
+            $table->unsignedInteger('membership_type_id');
+            $table->date('join_date')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+        });
+        Schema::connection('civicrm')->create('civicrm_value_beitrag_8', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('entity_id');
+            $table->decimal('monatlicher_mitgliedsbeitrag_29', 20, 2)->nullable();
+            $table->string('zahlungsweise_32')->nullable();
+            $table->string('kontoinhaber_33')->nullable();
+            $table->string('iban_34')->nullable();
+            $table->string('bic_35')->nullable();
+            $table->string('zahlungsreferenz_36')->nullable();
+            $table->string('zahlungsstatus_37')->nullable();
+            $table->dateTime('erm_igt_bis_49')->nullable();
+            $table->string('paypal_vault_50')->nullable();
+            $table->string('paypal_id_51')->nullable();
+            $table->string('locale_52')->nullable();
+        });
+        Schema::connection('civicrm')->create('civicrm_value_mastodon_10', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('entity_id');
+            $table->string('mastodon_id_42')->nullable();
+        });
+        Schema::connection('civicrm')->create('civicrm_value_metager_key_14', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('entity_id');
+            $table->string('key_46', 36)->nullable();
+            $table->dateTime('next_charge_47')->nullable();
+        });
 
         DB::connection('civicrm')->table('civicrm_contact')->insert([
             'contact_type' => 'Individual',

@@ -26,6 +26,7 @@ class BankStatementLine extends Model
     protected $fillable = ["iban", "amount", "reference", "booked_at", "matched_type", "matched_id", "match_method", "matched_by", "matched_at"];
 
     protected $casts = [
+        "amount" => "decimal:2",
         "booked_at" => "date",
         "matched_at" => "datetime",
     ];

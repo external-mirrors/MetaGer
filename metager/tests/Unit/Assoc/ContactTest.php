@@ -5,7 +5,6 @@ namespace Tests\Unit\Assoc;
 use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
-use App\Models\Assoc\Household;
 use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Database\QueryException;
@@ -114,5 +113,35 @@ class ContactTest extends TestCase
         $this->assertCount(1, $contact->debits);
         $this->assertCount(1, $contact->recurContributions);
         $this->assertSame("S1", $contact->debits->first()->mandate);
+    }
+
+    public function testNameJoinsFirstAndLastName(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+
+        $this->assertSame("Ada Lovelace", $contact->name());
+    }
+
+    /**
+     * display_name exists for a payer whose name only ever arrived as one
+     * unparsed string — what CiviCRM's "Household" contact type was actually
+     * for (see the assoc_contacts migration and CiviCrmImporter::importContacts()).
+     */
+    public function testAContactCanBeCreatedFromJustADisplayName(): void
+    {
+        $contact = Contact::create(["display_name" => "Familie Lovelace", "email" => "familie@example.com"]);
+
+        $reloaded = Contact::findOrFail($contact->id);
+        $this->assertSame("Familie Lovelace", $reloaded->display_name);
+        $this->assertNull($reloaded->first_name);
+        $this->assertNull($reloaded->last_name);
+        $this->assertSame("Familie Lovelace", $reloaded->name());
+    }
+
+    public function testDisplayNameTakesPrecedenceOverFirstAndLastNameInName(): void
+    {
+        $contact = Contact::create(["display_name" => "Familie Lovelace", "first_name" => "Ada", "last_name" => "Lovelace", "email" => "a@example.com"]);
+
+        $this->assertSame("Familie Lovelace", $contact->name());
     }
 }

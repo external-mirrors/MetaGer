@@ -5,7 +5,6 @@ namespace App\Assoc;
 use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
-use App\Models\Assoc\Household;
 use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +27,7 @@ class CiviCrmImporter
     }
 
     /**
-     * @return array{contacts: int, companies: int, households: int, memberships: int, debits: int, recur_contributions: int, donation_receipt_preferences: int, donation_receipt_preference_conflicts: int}
+     * @return array{contacts: int, companies: int, memberships: int, debits: int, recur_contributions: int, donation_receipt_preferences: int, donation_receipt_preference_conflicts: int}
      */
     public function import(): array
     {
@@ -38,7 +37,6 @@ class CiviCrmImporter
         return [
             "contacts" => $payers->where("type", "contact")->count(),
             "companies" => $payers->where("type", "company")->count(),
-            "households" => $payers->where("type", "household")->count(),
             "memberships" => $this->importMemberships($payers),
             "debits" => $this->importDebits($payers),
             "recur_contributions" => $this->importRecurContributions($payers),
@@ -51,7 +49,7 @@ class CiviCrmImporter
      * Migrates CiviCRM's contact-level Bescheinigungen.Spende_bescheinigen /
      * Mitgliedsbeitrag_bescheinigen (Niemals/Sofort/Jährlich, values 1/2/3 —
      * see Bescheinigungen/Spendenbescheinigung.php's $bescheinigenValues)
-     * onto the single assoc_contacts/companies/households.donation_receipt_preference
+     * onto the single assoc_contacts/companies.donation_receipt_preference
      * column this schema has instead of two independent settings.
      *
      * The "Bescheinigungen" custom group's table/column names were never
@@ -134,7 +132,6 @@ class CiviCrmImporter
             match ($payer["type"]) {
                 "contact" => Contact::where("id", $payer["id"])->update(["donation_receipt_preference" => $preference]),
                 "company" => Company::where("id", $payer["id"])->update(["donation_receipt_preference" => $preference]),
-                "household" => Household::where("id", $payer["id"])->update(["donation_receipt_preference" => $preference]),
             };
             $updated++;
         }
@@ -178,11 +175,28 @@ class CiviCrmImporter
 
         foreach ($rows as $row) {
             $payer = match ($row->contact_type) {
+                // CiviCRM's "Household" was never an actual multi-person
+                // household in this data — it was the only built-in contact
+                // type that takes a single unparsed name instead of
+                // first/last, used whenever a donation came in as one "Name"
+                // field. Imported as a Contact with display_name set and no
+                // first_name/last_name, same meaning as before, one fewer
+                // payer type to carry through every table that references one.
                 "Individual" => Contact::updateOrCreate(
                     ["civicrm_id" => $row->id],
                     [
                         "first_name" => $row->first_name ?? "",
                         "last_name" => $row->last_name ?? "",
+                        "email" => $row->email ?? "",
+                        "street" => $row->street_address,
+                        "postal_code" => $row->postal_code,
+                        "city" => $row->city,
+                    ],
+                ),
+                "Household" => Contact::updateOrCreate(
+                    ["civicrm_id" => $row->id],
+                    [
+                        "display_name" => $row->household_name ?? "",
                         "email" => $row->email ?? "",
                         "street" => $row->street_address,
                         "postal_code" => $row->postal_code,
@@ -198,24 +212,15 @@ class CiviCrmImporter
                         "city" => $row->city,
                     ],
                 ),
-                "Household" => Household::updateOrCreate(
-                    ["civicrm_id" => $row->id],
-                    [
-                        "household_name" => $row->household_name ?? "",
-                        "street" => $row->street_address,
-                        "postal_code" => $row->postal_code,
-                        "city" => $row->city,
-                    ],
-                ),
             };
 
             $payers->put($row->id, [
                 "type" => match ($row->contact_type) {
-                    "Individual" => "contact",
+                    "Individual", "Household" => "contact",
                     "Organization" => "company",
-                    "Household" => "household",
                 },
                 "id" => $payer->id,
+                "civicrm_contact_type" => $row->contact_type,
             ]);
         }
 
@@ -311,7 +316,6 @@ class CiviCrmImporter
         return [
             "contact_id" => $payer["type"] === "contact" ? $payer["id"] : null,
             "company_id" => $payer["type"] === "company" ? $payer["id"] : null,
-            "household_id" => $payer["type"] === "household" ? $payer["id"] : null,
         ];
     }
 
@@ -350,11 +354,15 @@ class CiviCrmImporter
         $count = 0;
         foreach ($rows as $row) {
             $payer = $payers->get($row->contact_id);
-            if ($payer === null || !in_array($payer["type"], ["contact", "company"], true)) {
-                // Household memberships (4 in the production dump) and memberships
-                // belonging to a contact importContacts() skipped (deleted, or an
-                // unsupported contact type) have no home here — assoc_memberships
-                // only relates to assoc_contacts/assoc_companies.
+            if ($payer === null || ($payer["civicrm_contact_type"] ?? null) === "Household") {
+                // Household memberships (4 in the production dump) have no
+                // home here: a "Household" was never an actual member, only
+                // ever a donation-only payer whose name wasn't split into
+                // first/last (see importContacts()) — these 4 rows are a
+                // CiviCRM data quirk, not a real membership to carry forward.
+                // Memberships belonging to a contact importContacts() itself
+                // skipped (deleted, or an unsupported contact type) also have
+                // no home here.
                 continue;
             }
 

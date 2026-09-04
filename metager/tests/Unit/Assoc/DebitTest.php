@@ -5,7 +5,6 @@ namespace Tests\Unit\Assoc;
 use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
-use App\Models\Assoc\Household;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concerns\UsesInMemorySqlite;
@@ -34,15 +33,20 @@ class DebitTest extends TestCase
         ];
     }
 
+    private function contact(): Contact
+    {
+        return Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+    }
+
     /**
      * SEPA debit amounts are the one place a float would quietly round —
      * this is the system of record for what goes into a pain.008 file.
      */
     public function testTheAmountRoundTripsExactlyAsADecimalString(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = $this->contact();
         $debit = Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "19.99",
             "mandate" => "S1",
         ]));
@@ -52,14 +56,14 @@ class DebitTest extends TestCase
 
     public function testBicIsNullableAndPreservedWhenPresent(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = $this->contact();
         $withoutBic = Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
         ]));
         $withBic = Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S2",
             "end_to_end_reference" => "E2E-2",
@@ -72,16 +76,16 @@ class DebitTest extends TestCase
 
     public function testTheEndToEndReferenceMustBeUnique(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = $this->contact();
         Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
         ]));
 
         $this->expectException(QueryException::class);
         Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
         ]));
@@ -94,15 +98,15 @@ class DebitTest extends TestCase
      */
     public function testTheSameMandateCanBeUsedForMultipleDebits(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = $this->contact();
         Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
             "end_to_end_reference" => "E2E-1",
         ]));
         $second = Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
             "end_to_end_reference" => "E2E-2",
@@ -116,9 +120,9 @@ class DebitTest extends TestCase
      */
     public function testCivicrmIdMustBeUniqueWhenPresent(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = $this->contact();
         Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
             "civicrm_id" => 42,
@@ -126,7 +130,7 @@ class DebitTest extends TestCase
 
         $this->expectException(QueryException::class);
         Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S2",
             "end_to_end_reference" => "E2E-2",
@@ -136,9 +140,9 @@ class DebitTest extends TestCase
 
     public function testStatusDefaultsToPending(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = $this->contact();
         $debit = Debit::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
         ]));
@@ -148,16 +152,13 @@ class DebitTest extends TestCase
 
     public function testItBelongsToWhicheverPayerCreatedIt(): void
     {
-        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $contact = $this->contact();
         $company = Company::create(["name" => "Analytical Engines Ltd"]);
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
 
         $contactDebit = Debit::create(array_merge($this->baseAttributes(), ["contact_id" => $contact->id, "amount" => "10.00", "mandate" => "S1", "end_to_end_reference" => "E2E-1"]));
         $companyDebit = Debit::create(array_merge($this->baseAttributes(), ["company_id" => $company->id, "amount" => "10.00", "mandate" => "S2", "end_to_end_reference" => "E2E-2"]));
-        $householdDebit = Debit::create(array_merge($this->baseAttributes(), ["household_id" => $household->id, "amount" => "10.00", "mandate" => "S3", "end_to_end_reference" => "E2E-3"]));
 
         $this->assertTrue($contactDebit->contact->is($contact));
         $this->assertTrue($companyDebit->company->is($company));
-        $this->assertTrue($householdDebit->household->is($household));
     }
 }

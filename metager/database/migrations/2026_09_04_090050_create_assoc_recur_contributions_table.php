@@ -18,10 +18,9 @@ return new class extends Migration {
             // civicrm_recur_contribution.id from de.suma-ev.donation-debit, so
             // re-running the importer upserts instead of duplicating.
             $table->unsignedInteger("civicrm_id")->nullable()->unique();
-            // Exactly one of these three is set.
+            // Exactly one of these two is set.
             $table->uuid("contact_id")->nullable()->references("id")->on("assoc_contacts");
             $table->uuid("company_id")->nullable()->references("id")->on("assoc_companies");
-            $table->uuid("household_id")->nullable()->references("id")->on("assoc_households");
             $table->enum("source", ["membership", "donation"]);
             $table->string("iban");
             // Nullable, same reasoning as assoc_debits.bic.

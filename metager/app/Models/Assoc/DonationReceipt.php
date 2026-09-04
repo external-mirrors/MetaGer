@@ -11,10 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $id
  * @property string|null $contact_id
  * @property string|null $company_id
- * @property string|null $household_id
  * @property Contact|null $contact
  * @property Company|null $company
- * @property Household|null $household
  * @property int $year
  * @property string $total_amount
  * @property string $source
@@ -27,7 +25,7 @@ class DonationReceipt extends Model
 
     protected $table = "assoc_donation_receipts";
 
-    protected $fillable = ["contact_id", "company_id", "household_id", "year", "total_amount", "source", "generated_at", "pdf_path"];
+    protected $fillable = ["contact_id", "company_id", "year", "total_amount", "source", "generated_at", "pdf_path"];
 
     protected $casts = [
         "total_amount" => "decimal:2",
@@ -44,19 +42,14 @@ class DonationReceipt extends Model
         return $this->belongsTo(Company::class, "company_id");
     }
 
-    public function household(): BelongsTo
-    {
-        return $this->belongsTo(Household::class, "household_id");
-    }
-
     public function debits(): HasMany
     {
         return $this->hasMany(Debit::class, "donation_receipt_id");
     }
 
-    public function payer(): Contact|Company|Household|null
+    public function payer(): Contact|Company|null
     {
-        return $this->contact ?? $this->company ?? $this->household;
+        return $this->contact ?? $this->company;
     }
 
     public function sourceLabel(): string

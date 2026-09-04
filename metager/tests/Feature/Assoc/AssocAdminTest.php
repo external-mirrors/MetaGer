@@ -5,7 +5,6 @@ namespace Tests\Feature\Assoc;
 use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
-use App\Models\Assoc\Household;
 use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -246,21 +245,18 @@ class AssocAdminTest extends TestCase
         $this->get("/admin/assoc/members/contact/00000000-0000-4000-8000-000000000000")->assertNotFound();
     }
 
-    public function testTheHouseholdsPageListsAHousehold(): void
+    /**
+     * A payer whose name only ever arrived as one unparsed string — what
+     * CiviCRM's "Household" contact type was actually for (see the
+     * assoc_contacts migration) — is just a Contact with display_name set,
+     * so it shows up on the regular members list and detail page like any
+     * other contact, with no separate "households" section to maintain.
+     */
+    public function testAContactWithOnlyADisplayNameIsListedByThatName(): void
     {
-        Household::create(["household_name" => "The Lovelace Household", "city" => "London"]);
-
-        $response = $this->get("/admin/assoc/households");
-
-        $response->assertOk();
-        $response->assertSee("The Lovelace Household");
-    }
-
-    public function testTheHouseholdDetailPageShowsItsDonations(): void
-    {
-        $household = Household::create(["household_name" => "The Lovelace Household"]);
+        $contact = Contact::create(["display_name" => "The Lovelace Household", "email" => "household@example.com", "city" => "London"]);
         RecurContribution::create([
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "source" => "donation",
             "iban" => "DE89370400440532013000",
             "account_holder" => "The Lovelace Household",
@@ -270,15 +266,13 @@ class AssocAdminTest extends TestCase
             "mandate_date" => "2020-01-01",
         ]);
 
-        $response = $this->get("/admin/assoc/households/{$household->id}");
+        $listResponse = $this->get("/admin/assoc/members");
+        $listResponse->assertOk();
+        $listResponse->assertSee("The Lovelace Household");
 
-        $response->assertOk();
-        $response->assertSee("The Lovelace Household");
-        $response->assertSee("20,00");
-    }
-
-    public function testAMissingHouseholdIs404(): void
-    {
-        $this->get("/admin/assoc/households/00000000-0000-4000-8000-000000000000")->assertNotFound();
+        $detailResponse = $this->get("/admin/assoc/members/contact/{$contact->id}");
+        $detailResponse->assertOk();
+        $detailResponse->assertSee("The Lovelace Household");
+        $detailResponse->assertSee("20,00");
     }
 }

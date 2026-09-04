@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Assoc;
 
-use App\Models\Assoc\Household;
+use App\Models\Assoc\Contact;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -31,9 +31,9 @@ class RecurContributionTest extends TestCase
 
     public function testActiveDefaultsToTrue(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
         $recur = RecurContribution::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
             "frequency" => "monthly",
@@ -44,9 +44,9 @@ class RecurContributionTest extends TestCase
 
     public function testBicAndAccountHolderAreNullableAndPreservedWhenPresent(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
         $recur = RecurContribution::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
             "frequency" => "monthly",
@@ -61,9 +61,9 @@ class RecurContributionTest extends TestCase
 
     public function testAMandateMustBeUnique(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
         RecurContribution::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
             "frequency" => "monthly",
@@ -71,7 +71,7 @@ class RecurContributionTest extends TestCase
 
         $this->expectException(QueryException::class);
         RecurContribution::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
             "frequency" => "monthly",
@@ -80,9 +80,9 @@ class RecurContributionTest extends TestCase
 
     public function testCivicrmIdMustBeUniqueWhenPresent(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
         RecurContribution::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
             "frequency" => "monthly",
@@ -91,7 +91,7 @@ class RecurContributionTest extends TestCase
 
         $this->expectException(QueryException::class);
         RecurContribution::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S2",
             "frequency" => "monthly",
@@ -101,11 +101,11 @@ class RecurContributionTest extends TestCase
 
     public function testAnUnknownFrequencyIsRejectedByTheDatabase(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
 
         $this->expectException(QueryException::class);
         RecurContribution::create(array_merge($this->baseAttributes(), [
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "amount" => "10.00",
             "mandate" => "S1",
             "frequency" => "weekly",

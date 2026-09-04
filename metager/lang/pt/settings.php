@@ -113,4 +113,6 @@ return [
         'total' => 'Cobramos <strong>:cost Token</strong> por consulta de pesquisa com as definições actuais.',
         'minimum' => 'Nota: O custo mínimo por pesquisa é <strong>:min Token</strong> por pesquisa.',
     ],
+    'resetAll' => 'Reiniciar todos os focos',
+    'resetAllDescription' => 'Limpa todas as definições em todas as secções — incluindo opções de motor, filtros e listas negras — e não apenas nesta página.',
 ];

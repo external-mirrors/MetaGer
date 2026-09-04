@@ -50,7 +50,7 @@ class DebitTest extends TestCase
         $this->assertSame("19.99", Debit::findOrFail($debit->id)->amount);
     }
 
-    public function testAMandateMustBeUnique(): void
+    public function testTheEndToEndReferenceMustBeUnique(): void
     {
         $household = Household::create(["household_name" => "Familie Lovelace"]);
         Debit::create(array_merge($this->baseAttributes(), [
@@ -65,6 +65,30 @@ class DebitTest extends TestCase
             "amount" => "10.00",
             "mandate" => "S1",
         ]));
+    }
+
+    /**
+     * A mandate is reused for every collection made under it — a renewal or
+     * a recurring instalment produces a new debit with the same mandate but
+     * a distinct end-to-end reference. Only the latter may be unique.
+     */
+    public function testTheSameMandateCanBeUsedForMultipleDebits(): void
+    {
+        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        Debit::create(array_merge($this->baseAttributes(), [
+            "household_id" => $household->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+            "end_to_end_reference" => "E2E-1",
+        ]));
+        $second = Debit::create(array_merge($this->baseAttributes(), [
+            "household_id" => $household->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+            "end_to_end_reference" => "E2E-2",
+        ]));
+
+        $this->assertSame("S1", $second->fresh()->mandate);
     }
 
     public function testStatusDefaultsToPending(): void
@@ -85,9 +109,9 @@ class DebitTest extends TestCase
         $company = Company::create(["name" => "Analytical Engines Ltd"]);
         $household = Household::create(["household_name" => "Familie Lovelace"]);
 
-        $contactDebit = Debit::create(array_merge($this->baseAttributes(), ["contact_id" => $contact->id, "amount" => "10.00", "mandate" => "S1"]));
-        $companyDebit = Debit::create(array_merge($this->baseAttributes(), ["company_id" => $company->id, "amount" => "10.00", "mandate" => "S2"]));
-        $householdDebit = Debit::create(array_merge($this->baseAttributes(), ["household_id" => $household->id, "amount" => "10.00", "mandate" => "S3"]));
+        $contactDebit = Debit::create(array_merge($this->baseAttributes(), ["contact_id" => $contact->id, "amount" => "10.00", "mandate" => "S1", "end_to_end_reference" => "E2E-1"]));
+        $companyDebit = Debit::create(array_merge($this->baseAttributes(), ["company_id" => $company->id, "amount" => "10.00", "mandate" => "S2", "end_to_end_reference" => "E2E-2"]));
+        $householdDebit = Debit::create(array_merge($this->baseAttributes(), ["household_id" => $household->id, "amount" => "10.00", "mandate" => "S3", "end_to_end_reference" => "E2E-3"]));
 
         $this->assertTrue($contactDebit->contact->is($contact));
         $this->assertTrue($companyDebit->company->is($company));

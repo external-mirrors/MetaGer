@@ -60,12 +60,13 @@ metager/tests/Feature/Assoc/AssocAdminTest.php                         admin UI 
 metager/tests/Feature/AdminRouteAuthenticationTest.php                 pins the two CI bugs below
 ```
 
-### Schema (8 tables, `assoc_` prefix — deliberately not `Crm*`)
+### Schema (7 tables, `assoc_` prefix — deliberately not `Crm*`)
 
-`Contact`, `Company`, `Household` (donation-only payer, never a member), `Membership`, `Debit`,
-`RecurContribution` (dues + donations share these two via a `source` enum, matching CiviCRM),
-`BankStatementLine`, `DonationReceipt`. Payer references are three nullable FK columns
-(`contact_id`/`company_id`/`household_id`, exactly one set, enforced at the app layer) — not
+`Contact` (people — `display_name` covers a donor whose name only ever arrived as one unparsed
+string, what CiviCRM's third contact type, "Household", was actually for here; see phase 5),
+`Company`, `Membership`, `Debit`, `RecurContribution` (dues + donations share these two via a
+`source` enum, matching CiviCRM), `BankStatementLine`, `DonationReceipt`. Payer references are two
+nullable FK columns (`contact_id`/`company_id`, exactly one set, enforced at the app layer) — not
 `morphTo`, nothing else here uses polymorphic relations.
 
 Decisions worth knowing before touching this schema:
@@ -144,7 +145,7 @@ it.**
 ## Where it stands right now
 
 - MR !2478 pipeline green as of commit `fc7ccbab4`; phases 4 and 5 have since been pushed on top.
-- Local suite: 1440 passed, 1 skipped, one known pre-existing failure unrelated to this branch
+- Local suite: 1446 passed, 1 skipped, one known pre-existing failure unrelated to this branch
   (`LogsAdminDeleteTest` — the developer's local `database.sqlite` has drifted from migrations,
   `logs_access_key` is missing `updated_at`; nothing this project touches).
 - Nothing has been merged to `development` yet — this is all still on `crm-replacement-schema`,
@@ -274,32 +275,36 @@ metager/tests/Unit/Assoc/{NumberToGermanWords,DonationReceiptGenerator,GenerateD
 metager/tests/Feature/Assoc/DonationReceiptAdminTest.php
 ```
 
-**Schema.** `assoc_contacts`/`assoc_companies`/`assoc_households` each gained a nullable
-`donation_receipt_preference` enum (`never`/`immediate`/`annual`) — CiviCRM's two independent
-contact-level settings (`Bescheinigungen.Spende_bescheinigen` for donations,
-`Mitgliedsbeitrag_bescheinigen` for dues) collapsed into one, since nobody asked for the split to
-survive and German nonprofit law treats both as the same instrument (a Zuwendungsbestätigung) with
-only the checkbox on the form differing. `assoc_debits` gained a nullable `donation_receipt_id` —
-which receipt (if any) this debit's payment has already been folded into, the equivalent of
-CiviCRM's `civicrm_contribution.receipt_date` but as a link rather than a bare timestamp, since
-regenerating/reprinting a receipt shouldn't mean the debit needs receipting again. And
-`assoc_donation_receipts` gained a `source` enum (`donation`/`membership`) — a receipt never mixes
-the two, matching the German certificate's distinct mandatory wording for each.
+**Schema.** `assoc_contacts`/`assoc_companies` each gained a nullable `donation_receipt_preference`
+enum (`never`/`immediate`/`annual`) — CiviCRM's two independent contact-level settings
+(`Bescheinigungen.Spende_bescheinigen` for donations, `Mitgliedsbeitrag_bescheinigen` for dues)
+collapsed into one, since nobody asked for the split to survive and German nonprofit law treats both
+as the same instrument (a Zuwendungsbestätigung) with only the checkbox on the form differing.
+`assoc_debits` gained a nullable `donation_receipt_id` — which receipt (if any) this debit's payment
+has already been folded into, the equivalent of CiviCRM's `civicrm_contribution.receipt_date` but as
+a link rather than a bare timestamp, since regenerating/reprinting a receipt shouldn't mean the debit
+needs receipting again. And `assoc_donation_receipts` gained a `source` enum (`donation`/
+`membership`) — a receipt never mixes the two, matching the German certificate's distinct mandatory
+wording for each.
+
+**`assoc_households` no longer exists** (folded into `assoc_contacts` — see below); the description
+above and the schema section further up already reflect the two-payer-type (`Contact`/`Company`)
+shape this settled on, not the original three-type one phase 1 shipped with.
 
 **`DonationReceiptGenerator`** exposes four entry points, all operating only on `status = executed,
 donation_receipt_id IS NULL` debits:
 
 1. `generateSingle(Debit $debit)` — on-demand, for one specific debit. Bypasses the payer's
    preference entirely: an admin choosing to generate a receipt right now *is* the decision every
-   preference check exists to make. Wired to a "Bescheinigung erstellen" button on the
-   member/household admin page's debits table (`_debits.blade.php`).
-2. `generateForPayer(Contact|Company|Household $payer, string $source)` — on-demand, for every
-   outstanding debit of one source for one payer, folded into a single receipt. The real-world case
-   this exists for: a donor with several unreceipted payments (typically because their preference
-   was "never"/unset, the actual default — see below) calls and asks for one now covering
-   everything so far. Wired to "Spendenbescheinigung/Beitragsbescheinigung für N offene …
-   erstellen" buttons on the member/household page, shown only when something is outstanding.
-   Same preference bypass as `generateSingle()`.
+   preference check exists to make. Wired to a "Bescheinigung erstellen" button on the member admin
+   page's debits table (`_debits.blade.php`).
+2. `generateForPayer(Contact|Company $payer, string $source)` — on-demand, for every outstanding
+   debit of one source for one payer, folded into a single receipt. The real-world case this exists
+   for: a donor with several unreceipted payments (typically because their preference was
+   "never"/unset, the actual default — see below) calls and asks for one now covering everything so
+   far. Wired to "Spendenbescheinigung/Beitragsbescheinigung für N offene … erstellen" buttons on the
+   member page, shown only when something is outstanding. Same preference bypass as
+   `generateSingle()`.
 3. `generateImmediate()` — every eligible debit whose effective preference is `immediate`, one
    receipt per debit.
 4. `generateAnnualBatch(int $year)` — one receipt per payer+source, covering every eligible debit
@@ -313,9 +318,35 @@ page a staff member is looking at", not something a cron would supply. "Effectiv
 `$payer->donation_receipt_preference ?? config('assoc.donation_receipt_default_preference')`,
 **default `never`** (`.env`-overridable) — most donors never ask for a receipt, and generating one
 unasked is a worse mistake than not generating one someone later requests via `generateForPayer()`.
-The member/household admin page also carries a small form to set a payer's own preference
+The member admin page also carries a small form to set a payer's own preference
 (`/admin/assoc/payers/{type}/{id}/donation-receipt-preference`) — the "and immediately in the
 future" half of the same real-world request.
+
+### Household removed as a payer type
+
+CiviCRM's "Household" contact type was never an actual multi-person household in this data — the
+original phase 1 schema comment already said as much ("Donation-only payer, keyed by the donor's
+full name... never becomes a member"), but it took until phase 5's admin-UI work exposed the
+three-way `contact_id`/`company_id`/`household_id` polymorphism on every table to notice it wasn't
+worth carrying forward. The actual point of "Household" was only ever to hold a donor's name when it
+arrived as one unparsed string CiviCRM couldn't safely split into first/last — this org really only
+distinguishes people from organizations.
+
+Folded into `Contact`: `assoc_contacts` gained a nullable `display_name`, used in place of
+`first_name`/`last_name` (now both nullable) wherever a display name is needed —
+`Contact::name()` is the one place that decides which. `assoc_households` is gone, along with its
+model, admin pages (`/admin/assoc/households*` — a former household now just shows up on the regular
+members list, by its display name), and the `household_id` column on `assoc_debits`/
+`assoc_recur_contributions`/`assoc_donation_receipts`. `CiviCrmImporter::importContacts()` imports a
+CiviCRM `Household` contact as a `Contact` with `display_name` set; `importMemberships()` still
+excludes the 4 production-dump rows where a `Household`-typed contact somehow has a
+`civicrm_membership` row (a CiviCRM data quirk, not a real membership), now tracked via a
+`civicrm_contact_type` tag carried alongside each resolved payer rather than a `payers` collection
+entry of type `"household"`.
+
+Since this schema hadn't been merged or deployed anywhere, the original migrations
+(`2026_09_04_090000`/`090040`/`090050`/`090070`/`090080`) were edited in place rather than layered
+with a new one — there's no real data anywhere that depended on the old shape.
 
 **Preference migration.** `CiviCrmImporter::importDonationReceiptPreferences()` (called from
 `import()`, so `assoc:import-civicrm` picks it up automatically) reads the "Bescheinigungen" custom
@@ -361,3 +392,28 @@ supports up to 999999, with 21 test cases including the "eins vs. ein" grammar d
   `CiviCrmImporter`, i.e. from CiviCRM having already executed it. `generateSingle()`/the annual
   batch are safe to run pre-cutover for exactly that reason: nothing here can manufacture a receipt
   for money that was never actually collected.
+
+**Two open risks found after the fact, neither resolved yet — do not run bulk generation against
+production data until both are:**
+
+- **Generated PDFs are not persisted anywhere durable.** `Storage::disk('local')` writes to
+  `storage/app` on the fpm container, and `chart/templates/_helpers.tpl`'s volume mounts back that:
+  only `mglogs` (a real PVC), `sqlite-databases` and `fast-logs` (both `emptyDir`) are mounted, none
+  at `storage/app`. Autoscaling runs 1–5 fpm replicas by default (`chart/values.yaml`), so a receipt
+  generated on one pod can 404 on download if routed to another, and every receipt vanishes outright
+  on the next deploy regardless of replica count. `config/filesystems.php` defines an `s3` disk but
+  nothing uses it — no object-storage infra exists in the chart to point it at. Needs a decision
+  (extend the `mglogs` PVC mount to cover receipts, add a dedicated PVC, or provision object storage
+  for the `s3` disk) before any receipt generated is trusted to still exist tomorrow.
+- **No correlation exists yet between an imported `assoc_debits` row and whether CiviCRM already
+  issued a receipt for it.** CiviCRM itself never persisted receipt PDFs — `DownloadReceipts.php`
+  only ever streams one as a `Content-Disposition: attachment` download, regenerated fresh from data
+  each time — so there is no historical PDF archive to migrate, only the fact of "already receipted"
+  to preserve. That fact lives on `civicrm_contribution.receipt_date`, core CiviCRM schema our
+  importer never reads (it only reads `civicrm_debit`/`civicrm_recur_contribution`, extension-specific
+  tables), and `civicrm_debit` carries no `contribution_id` linking back to it — `Auto.php` always
+  creates a *new* `civicrm_contribution` row per collection rather than referencing an existing one,
+  so there's no simple join to resolve this from. Until this is sorted, every `assoc_debits` row
+  imported from CiviCRM looks unreceipted regardless of its real history, and `generateAnnualBatch()`/
+  `generateForPayer()` run against production data would risk re-issuing a Zuwendungsbestätigung for
+  a donation already receipted under the old system.

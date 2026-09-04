@@ -39,7 +39,6 @@ class CompanyTest extends TestCase
             "interval" => "annual",
             "amount" => "16.00",
             "payment_method" => "banktransfer",
-            "status" => "okay",
         ]);
 
         $this->assertTrue($company->membership()->first()->is($membership));

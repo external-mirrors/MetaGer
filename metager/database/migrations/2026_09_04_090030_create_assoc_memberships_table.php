@@ -27,40 +27,38 @@ return new class extends Migration {
             $table->decimal("amount", 10, 2);
             // How dues get collected — a member can be on banktransfer/paypal/card
             // with no assoc_debits/assoc_recur_contributions row at all, so this
-            // can't be derived from those tables; it's what
-            // App\Models\Membership\CiviCrm's "Beitrag.Zahlungsweise" tracks today.
-            $table->enum("payment_method", ["banktransfer", "directdebit", "paypal", "card"]);
+            // can't be derived from those tables. "exempt" replaces CiviCRM's two
+            // separate membership types for this (Ehrenmitglied/honorary,
+            // Gegenseitigkeit/reciprocity — membership_type_id 21/22 in the
+            // production dump, 9 of 2311 rows): both mean the same thing here,
+            // "no dues are ever collected from this member," which is a billing
+            // fact, not a membership-type distinction — see ChargeKeys.php, which
+            // already charges every member's key at a flat 5€/month default
+            // whenever the computed price is 0, with no distinction between the
+            // two CiviCRM types.
+            $table->enum("payment_method", ["banktransfer", "directdebit", "paypal", "card", "exempt"]);
             // The mandate/reference tying this membership to its debit row(s) —
-            // "Beitrag.Zahlungsreferenz" today. Nullable: banktransfer members have
-            // none.
+            // "Beitrag.Zahlungsreferenz" today. Nullable: banktransfer/exempt
+            // members have none.
             $table->string("payment_reference")->nullable();
             // PayPal/card billing agreement token — "Beitrag.PayPal_Vault" today.
             // Not modelled as a table of its own; MetaGer never stores card data,
             // only this opaque reference PayPal resolves on its side.
             $table->string("paypal_vault_id")->nullable();
             $table->date("join_date")->nullable();
-            // Canonical values for CiviCRM's "Beitrag.Zahlungsstatus" custom field
-            // (option_group_id 118 in the production dump) — confirmed against real
-            // data, not just the values App\Models\Membership\CiviCrm and
-            // MembershipPaymentReminder happen to query for today: those two only
-            // ever read/write Eingetreten, Okay, Erste/Zweite Zahlungserinnerung,
-            // Unterbrochen, Ausgetreten, Verstorben, but "Warte auf
-            // Lastschrifteingang" (awaiting the direct-debit funds to arrive) is a
-            // real option value too — value '2' in civicrm_value_beitrag_8, 575 of
-            // 2311 membership rows in the 2026-09-04 production dump. Missing it
-            // here would have made every one of those unimportable. Stored as the
-            // canonical identifier, not the German label, so the import path needs
-            // to map one to the other rather than copy the label verbatim.
-            $table->enum("status", [
-                "eingetreten",
-                "okay",
-                "warte_auf_lastschrifteingang",
-                "erste_zahlungserinnerung",
-                "zweite_zahlungserinnerung",
-                "unterbrochen",
-                "ausgetreten",
-                "verstorben",
-            ]);
+            // Whether this person currently counts as a member — an admin action
+            // (someone marked them "Ausgetreten"/"Verstorben"), not a payment
+            // state. Deliberately not CiviCRM's 8-value Zahlungsstatus: the other
+            // six values there (Eingetreten, Okay, Warte auf Lastschrifteingang,
+            // Erste/Zweite Zahlungserinnerung) are all "how is dues collection
+            // going for a banktransfer/directdebit member right now" — derivable
+            // from end_date and the member's own assoc_debits rows (a directdebit
+            // member has an unresolved "warte auf Lastschrifteingang" exactly when
+            // they have a pending assoc_debits row — see
+            // Civi\Api4\Action\Membership\CreateDebits, custom_37 => 2), so storing
+            // it again here would just be re-deriving CiviCRM's own derived state
+            // rather than the underlying fact.
+            $table->enum("standing", ["active", "terminated", "deceased"])->default("active");
             $table->date("start_date")->nullable();
             $table->date("end_date")->nullable();
             $table->date("renewed_at")->nullable();

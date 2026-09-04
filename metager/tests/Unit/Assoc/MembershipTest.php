@@ -30,7 +30,6 @@ class MembershipTest extends TestCase
             "interval" => "monthly",
             "amount" => "4.00",
             "payment_method" => "banktransfer",
-            "status" => "okay",
             "start_date" => "2026-01-01",
         ]);
 
@@ -40,30 +39,42 @@ class MembershipTest extends TestCase
         $this->assertSame("2026-01-01", $reloaded->start_date->toDateString());
     }
 
+    public function testStandingDefaultsToActive(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "17.00",
+            "payment_method" => "banktransfer",
+        ]);
+
+        $this->assertSame("active", $membership->fresh()->standing);
+    }
+
     /**
-     * The status column carries every Zahlungsstatus option value confirmed
-     * against the production civicrm_option_value/civicrm_value_beitrag_8
-     * tables (option_group_id 118) — not just the ones
-     * App\Models\Membership\CiviCrm and MembershipPaymentReminder happen to
-     * query for today. "warte_auf_lastschrifteingang" in particular is easy to
-     * miss from reading the app code alone (nothing queries for it by name)
-     * but covers 575 of 2311 membership rows in the 2026-09-04 dump.
+     * "terminated"/"deceased" are a deliberate admin action, not a payment
+     * state — the CiviCRM Zahlungsstatus values this replaces conflated the
+     * two (Ausgetreten/Verstorben alongside Okay/Erste Zahlungserinnerung
+     * etc.). Collection progress for banktransfer/directdebit members is
+     * derived from end_date and assoc_debits, not stored here — see the
+     * migration's own comment.
      */
-    public function testEveryKnownZahlungsstatusValueIsAccepted(): void
+    public function testEveryKnownStandingValueIsAccepted(): void
     {
         $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
 
-        $statuses = ["eingetreten", "okay", "warte_auf_lastschrifteingang", "erste_zahlungserinnerung", "zweite_zahlungserinnerung", "unterbrochen", "ausgetreten", "verstorben"];
-        foreach ($statuses as $status) {
+        foreach (["active", "terminated", "deceased"] as $standing) {
             $membership = Membership::create([
                 "contact_id" => $contact->id,
                 "membership_type" => "person",
                 "interval" => "annual",
                 "amount" => "17.00",
                 "payment_method" => "banktransfer",
-                "status" => $status,
+                "standing" => $standing,
             ]);
-            $this->assertSame($status, Membership::findOrFail($membership->id)->status);
+            $this->assertSame($standing, Membership::findOrFail($membership->id)->standing);
             $membership->delete();
         }
     }
@@ -78,7 +89,6 @@ class MembershipTest extends TestCase
             "amount" => "19.99",
             "payment_method" => "directdebit",
             "payment_reference" => "M20260101120000",
-            "status" => "okay",
             "join_date" => "2026-01-01",
         ]);
 
@@ -88,6 +98,31 @@ class MembershipTest extends TestCase
         $this->assertSame("M20260101120000", $reloaded->payment_reference);
         $this->assertNull($reloaded->paypal_vault_id);
         $this->assertSame("2026-01-01", $reloaded->join_date->toDateString());
+    }
+
+    /**
+     * "exempt" replaces CiviCRM's two separate membership types for
+     * honorary/reciprocity members (Ehrenmitglied/Gegenseitigkeit) — both mean
+     * "no dues are ever collected," which is a billing fact, not a membership
+     * type. amount stays 0.00 here; ChargeKeys' own 5€/month default for a
+     * computed price of 0 is a key-charging concern, not something this
+     * column needs to encode.
+     */
+    public function testExemptIsAValidPaymentMethodWithNoDuesCollected(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "0.00",
+            "payment_method" => "exempt",
+        ]);
+
+        $reloaded = Membership::findOrFail($membership->id);
+        $this->assertSame("exempt", $reloaded->payment_method);
+        $this->assertSame("0.00", $reloaded->amount);
+        $this->assertNull($reloaded->payment_reference);
     }
 
     public function testReducedUntilLocaleAndMastodonIdRoundTrip(): void
@@ -100,7 +135,6 @@ class MembershipTest extends TestCase
             "interval" => "monthly",
             "amount" => "2.50",
             "payment_method" => "directdebit",
-            "status" => "okay",
             "reduced_until" => "2027-01-01",
             "locale" => "de-DE",
             "mastodon_id" => "12345",
@@ -123,7 +157,6 @@ class MembershipTest extends TestCase
             "interval" => "annual",
             "amount" => "17.00",
             "payment_method" => "banktransfer",
-            "status" => "okay",
         ]);
 
         $this->expectException(QueryException::class);
@@ -134,11 +167,10 @@ class MembershipTest extends TestCase
             "interval" => "annual",
             "amount" => "17.00",
             "payment_method" => "banktransfer",
-            "status" => "okay",
         ]);
     }
 
-    public function testAnUnknownStatusIsRejectedByTheDatabase(): void
+    public function testAnUnknownStandingIsRejectedByTheDatabase(): void
     {
         $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
 
@@ -149,7 +181,7 @@ class MembershipTest extends TestCase
             "interval" => "annual",
             "amount" => "17.00",
             "payment_method" => "banktransfer",
-            "status" => "not_a_real_status",
+            "standing" => "not_a_real_standing",
         ]);
     }
 }

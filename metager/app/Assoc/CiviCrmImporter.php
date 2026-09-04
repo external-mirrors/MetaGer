@@ -6,20 +6,17 @@ use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\Household;
+use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Reads de.suma-ev.donation-debit's tables (civicrm_contact/civicrm_debit/
- * civicrm_recur_contribution, on the `civicrm` connection — config/database.php)
- * and upserts them into the assoc_* tables, matched by civicrm_id so a re-run
- * updates rather than duplicates. Never writes to the civicrm connection.
- *
- * Membership import is not implemented yet: CiviCRM's payment_method/status/
- * amount/payment_reference for a membership live in per-install custom-value
- * tables (Beitrag.*, see App\Models\Membership\CiviCrm) whose column names
- * can only be read from civicrm_custom_group/civicrm_custom_field on an actual
- * dump — see importMemberships() below.
+ * civicrm_recur_contribution/civicrm_membership plus its Beitrag/Mastodon/
+ * MetaGer_Key custom-value tables, on the `civicrm` connection —
+ * config/database.php) and upserts them into the assoc_* tables, matched by
+ * civicrm_id so a re-run updates rather than duplicates. Never writes to the
+ * civicrm connection.
  */
 class CiviCrmImporter
 {
@@ -28,7 +25,7 @@ class CiviCrmImporter
     }
 
     /**
-     * @return array{contacts: int, companies: int, households: int, debits: int, recur_contributions: int}
+     * @return array{contacts: int, companies: int, households: int, memberships: int, debits: int, recur_contributions: int}
      */
     public function import(): array
     {
@@ -38,6 +35,7 @@ class CiviCrmImporter
             "contacts" => $payers->where("type", "contact")->count(),
             "companies" => $payers->where("type", "company")->count(),
             "households" => $payers->where("type", "household")->count(),
+            "memberships" => $this->importMemberships($payers),
             "debits" => $this->importDebits($payers),
             "recur_contributions" => $this->importRecurContributions($payers),
         ];
@@ -217,16 +215,117 @@ class CiviCrmImporter
     }
 
     /**
-     * Not implemented: Beitrag.Zahlungsweise/Zahlungsstatus/Zahlungsreferenz/
-     * PayPal_Vault/Monatlicher_Mitgliedsbeitrag live in custom-value tables whose
-     * column names (custom_NN) are assigned per-install by CiviCRM when the
-     * custom fields were created, and can only be read off
-     * civicrm_custom_group/civicrm_custom_field on an actual database dump —
-     * guessing them here would need rewriting the moment a real dump arrives
-     * anyway. See assoc_memberships' migration for the target columns.
+     * @param \Illuminate\Support\Collection<int, array{type: string, id: string}> $payers
      */
-    public function importMemberships(): int
+    private function importMemberships(\Illuminate\Support\Collection $payers): int
     {
-        return 0;
+        $rows = DB::connection($this->connection)
+            ->table("civicrm_membership")
+            ->join("civicrm_membership_type", "civicrm_membership_type.id", "=", "civicrm_membership.membership_type_id")
+            ->leftJoin("civicrm_value_beitrag_8", "civicrm_value_beitrag_8.entity_id", "=", "civicrm_membership.id")
+            ->leftJoin("civicrm_value_mastodon_10", "civicrm_value_mastodon_10.entity_id", "=", "civicrm_membership.id")
+            ->leftJoin("civicrm_value_metager_key_14", "civicrm_value_metager_key_14.entity_id", "=", "civicrm_membership.id")
+            ->select([
+                "civicrm_membership.id",
+                "civicrm_membership.contact_id",
+                "civicrm_membership.join_date",
+                "civicrm_membership.start_date",
+                "civicrm_membership.end_date",
+                "civicrm_membership_type.name as type_name",
+                "civicrm_membership_type.duration_unit",
+                "civicrm_membership_type.duration_interval",
+                "civicrm_value_beitrag_8.monatlicher_mitgliedsbeitrag_29 as amount",
+                "civicrm_value_beitrag_8.zahlungsweise_32",
+                "civicrm_value_beitrag_8.zahlungsreferenz_36 as payment_reference",
+                "civicrm_value_beitrag_8.zahlungsstatus_37",
+                "civicrm_value_beitrag_8.erm_igt_bis_49 as reduced_until",
+                "civicrm_value_beitrag_8.paypal_vault_50 as paypal_vault_id",
+                "civicrm_value_beitrag_8.locale_52 as locale",
+                "civicrm_value_mastodon_10.mastodon_id_42 as mastodon_id",
+                "civicrm_value_metager_key_14.key_46 as key_id",
+            ])
+            ->get();
+
+        $count = 0;
+        foreach ($rows as $row) {
+            $payer = $payers->get($row->contact_id);
+            if ($payer === null || !in_array($payer["type"], ["contact", "company"], true)) {
+                // Household memberships (4 in the production dump) and memberships
+                // belonging to a contact importContacts() skipped (deleted, or an
+                // unsupported contact type) have no home here — assoc_memberships
+                // only relates to assoc_contacts/assoc_companies.
+                continue;
+            }
+
+            $isExempt = $row->duration_unit === "lifetime";
+            $paymentMethod = match (true) {
+                $isExempt => "exempt",
+                $row->zahlungsweise_32 === "1" => "directdebit",
+                $row->zahlungsweise_32 === "2" => "banktransfer",
+                $row->zahlungsweise_32 === "paypal" => "paypal",
+                $row->zahlungsweise_32 === "card" => "card",
+                default => null,
+            };
+            if ($paymentMethod === null) {
+                // 38 rows in the production dump: long-expired (Status "Expired",
+                // end_date in 2020/2021) memberships that predate Zahlungsweise
+                // being populated at all. Not enough evidence to safely guess a
+                // payment method for a real person — skip rather than fabricate
+                // one.
+                continue;
+            }
+
+            Membership::updateOrCreate(
+                ["civicrm_id" => $row->id],
+                array_merge(
+                    $this->payerColumns($payer),
+                    [
+                        "membership_type" => $payer["type"] === "company" ? "company" : "person",
+                        "reduced" => str_contains($row->type_name, "ermäßigt"),
+                        "interval" => $this->intervalFor($row->duration_unit, $row->duration_interval),
+                        "amount" => $row->amount ?? "0.00",
+                        "payment_method" => $paymentMethod,
+                        "payment_reference" => $row->payment_reference ?: null,
+                        "paypal_vault_id" => $row->paypal_vault_id ?: null,
+                        "join_date" => $row->join_date,
+                        // Only Ausgetreten/Verstorben are an admin fact about
+                        // standing — every other Zahlungsstatus value (Okay,
+                        // Warte_auf_Lastschrifteingang, the two Erinnerung stages,
+                        // Unterbrochen, Eingetreten, or never set) describes
+                        // billing progress, not membership standing, and is left
+                        // for a later derived-collection-stage phase to surface.
+                        "standing" => match ($row->zahlungsstatus_37) {
+                            "6" => "terminated",
+                            "7" => "deceased",
+                            default => "active",
+                        },
+                        "start_date" => $row->start_date,
+                        "end_date" => $row->end_date,
+                        "reduced_until" => $row->reduced_until,
+                        "locale" => $row->locale ?: null,
+                        "key_id" => $row->key_id ?: null,
+                        "mastodon_id" => $row->mastodon_id ?: null,
+                    ],
+                ),
+            );
+            $count++;
+        }
+
+        return $count;
+    }
+
+    private function intervalFor(string $durationUnit, ?int $durationInterval): string
+    {
+        return match (true) {
+            // Ehrenmitglied/Gegenseitigkeit (duration_unit=lifetime, 9 rows in the
+            // production dump) don't have a real billing interval —
+            // payment_method=exempt is what actually matters for them; "annual"
+            // here is an arbitrary placeholder that nothing ever acts on.
+            $durationUnit === "lifetime" => "annual",
+            $durationUnit === "year" => "annual",
+            $durationUnit === "month" && $durationInterval === 6 => "six-monthly",
+            $durationUnit === "month" && $durationInterval === 3 => "quarterly",
+            $durationUnit === "month" && $durationInterval === 1 => "monthly",
+        };
     }
 }

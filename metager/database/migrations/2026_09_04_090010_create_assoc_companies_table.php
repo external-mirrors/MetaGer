@@ -12,6 +12,10 @@ return new class extends Migration {
     {
         Schema::create('assoc_companies', function (Blueprint $table) {
             $table->uuid('id')->primary(true);
+            // Set only for rows brought in by assoc:import-civicrm — the CiviCRM
+            // contact.id (Organization), so re-running the importer upserts instead
+            // of duplicating.
+            $table->unsignedInteger("civicrm_id")->nullable()->unique();
             $table->string("name");
             $table->uuid("contact_person_id")->nullable()->references("id")->on("assoc_contacts");
             $table->string("street")->nullable();

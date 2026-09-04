@@ -61,6 +61,27 @@ class RecurContributionTest extends TestCase
         ]));
     }
 
+    public function testCivicrmIdMustBeUniqueWhenPresent(): void
+    {
+        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        RecurContribution::create(array_merge($this->baseAttributes(), [
+            "household_id" => $household->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+            "frequency" => "monthly",
+            "civicrm_id" => 42,
+        ]));
+
+        $this->expectException(QueryException::class);
+        RecurContribution::create(array_merge($this->baseAttributes(), [
+            "household_id" => $household->id,
+            "amount" => "10.00",
+            "mandate" => "S2",
+            "frequency" => "monthly",
+            "civicrm_id" => 42,
+        ]));
+    }
+
     public function testAnUnknownFrequencyIsRejectedByTheDatabase(): void
     {
         $household = Household::create(["household_name" => "Familie Lovelace"]);

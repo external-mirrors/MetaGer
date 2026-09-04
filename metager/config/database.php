@@ -104,6 +104,24 @@ return [
                 \PDO::ATTR_TIMEOUT => env('DB_CONNECT_TIMEOUT', 3),
             ],
         ],
+        // A restored dump of the WordPress/CiviCRM database, read-only, only for
+        // `artisan assoc:import-civicrm` (App\Console\Commands\ImportCiviCrm). Not
+        // present in a fresh checkout; CIVICRM_DB_DATABASE is unset until a dump is
+        // loaded somewhere reachable.
+        'civicrm' => [
+            'driver' => 'mysql',
+            'host' => env('CIVICRM_DB_HOST', 'localhost'),
+            'port' => env('CIVICRM_DB_PORT', '3306'),
+            'database' => env('CIVICRM_DB_DATABASE', ''),
+            'username' => env('CIVICRM_DB_USERNAME', ''),
+            'password' => env('CIVICRM_DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
     ],
 
     /*

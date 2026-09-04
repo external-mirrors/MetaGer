@@ -28,6 +28,8 @@ class MembershipTest extends TestCase
             "membership_type" => "person",
             "reduced" => true,
             "interval" => "monthly",
+            "amount" => "4.00",
+            "payment_method" => "banktransfer",
             "status" => "okay",
             "start_date" => "2026-01-01",
         ]);
@@ -55,11 +57,61 @@ class MembershipTest extends TestCase
                 "contact_id" => $contact->id,
                 "membership_type" => "person",
                 "interval" => "annual",
+                "amount" => "17.00",
+                "payment_method" => "banktransfer",
                 "status" => $status,
             ]);
             $this->assertSame($status, Membership::findOrFail($membership->id)->status);
             $membership->delete();
         }
+    }
+
+    public function testPaymentMethodAndAmountRoundTrip(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "19.99",
+            "payment_method" => "directdebit",
+            "payment_reference" => "M20260101120000",
+            "status" => "okay",
+            "join_date" => "2026-01-01",
+        ]);
+
+        $reloaded = Membership::findOrFail($membership->id);
+        $this->assertSame("19.99", $reloaded->amount);
+        $this->assertSame("directdebit", $reloaded->payment_method);
+        $this->assertSame("M20260101120000", $reloaded->payment_reference);
+        $this->assertNull($reloaded->paypal_vault_id);
+        $this->assertSame("2026-01-01", $reloaded->join_date->toDateString());
+    }
+
+    public function testCivicrmIdMustBeUniqueWhenPresent(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $otherContact = Contact::create(["first_name" => "Grace", "last_name" => "Hopper", "email" => "grace@example.com"]);
+        Membership::create([
+            "civicrm_id" => 42,
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "17.00",
+            "payment_method" => "banktransfer",
+            "status" => "okay",
+        ]);
+
+        $this->expectException(QueryException::class);
+        Membership::create([
+            "civicrm_id" => 42,
+            "contact_id" => $otherContact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "17.00",
+            "payment_method" => "banktransfer",
+            "status" => "okay",
+        ]);
     }
 
     public function testAnUnknownStatusIsRejectedByTheDatabase(): void
@@ -71,6 +123,8 @@ class MembershipTest extends TestCase
             "contact_id" => $contact->id,
             "membership_type" => "person",
             "interval" => "annual",
+            "amount" => "17.00",
+            "payment_method" => "banktransfer",
             "status" => "not_a_real_status",
         ]);
     }

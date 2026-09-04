@@ -5,6 +5,7 @@ namespace Tests\Unit\Assoc;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\Household;
 use App\Models\Assoc\RecurContribution;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concerns\UsesInMemorySqlite;
 use Tests\TestCase;
@@ -27,6 +28,14 @@ class HouseholdTest extends TestCase
         $reloaded = Household::findOrFail($household->id);
         $this->assertSame("Familie Lovelace", $reloaded->household_name);
         $this->assertNull($reloaded->street);
+    }
+
+    public function testCivicrmIdMustBeUniqueWhenPresent(): void
+    {
+        Household::create(["civicrm_id" => 42, "household_name" => "Familie Lovelace"]);
+
+        $this->expectException(QueryException::class);
+        Household::create(["civicrm_id" => 42, "household_name" => "Familie Hopper"]);
     }
 
     public function testAHouseholdCanOwnADebitAndARecurContribution(): void

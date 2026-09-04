@@ -3,24 +3,27 @@ use App\Http\Controllers\AdminInterface;
 use App\Http\Controllers\AssocController;
 use App\Http\Controllers\LogsApiController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Middleware\AdminAuthenticate;
 use App\Mail\LogsLoginCode;
 use Illuminate\Http\Request;
+use Illuminate\Session\Middleware\StartSession;
 
 # In this File we collect all routes which require a session or other cookies to be active
 Route::get('login', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "login"])->name('keycloak.login');
 Route::get('logout', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "logout"])->name('keycloak.logout');
 Route::get('callback', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "callback"])->name('keycloak.callback');
 
-$auth_middleware = [];
 /**
- * Disable Authentication in local environments
- * but keep it enabled for development/production
+ * Authentication is disabled in local environments but kept for
+ * development/production — decided inside AdminAuthenticate, per request,
+ * not here. Routes are cached in production and the test job runs against a
+ * warm cache built from a copy of the production .env (see CLAUDE.md), so an
+ * App::environment() check at this point in the file would be baked into the
+ * cache at build time and stop varying afterwards — every /admin/* route
+ * would keep whatever middleware was decided then, regardless of the
+ * environment actually serving the request later.
  */
-if (in_array(App::environment(), ["development", "production"])) {
-    $auth_middleware[] = "keycloak-web";
-}
-
-Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function () {
+Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], 'prefix' => 'admin'], function () {
     Route::match(["get", "post"], "logs", [LogsApiController::class, "admin"])->name("logs:admin");
     Route::get("membership", [MembershipController::class, "adminIndex"])->name("membership_admin_overview");
     Route::get("membership/test", [MembershipController::class, "test"]);

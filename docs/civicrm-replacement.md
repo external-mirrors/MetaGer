@@ -153,12 +153,9 @@ it.**
 1. ~~Data model~~ — done (`6d4cca588` .. `3803884fc`).
 2. ~~CiviCRM importer~~ — done (`4308c8e64`).
 3. ~~Read-only admin UI~~ — done (`9ed4a26e9`, CI fixed by `7636dea21`/`fc7ccbab4`).
-4. **Shadow-mode bank-statement matching** — next up. Port the Hibiscus/PayPal matching logic from
-   `de.suma-ev.bescheinigungen` (`FetchBankAccount.php`, `FetchPayPal.php`, the triage UI) against
-   `assoc_bank_statement_lines`, running alongside CiviCRM without writing back to it yet, to
-   validate the matcher against real traffic before it has to be trusted.
-5. **Donation receipts** — port `de.suma-ev.bescheinigungen`'s Zuwendungsbestätigung generation
-   (mpdf, address-completeness gating, the German number-to-words converter) onto
+4. ~~Shadow-mode bank-statement matching~~ — done, see below.
+5. **Donation receipts** — next up. Port `de.suma-ev.bescheinigungen`'s Zuwendungsbestätigung
+   generation (mpdf, address-completeness gating, the German number-to-words converter) onto
    `assoc_donation_receipts`.
 6. **Cutover** — the SEPA-generation port (`de.suma-ev.donation-debit`'s pain.008.001.02 logic),
    wiring `ChargeKeys`-equivalent keymanager charging onto this schema (reuse the existing
@@ -168,6 +165,75 @@ it.**
 7. **Mass email** — deliberately last, per explicit prior instruction. Still undecided between
    keeping/improving the WordPress+Newsletter-plugin setup or adopting listmonk.
 
-None of phases 4-7 have been started. The natural next step on resume is phase 4, but confirm with
+None of phases 5-7 have been started. The natural next step on resume is phase 5, but confirm with
 whoever picks this up before starting — the mass-email and keymanager-payment-phase-timing
 questions above are still open and may reorder things.
+
+### Phase 4 — shadow-mode bank-statement matching
+
+Ported from `de.suma-ev.bescheinigungen`'s `FetchBankAccount.php` (Hibiscus XML upload) and
+`checkMandates()`/`searchForMandates()`, plus `de.suma-ev.donation-debit`'s
+`IncomingPayment/Auto.php` mandate-lookup cascade — read from a session-scratch copy of the
+extensions still sitting in `~/.local/share/Trash` at the time (`de.suma-ev.donation-debit` and
+`de.suma-ev.bescheinigungen`, under `wp-content/plugins/civicrm/civicrm/ext/`); that copy is not
+guaranteed to survive and should be re-pulled from the production pod if it's gone. **Not
+re-verified against a real Hibiscus export** — see the IBAN caveat below.
+
+```
+metager/app/Assoc/{BankStatementImporter,BankStatementMatcher}.php
+metager/app/Console/Commands/ImportBankStatement.php               assoc:import-bank-statement
+metager/app/Http/Controllers/BankStatementController.php           the triage UI, not read-only
+metager/resources/views/admin/assoc/bank_statement{,s}.blade.php
+metager/tests/Unit/Assoc/BankStatement{Matcher,Importer}Test.php, ImportBankStatementCommandTest.php
+metager/tests/Feature/Assoc/BankStatementAdminTest.php
+```
+
+Fixed in passing: `BankStatementLine.amount` was missing the `decimal:2` cast every other money
+column in this schema has (see the SQLite-affinity paragraph above) — CLAUDE.md's own documented
+footgun, found by writing this phase's tests rather than by inspection.
+
+**The matching cascade** (`BankStatementMatcher`), run once per line at import time and re-runnable
+via `rematchUnresolved()`/the admin "Automatik erneut anwenden" button:
+
+1. `mandate_reference` — an exact match on a structured field the bank itself supplied: the SEPA
+   end-to-end reference (`Debit::end_to_end_reference`, unique per collection) if present, else the
+   SEPA mandate id against `Debit::mandate`/`RecurContribution::mandate` directly — no CiviCRM API
+   round-trip needed, unlike the original, because our own `assoc_debits`/`assoc_recur_contributions`
+   already carry these per row (confirmed by re-reading `CiviCrmImporter::importDebits()` — it
+   copies `civicrm_debit.mandate` straight across).
+2. `regex` — the mandate id isn't in a structured field, but appears as a whole word (`\bMANDATE\b`)
+   in the free-text purpose — this is what `searchForMandates()` actually did; the doc-carried
+   assumption of a specific `/([mM]\d{14})/`-shaped regex did **not** turn up anywhere in either
+   extension on inspection, and isn't what got built. (`M`+14-digit-timestamp *is* the real format
+   CiviCRM's membership mandates use — confirmed in `MembershipChangeController.php`/
+   `RecurContribution/CreateAll.php` — so this may have been a plausible-looking but wrong inference
+   from an earlier session. Not chased further; the whole-word cascade is what's implemented and
+   tested.)
+3. `substring` — loosest fallback, mandate id appears anywhere in the free text, unbounded.
+4. unmatched — queued for manual triage at `/admin/assoc/bank-statements/{id}`.
+
+When several pending debits share a mandate (recurring dues), the one whose own `amount` matches
+the payment exactly is preferred; otherwise the earliest-due one, so an over/underpayment still
+resolves rather than staying unmatched.
+
+**Deliberately does not write to `assoc_debits`/`assoc_recur_contributions`.** The CiviCRM original
+flipped a debit to `status = executed` the moment a payment matched it; this phase only ever writes
+`matched_type`/`matched_id`/`match_method`/`matched_at` onto the `assoc_bank_statement_lines` row
+itself. That's the shadow-mode contract from the roadmap line above — validate the cascade's hit
+rate against real traffic before letting it drive state anywhere. Flipping debit status on a
+confirmed match is future work, not yet built.
+
+**The IBAN caveat.** `assoc_bank_statement_lines.iban` (added in phase 1, before this phase existed)
+expects the payer's IBAN per line. Neither `FetchBankAccount.php` nor any other file in the
+extension copy actually parses an IBAN out of the Hibiscus XML — it was never a field that
+extension's matching used. `BankStatementImporter::extractIban()` tries `empfaenger_iban` /
+`gegenkonto_iban` / `iban` in that order and falls back to an empty string; **this needs checking
+against a real Hibiscus "Umsätze exportieren" export before the importer is trusted operationally**
+— if none of those tag names are right, every imported line will carry an empty `iban` and
+`BankStatementAdminTest`/production usage would both need revisiting.
+
+No file-upload web form was built — import is CLI-only (`assoc:import-bank-statement {file}
+--account=1 --account=2`), matching this codebase's existing `assoc:import-civicrm` pattern. The
+admin UI (`/admin/assoc/bank-statements`) is triage-only: list (filterable unmatched/matched/all),
+a per-line detail page to search pending debits/recur contributions by account holder or mandate
+and assign one manually, and a button to re-run the automatic cascade.

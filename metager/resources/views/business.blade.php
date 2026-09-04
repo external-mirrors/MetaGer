@@ -7,8 +7,8 @@
 	MetaGer für Firmen und Organisationen.
 
 	Das Ziel jedes B2B-Hinweises auf der Seite (Seitenleiste, /preise, /konto,
-	Beitrittsformular) und der einzige Ort, an dem steht, was eine
-	Firmenmitgliedschaft ist. Der Weg von hier führt in denselben Zweig des
+	Beitrittsformular) und der einzige Ort, an dem steht, was eine Mitgliedschaft
+	für eine Organisation bedeutet. Der Weg von hier führt in denselben Zweig des
 	Beitrittsformulars, den es schon gab — `?type=company` —, nur dass ihn
 	vorher niemand gefunden hat, weil er nur als Link in einer Überschrift
 	existierte.

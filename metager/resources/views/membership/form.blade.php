@@ -178,9 +178,10 @@
              sich daraus — ohne diesen Satz wirken die Beträge willkürlich. --}}
         <div id="membership-fee-company">Für Ihre Größenklasse sieht unsere <a
                 href="https://suma-ev.de/beitragsordnung/" target="_blank">Beitragsordnung</a> einen
-            Mitgliedsbeitrag ab <span>{{ number_format($feeMinimum, 0, ",", ".") }}€</span> im Monat vor. Ihre
-            Mitarbeitenden suchen damit werbefrei, ohne selbst etwas einrichten oder eingeben zu müssen —
-            wie das aussieht, steht auf der <a href="{{ route('business') }}">Seite für Firmen</a>.</div>
+            Mitgliedsbeitrag ab <span>{{ number_format($feeMinimum, 0, ",", ".") }}€</span> im Monat vor. Mitglieder
+            suchen auf MetaGer werbefrei, ohne dass die Menschen an den Geräten etwas einrichten oder eingeben
+            müssen — was das für eine Organisation bedeutet, steht auf der <a
+                href="{{ route('business') }}">Seite für Firmen</a>.</div>
         @endif
         @foreach($feePresets as $preset)
         <div class="input-group @if(!$editable)disabled @endif ">
@@ -404,21 +405,21 @@
 </form>
 <section id="membership-advantages">
     <div>
-        <h3>MetaGer Schlüssel inklusive</h3>
-        <div>Sie erhalten einen Schlüssel für werbefreie Suchen im Gegenwert Ihres Mitgliedsbeitrags. Dieser wird
-            automatisch jeden Monat aufgefüllt. Dank <a
-                href="{{ route('anonymous-token') }}" target="_blank">anonymer Token</a> können wir die
-            anonyme Suche auch im Zusammenhang mit einer Mitgliedschaft beweisbar versprechen.</div>
+        <h3>Mitglieder suchen werbefrei</h3>
+        <div>Für die Suche auf MetaGer wird ein Schlüssel verwendet, den wir Ihnen als Mitglied jeden Monat
+            automatisch auffüllen. Dank <a href="{{ route('anonymous-token') }}" target="_blank">anonymer
+                Token</a> können wir die anonyme Suche auch im Zusammenhang mit einer Mitgliedschaft beweisbar
+            versprechen.</div>
     </div>
     <div>
         <h3>Mastodon</h3>
         <div>Der SUMA-EV ist im alternativen und verteilten sozialen Netzwerk Mastodon mit einem eigenen Account
             vertreten. Hierzu betreiben wir eine <a href="https://suma-ev.social">Instanz</a> auf unseren eigenen
-            Servern. Gleichzeitig erhalten Sie als Mitglied die exklusive Möglichkeit dem Fediverse ebenfalls über diese
-            Instanz beizutreten. Sie bekommen dann einen Nutzeraccount, der auf @suma-ev.social endet.</div>
+            Servern. Mitglieder können dem Fediverse ebenfalls über diese Instanz beitreten, mit einem Nutzeraccount,
+            der auf @suma-ev.social endet.</div>
     </div>
     <div>
-        <h3>Ihr Beitrag wird für gemeinnützige Zwecke verwendet</h3>
+        <h3>Ihr Beitrag trägt den Verein</h3>
         <div>Der SUMA-EV ist vom Finanzamt Hannover Nord als gemeinnützig anerkannt, eingetragen in das Vereinsregister
             beim Amtsgericht Hannover unter VR200033. Ihre Beiträge können somit steuerlich geltend gemacht werden.
         </div>

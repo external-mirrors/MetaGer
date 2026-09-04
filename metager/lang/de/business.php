@@ -3,12 +3,12 @@
 /**
  * MetaGer für Firmen und Organisationen — /firmen.
  *
- * Die Seite, auf die jeder Hinweis für Geschäftskunden zeigt, und der einzige
- * Weg in eine Firmenmitgliedschaft, der erklärt, was sie ist. Vorher gab es
- * dafür nichts: das Beitrittsformular kennt seit jeher einen Zweig „Als Firma
- * beitreten?“, aber keine Seite sagte, was eine Firma davon hat — und die eine
- * bestehende Abmachung mit einer Universität ist eine Zeile in
- * `config/metager/metager.php`, kein Angebot.
+ * Die Seite, auf die jeder Hinweis für Organisationen zeigt, und der einzige
+ * Ort, der erklärt, was eine Mitgliedschaft für eine Organisation bedeutet.
+ * Vorher gab es dafür nichts: das Beitrittsformular kennt seit jeher einen
+ * Zweig „Als Firma beitreten?“, aber keine Seite sagte, worum es dabei geht —
+ * und die eine bestehende Abmachung mit einer Universität ist eine Zeile in
+ * `config/metager/metager.php`.
  *
  * Beträge stehen hier bewusst nicht. Sie kommen aus
  * {@see \App\Support\MembershipFee}, aus derselben Quelle wie die Validierung
@@ -23,14 +23,14 @@
 return [
     "title" => "MetaGer für Firmen und Organisationen",
 
-    "intro" => "Werbefreie, anonyme Suche an jedem Arbeitsplatz — eingerichtet als Standardsuchmaschine, ohne dass Ihre Mitarbeitenden dafür etwas eingeben oder einrichten müssen. Abgerechnet wird das nicht nach Verbrauch, sondern über eine Mitgliedschaft in unserem gemeinnützigen Trägerverein.",
+    "intro" => "Der SUMA-EV entwickelt und betreibt MetaGer, um freien Wissenszugang und eine unabhängige Suchmaschinentechnologie zu fördern. Auch Firmen, Schulen und Behörden können Mitglied werden und diese Arbeit tragen. Mitglieder suchen auf MetaGer werbefrei — an jedem Arbeitsplatz, ohne dass die Menschen an den Geräten etwas eingeben oder einrichten müssen.",
 
     "benefits" => [
-        "heading" => "Was Ihre Organisation bekommt",
+        "heading" => "Was eine Mitgliedschaft bedeutet",
         "items" => [
             [
                 "heading" => "Werbefreie Ergebnisse",
-                "text" => "Keine Anzeigen, keine als Ergebnis getarnte Werbung, keine Sortierung nach dem, was ein Werbekunde bezahlt hat. Was oben steht, steht oben, weil es zur Suchanfrage passt.",
+                "text" => "Mitglieder suchen auf MetaGer werbefrei: keine Anzeigen, keine als Ergebnis getarnte Werbung, keine Sortierung nach dem, was ein Werbekunde bezahlt hat. Was oben steht, steht oben, weil es zur Suchanfrage passt.",
             ],
             [
                 "heading" => "Keine Profile Ihrer Mitarbeitenden",
@@ -41,8 +41,8 @@ return [
                 "text" => "MetaGer läuft auf eigener Hardware in Deutschland, betrieben vom SUMA-EV, einem gemeinnützigen Verein mit Sitz in Hannover. Es gibt keinen Konzern dahinter und keine Datenweitergabe an einen.",
             ],
             [
-                "heading" => "Ein Beitrag statt einer Verbrauchsabrechnung",
-                "text" => "Sie zahlen einen monatlichen Mitgliedsbeitrag und bekommen dafür Suchguthaben im Gegenwert dieses Beitrags, das jeden Monat neu aufgefüllt wird. Keine Rechnung, die mit der Nutzung schwankt, und nichts, was Ihre Buchhaltung monatlich prüfen müsste.",
+                "heading" => "Sie tragen die Suchmaschine, statt sie zu bezahlen",
+                "text" => "Ihr Beitrag fließt in die Entwicklung und den Betrieb von MetaGer und in die übrige Arbeit des Vereins. Für Ihre Buchhaltung ist er ein Mitgliedsbeitrag und keine Rechnung, die jeden Monat anders aussieht.",
             ],
         ],
     ],
@@ -51,7 +51,7 @@ return [
         "heading" => "So läuft die Einrichtung",
         "steps" => [
             [
-                "heading" => "Sie beantragen die Mitgliedschaft",
+                "heading" => "Sie stellen einen Aufnahmeantrag",
                 "text" => "Über das Beitrittsformular, als Firma. Mehr als Name, Größenklasse und eine E-Mail-Adresse brauchen wir dafür nicht.",
             ],
             [
@@ -72,14 +72,14 @@ return [
          * Funktion, sondern der Grund, warum die Einrichtung über Ihre IT läuft.
          */
         "hint" => [
-            "heading" => "Ihre Mitarbeitenden bekommen keinen Schlüssel in die Hand",
-            "text" => "Der Zugang zu einer werbefreien Suche hängt bei MetaGer an einem Schlüssel. Bei einer Firmenmitgliedschaft gehört dieser Schlüssel Ihrer Organisation: er wird zentral hinterlegt, niemand muss ihn eingeben, und niemand bekommt ihn zu sehen. Deshalb finden Sie hier auch keine Datei zum Herunterladen — wir richten das gemeinsam mit Ihrer IT so ein, dass der Schlüssel dort bleibt, wo er hingehört.",
+            "heading" => "Ihre Mitarbeitenden sehen den Schlüssel nicht",
+            "text" => "Die werbefreie Suche hängt bei MetaGer an einem Schlüssel. Bei einer Firmenmitgliedschaft gehört dieser Schlüssel Ihrer Organisation: er wird zentral hinterlegt, niemand muss ihn eingeben, und niemand bekommt ihn zu sehen. Deshalb finden Sie hier auch keine Datei zum Herunterladen — wir richten das gemeinsam mit Ihrer IT so ein, dass der Schlüssel dort bleibt, wo er hingehört.",
         ],
     ],
 
     "fee" => [
-        "heading" => "Was es kostet",
-        "text" => "Der Mitgliedsbeitrag richtet sich nach der Größe Ihrer Organisation. Maßgeblich ist die <a href=\":linkfeeorder\">Beitragsordnung</a> des SUMA-EV; die folgenden Beträge sind die Mindestbeiträge, nach oben ist jeder Betrag möglich.",
+        "heading" => "Der Mitgliedsbeitrag",
+        "text" => "Er richtet sich nach der Größe Ihrer Organisation. Maßgeblich ist die <a href=\":linkfeeorder\">Beitragsordnung</a> des SUMA-EV; die folgenden Beträge sind die Mindestbeiträge, nach oben ist jeder Betrag möglich.",
         "columns" => [
             "employees" => "Mitarbeitende",
             "amount" => "ab … im Monat",
@@ -90,13 +90,13 @@ return [
             ">200" => "ab 200",
         ],
         "unit" => "€ / Monat",
-        "credit" => "Im Beitrag enthalten ist Suchguthaben im Gegenwert des Beitrags, das monatlich aufgefüllt wird. Was eine Suche kostet, steht auf der <a href=\":linkprice\">Preisseite</a>.",
+        "credit" => "Mitglieder suchen ohne weitere Kosten; der Schlüssel Ihrer Organisation wird dazu monatlich aufgefüllt. Wie sich der Aufwand einer Suche zusammensetzt und wohin er fließt, steht auf der <a href=\":linkprice\">Preisseite</a>.",
         "charity" => "Der SUMA-EV ist vom Finanzamt Hannover Nord als gemeinnützig anerkannt. Ihre Beiträge können somit steuerlich geltend gemacht werden; eine Zuwendungsbestätigung stellen wir aus.",
     ],
 
     "education" => [
         "heading" => "Schulen, Hochschulen und Behörden",
-        "text" => "Für öffentliche Einrichtungen ist die Mitgliedschaft oft der einfachere Weg als ein Beschaffungsvorgang: ein Vereinsbeitrag ist keine Auftragsvergabe, und weil bei uns keine personenbezogenen Suchdaten anfallen, ist auch die Prüfung durch Ihre Datenschutzbeauftragten überschaubar. Eine Universität lässt ihre Angehörigen bereits über uns suchen.",
+        "text" => "Für öffentliche Einrichtungen ist die Mitgliedschaft oft der einfachere Weg als ein Beschaffungsvorgang: ein Vereinsbeitrag ist keine Auftragsvergabe, und weil bei uns keine personenbezogenen Suchdaten anfallen, ist auch die Prüfung durch Ihre Datenschutzbeauftragten überschaubar. Der Vereinszweck passt zudem zu Ihrem: Medienkompetenz und freier Wissenszugang. Eine Universität lässt ihre Angehörigen bereits über uns suchen.",
         "cta" => "Wenn Sie für eine Schule oder eine Behörde fragen, schreiben Sie uns — wir kennen die Formulare, die Sie brauchen.",
     ],
 
@@ -116,19 +116,19 @@ return [
         "sidebar" => "MetaGer für Firmen",
         "price" => [
             "heading" => "Sie fragen für eine Organisation?",
-            "text" => "Firmen, Schulen und Behörden rechnen bei uns keinen Verbrauch ab, sondern zahlen einen Mitgliedsbeitrag — und richten MetaGer als Standardsuchmaschine ein, ohne dass die Menschen an den Geräten etwas eingeben müssen.",
+            "text" => "Firmen, Schulen und Behörden können Mitglied im gemeinnützigen Trägerverein werden. Mitglieder suchen ohne weitere Kosten, und MetaGer lässt sich auf allen Geräten als Standardsuche einrichten, ohne dass jemand etwas eingeben muss.",
             "action" => "MetaGer für Firmen",
         ],
         "account" => [
             "heading" => "Sie laden für eine Organisation auf?",
-            "text" => "Dann ist eine Firmenmitgliedschaft der ruhigere Weg: ein Beitrag im Monat, Guthaben, das sich von selbst auffüllt, und MetaGer als Standardsuche auf allen Geräten.",
+            "text" => "Dann ist eine Mitgliedschaft im Trägerverein der ruhigere Weg: Mitglieder laden nicht auf, ihr Schlüssel füllt sich monatlich von selbst — und MetaGer lässt sich als Standardsuche auf allen Geräten einrichten.",
             "action" => "MetaGer für Firmen",
         ],
-        "form" => "Was eine Firmenmitgliedschaft umfasst und wie MetaGer bei Ihnen zur Standardsuche wird, steht auf <a href=\":linkbusiness\">MetaGer für Firmen</a>.",
+        "form" => "Was eine Mitgliedschaft für eine Organisation bedeutet und wie MetaGer bei Ihnen zur Standardsuche wird, steht auf <a href=\":linkbusiness\">MetaGer für Firmen</a>.",
     ],
 
     "actions" => [
-        "join" => "Firmenmitgliedschaft beantragen",
+        "join" => "Aufnahmeantrag für Ihre Organisation",
         "contact" => "Erst Fragen stellen",
     ],
 ];

@@ -293,10 +293,10 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      * MetaGer für Firmen und Organisationen.
      *
      * Das Ziel der B2B-Hinweise in der Seitenleiste, auf /preise, im Konto und
-     * im Beitrittsformular. Der Zweig „Als Firma beitreten?“ gab es im Formular
-     * schon; was gefehlt hat, war die Seite, die erklärt, was eine Firma davon
-     * hat — und ein Weg dorthin, den jemand findet, ohne das Formular schon
-     * geöffnet zu haben.
+     * im Beitrittsformular. Den Zweig „Als Firma beitreten?“ gab es im Formular
+     * schon; was gefehlt hat, war die Seite, die erklärt, was eine
+     * Mitgliedschaft für eine Organisation bedeutet — und ein Weg dorthin, den
+     * jemand findet, ohne das Formular schon geöffnet zu haben.
      *
      * Deutsch wie jeder Hinweis auf die Mitgliedschaft
      * ({@see \App\Support\MembershipOffer}), und aus demselben Grund: dahinter

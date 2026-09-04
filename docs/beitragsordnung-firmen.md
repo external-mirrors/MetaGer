@@ -20,9 +20,8 @@ statt jede Firma auf den Mindestbeitrag zu setzen.
 ### Warum die 5 € nicht bleiben können
 
 Sie sind der Mindestbeitrag einer Einzelperson, und sie galten für eine Organisation mit bis zu
-neunzehn Menschen, die alle suchen. Ein Verein, dessen Ertrag daran hängt, dass Mitglieder ihr
-Suchguthaben nicht vollständig verbrauchen, verliert bei dieser Klasse in beide Richtungen: neunzehn
-Suchende verbrauchen mehr als eine Person, und der Beitrag ist derselbe.
+neunzehn Menschen, die alle suchen. Der Aufwand, den der Verein trägt, wächst mit der Zahl der
+Suchenden: neunzehn Menschen suchen mehr als einer, und der Beitrag war bisher derselbe.
 
 25 € ist die untere Kante dessen, was die Größenklasse trägt, und sie ist mit Absicht nicht höher:
 die kleinen Büros und Praxen, um die es hier geht, sollen weiter beitreten können, und ein Beitrag,
@@ -81,12 +80,10 @@ inzwischen gar nicht mehr an.
    Größenklassen liegen als ENUM in der Datenbank und als Mitgliedschaftstypen in CiviCRM, eine
    vierte wäre eine Migration und neue Typen. Ein Satz, der die Zählweise ändert, ist keins von
    beidem.
-3. **Ob der Beitrag im Text an das Suchguthaben gekoppelt wird.** Heute steht die Zusage — Guthaben
-   im Gegenwert des Beitrags, monatlich aufgefüllt — auf `/firmen` und nicht in der
-   Beitragsordnung. Das ist vermutlich die richtige Stelle: eine Vereinsordnung, die eine
-   Gegenleistung verspricht, liest sich weniger wie eine Beitragsordnung und mehr wie ein Vertrag,
-   und für die Gemeinnützigkeit ist der Unterschied nicht bedeutungslos. Wenn es doch hinein soll,
-   dann bitte mit dem Steuerberater.
+3. **Ob die Beitragsordnung die Nutzung von MetaGer überhaupt erwähnt.** Der Vorschlag oben tut es
+   nicht: er regelt Beiträge, wie eine Beitragsordnung es tun soll. Dass Mitglieder auf MetaGer
+   werbefrei suchen, steht auf `/firmen` und auf der Startseite. Sollte der Vorstand das anders
+   wollen, gehört der Satz vorher über den Tisch des Steuerberaters.
 
 ## Wenn eine Zahl sich ändert
 

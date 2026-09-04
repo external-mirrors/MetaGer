@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $end_to_end_reference
  * @property \Carbon\Carbon $due_date
  * @property string|null $reference
+ * @property string|null $donation_receipt_id
+ * @property DonationReceipt|null $donationReceipt
  */
 class Debit extends Model
 {
@@ -33,7 +35,7 @@ class Debit extends Model
 
     protected $table = "assoc_debits";
 
-    protected $fillable = ["civicrm_id", "contact_id", "company_id", "household_id", "source", "iban", "bic", "account_holder", "amount", "mandate", "mandate_date", "status", "end_to_end_reference", "due_date", "reference"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "household_id", "source", "iban", "bic", "account_holder", "amount", "mandate", "mandate_date", "status", "end_to_end_reference", "due_date", "reference", "donation_receipt_id"];
 
     protected $casts = [
         "amount" => "decimal:2",
@@ -54,5 +56,15 @@ class Debit extends Model
     public function household(): BelongsTo
     {
         return $this->belongsTo(Household::class, "household_id");
+    }
+
+    public function donationReceipt(): BelongsTo
+    {
+        return $this->belongsTo(DonationReceipt::class, "donation_receipt_id");
+    }
+
+    public function payer(): Contact|Company|Household|null
+    {
+        return $this->contact ?? $this->company ?? $this->household;
     }
 }

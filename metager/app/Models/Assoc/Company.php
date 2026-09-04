@@ -2,6 +2,7 @@
 
 namespace App\Models\Assoc;
 
+use App\Models\Assoc\Concerns\HasDonationReceiptPreference;
 use Illuminate\Database\Eloquent\Concerns\HasVersion4Uuids as HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,14 +20,16 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $city
  * @property string|null $country
  * @property string|null $tax_id
+ * @property string|null $donation_receipt_preference
  */
 class Company extends Model
 {
     use HasUuids;
+    use HasDonationReceiptPreference;
 
     protected $table = "assoc_companies";
 
-    protected $fillable = ["civicrm_id", "name", "contact_person_id", "street", "postal_code", "city", "country", "tax_id"];
+    protected $fillable = ["civicrm_id", "name", "contact_person_id", "street", "postal_code", "city", "country", "tax_id", "donation_receipt_preference"];
 
     public function contactPerson(): BelongsTo
     {
@@ -46,5 +49,10 @@ class Company extends Model
     public function recurContributions(): HasMany
     {
         return $this->hasMany(RecurContribution::class, "company_id");
+    }
+
+    public function donationReceipts(): HasMany
+    {
+        return $this->hasMany(DonationReceipt::class, "company_id");
     }
 }

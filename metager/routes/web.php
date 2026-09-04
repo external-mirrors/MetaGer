@@ -32,6 +32,8 @@ use App\Http\Middleware\AuthenticationValidation;
 use App\Http\Middleware\LocalizationRedirect;
 use App\Localization;
 use App\Models\Authorization\Authorization;
+use App\Support\MembershipFee;
+use App\Support\MembershipOffer;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
@@ -286,6 +288,47 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('linkSearch', route('startpage'))
             ->with('css', [Vite::asset('resources/less/metager/pages/price.less')]);
     })->name('price');
+
+    /**
+     * MetaGer für Firmen und Organisationen.
+     *
+     * Das Ziel der B2B-Hinweise in der Seitenleiste, auf /preise, im Konto und
+     * im Beitrittsformular. Der Zweig „Als Firma beitreten?“ gab es im Formular
+     * schon; was gefehlt hat, war die Seite, die erklärt, was eine Firma davon
+     * hat — und ein Weg dorthin, den jemand findet, ohne das Formular schon
+     * geöffnet zu haben.
+     *
+     * Deutsch wie jeder Hinweis auf die Mitgliedschaft
+     * ({@see \App\Support\MembershipOffer}), und aus demselben Grund: dahinter
+     * liegt ein Formular, das es nur auf Deutsch gibt. Erreichbar bleibt die
+     * Adresse trotzdem in jeder Sprache — sie antwortet dann mit demselben
+     * Hinweis, den das Beitrittsformular einem nicht-deutschen Besucher gibt,
+     * statt mit einer 404 auf einen Link, den jemand weitergegeben hat.
+     */
+    Route::get('firmen', function () {
+        if (!MembershipOffer::isAdvertised()) {
+            return response(view('membership.nonGerman')
+                ->with('title', trans('titles.membership'))
+                ->with('navbarFocus', 'info')
+                ->with('css', [Vite::asset('resources/less/metager/pages/membership/base.less')])
+                ->with('darkcss', [Vite::asset('resources/less/metager/pages/membership/base-dark.less')]));
+        }
+
+        return view('business')
+            ->with('title', trans('business.title'))
+            ->with('navbarFocus', 'info')
+            // Die Beträge kommen aus derselben Klasse, die das Formular
+            // validiert. Eine Seite, die 25 € verspricht, und ein Formular, das
+            // 25 € ablehnt, wäre ein Fehler, den niemand bemerkt, bis eine
+            // Firma ihn bemerkt.
+            ->with('brackets', MembershipFee::companyBrackets())
+            ->with('linkJoin', route('membership_form', ['type' => 'company']))
+            ->with('linkContact', route('contact'))
+            ->with('linkPrice', route('price'))
+            ->with('linkPrivacy', LaravelLocalization::getLocalizedURL(null, '/datenschutz'))
+            ->with('linkFeeOrder', 'https://suma-ev.de/beitragsordnung/')
+            ->with('css', [Vite::asset('resources/less/metager/pages/business.less')]);
+    })->name('business');
 
     Route::get('agb', function () {
         return view('agb')

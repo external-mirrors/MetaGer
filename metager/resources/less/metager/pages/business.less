@@ -1,0 +1,125 @@
+@import "../variables.less";
+
+// /firmen — MetaGer für Firmen und Organisationen.
+//
+// Eine Textseite mit vier Einbauten: den Vorteilskacheln, den nummerierten
+// Einrichtungsschritten, dem hervorgehobenen Kasten zum Schlüssel und der
+// Beitragstabelle. Kein eigenes Farbschema — die Seite lebt von den Tokens aus
+// variables.less und ist damit in beiden Paletten richtig, ohne ein
+// Dunkel-Stylesheet daneben.
+//
+// Der Kasten zum Schlüssel ist der einzige Absatz, der optisch heraussticht,
+// und das mit Absicht: er ist die Einschränkung, nach der jede IT-Abteilung als
+// erstes fragt, und eine Einschränkung, die man suchen muss, ist eine, die man
+// später vorgeworfen bekommt.
+
+#business-page {
+  max-width: 980px;
+  margin: 0 auto;
+
+  h2 {
+    margin-top: 2.5rem;
+  }
+
+  .business-intro {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  // Zwei Reihen Knöpfe, oben und unten. .account-btn kommt aus
+  // parts/account.less und ist `flex: 1 1 0`, braucht also einen Flex-Elternteil
+  // — ohne den fällt jeder Knopf auf seine Inhaltsbreite zusammen.
+  .business-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem 0;
+
+    > .account-btn {
+      min-width: 16rem;
+    }
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+
+      > .account-btn {
+        min-width: 0;
+      }
+    }
+  }
+
+  .business-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+
+    @media (max-width: 720px) {
+      grid-template-columns: 1fr;
+    }
+
+    > li {
+      border: 1px solid @border-color;
+      border-radius: 8px;
+      padding: 1.25rem;
+
+      > h3 {
+        margin-top: 0;
+        font-size: 1.05rem;
+      }
+    }
+  }
+
+  .business-setup {
+    margin: 1.5rem 0 0;
+    padding-left: 1.5rem;
+
+    > li {
+      margin-bottom: 1.25rem;
+
+      > h3 {
+        margin: 0 0 0.25rem;
+        font-size: 1.05rem;
+      }
+    }
+  }
+
+  .business-hint {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    border-radius: 8px;
+    border-left: 4px solid @metager-orange;
+    background-color: @background-color-mobile;
+
+    > h3 {
+      margin-top: 0;
+      font-size: 1.05rem;
+    }
+
+    > p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .business-fee {
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 32rem;
+
+    th,
+    td {
+      border-bottom: 1px solid @border-color;
+      padding: 0.6rem 1rem 0.6rem 0;
+      text-align: left;
+    }
+
+    // Der Betrag ist die Zahl, wegen der jemand die Tabelle liest.
+    tbody td {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+  }
+}

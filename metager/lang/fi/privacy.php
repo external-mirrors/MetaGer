@@ -109,6 +109,10 @@ return [
             'title' => 'Viesti',
             'description' => 'Tähän syötetty viesti välitetään meille ja sitä käytetään pyyntösi käsittelyyn.',
         ],
+        'error' => [
+            'title' => 'Virheilmoitus (pinojälki)',
+            'description' => 'Kun sovelluksessamme ilmenee tekninen virhe, virheen kuvaus ja pinojälki luodaan automaattisesti. Näin näemme, missä kohdassa lähdekoodia virhe tapahtui, jotta voimme korjata sen.',
+        ],
     ],
     'data' => [
         'payment' => 'Maksutiedot',
@@ -122,6 +126,7 @@ return [
         'gps' => 'Sijaintitiedot',
         'optional' => 'valinnainen',
         'unused' => 'Ei tallenneta eikä jaeta.',
+        'error' => 'Virheilmoitus',
     ],
     'responsible_party' => [
         'title' => 'Vastuuhenkilöt ja yhteyshenkilöt',
@@ -176,5 +181,22 @@ return [
         'title' => 'Muutokset tähän lausumaan',
         'description' => 'Kuten tarjouksemme, myös tämä tietosuojaseloste muuttuu jatkuvasti. Siksi sinun on syytä lukea ne säännöllisesti uudelleen.',
         'date' => 'Tämä versio tietosuojakäytännöstämme on päivätty: :date',
+    ],
+    'monitoring' => [
+        'title' => 'Virheiden seuranta ja sovellusten valvonta',
+        'description' => 'Palveluidemme luotettavuuden varmistamiseksi käytämme avoimen lähdekoodin virheenseurantatyökalua GlitchTipiä sekä sovellustemme taustapuolella että käyttöliittymässä. GlitchTip toimii yksinomaan omalla infrastruktuurillamme; tietoja ei jaeta eikä lähetetä millekään kolmannen osapuolen analytiikka- tai valvontapalveluntarjoajalle.',
+        'collected' => [
+            'title' => 'Mitä tietoja syntyy',
+            'description' => 'Kun verkkosovelluksessamme tai palvelimillamme ilmenee virhe, keräämme automaattisesti seuraavat tiedot:',
+            'error' => 'Virheen kuvaus ja pinojälki, josta käy ilmi, missä kohdassa koodia virhe on tapahtunut.',
+            'useragent' => 'Selaimen tyyppi, käyttöjärjestelmä ja laitteen arvioitu tyyppi, jotka on määritetty käyttäjäagentin perusteella.',
+            'url' => 'Sen sivun tai toiminnon osoite (URL), jossa virhe ilmeni.',
+        ],
+        'not_collected' => [
+            'title' => 'Mitä tietoja ei tuoteta',
+            'description' => 'IP-osoitteesi poistetaan ennen kuin se lähetetään GlitchTipille, eikä se pääse järjestelmään lainkaan. Emme yhdistä virheraportteja mihinkään henkilöön tai käyttäjätiliin – emme edes kirjautuneiden käyttäjien osalta. Emme myöskään kerää salasanoja, maksutietoja tai lomakkeiden tai viestien sisältöä, joita lähetät palveluidemme kautta.',
+        ],
+        'retention' => 'Säilytämme virheraportteja 30 päivän ajan, minkä jälkeen ne poistetaan automaattisesti.',
+        'base' => 'Tämän käsittelyn oikeusperusteena on oikeutettu etumme tarjota palveluitamme luotettavasti ja turvallisesti (GDPR:n 6 artiklan 1 kohdan f alakohta).',
     ],
 ];

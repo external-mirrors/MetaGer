@@ -39,6 +39,10 @@ return [
             'example_full' => 'Exemples (adresse IP complète)',
             'example_partial' => 'Exemples (deux premiers blocs uniquement)',
         ],
+        'error' => [
+            'description' => 'Lorsqu\'une erreur technique survient dans notre application, une description de l\'erreur accompagnée d\'une trace de pile est automatiquement générée. Cela nous permet de localiser l\'endroit où l\'erreur s\'est produite dans le code source afin de pouvoir la corriger.',
+            'title' => 'Rapport d\'erreur (trace de pile)',
+        ],
     ],
     'base' => [
         'title' => 'Base juridique du traitement',
@@ -98,6 +102,7 @@ return [
         'gps' => 'Données de localisation',
         'optional' => 'facultatif',
         'unused' => 'Ne sera ni sauvegardé ni partagé.',
+        'error' => 'Rapport d\'erreur',
     ],
     'title' => 'Politique de confidentialité',
     'responsible_party' => [
@@ -176,5 +181,22 @@ return [
     'hosting' => [
         'title' => 'Hébergement',
         'description' => 'Nos services sont administrés par nous, la SUMA-EV, et exploités sur du matériel loué à Hetzner Online GmbH.',
+    ],
+    'monitoring' => [
+        'description' => 'Afin de garantir la fiabilité de nos services, nous utilisons l\'outil open source de suivi des erreurs GlitchTip, tant au niveau du backend que du frontend de nos applications. GlitchTip fonctionne exclusivement sur notre propre infrastructure ; aucune donnée n\'est partagée avec ni transmise à un prestataire tiers spécialisé dans l\'analyse ou la surveillance.',
+        'collected' => [
+            'title' => 'Quelles sont les données générées ?',
+            'description' => 'Lorsqu\'une erreur survient dans notre application web ou sur nos serveurs, nous collectons automatiquement :',
+            'error' => 'Une description de l\'erreur et une trace de pile permettant d\'identifier l\'emplacement concerné dans le code.',
+            'useragent' => 'Type de navigateur, système d\'exploitation et type approximatif d\'appareil, déterminés à partir de votre agent utilisateur.',
+            'url' => 'L\'adresse (URL) de la page ou de la fonction où l\'erreur s\'est produite.',
+        ],
+        'not_collected' => [
+            'title' => 'Quelles sont les données qui ne sont pas générées ?',
+            'description' => 'Votre adresse IP est supprimée avant même d\'être transmise à GlitchTip et n\'atteint donc jamais le système. Nous n\'associons pas les rapports d\'erreur à une personne ou à un compte utilisateur en particulier, même pas pour les utilisateurs connectés. Nous ne collectons pas non plus les mots de passe, les informations de paiement ni le contenu des formulaires ou des messages que vous envoyez via nos services.',
+        ],
+        'retention' => 'Nous conservons les rapports d\'erreur pendant 30 jours ; ils sont ensuite automatiquement supprimés.',
+        'base' => 'La base juridique de ce traitement est notre intérêt légitime à assurer un fonctionnement fiable et sécurisé de nos services (art. 6, paragraphe 1, point f) du RGPD).',
+        'title' => 'Suivi des erreurs et surveillance des applications',
     ],
 ];

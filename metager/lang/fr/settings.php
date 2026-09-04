@@ -113,4 +113,6 @@ return [
         'total' => 'Nous facturons <strong>:cost Token</strong> par requête de recherche avec les paramètres actuels.',
         'minimum' => 'Note : Le coût minimum par recherche est de <strong>:min Token</strong> par recherche.',
     ],
+    'resetAll' => 'Réinitialiser tous les points de mise au point',
+    'resetAllDescription' => 'Efface tous les paramètres de toutes les rubriques — y compris les choix de moteurs, les filtres et les listes noires — et pas seulement ceux de cette page.',
 ];

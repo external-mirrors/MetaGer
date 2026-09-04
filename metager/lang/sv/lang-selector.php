@@ -13,6 +13,7 @@ return [
         'no' => 'Norska',
         'it' => 'Italienska',
         'pt' => 'Portugisiska',
+        'ca' => 'katalanska',
     ],
     'h1' => [
         '1' => 'Val av språk',

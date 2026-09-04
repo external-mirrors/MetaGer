@@ -13,6 +13,7 @@ return [
         'it' => 'italiano',
         'en' => 'Inglês',
         'pt' => 'Português',
+        'ca' => 'Catalão',
     ],
     'translate' => [
         'title' => 'Encontrou algum erro nas nossas traduções?',

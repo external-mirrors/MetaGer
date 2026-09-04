@@ -82,6 +82,7 @@ return [
         'gps' => 'Datos de localización',
         'optional' => 'opcional',
         'unused' => 'No se guardará ni compartirá.',
+        'error' => 'Informe de errores',
     ],
     'principles' => [
         'title' => 'Principios',
@@ -130,6 +131,10 @@ return [
             'title' => 'Mensaje',
             'description' => 'El mensaje introducido aquí nos será transmitido y utilizado para tramitar su solicitud.',
         ],
+        'error' => [
+            'title' => 'Informe de error (traza de pila)',
+            'description' => 'Cuando se produce un error técnico en nuestra aplicación, se genera automáticamente una descripción del error junto con un seguimiento de la pila. Esto nos permite saber en qué parte del código fuente se ha producido el error para poder solucionarlo.',
+        ],
     ],
     'base' => [
         'title' => 'Base jurídica del tratamiento',
@@ -176,5 +181,22 @@ return [
         'title' => 'Cambios en esta declaración',
         'description' => 'Al igual que nuestras ofertas, esta declaración de protección de datos también está sujeta a cambios constantes. Por ello, le recomendamos que vuelva a leerla con regularidad.',
         'date' => 'Esta versión de nuestra política de privacidad tiene fecha: :date',
+    ],
+    'monitoring' => [
+        'title' => 'Seguimiento de errores y supervisión de aplicaciones',
+        'description' => 'Para garantizar la fiabilidad de nuestros servicios, utilizamos la herramienta de seguimiento de errores de código abierto GlitchTip, tanto en el backend como en el frontend de nuestras aplicaciones. GlitchTip se ejecuta exclusivamente en nuestra propia infraestructura; no se comparten ni se transmiten datos a ningún proveedor externo de análisis o supervisión.',
+        'collected' => [
+            'title' => '¿Qué datos se generan?',
+            'description' => 'Cuando se produce un error en nuestra aplicación web o en nuestros servidores, recopilamos automáticamente:',
+            'error' => 'Una descripción del error y un seguimiento de la pila que identifique la ubicación afectada en el código.',
+            'useragent' => 'Tipo de navegador, sistema operativo y tipo aproximado de dispositivo, determinados a partir de tu agente de usuario.',
+            'url' => 'La dirección (URL) de la página o función en la que se produjo el error.',
+        ],
+        'not_collected' => [
+            'title' => '¿Qué datos no se generan?',
+            'description' => 'Tu dirección IP se elimina antes de que se transmita a GlitchTip y nunca llega al sistema. No asociamos los informes de errores con ninguna persona ni cuenta de usuario, ni siquiera en el caso de los usuarios que han iniciado sesión. Tampoco recopilamos contraseñas, datos de pago ni el contenido de ningún formulario o mensaje que envíes a través de nuestros servicios.',
+        ],
+        'retention' => 'Almacenamos los informes de errores durante 30 días; después se eliminan automáticamente.',
+        'base' => 'La base jurídica de este tratamiento es nuestro interés legítimo en prestar nuestros servicios de forma fiable y segura (art. 6, apartado 1, letra f) del RGPD).',
     ],
 ];

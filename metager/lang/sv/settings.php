@@ -113,4 +113,6 @@ return [
         'total' => 'Vi debiterar <strong>:cost Token</strong> per sökfråga med nuvarande inställningar.',
         'minimum' => 'Obs: Den lägsta kostnaden per sökning är <strong>:min Token</strong> per sökning.',
     ],
+    'resetAll' => 'Återställ alla fokuspunkter',
+    'resetAllDescription' => 'Rensar alla inställningar i alla kategorier – inklusive motorval, filter och svartlistor – inte bara på den här sidan.',
 ];

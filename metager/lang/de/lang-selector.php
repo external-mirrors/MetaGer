@@ -17,6 +17,7 @@ return [
         'pl' => "Polnisch",
         'fr' => "Französisch",
         'pt' => 'Portugiesisch',
+        'ca' => 'Katalanisch',
     ],
     'detection' => [
         'title' => "Welche Standardeinstellung wird für die Sprache verwendet?",

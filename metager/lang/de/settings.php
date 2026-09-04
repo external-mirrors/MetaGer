@@ -115,8 +115,4 @@ return [
     'tips' => [
         'label' => 'Zufällige Tipps auf der Ergebnisseite anzeigen',
     ],
-    'zitate' => [
-        'on' => 'Anzeigen',
-        'off' => 'Nicht Anzeigen',
-    ],
 ];

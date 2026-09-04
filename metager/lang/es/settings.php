@@ -113,4 +113,6 @@ return [
         'total' => 'Cobramos <strong>:cost Token</strong> por consulta de búsqueda con la configuración actual.',
         'minimum' => 'Nota: El coste mínimo por búsqueda es <strong>:min Ficha</strong> por búsqueda.',
     ],
+    'resetAll' => 'Restablecer todos los enfoques',
+    'resetAllDescription' => 'Borra todos los ajustes de todas las secciones —incluidas las opciones de motor, los filtros y las listas negras—, no solo los de esta página.',
 ];

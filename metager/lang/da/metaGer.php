@@ -43,6 +43,7 @@ return [
             'cc' => 'Kinesisk (Kina)',
             'name' => 'Sprog',
             'ppt' => 'Portugisisk (Portugal)',
+            'caes' => 'Katalansk (Spanien)',
         ],
         'skip' => 'Spring over',
         'min' => 'Minimum søvn (i s)',

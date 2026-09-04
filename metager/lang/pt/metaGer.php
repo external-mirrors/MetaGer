@@ -43,6 +43,7 @@ return [
             'gg' => 'Alemão (Alemanha)',
             'gs' => 'Alemão (Suíça)',
             'ea' => 'Inglês (Austrália)',
+            'caes' => 'Catalão (Espanha)',
         ],
         'sort' => [
             'priceascending' => 'Preço (ascendente)',

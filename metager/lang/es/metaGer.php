@@ -146,6 +146,7 @@ return [
             'ct' => 'Chino (Taiwán)',
             'name' => 'Idioma',
             'ppt' => 'Portugués (Portugal)',
+            'caes' => 'Catalán (España)',
         ],
         'sort' => [
             'priceascending' => 'Precio (ascendente)',

@@ -113,4 +113,6 @@ return [
         'total' => 'Addebitiamo <strong>:cost Token</strong> per ogni query di ricerca con le impostazioni attuali.',
         'minimum' => 'Nota: Il costo minimo per ricerca è <strong>:min Token</strong> per ricerca.',
     ],
+    'resetAll' => 'Reimposta tutti i punti di messa a fuoco',
+    'resetAllDescription' => 'Cancella tutte le impostazioni in ogni sezione — comprese le opzioni relative al motore, i filtri e le liste nere — non solo in questa pagina.',
 ];

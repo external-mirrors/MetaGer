@@ -113,4 +113,6 @@ return [
         'total' => 'Vi opkræver <strong>:cost Token</strong> pr. søgeforespørgsel med de nuværende indstillinger.',
         'minimum' => 'Bemærk: Den mindste omkostning pr. søgning er <strong>:min Token</strong> pr. søgning.',
     ],
+    'resetAll' => 'Nulstil alle fokuspunkter',
+    'resetAllDescription' => 'Sletter alle indstillinger på alle sider — herunder valg af motor, filtre og sortlister — ikke kun denne side.',
 ];

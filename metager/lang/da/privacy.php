@@ -107,6 +107,10 @@ return [
             'title' => 'Besked',
             'description' => 'Den besked, du indtaster her, vil blive sendt til os og brugt til at behandle din anmodning.',
         ],
+        'error' => [
+            'title' => 'Fejlrapport (stakspor)',
+            'description' => 'Når der opstår en teknisk fejl i vores applikation, genereres der automatisk en fejlbeskrivelse sammen med et stack trace. Det viser os, hvor i kildekoden fejlen opstod, så vi kan rette den.',
+        ],
     ],
     'rights' => [
         'opposition' => [
@@ -176,5 +180,23 @@ return [
         'gps' => 'Data om placering',
         'optional' => 'valgfri',
         'unused' => 'Vil ikke blive gemt eller delt.',
+        'error' => 'Fejlrapport',
+    ],
+    'monitoring' => [
+        'title' => 'Fejlsporing og applikationsovervågning',
+        'description' => 'For at sikre pålideligheden af vores tjenester bruger vi det open source-baserede fejlsporingsværktøj GlitchTip, både i backend- og frontend-delen af vores applikationer. GlitchTip kører udelukkende på vores egen infrastruktur; der deles eller overføres ingen data til tredjepartsudbydere af analyse- eller overvågningstjenester.',
+        'collected' => [
+            'title' => 'Hvilke data genereres?',
+            'description' => 'Når der opstår en fejl i vores webapplikation eller på vores servere, indsamler vi automatisk følgende oplysninger:',
+            'error' => 'En fejlbeskrivelse og et stakspor, der angiver det berørte sted i koden.',
+            'useragent' => 'Browsertype, operativsystem og omtrentlig enhedstype, som fastslås ud fra din brugeragent.',
+            'url' => 'Adressen (URL) til den side eller funktion, hvor fejlen opstod.',
+        ],
+        'not_collected' => [
+            'title' => 'Hvilke data genereres ikke?',
+            'description' => 'Din IP-adresse fjernes, inden den overhovedet sendes til GlitchTip, og den når aldrig frem til systemet. Vi knytter ikke fejlrapporter til nogen bestemt person eller brugerkonto – heller ikke for brugere, der er logget ind. Vi indsamler heller ikke adgangskoder, betalingsoplysninger eller indholdet af formularer eller beskeder, som du indsender via vores tjenester.',
+        ],
+        'retention' => 'Vi gemmer fejlrapporter i 30 dage; derefter slettes de automatisk.',
+        'base' => 'Retsgrundlaget for denne databehandling er vores berettigede interesse i at drive vores tjenester på en pålidelig og sikker måde (art. 6, stk. 1, litra f), i GDPR).',
     ],
 ];

@@ -13,6 +13,7 @@ return [
         'pl' => 'Polonais',
         'fr' => 'Français',
         'pt' => 'Portugais',
+        'ca' => 'catalan',
     ],
     'description' => 'Vous trouverez ci-dessous une liste de toutes les langues/régions actuellement prises en charge par la recherche MetaGer. Les résultats de votre recherche seront optimisés pour la région sélectionnée. Nous utilisons un cookie pour sauvegarder les paramètres modifiés.',
     'detection' => [

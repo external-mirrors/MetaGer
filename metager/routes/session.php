@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AdminInterface;
+use App\Http\Controllers\AssocController;
 use App\Http\Controllers\LogsApiController;
 use App\Http\Controllers\MembershipController;
 use App\Mail\LogsLoginCode;
@@ -28,6 +29,10 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
     Route::post("membership/reduction/accept", [MembershipController::class, "adminMembershipReductionAccept"])->name("membership_admin_reduction_accept");
     Route::post("membership/accept", [MembershipController::class, "adminAccept"])->name("membership_admin_accept");
     Route::post("membership/deny", [MembershipController::class, "adminDeny"])->name("membership_admin_deny");
+    Route::get("assoc/members", [AssocController::class, "members"])->name("assoc_admin_members");
+    Route::get("assoc/members/{type}/{id}", [AssocController::class, "member"])->name("assoc_admin_member");
+    Route::get("assoc/households", [AssocController::class, "households"])->name("assoc_admin_households");
+    Route::get("assoc/households/{id}", [AssocController::class, "household"])->name("assoc_admin_household");
     Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');

@@ -57,4 +57,44 @@ class Membership extends Model
     {
         return $this->belongsTo(Company::class, "company_id");
     }
+
+    /**
+     * German-only, deliberately not routed through the translation files —
+     * the admin views this feeds render whatever locale the visitor's
+     * browser negotiates (App\Http\Middleware\ResolveLocale runs on every
+     * route, including admin/*), and suma-ev's imported membership data is
+     * a German-language, German-staff-only concern that never appears on
+     * the public, multi-locale membership pages.
+     */
+    public function standingLabel(): string
+    {
+        return match ($this->standing) {
+            "terminated" => "Ausgetreten",
+            "deceased" => "Verstorben",
+            default => "Aktiv",
+        };
+    }
+
+    public function paymentMethodLabel(): string
+    {
+        return match ($this->payment_method) {
+            "exempt" => "Beitragsbefreit",
+            "directdebit" => "Lastschrift",
+            "banktransfer" => "Überweisung",
+            "paypal" => "PayPal",
+            "card" => "Kreditkarte",
+            default => $this->payment_method,
+        };
+    }
+
+    public function intervalLabel(): string
+    {
+        return match ($this->interval) {
+            "monthly" => "monatlich",
+            "quarterly" => "vierteljährlich",
+            "six-monthly" => "halbjährlich",
+            "annual" => "jährlich",
+            default => $this->interval,
+        };
+    }
 }

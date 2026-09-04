@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Authentication\KeyUser;
 use Tests\TestCase;
 
 /**
@@ -182,6 +183,35 @@ class KeyPagesNavigationTest extends TestCase
 
         $response->assertSee('href="' . url("/konto") . '"', false);
         $response->assertSeeText(__("account.page.heading"));
+    }
+
+    /**
+     * Die Weberweiterung ist keine Anmeldung wert, die es nicht gibt.
+     *
+     * Ein temporärer Besucher (die Weberweiterung meldet über ein anonymes
+     * Token an, nicht über einen echten Schlüssel — App\Authentication\
+     * KeyAuthGuard::user()) fiel bis hierher in denselben Zweig wie ein
+     * Besucher ganz ohne Schlüssel und bekam auch "Ich habe bereits einen
+     * Schlüssel" angeboten. Das ist eine Sackgasse: /anmelden erkennt das
+     * anonyme Token nicht (es prüft nur Cookie/Header/Query "key") und zeigt
+     * ein echtes Formular für eine Eingabe, die dieser Besucher gar nicht
+     * hat — App\Http\Controllers\AccountController::show() schickt ihn von
+     * dort ohnehin nur weiter zur Erklärseite. "Start" bleibt der einzige
+     * Weg, der für ihn tatsächlich funktioniert: /schluessel-erstellen fragt
+     * nie nach dem Token und stellt einen neuen, echten Schlüssel aus.
+     */
+    public function testThePricePageOffersOnlyKeyCreationToAWebextensionVisitor(): void
+    {
+        $user = new KeyUser("aaaaaaaa-bbbb-cccc-dddd-eeeeee999999");
+        $user->temporary = true;
+        $this->be($user, "key");
+
+        $response = $this->get("/preise")->assertOk();
+
+        $response->assertSee('href="' . url("/schluessel-erstellen") . '"', false);
+        $response->assertSeeText(__("index.landing.howitworks.start"));
+        $response->assertDontSee('href="' . url("/anmelden") . '?', false);
+        $response->assertDontSeeText(__("index.landing.howitworks.login"));
     }
 
     /**

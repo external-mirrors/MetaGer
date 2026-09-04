@@ -115,16 +115,24 @@
 		parts/landing/how-it-works, damit der Weg gleich benannt ist wie der,
 		den der Besucher auf der Startseite schon gesehen hat.
 
-		Der temporäre Nutzer der Weberweiterung fällt in denselben Zweig wie ein
-		Besucher ohne Schlüssel: /konto ist für ihn kein Ziel, und der generische
-		Einstieg ist die sichere Voreinstellung — er verwaltet seinen Zugang
-		ohnehin im Fenster der Erweiterung.
+		Der temporäre Nutzer der Weberweiterung bekommt nur "Start", nicht auch
+		"Ich habe bereits einen Schlüssel": er hat, anders als der Name der
+		zweiten Schaltfläche verspricht, keinen echten Schlüssel zum Anmelden —
+		die Erweiterung meldet ihn über ein anonymes Token an, das
+		KeyAuthGuard nie in einen Schlüssel auflöst. /anmelden erkennt dieses
+		Token nicht (es prüft nur Cookie/Header/Query "key", nie
+		"anonymous-token-key") und zeigt darum ein echtes Anmeldeformular für
+		eine Eingabe, die es nicht gibt. "Start" dagegen funktioniert: /schluessel-
+		erstellen fragt denselben Guard nie nach dem Token und stellt einen
+		neuen, echten Schlüssel aus.
 	--}}
 	@php($priceKeyUser = \Auth::guard('key')->user())
 	<div class="price-next">
 		@if($priceKeyUser !== null && !$priceKeyUser->temporary)
 			<a class="account-btn account-btn--primary" href="{{ $linkAccount }}">@lang('account.page.heading')</a>
 			<a class="account-btn account-btn--quiet" href="{{ $linkSearch }}">@lang('account.page.actions.search')</a>
+		@elseif($priceKeyUser !== null && $priceKeyUser->temporary)
+			<a class="account-btn account-btn--primary" href="{{ $linkCreate }}">@lang('index.landing.howitworks.start')</a>
 		@else
 			<a class="account-btn account-btn--primary" href="{{ $linkCreate }}">@lang('index.landing.howitworks.start')</a>
 			<a class="account-btn account-btn--quiet" href="{{ $linkLogin }}">@lang('index.landing.howitworks.login')</a>

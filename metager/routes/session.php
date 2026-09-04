@@ -2,6 +2,7 @@
 use App\Http\Controllers\AdminInterface;
 use App\Http\Controllers\AssocController;
 use App\Http\Controllers\BankStatementController;
+use App\Http\Controllers\DonationReceiptController;
 use App\Http\Controllers\LogsApiController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Middleware\AdminAuthenticate;
@@ -41,6 +42,9 @@ Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], '
     Route::get("assoc/bank-statements/{id}", [BankStatementController::class, "show"])->name("assoc_admin_bank_statement");
     Route::post("assoc/bank-statements/{id}/match", [BankStatementController::class, "match"])->name("assoc_admin_bank_statement_match");
     Route::post("assoc/bank-statements/rematch", [BankStatementController::class, "rematch"])->name("assoc_admin_bank_statements_rematch");
+    Route::get("assoc/donation-receipts", [DonationReceiptController::class, "index"])->name("assoc_admin_donation_receipts");
+    Route::get("assoc/donation-receipts/{id}/download", [DonationReceiptController::class, "download"])->name("assoc_admin_donation_receipt_download");
+    Route::post("assoc/debits/{debitId}/generate-receipt", [DonationReceiptController::class, "generate"])->name("assoc_admin_debit_generate_receipt");
     Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');

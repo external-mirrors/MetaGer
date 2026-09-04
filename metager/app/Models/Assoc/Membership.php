@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $payment_reference
  * @property string|null $paypal_vault_id
  * @property \Carbon\Carbon|null $join_date
- * @property string $status
+ * @property string $standing
  * @property \Carbon\Carbon|null $start_date
  * @property \Carbon\Carbon|null $end_date
  * @property \Carbon\Carbon|null $renewed_at
@@ -36,7 +36,7 @@ class Membership extends Model
 
     protected $table = "assoc_memberships";
 
-    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "status", "start_date", "end_date", "renewed_at", "reduced_until", "locale", "key_id", "mastodon_id"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "standing", "start_date", "end_date", "renewed_at", "reduced_until", "locale", "key_id", "mastodon_id"];
 
     protected $casts = [
         "reduced" => "boolean",

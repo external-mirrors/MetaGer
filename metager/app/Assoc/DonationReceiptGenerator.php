@@ -2,8 +2,11 @@
 
 namespace App\Assoc;
 
+use App\Models\Assoc\Company;
+use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\DonationReceipt;
+use App\Models\Assoc\Household;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,6 +53,38 @@ class DonationReceiptGenerator
         }
 
         return $this->createReceipt(collect([$debit]), $debit->due_date->year);
+    }
+
+    /**
+     * Every executed, unreceipted debit for one payer and one source —
+     * folded into a single receipt. The "several outstanding payments,
+     * please receipt all of them now" case: a donor who has been on
+     * "never"/no preference asks for a receipt covering their history so
+     * far, not one PDF per payment. Same bypass-the-preference contract as
+     * generateSingle() — this is only ever run on explicit request.
+     *
+     * Returns null rather than an empty receipt when there is nothing
+     * outstanding for that payer+source.
+     */
+    public function generateForPayer(Contact|Company|Household $payer, string $source): ?DonationReceipt
+    {
+        $column = match (true) {
+            $payer instanceof Contact => "contact_id",
+            $payer instanceof Company => "company_id",
+            $payer instanceof Household => "household_id",
+        };
+
+        $debits = Debit::where($column, $payer->id)
+            ->where("source", $source)
+            ->where("status", "executed")
+            ->whereNull("donation_receipt_id")
+            ->get();
+
+        if ($debits->isEmpty()) {
+            return null;
+        }
+
+        return $this->createReceipt($debits, $debits->max(fn (Debit $debit) => $debit->due_date->year));
     }
 
     /**

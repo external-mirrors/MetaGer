@@ -10,17 +10,20 @@ return [
     | Fallback used by Contact/Company/Household::effectiveDonationReceiptPreference()
     | when the payer has no donation_receipt_preference of their own — i.e. no
     | migrated CiviCRM preference (see CiviCrmImporter::importContacts()) and
-    | nobody has changed it since. One of "immediate" or "annual".
+    | nobody has changed it since. One of "never", "immediate" or "annual".
     |
-    | CiviCRM's own Spendenbescheinigung.php::shouldCreateReceipt() generated no
-    | receipt at all when neither the contribution nor the contact had a
-    | preference set. That was never a deliberate default, just what happens
-    | when nothing was configured — this setting replaces it with an actual,
-    | changeable decision.
+    | Default is "never": most donors never ask for a receipt, and generating
+    | one unasked is a bigger mistake (an unwanted PDF, a wrong assumption
+    | about what someone wants mailed to them) than not generating one someone
+    | later requests — that case is DonationReceiptGenerator::generateForPayer(),
+    | available on demand regardless of this setting. CiviCRM's own
+    | Spendenbescheinigung.php::shouldCreateReceipt() also generated nothing
+    | when neither the contribution nor the contact had a preference set, so
+    | this default matches existing practice rather than changing it.
     |
     */
 
-    "donation_receipt_default_preference" => env("ASSOC_DONATION_RECEIPT_DEFAULT_PREFERENCE", "annual"),
+    "donation_receipt_default_preference" => env("ASSOC_DONATION_RECEIPT_DEFAULT_PREFERENCE", "never"),
 
     /*
     |--------------------------------------------------------------------------

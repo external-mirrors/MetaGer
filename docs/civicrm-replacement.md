@@ -286,23 +286,36 @@ regenerating/reprinting a receipt shouldn't mean the debit needs receipting agai
 `assoc_donation_receipts` gained a `source` enum (`donation`/`membership`) — a receipt never mixes
 the two, matching the German certificate's distinct mandatory wording for each.
 
-**`DonationReceiptGenerator`** exposes three entry points, all operating only on `status = executed,
+**`DonationReceiptGenerator`** exposes four entry points, all operating only on `status = executed,
 donation_receipt_id IS NULL` debits:
 
-1. `generateSingle(Debit $debit)` — the on-demand capability. Bypasses the payer's preference
-   entirely: an admin choosing to generate a receipt right now *is* the decision every preference
-   check exists to make. Wired to a "Bescheinigung erstellen" button on the member/household admin
-   page's debits table (`_debits.blade.php`).
-2. `generateImmediate()` — every eligible debit whose effective preference is `immediate`, one
+1. `generateSingle(Debit $debit)` — on-demand, for one specific debit. Bypasses the payer's
+   preference entirely: an admin choosing to generate a receipt right now *is* the decision every
+   preference check exists to make. Wired to a "Bescheinigung erstellen" button on the
+   member/household admin page's debits table (`_debits.blade.php`).
+2. `generateForPayer(Contact|Company|Household $payer, string $source)` — on-demand, for every
+   outstanding debit of one source for one payer, folded into a single receipt. The real-world case
+   this exists for: a donor with several unreceipted payments (typically because their preference
+   was "never"/unset, the actual default — see below) calls and asks for one now covering
+   everything so far. Wired to "Spendenbescheinigung/Beitragsbescheinigung für N offene …
+   erstellen" buttons on the member/household page, shown only when something is outstanding.
+   Same preference bypass as `generateSingle()`.
+3. `generateImmediate()` — every eligible debit whose effective preference is `immediate`, one
    receipt per debit.
-3. `generateAnnualBatch(int $year)` — one receipt per payer+source, covering every eligible debit
+4. `generateAnnualBatch(int $year)` — one receipt per payer+source, covering every eligible debit
    due in `$year` or earlier, for payers whose effective preference is `annual` — the catch-up
    CiviCRM's "Jährlich" performed for anything before the first of January.
 
-All three are reachable via `assoc:generate-donation-receipts` (`--debit=<id>` repeatable,
-`--year=YYYY`, or no options for the immediate batch — mutually exclusive).
-"Effective preference" is `$payer->donation_receipt_preference ?? config('assoc.donation_receipt_default_preference')`
-(default `annual`, `.env`-overridable).
+`generateImmediate()`/`generateAnnualBatch()` are reachable via `assoc:generate-donation-receipts`
+(plus `--debit=<id>` repeatable for `generateSingle()`, `--year=YYYY` for the annual batch — mutually
+exclusive); `generateForPayer()` is admin-UI-only, since its input is naturally "whichever payer's
+page a staff member is looking at", not something a cron would supply. "Effective preference" is
+`$payer->donation_receipt_preference ?? config('assoc.donation_receipt_default_preference')`,
+**default `never`** (`.env`-overridable) — most donors never ask for a receipt, and generating one
+unasked is a worse mistake than not generating one someone later requests via `generateForPayer()`.
+The member/household admin page also carries a small form to set a payer's own preference
+(`/admin/assoc/payers/{type}/{id}/donation-receipt-preference`) — the "and immediately in the
+future" half of the same real-world request.
 
 **Preference migration.** `CiviCrmImporter::importDonationReceiptPreferences()` (called from
 `import()`, so `assoc:import-civicrm` picks it up automatically) reads the "Bescheinigungen" custom

@@ -143,8 +143,10 @@ it.**
 
 ## Where it stands right now
 
-- MR !2478 pipeline green as of commit `fc7ccbab4`.
-- Local suite: 1369 passed, 1 skipped, no known failures.
+- MR !2478 pipeline green as of commit `fc7ccbab4`; phases 4 and 5 have since been pushed on top.
+- Local suite: 1440 passed, 1 skipped, one known pre-existing failure unrelated to this branch
+  (`LogsAdminDeleteTest` — the developer's local `database.sqlite` has drifted from migrations,
+  `logs_access_key` is missing `updated_at`; nothing this project touches).
 - Nothing has been merged to `development` yet — this is all still on `crm-replacement-schema`,
   under active review/iteration.
 
@@ -154,18 +156,19 @@ it.**
 2. ~~CiviCRM importer~~ — done (`4308c8e64`).
 3. ~~Read-only admin UI~~ — done (`9ed4a26e9`, CI fixed by `7636dea21`/`fc7ccbab4`).
 4. ~~Shadow-mode bank-statement matching~~ — done, see below.
-5. **Donation receipts** — next up. Port `de.suma-ev.bescheinigungen`'s Zuwendungsbestätigung
-   generation (mpdf, address-completeness gating, the German number-to-words converter) onto
-   `assoc_donation_receipts`.
-6. **Cutover** — the SEPA-generation port (`de.suma-ev.donation-debit`'s pain.008.001.02 logic),
-   wiring `ChargeKeys`-equivalent keymanager charging onto this schema (reuse the existing
-   production keymanager credential — already decided, no new credential needed), and switching
-   `Zahlungsstatus`-derived writes over from CiviCRM. `ChargeKeys.php`'s hardcoded bearer token
-   needs rotating at this point (see extension inventory above).
+5. ~~Donation receipts~~ — done, see below.
+6. **Cutover** — next up. The SEPA-generation port (`de.suma-ev.donation-debit`'s pain.008.001.02
+   logic), wiring `ChargeKeys`-equivalent keymanager charging onto this schema (reuse the existing
+   production keymanager credential — already decided, no new credential needed), switching
+   `Zahlungsstatus`-derived writes over from CiviCRM, and turning phase 4's shadow-mode matcher and
+   phase 5's manual-only receipt generation into the real, automatic thing (flipping
+   `assoc_debits.status` to `executed` on a confirmed match — deliberately not built yet, see phase
+   4's section). `ChargeKeys.php`'s hardcoded bearer token needs rotating at this point (see
+   extension inventory above).
 7. **Mass email** — deliberately last, per explicit prior instruction. Still undecided between
    keeping/improving the WordPress+Newsletter-plugin setup or adopting listmonk.
 
-None of phases 5-7 have been started. The natural next step on resume is phase 5, but confirm with
+None of phase 6/7 have been started. The natural next step on resume is phase 6, but confirm with
 whoever picks this up before starting — the mass-email and keymanager-payment-phase-timing
 questions above are still open and may reorder things.
 
@@ -237,3 +240,111 @@ No file-upload web form was built — import is CLI-only (`assoc:import-bank-sta
 admin UI (`/admin/assoc/bank-statements`) is triage-only: list (filterable unmatched/matched/all),
 a per-line detail page to search pending debits/recur contributions by account holder or mandate
 and assign one manually, and a button to re-run the automatic cascade.
+
+### Phase 5 — donation receipts
+
+Generates `assoc_donation_receipts` (Zuwendungsbestätigung/Beitragsbescheinigung) from executed,
+unreceipted `assoc_debits`, ported from `de.suma-ev.bescheinigungen`'s
+`Bescheinigungen/Spendenbescheinigung.php`. Confirmed with whoever picked this up (see prior
+session) before starting, because the schema `assoc_donation_receipts` already had — one yearly
+total per payer, from phase 1, written before the extension source had been read — didn't match
+what the original extension actually does (per-contribution, donation vs. dues split, a
+Sofort/Jährlich/Niemals preference). The direction taken: extend the schema to keep that real
+behaviour, specifically:
+
+- the ability to generate a single receipt for one contribution on demand, not just as part of a
+  batch;
+- one preference *per payer* that applies to every future donation/dues payment ("global" in the
+  sense of "global for that person", not one system-wide value) plus an actual system-wide default
+  for payers with no preference of their own — CiviCRM's real behaviour, `shouldCreateReceipt()`,
+  generated nothing at all when neither the contribution nor the contact had a preference set; this
+  makes "nothing configured" mean something instead of silently never receipting;
+- existing CiviCRM preferences correctly migrated in.
+
+```
+metager/database/migrations/2026_09_04_090080_add_donation_receipt_tracking.php
+metager/app/Models/Assoc/Concerns/HasDonationReceiptPreference.php
+metager/app/Assoc/{NumberToGermanWords,DonationReceiptGenerator,DonationReceiptPdf}.php
+metager/app/Console/Commands/GenerateDonationReceipts.php               assoc:generate-donation-receipts
+metager/app/Http/Controllers/DonationReceiptController.php              the write-side triage UI
+metager/resources/views/assoc/donation_receipt_pdf.blade.php            the certificate itself
+metager/resources/views/admin/assoc/donation_receipts.blade.php
+metager/config/assoc.php
+metager/tests/Unit/Assoc/{NumberToGermanWords,DonationReceiptGenerator,GenerateDonationReceiptsCommand}Test.php
+metager/tests/Feature/Assoc/DonationReceiptAdminTest.php
+```
+
+**Schema.** `assoc_contacts`/`assoc_companies`/`assoc_households` each gained a nullable
+`donation_receipt_preference` enum (`never`/`immediate`/`annual`) — CiviCRM's two independent
+contact-level settings (`Bescheinigungen.Spende_bescheinigen` for donations,
+`Mitgliedsbeitrag_bescheinigen` for dues) collapsed into one, since nobody asked for the split to
+survive and German nonprofit law treats both as the same instrument (a Zuwendungsbestätigung) with
+only the checkbox on the form differing. `assoc_debits` gained a nullable `donation_receipt_id` —
+which receipt (if any) this debit's payment has already been folded into, the equivalent of
+CiviCRM's `civicrm_contribution.receipt_date` but as a link rather than a bare timestamp, since
+regenerating/reprinting a receipt shouldn't mean the debit needs receipting again. And
+`assoc_donation_receipts` gained a `source` enum (`donation`/`membership`) — a receipt never mixes
+the two, matching the German certificate's distinct mandatory wording for each.
+
+**`DonationReceiptGenerator`** exposes three entry points, all operating only on `status = executed,
+donation_receipt_id IS NULL` debits:
+
+1. `generateSingle(Debit $debit)` — the on-demand capability. Bypasses the payer's preference
+   entirely: an admin choosing to generate a receipt right now *is* the decision every preference
+   check exists to make. Wired to a "Bescheinigung erstellen" button on the member/household admin
+   page's debits table (`_debits.blade.php`).
+2. `generateImmediate()` — every eligible debit whose effective preference is `immediate`, one
+   receipt per debit.
+3. `generateAnnualBatch(int $year)` — one receipt per payer+source, covering every eligible debit
+   due in `$year` or earlier, for payers whose effective preference is `annual` — the catch-up
+   CiviCRM's "Jährlich" performed for anything before the first of January.
+
+All three are reachable via `assoc:generate-donation-receipts` (`--debit=<id>` repeatable,
+`--year=YYYY`, or no options for the immediate batch — mutually exclusive).
+"Effective preference" is `$payer->donation_receipt_preference ?? config('assoc.donation_receipt_default_preference')`
+(default `annual`, `.env`-overridable).
+
+**Preference migration.** `CiviCrmImporter::importDonationReceiptPreferences()` (called from
+`import()`, so `assoc:import-civicrm` picks it up automatically) reads the "Bescheinigungen" custom
+group. Unlike Beitrag/Mastodon/MetaGer_Key, this group's table/column names were never confirmed
+against a production dump — it exists only through CiviCRM's admin UI, not shipped extension code,
+so nothing in the repository recorded its generated names. Resolved dynamically instead of guessed:
+`civicrm_custom_group`/`civicrm_custom_field` are core CiviCRM schema, present and stable regardless
+of which numeric suffix a given install generated for the value table. A missing group, missing
+fields, or (in a test fixture) a missing `civicrm_custom_group` table entirely all degrade to
+"zero preferences imported" rather than failing the whole import — the rest of the data doesn't
+depend on it, so a wrong assumption here shouldn't cost contacts/debits/memberships too. **Not yet
+run against the real "Bescheinigungen" group** — needs a production dry-run
+(`assoc:import-civicrm --dry-run`) to confirm the group/field names actually resolve before this is
+trusted. When a contact's two CiviCRM settings disagree, the donation-side one wins arbitrarily and
+the conflict is counted in the import summary (`donation_receipt_preference_conflicts`) rather than
+silently resolved either way.
+
+**The PDF.** `mpdf/mpdf` (same library the original used) renders
+`resources/views/assoc/donation_receipt_pdf.blade.php` — the original's Smarty template ported to
+Blade, keeping the legally-mandated boilerplate text verbatim (the §10b EStG reference, the
+Finanzamt Hannover-Nord exemption details, the §60a AO note, the liability warning) since altering
+it risks invalidating the certificate for German tax purposes. `NumberToGermanWords` is a clean
+rewrite of `zahl2wort()`, not a port — the original hand-cased 1–4-digit numbers with duplicated
+branches and silently produced wrong output above 9999; this recurses over hundreds/thousands and
+supports up to 999999, with 21 test cases including the "eins vs. ein" grammar distinction
+(`einhunderteins` but `einundzwanzig`).
+
+**Not ported, deliberately deferred, nobody asked for it in this pass:**
+- the thank-you letter (`createDonorThankyou`) — needs a `thankyou` free-text field nothing here
+  imports;
+- the embedded suma-ev/MetaGer logos and the >2-line-item multi-page layout — visual polish, no
+  legal weight;
+- PayPal-sourced receipts — phase 4 only covers the Hibiscus/bank-statement side of confirming a
+  payment landed.
+- **The signee and signature image are configuration, not code.** The original
+  (`CRM/Bescheinigungen/Form/DownloadReceipts.php`) hardcoded two board members' names and their
+  scanned JPEG signatures directly into extension source — which puts a personal signature image in
+  version control. `config('assoc.donation_receipt_signee_name'/'_signature_path')`, both env-only,
+  replace that; leaving them unset prints no signature image and the receipt gets signed by hand.
+  Nothing is configured yet in any environment.
+- **`assoc_debits.status` flipping to `executed` automatically is still not built** — same
+  shadow-mode boundary as phase 4. Every debit receiptable today got its `executed` status from
+  `CiviCrmImporter`, i.e. from CiviCRM having already executed it. `generateSingle()`/the annual
+  batch are safe to run pre-cutover for exactly that reason: nothing here can manufacture a receipt
+  for money that was never actually collected.

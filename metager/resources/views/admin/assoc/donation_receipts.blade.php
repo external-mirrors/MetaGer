@@ -22,10 +22,7 @@
                         <td>{{ $receipt->generated_at?->format("d.m.Y") }}</td>
                         <td>{{ $receipt->year }}</td>
                         <td>{{ $receipt->sourceLabel() }}</td>
-                        <td>
-                            {{ $payer?->first_name ?? $payer?->name ?? $payer?->household_name ?? "—" }}
-                            {{ $payer?->last_name ?? "" }}
-                        </td>
+                        <td>{{ $payer instanceof \App\Models\Assoc\Contact ? $payer->name() : ($payer->name ?? "—") }}</td>
                         <td>{{ number_format($receipt->total_amount, 2, ",", ".") }}&euro;</td>
                         <td>
                             @if($receipt->pdf_path)

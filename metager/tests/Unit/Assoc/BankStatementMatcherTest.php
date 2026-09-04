@@ -4,8 +4,8 @@ namespace Tests\Unit\Assoc;
 
 use App\Assoc\BankStatementMatcher;
 use App\Models\Assoc\BankStatementLine;
+use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
-use App\Models\Assoc\Household;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concerns\UsesInMemorySqlite;
@@ -27,15 +27,15 @@ class BankStatementMatcherTest extends TestCase
         $this->setUpInMemorySqlite();
     }
 
-    private function household(): Household
+    private function contact(): Contact
     {
-        return Household::create(["household_name" => "Familie Lovelace"]);
+        return Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
     }
 
-    private function debit(Household $household, array $overrides = []): Debit
+    private function debit(Contact $contact, array $overrides = []): Debit
     {
         return Debit::create(array_merge([
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "account_holder" => "Familie Lovelace",
@@ -59,7 +59,7 @@ class BankStatementMatcherTest extends TestCase
 
     public function testMatchesByEndToEndReferenceOnAPendingDebit(): void
     {
-        $debit = $this->debit($this->household(), ["end_to_end_reference" => "E2E-42"]);
+        $debit = $this->debit($this->contact(), ["end_to_end_reference" => "E2E-42"]);
         $line = $this->line();
 
         $matched = (new BankStatementMatcher())->match($line, mandate: null, endToEndReference: "E2E-42");
@@ -74,7 +74,7 @@ class BankStatementMatcherTest extends TestCase
 
     public function testMatchesByStructuredMandateOnAPendingDebit(): void
     {
-        $debit = $this->debit($this->household());
+        $debit = $this->debit($this->contact());
         $line = $this->line();
 
         $matched = (new BankStatementMatcher())->match($line, mandate: "M1");
@@ -88,9 +88,9 @@ class BankStatementMatcherTest extends TestCase
 
     public function testMatchesByStructuredMandateOnAnActiveRecurContribution(): void
     {
-        $household = $this->household();
+        $contact = $this->contact();
         $recur = RecurContribution::create([
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "amount" => "10.00",
@@ -111,9 +111,9 @@ class BankStatementMatcherTest extends TestCase
 
     public function testPrefersTheDebitWhoseAmountMatchesExactlyAmongSeveralOnTheSameMandate(): void
     {
-        $household = $this->household();
-        $this->debit($household, ["amount" => "5.00", "due_date" => "2026-01-01"]);
-        $wanted = $this->debit($household, ["amount" => "10.00", "due_date" => "2026-03-01"]);
+        $contact = $this->contact();
+        $this->debit($contact, ["amount" => "5.00", "due_date" => "2026-01-01"]);
+        $wanted = $this->debit($contact, ["amount" => "10.00", "due_date" => "2026-03-01"]);
         $line = $this->line(["amount" => "10.00"]);
 
         (new BankStatementMatcher())->match($line, mandate: "M1");
@@ -124,9 +124,9 @@ class BankStatementMatcherTest extends TestCase
 
     public function testFallsBackToTheEarliestDueDebitWhenNoAmountMatches(): void
     {
-        $household = $this->household();
-        $earliest = $this->debit($household, ["amount" => "5.00", "due_date" => "2026-01-01"]);
-        $this->debit($household, ["amount" => "7.00", "due_date" => "2026-03-01"]);
+        $contact = $this->contact();
+        $earliest = $this->debit($contact, ["amount" => "5.00", "due_date" => "2026-01-01"]);
+        $this->debit($contact, ["amount" => "7.00", "due_date" => "2026-03-01"]);
         $line = $this->line(["amount" => "10.00"]);
 
         (new BankStatementMatcher())->match($line, mandate: "M1");
@@ -137,7 +137,7 @@ class BankStatementMatcherTest extends TestCase
 
     public function testMatchesViaRegexWhenTheMandateAppearsAsAWholeWordInTheFreeText(): void
     {
-        $debit = $this->debit($this->household());
+        $debit = $this->debit($this->contact());
         $line = $this->line(["reference" => "Beitrag M1 Januar"]);
 
         $matched = (new BankStatementMatcher())->match($line);
@@ -150,7 +150,7 @@ class BankStatementMatcherTest extends TestCase
 
     public function testFallsBackToSubstringWhenTheMandateIsGluedToOtherText(): void
     {
-        $debit = $this->debit($this->household());
+        $debit = $this->debit($this->contact());
         // "M1" is not a whole word here — bounded on the right by "0" — so the
         // regex tier must not fire; only the looser substring tier should.
         $line = $this->line(["reference" => "BeitragM10Januar"]);
@@ -165,7 +165,7 @@ class BankStatementMatcherTest extends TestCase
 
     public function testLeavesALineUnmatchedWhenNothingCorroboratesIt(): void
     {
-        $this->debit($this->household());
+        $this->debit($this->contact());
         $line = $this->line(["reference" => "Vielen Dank für die Spende"]);
 
         $matched = (new BankStatementMatcher())->match($line);
@@ -178,7 +178,7 @@ class BankStatementMatcherTest extends TestCase
     public function testRematchUnresolvedPicksUpDebitsCreatedAfterTheLine(): void
     {
         $line = $this->line(["reference" => "Beitrag M1 Januar"]);
-        $debit = $this->debit($this->household());
+        $debit = $this->debit($this->contact());
 
         $result = (new BankStatementMatcher())->rematchUnresolved();
 
@@ -191,7 +191,7 @@ class BankStatementMatcherTest extends TestCase
 
     public function testDoesNotMatchAnAlreadyExecutedDebit(): void
     {
-        $this->debit($this->household(), ["status" => "executed"]);
+        $this->debit($this->contact(), ["status" => "executed"]);
         $line = $this->line();
 
         $matched = (new BankStatementMatcher())->match($line, mandate: "M1");

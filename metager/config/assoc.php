@@ -7,7 +7,7 @@ return [
     | Donation receipt default preference
     |--------------------------------------------------------------------------
     |
-    | Fallback used by Contact/Company/Household::effectiveDonationReceiptPreference()
+    | Fallback used by Contact/Company::effectiveDonationReceiptPreference()
     | when the payer has no donation_receipt_preference of their own — i.e. no
     | migrated CiviCRM preference (see CiviCrmImporter::importContacts()) and
     | nobody has changed it since. One of "never", "immediate" or "annual".

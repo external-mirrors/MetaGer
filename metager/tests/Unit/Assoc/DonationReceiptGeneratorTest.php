@@ -7,7 +7,6 @@ use App\Assoc\DonationReceiptPdf;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\DonationReceipt;
-use App\Models\Assoc\Household;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Storage;
 use Tests\Concerns\UsesInMemorySqlite;
@@ -42,12 +41,10 @@ class DonationReceiptGeneratorTest extends TestCase
         ], $overrides));
     }
 
-    private function debit(Contact|Household $payer, array $overrides = []): Debit
+    private function debit(Contact $payer, array $overrides = []): Debit
     {
-        $payerColumn = $payer instanceof Contact ? "contact_id" : "household_id";
-
         return Debit::create(array_merge([
-            $payerColumn => $payer->id,
+            "contact_id" => $payer->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "account_holder" => "Ada Lovelace",

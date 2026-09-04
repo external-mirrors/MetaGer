@@ -5,8 +5,8 @@ namespace Tests\Unit\Assoc;
 use App\Assoc\BankStatementImporter;
 use App\Assoc\BankStatementMatcher;
 use App\Models\Assoc\BankStatementLine;
+use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
-use App\Models\Assoc\Household;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concerns\UsesInMemorySqlite;
 use Tests\TestCase;
@@ -172,9 +172,9 @@ class BankStatementImporterTest extends TestCase
 
     public function testAStructuredMandateIdIsPassedToTheMatcherAndResolvedImmediately(): void
     {
-        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
         Debit::create([
-            "household_id" => $household->id,
+            "contact_id" => $contact->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "account_holder" => "Familie Lovelace",

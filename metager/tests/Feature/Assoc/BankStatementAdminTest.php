@@ -3,8 +3,8 @@
 namespace Tests\Feature\Assoc;
 
 use App\Models\Assoc\BankStatementLine;
+use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
-use App\Models\Assoc\Household;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concerns\UsesInMemorySqlite;
 use Tests\TestCase;
@@ -27,9 +27,9 @@ class BankStatementAdminTest extends TestCase
         $this->setUpInMemorySqlite();
     }
 
-    private function household(): Household
+    private function contact(): Contact
     {
-        return Household::create(["household_name" => "Familie Lovelace"]);
+        return Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
     }
 
     public function testTheIndexDefaultsToUnmatchedLines(): void
@@ -41,7 +41,7 @@ class BankStatementAdminTest extends TestCase
             "booked_at" => "2026-01-05",
         ]);
         $debit = Debit::create([
-            "household_id" => $this->household()->id,
+            "contact_id" => $this->contact()->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "account_holder" => "Familie Lovelace",
@@ -94,7 +94,7 @@ class BankStatementAdminTest extends TestCase
             "booked_at" => "2026-01-05",
         ]);
         Debit::create([
-            "household_id" => $this->household()->id,
+            "contact_id" => $this->contact()->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "account_holder" => "Familie Lovelace",
@@ -121,7 +121,7 @@ class BankStatementAdminTest extends TestCase
             "booked_at" => "2026-01-05",
         ]);
         $debit = Debit::create([
-            "household_id" => $this->household()->id,
+            "contact_id" => $this->contact()->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "account_holder" => "Familie Lovelace",
@@ -149,7 +149,7 @@ class BankStatementAdminTest extends TestCase
     public function testAnAlreadyMatchedLineCannotBeMatchedAgain(): void
     {
         $debit = Debit::create([
-            "household_id" => $this->household()->id,
+            "contact_id" => $this->contact()->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "account_holder" => "Familie Lovelace",
@@ -185,7 +185,7 @@ class BankStatementAdminTest extends TestCase
             "booked_at" => "2026-01-05",
         ]);
         $debit = Debit::create([
-            "household_id" => $this->household()->id,
+            "contact_id" => $this->contact()->id,
             "source" => "donation",
             "iban" => "DE02120300000000202051",
             "account_holder" => "Familie Lovelace",

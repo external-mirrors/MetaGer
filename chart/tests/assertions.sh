@@ -202,6 +202,76 @@ else
 fi
 
 echo
+echo "Valkey survives a node drain:"
+
+# ---------------------------------------------------------------------------
+# A drain can only take one valkey pod at a time.
+# ---------------------------------------------------------------------------
+#
+# kubectl drain goes through the Eviction API, which honours a
+# PodDisruptionBudget; sentinel.quorum above is 2 of 3, so losing two pods to
+# back-to-back evictions is a lost quorum, not a failover. Without this PDB a
+# drain has no such protection at all.
+
+if grep -q 'name: golden-valkey$' "$WORK/rendered.yaml" && grep -A20 'kind: PodDisruptionBudget' "$WORK/rendered.yaml" | grep -q 'name: golden-valkey$'; then
+    pdb_min_available="$(capture awk '
+        /^kind: PodDisruptionBudget$/ { inpdb = 1 }
+        inpdb && /name: golden-valkey$/ { named = 1 }
+        named && /^  minAvailable: /{ print $2; exit }
+    ' "$WORK/rendered.yaml")"
+
+    if [[ "${pdb_min_available:-0}" -ge 2 ]]; then
+        pass "valkey PodDisruptionBudget keeps quorum (minAvailable ${pdb_min_available})"
+    else
+        fail "valkey PodDisruptionBudget allows quorum loss" \
+            "minAvailable is '${pdb_min_available:-unset}', needs to be at least 2 of 3"
+    fi
+else
+    fail "no PodDisruptionBudget is rendered for valkey" "valkey.pdb.enabled must be true"
+fi
+
+# ---------------------------------------------------------------------------
+# The pod outlives its own graceful-failover hook.
+# ---------------------------------------------------------------------------
+#
+# The subchart's preStop hook can take ~45s to hand off a master cleanly (a
+# 22s write pause, then up to 20s confirming the failover, then settle time).
+# terminationGracePeriodSeconds below that figure means a drained master gets
+# SIGKILLed mid-handoff instead of completing it — a lost quorum member, not a
+# graceful one.
+
+grace_period="$(capture awk '/^kind: StatefulSet$/ { inss = 1 }
+    inss && /terminationGracePeriodSeconds: / { print $2; exit }' "$WORK/rendered.yaml")"
+if [[ "${grace_period:-0}" -ge 60 ]]; then
+    pass "terminationGracePeriodSeconds gives the preStop hook room to finish (${grace_period}s)"
+else
+    fail "terminationGracePeriodSeconds is too short for a graceful failover" \
+        "got ${grace_period:-unset}s, the subchart's own hook can take ~45s"
+fi
+
+
+# ---------------------------------------------------------------------------
+# A drain is less likely to expose more than one quorum member at a time,
+# because they were steered apart to begin with.
+# ---------------------------------------------------------------------------
+#
+# The PDB above only governs the Eviction API, not a node dying outright — if
+# two of the three replicas were co-located, losing that one node is a lost
+# quorum regardless of how gracefully it happens. Preferred rather than
+# required (same choice the app Deployments make): it doesn't guarantee
+# spread under node pressure, but it never leaves a pod stuck Pending either.
+
+has_soft_anti_affinity="$(capture awk '/^kind: StatefulSet$/ { inss = 1 }
+    inss && /preferredDuringSchedulingIgnoredDuringExecution:/ { found = 1 }
+    inss && found && /topologyKey: kubernetes.io\/hostname/ { print "yes"; exit }' "$WORK/rendered.yaml")"
+if [[ "$has_soft_anti_affinity" == "yes" ]]; then
+    pass "valkey pods are steered to spread across nodes"
+else
+    fail "valkey has no pod anti-affinity" \
+        "two of the three sentinel-quorum members could land on the same node"
+fi
+
+echo
 if [[ $failures -eq 0 ]]; then
     echo "All chart assertions passed."
 else

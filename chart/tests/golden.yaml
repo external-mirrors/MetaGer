@@ -1,4 +1,24 @@
 ---
+# Source: chart/charts/valkey/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: golden-valkey
+  namespace: metager
+  labels:
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: golden
+      app.kubernetes.io/name: valkey
+
+---
 # Source: chart/templates/pdb.yaml
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -1997,7 +2017,16 @@ spec:
             name: golden-valkey
         - name: tmp
           emptyDir: {}
-      terminationGracePeriodSeconds: 30
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: valkey
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      terminationGracePeriodSeconds: 60
 
 ---
 # Source: chart/templates/ingress-reverb.yaml

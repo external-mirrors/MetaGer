@@ -41,17 +41,19 @@ class MembershipTest extends TestCase
     }
 
     /**
-     * The status column carries every value CiviCrm.php and
-     * MembershipPaymentReminder actually read or write today (Zahlungsstatus:
-     * Eingetreten, Okay, Erste/Zweite Zahlungserinnerung, Unterbrochen,
-     * Ausgetreten, Verstorben) — pinned here so an import or the reminder
-     * cron's future port can't silently drop one.
+     * The status column carries every Zahlungsstatus option value confirmed
+     * against the production civicrm_option_value/civicrm_value_beitrag_8
+     * tables (option_group_id 118) — not just the ones
+     * App\Models\Membership\CiviCrm and MembershipPaymentReminder happen to
+     * query for today. "warte_auf_lastschrifteingang" in particular is easy to
+     * miss from reading the app code alone (nothing queries for it by name)
+     * but covers 575 of 2311 membership rows in the 2026-09-04 dump.
      */
     public function testEveryKnownZahlungsstatusValueIsAccepted(): void
     {
         $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
 
-        $statuses = ["eingetreten", "okay", "erste_zahlungserinnerung", "zweite_zahlungserinnerung", "unterbrochen", "ausgetreten", "verstorben"];
+        $statuses = ["eingetreten", "okay", "warte_auf_lastschrifteingang", "erste_zahlungserinnerung", "zweite_zahlungserinnerung", "unterbrochen", "ausgetreten", "verstorben"];
         foreach ($statuses as $status) {
             $membership = Membership::create([
                 "contact_id" => $contact->id,
@@ -86,6 +88,28 @@ class MembershipTest extends TestCase
         $this->assertSame("M20260101120000", $reloaded->payment_reference);
         $this->assertNull($reloaded->paypal_vault_id);
         $this->assertSame("2026-01-01", $reloaded->join_date->toDateString());
+    }
+
+    public function testReducedUntilLocaleAndMastodonIdRoundTrip(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "reduced" => true,
+            "interval" => "monthly",
+            "amount" => "2.50",
+            "payment_method" => "directdebit",
+            "status" => "okay",
+            "reduced_until" => "2027-01-01",
+            "locale" => "de-DE",
+            "mastodon_id" => "12345",
+        ]);
+
+        $reloaded = Membership::findOrFail($membership->id);
+        $this->assertSame("2027-01-01", $reloaded->reduced_until->toDateString());
+        $this->assertSame("de-DE", $reloaded->locale);
+        $this->assertSame("12345", $reloaded->mastodon_id);
     }
 
     public function testCivicrmIdMustBeUniqueWhenPresent(): void

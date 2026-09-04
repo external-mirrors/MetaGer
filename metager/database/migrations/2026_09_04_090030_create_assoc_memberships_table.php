@@ -39,16 +39,22 @@ return new class extends Migration {
             // only this opaque reference PayPal resolves on its side.
             $table->string("paypal_vault_id")->nullable();
             $table->date("join_date")->nullable();
-            // Canonical values for CiviCRM's "Beitrag.Zahlungsstatus" custom field,
-            // as actually read/written by App\Models\Membership\CiviCrm and
-            // MembershipPaymentReminder today: Eingetreten, Okay,
-            // Erste Zahlungserinnerung, Zweite Zahlungserinnerung, Unterbrochen,
-            // Ausgetreten, Verstorben. Stored here as the canonical identifier,
-            // not the German label, so the import path needs to map one to the
-            // other rather than copy the label verbatim.
+            // Canonical values for CiviCRM's "Beitrag.Zahlungsstatus" custom field
+            // (option_group_id 118 in the production dump) — confirmed against real
+            // data, not just the values App\Models\Membership\CiviCrm and
+            // MembershipPaymentReminder happen to query for today: those two only
+            // ever read/write Eingetreten, Okay, Erste/Zweite Zahlungserinnerung,
+            // Unterbrochen, Ausgetreten, Verstorben, but "Warte auf
+            // Lastschrifteingang" (awaiting the direct-debit funds to arrive) is a
+            // real option value too — value '2' in civicrm_value_beitrag_8, 575 of
+            // 2311 membership rows in the 2026-09-04 production dump. Missing it
+            // here would have made every one of those unimportable. Stored as the
+            // canonical identifier, not the German label, so the import path needs
+            // to map one to the other rather than copy the label verbatim.
             $table->enum("status", [
                 "eingetreten",
                 "okay",
+                "warte_auf_lastschrifteingang",
                 "erste_zahlungserinnerung",
                 "zweite_zahlungserinnerung",
                 "unterbrochen",
@@ -58,10 +64,24 @@ return new class extends Migration {
             $table->date("start_date")->nullable();
             $table->date("end_date")->nullable();
             $table->date("renewed_at")->nullable();
+            // "Beitrag.Erm_igt_bis" today — until when the reduced rate applies.
+            // FIND_REDUCTION_REMINDER reads this to warn a member their proof of
+            // eligibility is expiring; nullable because most members pay full rate.
+            $table->date("reduced_until")->nullable();
+            // "Beitrag.Locale" today — which language to send reminder/service
+            // emails in. Not derived from the contact: CiviCrm.php stores it
+            // per-membership, independently of any browser/account locale.
+            $table->string("locale")->nullable();
             // The MetaGer search key tied to this membership (see ChargeKeys in the
             // donation-debit extension). A plain identifier, not a foreign key —
             // keys are owned by the separate keymanager service.
             $table->uuid("key_id")->nullable();
+            // "Mastodon.Mastodon_ID" today — confirmed against the production dump
+            // to extend Membership, not Contact (civicrm_value_mastodon_10.entity_id
+            // is a foreign key to civicrm_membership): a contact who re-joins after
+            // lapsing could reasonably register a different Mastodon account against
+            // the new membership, so this belongs here and not on assoc_contacts.
+            $table->string("mastodon_id")->nullable();
             $table->timestamps();
         });
     }

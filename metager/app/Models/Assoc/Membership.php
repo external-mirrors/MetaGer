@@ -25,7 +25,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Carbon\Carbon|null $start_date
  * @property \Carbon\Carbon|null $end_date
  * @property \Carbon\Carbon|null $renewed_at
+ * @property \Carbon\Carbon|null $reduced_until
+ * @property string|null $locale
  * @property string|null $key_id
+ * @property string|null $mastodon_id
  */
 class Membership extends Model
 {
@@ -33,7 +36,7 @@ class Membership extends Model
 
     protected $table = "assoc_memberships";
 
-    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "status", "start_date", "end_date", "renewed_at", "key_id"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "status", "start_date", "end_date", "renewed_at", "reduced_until", "locale", "key_id", "mastodon_id"];
 
     protected $casts = [
         "reduced" => "boolean",
@@ -42,6 +45,7 @@ class Membership extends Model
         "start_date" => "date",
         "end_date" => "date",
         "renewed_at" => "date",
+        "reduced_until" => "date",
     ];
 
     public function contact(): BelongsTo

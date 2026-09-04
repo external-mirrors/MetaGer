@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
+ * @property int|null $civicrm_id
  * @property string|null $contact_id
  * @property string|null $company_id
  * @property string|null $household_id
@@ -31,7 +32,7 @@ class Debit extends Model
 
     protected $table = "assoc_debits";
 
-    protected $fillable = ["contact_id", "company_id", "household_id", "source", "iban", "account_holder", "amount", "mandate", "mandate_date", "status", "end_to_end_reference", "due_date", "reference"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "household_id", "source", "iban", "account_holder", "amount", "mandate", "mandate_date", "status", "end_to_end_reference", "due_date", "reference"];
 
     protected $casts = [
         "amount" => "decimal:2",

@@ -8,6 +8,7 @@ use App\Models\Assoc\Debit;
 use App\Models\Assoc\Household;
 use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concerns\UsesInMemorySqlite;
 use Tests\TestCase;
@@ -47,10 +48,23 @@ class ContactTest extends TestCase
             "contact_id" => $contact->id,
             "membership_type" => "person",
             "interval" => "annual",
+            "amount" => "17.00",
+            "payment_method" => "banktransfer",
             "status" => "okay",
         ]);
 
         $this->assertTrue($contact->membership()->first()->is($membership));
+    }
+
+    /**
+     * assoc:import-civicrm re-runs need this to upsert rather than duplicate.
+     */
+    public function testCivicrmIdMustBeUniqueWhenPresent(): void
+    {
+        Contact::create(["civicrm_id" => 42, "first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+
+        $this->expectException(QueryException::class);
+        Contact::create(["civicrm_id" => 42, "first_name" => "Grace", "last_name" => "Hopper", "email" => "grace@example.com"]);
     }
 
     public function testAContactCanBeACompanysContactPerson(): void

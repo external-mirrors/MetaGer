@@ -12,6 +12,10 @@ return new class extends Migration {
     {
         Schema::create('assoc_memberships', function (Blueprint $table) {
             $table->uuid('id')->primary(true);
+            // Set only for rows brought in by assoc:import-civicrm — the CiviCRM
+            // membership.id, so re-running the importer upserts instead of
+            // duplicating.
+            $table->unsignedInteger("civicrm_id")->nullable()->unique();
             // Exactly one of contact_id/company_id is set, same convention as
             // membership_applications.crm_contact vs. a company relation today —
             // enforced at the application layer, not a DB constraint.
@@ -20,6 +24,21 @@ return new class extends Migration {
             $table->enum("membership_type", ["person", "company"]);
             $table->boolean("reduced")->default(false);
             $table->enum("interval", ["monthly", "quarterly", "six-monthly", "annual"]);
+            $table->decimal("amount", 10, 2);
+            // How dues get collected — a member can be on banktransfer/paypal/card
+            // with no assoc_debits/assoc_recur_contributions row at all, so this
+            // can't be derived from those tables; it's what
+            // App\Models\Membership\CiviCrm's "Beitrag.Zahlungsweise" tracks today.
+            $table->enum("payment_method", ["banktransfer", "directdebit", "paypal", "card"]);
+            // The mandate/reference tying this membership to its debit row(s) —
+            // "Beitrag.Zahlungsreferenz" today. Nullable: banktransfer members have
+            // none.
+            $table->string("payment_reference")->nullable();
+            // PayPal/card billing agreement token — "Beitrag.PayPal_Vault" today.
+            // Not modelled as a table of its own; MetaGer never stores card data,
+            // only this opaque reference PayPal resolves on its side.
+            $table->string("paypal_vault_id")->nullable();
+            $table->date("join_date")->nullable();
             // Canonical values for CiviCRM's "Beitrag.Zahlungsstatus" custom field,
             // as actually read/written by App\Models\Membership\CiviCrm and
             // MembershipPaymentReminder today: Eingetreten, Okay,

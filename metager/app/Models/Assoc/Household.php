@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $id
+ * @property int|null $civicrm_id
  * @property string $household_name
  * @property string|null $street
  * @property string|null $postal_code
@@ -20,7 +21,7 @@ class Household extends Model
 
     protected $table = "assoc_households";
 
-    protected $fillable = ["household_name", "street", "postal_code", "city", "country"];
+    protected $fillable = ["civicrm_id", "household_name", "street", "postal_code", "city", "country"];
 
     public function debits(): HasMany
     {

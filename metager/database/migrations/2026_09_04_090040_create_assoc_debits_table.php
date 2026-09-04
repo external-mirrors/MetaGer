@@ -23,10 +23,15 @@ return new class extends Migration {
             $table->string("iban");
             $table->string("account_holder");
             $table->decimal("amount", 10, 2);
-            $table->string("mandate")->unique();
+            // Not unique: a SEPA mandate is reused for every collection made
+            // under it (renewals, recurring instalments), so the same value
+            // legitimately repeats across rows here.
+            $table->string("mandate")->index();
             $table->date("mandate_date");
             $table->enum("status", ["pending", "executed", "failed"])->default("pending");
-            $table->string("end_to_end_reference");
+            // The per-transaction identifier — this is what's actually
+            // unique per collection, not the mandate.
+            $table->string("end_to_end_reference")->unique();
             $table->date("due_date");
             $table->string("reference")->nullable();
             $table->timestamps();

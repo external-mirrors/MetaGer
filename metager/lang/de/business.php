@@ -100,6 +100,33 @@ return [
         "cta" => "Wenn Sie für eine Schule oder eine Behörde fragen, schreiben Sie uns — wir kennen die Formulare, die Sie brauchen.",
     ],
 
+    /**
+     * Die Hinweise, die von anderen Seiten hierher zeigen.
+     *
+     * Sie stehen hier und nicht in `sidebar.php`, `price.php` oder
+     * `account.php`, obwohl sie dort gerendert werden: diese Dateien gibt es in
+     * zwölf Sprachen, und {@see \Tests\Feature\AccountTranslationsTest} sowie
+     * {@see \Tests\Feature\KeyPagesTranslationsTest} rechnen ihre Schlüssel
+     * gegeneinander auf. Ein deutscher Zusatz darin wäre ein fehlender
+     * Schlüssel in elf anderen Sprachen — für einen Text, den es in elf anderen
+     * Sprachen gar nicht geben soll. (Genau daran ist die erste Fassung
+     * gescheitert: `sidebar.navBusiness`.)
+     */
+    "hints" => [
+        "sidebar" => "MetaGer für Firmen",
+        "price" => [
+            "heading" => "Sie fragen für eine Organisation?",
+            "text" => "Firmen, Schulen und Behörden rechnen bei uns keinen Verbrauch ab, sondern zahlen einen Mitgliedsbeitrag — und richten MetaGer als Standardsuchmaschine ein, ohne dass die Menschen an den Geräten etwas eingeben müssen.",
+            "action" => "MetaGer für Firmen",
+        ],
+        "account" => [
+            "heading" => "Sie laden für eine Organisation auf?",
+            "text" => "Dann ist eine Firmenmitgliedschaft der ruhigere Weg: ein Beitrag im Monat, Guthaben, das sich von selbst auffüllt, und MetaGer als Standardsuche auf allen Geräten.",
+            "action" => "MetaGer für Firmen",
+        ],
+        "form" => "Was eine Firmenmitgliedschaft umfasst und wie MetaGer bei Ihnen zur Standardsuche wird, steht auf <a href=\":linkbusiness\">MetaGer für Firmen</a>.",
+    ],
+
     "actions" => [
         "join" => "Firmenmitgliedschaft beantragen",
         "contact" => "Erst Fragen stellen",

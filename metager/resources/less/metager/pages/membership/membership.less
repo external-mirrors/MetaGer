@@ -63,8 +63,17 @@
       &.company {
         grid-template-columns: 1fr 0.5fr 1fr;
 
-        >h3 {
+        // Der Satz unter der Überschrift, der auf /firmen zeigt. Er liegt im
+        // selben Raster wie die Felder und muss deshalb über die volle Breite
+        // gehen — sonst steht er als schmale Spalte neben dem Firmennamen.
+        >h3,
+        >div.company-hint {
           grid-column: span 3;
+        }
+
+        >div.company-hint {
+          font-size: 0.9rem;
+          color: @color-light-grey;
         }
 
         input,
@@ -81,6 +90,7 @@
           grid-template-columns: 0.5fr 1fr;
 
           >h3,
+          >div.company-hint,
           .input-group.company,
           button[type=submit] {
             grid-column: span 2;
@@ -91,6 +101,7 @@
           grid-template-columns: 1fr;
 
           >h3,
+          >div.company-hint,
           .input-group.company,
           button[type=submit] {
             grid-column: span 1;

@@ -100,6 +100,24 @@
 	</ul>
 
 	{{--
+		Der Hinweis für Geschäftskunden, an der Stelle, an der jemand ausrechnet,
+		was MetaGer kostet. Wer das für eine Organisation tut, rechnet hier mit
+		Token-Paketen und kommt auf eine Zahl, die nach laufender Abrechnung
+		aussieht — die Firmenmitgliedschaft ist die Antwort, die er sucht, und
+		sie stand bisher nirgends.
+
+		Auf Deutsch und nur dort, wie jeder Hinweis auf die Mitgliedschaft:
+		App\Support\MembershipOffer.
+	--}}
+	@if(\App\Support\MembershipOffer::isAdvertised())
+		<div class="price-business" id="price-business">
+			<h3>@lang('business.hints.price.heading')</h3>
+			<p>@lang('business.hints.price.text')</p>
+			<a href="{{ route('business') }}">@lang('business.hints.price.action')</a>
+		</div>
+	@endif
+
+	{{--
 		Wohin es von hier aus weitergeht.
 
 		Diese Seite wird von der Seitenleiste, den Landing-Abschnitten

@@ -83,6 +83,11 @@
                 value="{{ $lastname }}" required />
         </div>
         @else
+        {{-- Wohin dieser Zweig führt. Die Umschaltung „Als Firma beitreten?“
+             steht seit jeher in der Überschrift, erklärt aber nichts — wer sie
+             gefunden hat, steht vor denselben Feldern und einem anderen
+             Beitrag, ohne zu wissen, was er dafür bekommt. --}}
+        <div class="company-hint">{!! __('business.hints.form', ['linkbusiness' => route('business')]) !!}</div>
         <div class="input-group company">
             @if(isset($errors) && $errors->has("company"))
                 @foreach($errors->get("company") as $error)
@@ -162,7 +167,9 @@
              sich daraus — ohne diesen Satz wirken die Beträge willkürlich. --}}
         <div id="membership-fee-company">Für Ihre Größenklasse sieht unsere <a
                 href="https://suma-ev.de/beitragsordnung/" target="_blank">Beitragsordnung</a> einen
-            Mitgliedsbeitrag ab <span>{{ number_format($feeMinimum, 0, ",", ".") }}€</span> im Monat vor.</div>
+            Mitgliedsbeitrag ab <span>{{ number_format($feeMinimum, 0, ",", ".") }}€</span> im Monat vor. Ihre
+            Mitarbeitenden suchen damit werbefrei, ohne selbst etwas einrichten oder eingeben zu müssen —
+            wie das aussieht, steht auf der <a href="{{ route('business') }}">Seite für Firmen</a>.</div>
         @endif
         @foreach($feePresets as $preset)
         <div class="input-group @if(!$editable)disabled @endif ">

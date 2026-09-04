@@ -189,6 +189,17 @@
         <span>{{ trans('sidebar.nav23') }}</span>
       </a>
     </li>
+    {{-- Der Weg für Firmen steht neben dem für Menschen und nicht in einem
+         Untermenü: wer hier nach einer Mitgliedschaft sucht und für eine
+         Organisation fragt, soll nicht erst im Beitrittsformular erfahren, dass
+         es diesen Zweig gibt. Unter derselben Sprachbedingung, weil dahinter
+         dasselbe deutsche Formular liegt. --}}
+    <li>
+      <a href="{{ route('business') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+      <img src="/img/svg-icons/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-business"> 
+        <span>{{ trans('business.hints.sidebar') }}</span>
+      </a>
+    </li>
     @endif
     <hr>
     <li>

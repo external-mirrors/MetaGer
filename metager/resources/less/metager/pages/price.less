@@ -114,6 +114,23 @@
     }
   }
 
+  // Der Hinweis für Geschäftskunden, direkt über dem Weiterweg. Abgesetzt wie
+  // der Kasten auf /firmen und aus demselben Grund: er richtet sich an eine
+  // andere Leserin als der Rest der Seite, und wer für sich selbst rechnet,
+  // soll ihn überspringen können.
+  .price-business {
+    margin-top: 3rem;
+    padding: 1.25rem;
+    border-radius: 8px;
+    border-left: 4px solid @metager-orange;
+    background-color: @background-color-mobile;
+
+    > h3 {
+      margin-top: 0;
+      font-size: 1.05rem;
+    }
+  }
+
   // Der Weiterweg am Seitenende — „Mein Konto"/„Zur Suche" für einen
   // angemeldeten Besucher, sonst „Jetzt loslegen"/„Ich habe bereits einen
   // Schlüssel". Dieselben Knöpfe wie die Guthaben-Aktionen auf /konto

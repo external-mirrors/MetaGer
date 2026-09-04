@@ -166,6 +166,74 @@ class MembershipAdvertisingTest extends TestCase
         $response->assertSee("account-tiers", false);
     }
 
+    // ── Die Firmenmitgliedschaft ─────────────────────────────────────────────
+
+    /**
+     * Vier neue Stellen, und dieselbe Regel.
+     *
+     * Die Hinweise auf /firmen bewerben dieselbe Mitgliedschaft wie die sechs
+     * darüber, nur den Zweig für Organisationen. Sie führen über /firmen in
+     * dasselbe deutsche Formular und stehen deshalb unter derselben Bedingung —
+     * das ist genau die Art, auf die diese Regel schon zweimal verloren
+     * gegangen ist, und der Grund, warum die vier hier stehen und nicht in
+     * {@see BusinessPageTest}.
+     */
+    public function testTheSidebarOffersTheBusinessPageInGermanOnly(): void
+    {
+        $this->get("/about", self::speaking("de-DE,de"))->assertOk()
+            ->assertSee("sidebar-img-business", false)
+            ->assertSee(route("business"), false);
+
+        $this->get("/about", self::speaking("en-US,en"))->assertOk()
+            ->assertDontSee("sidebar-img-business", false);
+    }
+
+    /**
+     * Auf /preise, weil dort jemand ausrechnet, was MetaGer kostet — und wer
+     * das für eine Organisation tut, rechnet mit dem falschen Modell.
+     */
+    public function testThePricePageOffersTheBusinessPageInGermanOnly(): void
+    {
+        $this->get("/preise", self::speaking("de-DE,de"))->assertOk()
+            ->assertSee('id="price-business"', false)
+            ->assertSeeText(__("business.hints.price.heading", locale: "de"));
+
+        $this->get("/preise", self::speaking("en-US,en"))->assertOk()
+            ->assertDontSee('id="price-business"', false);
+    }
+
+    /** Im Konto neben der Alternative für Einzelne, an derselben Kaufstelle. */
+    public function testTheChargeSectionOffersTheBusinessPageInGermanOnly(): void
+    {
+        $this->keyserverKnows();
+
+        $this->signedIn()->get("/konto", self::speaking("de-DE,de"))->assertOk()
+            ->assertSee('id="charge-business"', false)
+            ->assertSeeText(__("business.hints.account.heading", locale: "de"));
+
+        $this->keyserverKnows();
+
+        $this->signedIn()->get("/konto", self::speaking("en-US,en"))->assertOk()
+            ->assertDontSee('id="charge-business"', false);
+    }
+
+    /**
+     * Und im Beitrittsformular selbst: der Zweig „Als Firma beitreten?“ gab es
+     * schon, er erklärte nur nichts. Das Formular ist ohnehin nur auf Deutsch
+     * zu haben — auf Englisch antwortet es mit `membership.nonGerman` —, aber
+     * geprüft wird beides, weil der Hinweis sonst der erste wäre, der die Regel
+     * nicht kennt.
+     */
+    public function testTheCompanyBranchOfTheFormPointsAtTheBusinessPage(): void
+    {
+        $this->get("/membership?type=company", self::speaking("de-DE,de"))->assertOk()
+            ->assertSee("company-hint", false)
+            ->assertSee(route("business"), false);
+
+        $this->get("/membership?type=company", self::speaking("en-US,en"))->assertOk()
+            ->assertDontSee("company-hint", false);
+    }
+
     /**
      * Ein Mitglied darf nicht aufladen, und die Begründung dafür verlinkt
      * ebenfalls das Beitrittsformular. Auch dieser Link ist deutsch — ein

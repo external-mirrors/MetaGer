@@ -156,6 +156,17 @@
 					<p class="account-membership__text">{!! __('account.page.charge.membership.text') !!}</p>
 					<a class="account-membership__action" href="{{ $membershipUrl }}">@lang('account.page.charge.membership.action')</a>
 				</div>
+				{{--
+					Dieselbe Alternative für den, der nicht für sich auflädt.
+					Ein Schlüssel, den ein Team benutzt, wird hier nachgeladen,
+					und das ist der Moment, in dem eine Firmenmitgliedschaft der
+					offensichtlich ruhigere Weg ist — sie füllt sich von selbst.
+				--}}
+				<div class="account-membership" id="charge-business">
+					<h3 class="account-membership__heading">@lang('business.hints.account.heading')</h3>
+					<p class="account-membership__text">@lang('business.hints.account.text')</p>
+					<a class="account-membership__action" href="{{ route('business') }}">@lang('business.hints.account.action')</a>
+				</div>
 			@endif
 		@endif
 	</section>

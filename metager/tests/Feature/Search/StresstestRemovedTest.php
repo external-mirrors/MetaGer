@@ -24,8 +24,9 @@ class StresstestRemovedTest extends TestCase
 {
     /**
      * The admin routes are unauthenticated outside development and production
-     * (see routes/session.php), so under test these would answer if they still
-     * existed.
+     * (decided per-request in App\Http\Middleware\AdminAuthenticate, not in
+     * routes/session.php — see its docblock), so under test these would
+     * answer if they still existed.
      */
     public function testTheStresstestRoutesAreGone(): void
     {

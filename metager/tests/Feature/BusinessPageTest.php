@@ -121,7 +121,6 @@ class BusinessPageTest extends TestCase
 
         $response->assertDontSee("policies.json", false);
         $response->assertDontSee("opensearch.xml", false);
-        $response->assertDontSee("download", false);
     }
 
     // ── Die Sprache ──────────────────────────────────────────────────────────

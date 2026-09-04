@@ -143,6 +143,17 @@
     $feePresets = $fee->presets();
     $feeMinimum = $fee->minimum();
     $isCompany = $application !== null && $application->company !== null;
+
+    // Ob der erste Vorschlag vorausgewählt wird. Bei einem neuen Antrag ja —
+    // irgendetwas muss angehakt sein. Bei der Änderung einer bestehenden
+    // Mitgliedschaft nicht: der Beitragsschritt kommt dann aus einer
+    // Erinnerungsmail, der bisherige Beitrag wird über die Adresszeile
+    // mitgeführt und landet oben in $amount. Fehlt er dort — weil jemand die
+    // Adresse ohne Parameter aufgerufen hat —, wäre eine Vorauswahl eine
+    // Beitragserhöhung, die niemand angeklickt hat. Für ein Bestandsmitglied
+    // mit 5 € und dem neuen Mindestbeitrag von 25 € wäre sie das Fünffache.
+    // Ohne Vorauswahl verlangt `required` eine bewusste Entscheidung.
+    $preselectFirst = $amount === null && !($application !== null && $application->is_update);
     @endphp
     <div id="membership-fee" @if(!$visible)class="disabled"@endif data-min-amount="{{ $feeMinimum }}">
         <h3>2. Ihr monatlicher Mitgliedsbeitrag
@@ -174,7 +185,7 @@
         @foreach($feePresets as $preset)
         <div class="input-group @if(!$editable)disabled @endif ">
             <input type="radio" name="amount" id="amount-{{ str_replace(".", "-", $preset) }}" value="{{ $preset }}"
-                @if(($amount === null && $loop->first) || $amount === (float) $preset)checked @endif @if(!$editable)disabled @endif required />
+                @if(($preselectFirst && $loop->first) || $amount === (float) $preset)checked @endif @if(!$editable)disabled @endif required />
             <label for="amount-{{ str_replace(".", "-", $preset) }}">{{ number_format((float) $preset, 0, ",", ".") }}€</label>
         </div>
         @endforeach

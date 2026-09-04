@@ -79,14 +79,22 @@ final class MembershipFee
         ">200" => 200.0,
     ];
 
-    /** @var array<string, list<float>> Die Vorschläge je Größenklasse. */
+    /**
+     * Die Vorschläge je Größenklasse — drei, und nicht vier.
+     *
+     * `membership/membership.less` legt den Beitragsschritt als
+     * `repeat(4, 1fr)` an: drei Vorschläge und das Wunschbetragsfeld. Ein
+     * vierter Vorschlag bricht nicht, er rutscht in die nächste Zeile.
+     *
+     * @var array<string, list<float>>
+     */
     private const COMPANY_PRESETS = [
         "1-19" => [25.0, 50.0, 100.0],
         "20-199" => [100.0, 200.0, 300.0],
         ">200" => [200.0, 400.0, 600.0],
     ];
 
-    /** @var list<float> Die Vorschläge für eine natürliche Person. */
+    /** @var list<float> Die Vorschläge für eine natürliche Person. Ebenfalls drei. */
     private const PERSON_PRESETS = [10.0, 15.0, 20.0];
 
     /**

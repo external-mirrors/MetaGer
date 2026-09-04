@@ -97,6 +97,30 @@ test:
     - npm
     - fpm
     - composer_dev
+  variables:
+    # GitLab merges job-level variables over .test_base's rather than replacing them
+    # (unlike `services:`, which is why redis has to be repeated there).
+    #
+    # Set here and not in .test_base for the same reason CACHE_STORE/SESSION_DRIVER/etc
+    # are job variables rather than .env values: `php artisan optimize` in before_script
+    # runs config:cache, which bakes config('app.env') — and therefore
+    # App::environment() — into bootstrap/cache/config.php as a literal, and every
+    # request afterwards reads that literal back without calling env() again.
+    # phpunit.xml's <env name="APP_ENV" value="testing"/> is silently ignored once that
+    # cache exists, exactly like the other variables above, so App::environment() stayed
+    # "production" (from the copied-in $ENV_PRODUCTION .env) for the whole job — which
+    # made every App::environment()-gated check answer as if this were the real site.
+    # AdminAuthenticate is what surfaced it: every /admin/* route required real Keycloak
+    # auth, so AssocAdminTest's twelve cases all got 302 instead of 200/404.
+    #
+    # Dotenv doesn't overwrite an already-set real environment variable, so this wins
+    # over $ENV_PRODUCTION's own APP_ENV and gets baked into the cache instead — see
+    # tests/Feature/AdminRouteAuthenticationTest for the pinning test.
+    #
+    # Deliberately not added to .test_base: browsertest's own comment below warns that
+    # its local app.locale comes out of the same config cache, and it has nothing to
+    # gain from this — its page content comes from the deployed pod, not this container.
+    APP_ENV: testing
   # Same image as docker-compose runs locally, so a test that passes on a laptop passes here.
   services:
     # Valkey, matching what the Helm chart deploys and what docker-compose.yml runs

@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Household|null $household
  * @property string $source
  * @property string $iban
+ * @property string|null $bic
+ * @property string|null $account_holder
  * @property string $amount
  * @property string $mandate
  * @property \Carbon\Carbon $mandate_date
@@ -30,7 +32,7 @@ class RecurContribution extends Model
 
     protected $table = "assoc_recur_contributions";
 
-    protected $fillable = ["civicrm_id", "contact_id", "company_id", "household_id", "source", "iban", "amount", "mandate", "mandate_date", "frequency", "active", "next_due_date"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "household_id", "source", "iban", "bic", "account_holder", "amount", "mandate", "mandate_date", "frequency", "active", "next_due_date"];
 
     protected $casts = [
         "amount" => "decimal:2",

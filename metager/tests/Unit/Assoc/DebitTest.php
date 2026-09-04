@@ -50,6 +50,26 @@ class DebitTest extends TestCase
         $this->assertSame("19.99", Debit::findOrFail($debit->id)->amount);
     }
 
+    public function testBicIsNullableAndPreservedWhenPresent(): void
+    {
+        $household = Household::create(["household_name" => "Familie Lovelace"]);
+        $withoutBic = Debit::create(array_merge($this->baseAttributes(), [
+            "household_id" => $household->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+        ]));
+        $withBic = Debit::create(array_merge($this->baseAttributes(), [
+            "household_id" => $household->id,
+            "amount" => "10.00",
+            "mandate" => "S2",
+            "end_to_end_reference" => "E2E-2",
+            "bic" => "GENODEF1S01",
+        ]));
+
+        $this->assertNull($withoutBic->fresh()->bic);
+        $this->assertSame("GENODEF1S01", $withBic->fresh()->bic);
+    }
+
     public function testTheEndToEndReferenceMustBeUnique(): void
     {
         $household = Household::create(["household_name" => "Familie Lovelace"]);

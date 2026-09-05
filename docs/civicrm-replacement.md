@@ -158,20 +158,65 @@ it.**
 3. ~~Read-only admin UI~~ — done (`9ed4a26e9`, CI fixed by `7636dea21`/`fc7ccbab4`).
 4. ~~Shadow-mode bank-statement matching~~ — done, see below.
 5. ~~Donation receipts~~ — done, see below.
-6. **Cutover** — next up. The SEPA-generation port (`de.suma-ev.donation-debit`'s pain.008.001.02
-   logic), wiring `ChargeKeys`-equivalent keymanager charging onto this schema (reuse the existing
-   production keymanager credential — already decided, no new credential needed), switching
-   `Zahlungsstatus`-derived writes over from CiviCRM, and turning phase 4's shadow-mode matcher and
-   phase 5's manual-only receipt generation into the real, automatic thing (flipping
-   `assoc_debits.status` to `executed` on a confirmed match — deliberately not built yet, see phase
-   4's section). `ChargeKeys.php`'s hardcoded bearer token needs rotating at this point (see
+6. **Cutover** — in progress, being built as five separable pieces (see below): (a) ~~flip phase
+   4's matcher live~~ — done, see below; (b) `assoc:create-debits`, porting the two `CreateDebits`
+   cron jobs; (c) the SEPA-generation port (`de.suma-ev.donation-debit`'s pain.008.001.02 logic);
+   (d) `assoc:charge-keys`, wiring `ChargeKeys`-equivalent keymanager charging onto this schema
+   (reuse the existing production keymanager credential — already decided, no new credential
+   needed); (e) derived (not stored) payment-status reminder emails and the `Membership.Renew`
+   equivalent. `ChargeKeys.php`'s hardcoded bearer token needs rotating once (d) replaces it (see
    extension inventory above).
 7. **Mass email** — deliberately last, per explicit prior instruction. Still undecided between
    keeping/improving the WordPress+Newsletter-plugin setup or adopting listmonk.
 
-None of phase 6/7 have been started. The natural next step on resume is phase 6, but confirm with
-whoever picks this up before starting — the mass-email and keymanager-payment-phase-timing
-questions above are still open and may reorder things.
+Phase 6 was scoped into the five pieces above via a research pass re-reading
+`de.suma-ev.donation-debit`/`de.suma-ev.bescheinigungen` from the Trash copy (still intact as of
+this writing, but see the same "not guaranteed to survive" caveat as phase 4). Findings worth
+knowing before touching any of (b)-(e):
+
+- The SEPA XML itself is built with `digitick/sepa-xml` (composer package), not hand-rolled —
+  `CRM_DonationDebit_Form_ExecuteDebits::createPaymentInfos()`. The creditor name/IBAN/BIC/
+  Gläubiger-ID are hardcoded literals there; the port needs these as `.env`-backed config (real
+  values not captured anywhere in this repo — whoever does (c) needs to source them).
+- `ChargeKeys.php`'s hardcoded bearer token is a *second*, separate credential from this app's own
+  `config("metager.metager.keymanager.access_token")`/`KEY_SERVER` (used today by
+  `VRPaymentChargeIssuer`/`ManualChargeIssuer`). (d) should call the keymanager's `/key/create` and
+  `/key/{key}/charge` endpoints through that existing config/HTTP pattern, not reintroduce
+  `ChargeKeys.php`'s own token.
+- For direct-debit members, CiviCRM never wrote `Zahlungsstatus` back to "Okay" after their first
+  billing cycle — only `end_date`/debit status were ever the live signal for them. Confirms (rather
+  than requires changing) the existing decision that `assoc_memberships.standing` is derived from
+  `end_date` + `assoc_debits`, not a stored mirror of the 8-value CiviCRM enum.
+- The doc's earlier "9 cron jobs" figure only turned up 8 in the extension source
+  (`RecurContribution.CreateDebits`, `IncomingPayment.Auto`, `Membership.UpdatePaymentStatus`,
+  `Membership.Chargekeys`, `Membership.Renew`, `Membership.UpdatePublicMemberlist`,
+  `Membership.Mastodonpendingaccounts`, `Membership.CreateDebits`) — the 9th may have been a core
+  CiviCRM job (e.g. `UpdateMembershipStatuses`) counted alongside the two extensions'. Not chased
+  further; flagging rather than guessing which one.
+- `assoc_debits.status` today is `pending`/`executed`/`failed`. The legacy flow has a fourth,
+  intermediate state — "included in a generated SEPA file, submitted to the bank, awaiting
+  confirmation" — that this schema doesn't have yet; (c) will need it (so `Membership.CreateDebits`'
+  ~26-day and (c)'s admin-confirmed batch don't both keep re-offering the same still-pending debits).
+- Confirming a payment has exactly one side effect in the legacy flow: the debit flips to executed.
+  `ChargeKeys` and the payment-status reminders are separate, independently-scheduled jobs reading
+  the resulting state afterward, not triggered by the match itself — matches how (a) below and phase
+  5's receipt generation are already split apart.
+
+### Phase 6a — bank-statement matcher is live
+
+`BankStatementMatcher::confirm()` (renamed from the former private `assign()`) now flips a matched
+Debit from `pending` to `executed` the moment a match is recorded — automatic cascade and manual
+match (`BankStatementController::match()`) both go through it, so the flip can't drift between the
+two paths. Guarded to only flip a currently-`pending` debit, so a manual match can't silently
+downgrade an already-`failed` (bounced/returned) collection back to looking executed. A
+`recur_contribution` match still touches nothing — there is no per-collection Debit row to flip in
+that case (see the class docblock).
+
+This was shadow-mode's whole reason to exist: phase 5's receipt generation now sees real, live
+`executed` debits from confirmed bank-statement matches, not only ones imported already-executed
+from CiviCRM. **The two open risks flagged at the end of phase 5's section (PDF persistence, no
+CiviCRM-receipted correlation) still apply and are unaffected by this change** — they gate bulk
+receipt generation regardless of how a debit became `executed`.
 
 ### Phase 4 — shadow-mode bank-statement matching
 
@@ -220,12 +265,12 @@ When several pending debits share a mandate (recurring dues), the one whose own 
 the payment exactly is preferred; otherwise the earliest-due one, so an over/underpayment still
 resolves rather than staying unmatched.
 
-**Deliberately does not write to `assoc_debits`/`assoc_recur_contributions`.** The CiviCRM original
-flipped a debit to `status = executed` the moment a payment matched it; this phase only ever writes
+**Originally shadow-mode: didn't write to `assoc_debits`/`assoc_recur_contributions`, only
 `matched_type`/`matched_id`/`match_method`/`matched_at` onto the `assoc_bank_statement_lines` row
-itself. That's the shadow-mode contract from the roadmap line above — validate the cascade's hit
-rate against real traffic before letting it drive state anywhere. Flipping debit status on a
-confirmed match is future work, not yet built.
+itself — since phase 6a, it's live.** The point of shipping it shadow-mode first was validating the
+cascade's hit rate against real traffic before trusting it to drive state anywhere; phase 6a (see
+the roadmap section above) turned it on: a confirmed match — automatic or manual — now also flips
+the matched Debit to `status = executed`, same as the CiviCRM original did.
 
 **The IBAN caveat.** `assoc_bank_statement_lines.iban` (added in phase 1, before this phase existed)
 expects the payer's IBAN per line. Neither `FetchBankAccount.php` nor any other file in the
@@ -387,11 +432,11 @@ supports up to 999999, with 21 test cases including the "eins vs. ein" grammar d
   version control. `config('assoc.donation_receipt_signee_name'/'_signature_path')`, both env-only,
   replace that; leaving them unset prints no signature image and the receipt gets signed by hand.
   Nothing is configured yet in any environment.
-- **`assoc_debits.status` flipping to `executed` automatically is still not built** — same
-  shadow-mode boundary as phase 4. Every debit receiptable today got its `executed` status from
-  `CiviCrmImporter`, i.e. from CiviCRM having already executed it. `generateSingle()`/the annual
-  batch are safe to run pre-cutover for exactly that reason: nothing here can manufacture a receipt
-  for money that was never actually collected.
+- **`assoc_debits.status` now does flip to `executed` automatically** — phase 6a wired that up on
+  top of phase 4's matcher (see the roadmap section above), so a debit can become receiptable either
+  from `CiviCrmImporter` (already executed in CiviCRM) or from a live, confirmed bank-statement
+  match. `generateSingle()`/the annual batch remain safe to run either way: both paths only ever mark
+  a debit executed once a real payment was actually matched to it.
 
 **Two open risks found after the fact, neither resolved yet — do not run bulk generation against
 production data until both are:**

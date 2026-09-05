@@ -368,6 +368,15 @@ things perfectly" only holds for banktransfer — direct-debit members' standing
    "generate a pain.008 file"; it now includes submitting that file to the Hibiscus server rather
    than leaving delivery unspecified. Worth flagging for whoever picks up (c) even before the ledger
    itself is built.
+   - **Only the statement side of that is meant to be unattended.** Pulling bank statements every day
+     is plain read access and can run on its own, same as `BankStatementImporter` today. Anything that
+     moves money out — submitting a generated SEPA collection batch, sending a refund credit transfer
+     — is a TAN-gated action on Jameica/Hibiscus's side and needs a human to authorize it with their
+     second factor there; nothing this system does can complete that step unattended, by the nature of
+     online banking, not by choice. So (c) and any refund tooling can *hand off* a job to Hibiscus (a
+     file, a queued transfer), but "was it actually sent" is only known once a person releases it in
+     Jameica and the resulting statement line comes back through the automatic import — the same
+     already-designed shape as (a)'s bank-statement matching confirming a debit, not a new mechanism.
 
 **Proposed shape** (not yet built): a new ledger table — one row per accrual/payment/adjustment
 event, tied to a membership and, where applicable, to the `Debit`/`BankStatementLine` it came from —

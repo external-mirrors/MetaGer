@@ -79,6 +79,13 @@ return new class extends Migration {
             // The MetaGer search key tied to this membership (see ChargeKeys in the
             // donation-debit extension). A plain identifier, not a foreign key —
             // keys are owned by the separate keymanager service.
+            // Which balance-shortfall reminder (if any) is currently
+            // outstanding for this membership — the payment-ledger design
+            // pass's decision 2 (see docs/civicrm-replacement.md). Null
+            // means no reminder is out; PaymentReminderProcessor resets it
+            // to null the moment the ledger balance clears, so the
+            // escalation restarts from the top on the next shortfall.
+            $table->enum("reminder_stage", ["first", "second"])->nullable();
             $table->uuid("key_id")->nullable();
             // "Mastodon.Mastodon_ID" today — confirmed against the production dump
             // to extend Membership, not Contact (civicrm_value_mastodon_10.entity_id

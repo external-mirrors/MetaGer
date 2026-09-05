@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasVersion4Uuids as HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Carbon\Carbon|null $renewed_at
  * @property \Carbon\Carbon|null $reduced_until
  * @property string|null $locale
+ * @property string|null $reminder_stage
  * @property string|null $key_id
  * @property string|null $mastodon_id
  */
@@ -50,7 +52,7 @@ class Membership extends Model
 
     protected $table = "assoc_memberships";
 
-    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "category", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "standing", "start_date", "end_date", "renewed_at", "reduced_until", "locale", "key_id", "mastodon_id"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "category", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "standing", "start_date", "end_date", "renewed_at", "reduced_until", "locale", "reminder_stage", "key_id", "mastodon_id"];
 
     protected $casts = [
         "reduced" => "boolean",
@@ -99,6 +101,50 @@ class Membership extends Model
         }
 
         return number_format($cents / 100, 2, ".", "");
+    }
+
+    /**
+     * What PaymentReminderProcessor measures a shortfall's age from (design
+     * decision 2) — needed because the ledger records amounts but never
+     * allocates a given payment to a specific charge. A FIFO walk: "debt"
+     * entries (charge, chargeback_fee, refund — see
+     * LedgerEntry::BALANCE_SIGN) are consumed oldest-first by the pooled
+     * total of "reduction" entries (payment, waiver); the first debt entry
+     * the pool can't fully cover is the oldest unpaid one. Ordered by the
+     * entry's own Debit::due_date where one exists (charge/chargeback_fee
+     * always have one; a chargeback's refund shares its debit's), falling
+     * back to the entry's own created_at for an admin-recorded refund with
+     * no debit at all.
+     *
+     * Returns null once the balance is fully covered — nothing left
+     * unpaid, matching ledgerBalance()'s own sign convention.
+     */
+    public function oldestUnpaidChargeDueDate(): ?Carbon
+    {
+        $debtKinds = ["charge", "chargeback_fee", "refund"];
+
+        $debts = $this->ledgerEntries
+            ->filter(fn (LedgerEntry $entry) => in_array($entry->kind, $debtKinds, true))
+            ->sortBy(fn (LedgerEntry $entry) => ($entry->debit?->due_date ?? $entry->created_at)->timestamp);
+
+        $pool = 0;
+        foreach ($this->ledgerEntries as $entry) {
+            if (in_array($entry->kind, ["payment", "waiver"], true)) {
+                $pool += (int) round($entry->amount * 100);
+            }
+        }
+
+        foreach ($debts as $entry) {
+            $cents = (int) round($entry->amount * 100);
+            if ($cents <= $pool) {
+                $pool -= $cents;
+                continue;
+            }
+
+            return $entry->debit?->due_date ?? $entry->created_at;
+        }
+
+        return null;
     }
 
     /**

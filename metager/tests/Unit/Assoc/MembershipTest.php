@@ -3,6 +3,7 @@
 namespace Tests\Unit\Assoc;
 
 use App\Models\Assoc\Contact;
+use App\Models\Assoc\Debit;
 use App\Models\Assoc\LedgerEntry;
 use App\Models\Assoc\Membership;
 use Illuminate\Database\QueryException;
@@ -272,5 +273,129 @@ class MembershipTest extends TestCase
         LedgerEntry::create(["membership_id" => $membership->id, "kind" => "refund", "amount" => "20.00", "channel" => "sepa_credit_transfer"]);
 
         $this->assertSame("0.00", $membership->fresh()->ledgerBalance());
+    }
+
+    private function debitDueOn(Membership $membership, string $dueDate): Debit
+    {
+        return Debit::create([
+            "contact_id" => $membership->contact_id,
+            "membership_id" => $membership->id,
+            "source" => "membership",
+            "account_holder" => "Ada Lovelace",
+            "amount" => $membership->amount,
+            "mandate" => "M1",
+            "mandate_date" => "2026-01-01",
+            "status" => "executed",
+            "end_to_end_reference" => "E2E-" . uniqid(),
+            "due_date" => $dueDate,
+        ]);
+    }
+
+    /**
+     * PaymentReminderProcessor's whole reason to exist (design decision 2):
+     * measuring a shortfall's age needs to know which charge is actually
+     * unpaid, not just that the balance is positive.
+     */
+    public function testOldestUnpaidChargeDueDateIsNullWhenTheBalanceIsCovered(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "quarterly",
+            "amount" => "60.00",
+            "payment_method" => "banktransfer",
+        ]);
+        $debit = $this->debitDueOn($membership, "2026-03-01");
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $debit->id, "kind" => "charge", "amount" => "60.00"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $debit->id, "kind" => "payment", "amount" => "60.00", "channel" => "banktransfer"]);
+
+        $this->assertNull($membership->fresh()->oldestUnpaidChargeDueDate());
+    }
+
+    public function testOldestUnpaidChargeDueDateIsTheUnderpaidChargesDueDate(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "quarterly",
+            "amount" => "60.00",
+            "payment_method" => "banktransfer",
+        ]);
+        $debit = $this->debitDueOn($membership, "2026-03-01");
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $debit->id, "kind" => "charge", "amount" => "60.00"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $debit->id, "kind" => "payment", "amount" => "40.00", "channel" => "banktransfer"]);
+
+        $this->assertSame("2026-03-01", $membership->fresh()->oldestUnpaidChargeDueDate()->toDateString());
+    }
+
+    /**
+     * A payment that fully covers the oldest charge but leaves a later one
+     * untouched must skip over the covered one — a plain "is there any
+     * unpaid entry" scan would wrongly report the covered charge.
+     */
+    public function testOldestUnpaidChargeDueDateSkipsFullyCoveredChargesInFifoOrder(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "30.00",
+            "payment_method" => "banktransfer",
+        ]);
+        $first = $this->debitDueOn($membership, "2026-01-01");
+        $second = $this->debitDueOn($membership, "2026-02-01");
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $first->id, "kind" => "charge", "amount" => "30.00"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $second->id, "kind" => "charge", "amount" => "30.00"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $first->id, "kind" => "payment", "amount" => "30.00", "channel" => "banktransfer"]);
+
+        $this->assertSame("2026-02-01", $membership->fresh()->oldestUnpaidChargeDueDate()->toDateString());
+    }
+
+    /**
+     * A chargeback fee is debt tied to the bounced debit itself (see
+     * BankStatementMatcher::confirmChargeback()) — it must count toward
+     * the shortfall the same as an unpaid charge would.
+     */
+    public function testOldestUnpaidChargeDueDateTreatsAChargebackFeeAsDebt(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "30.00",
+            "payment_method" => "banktransfer",
+        ]);
+        $debit = $this->debitDueOn($membership, "2026-01-01");
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $debit->id, "kind" => "charge", "amount" => "30.00"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $debit->id, "kind" => "payment", "amount" => "30.00", "channel" => "banktransfer"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $debit->id, "kind" => "chargeback_fee", "amount" => "5.00"]);
+
+        $this->assertSame("2026-01-01", $membership->fresh()->oldestUnpaidChargeDueDate()->toDateString());
+    }
+
+    /**
+     * A standalone admin-recorded refund (LedgerEntryController) carries no
+     * debit_id at all — falls back to the entry's own created_at rather
+     * than crashing on a null due_date.
+     */
+    public function testOldestUnpaidChargeDueDateFallsBackToCreatedAtWithNoLinkedDebit(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "30.00",
+            "payment_method" => "banktransfer",
+        ]);
+        $entry = LedgerEntry::create(["membership_id" => $membership->id, "kind" => "refund", "amount" => "20.00", "channel" => "sepa_credit_transfer"]);
+
+        $dueDate = $membership->fresh()->oldestUnpaidChargeDueDate();
+        $this->assertNotNull($dueDate);
+        $this->assertSame($entry->created_at->toDateTimeString(), $dueDate->toDateTimeString());
     }
 }

@@ -514,14 +514,13 @@ snapshot column makes this exact rather than assuming "subtract one interval," w
 right (see the resumption case above). A `"donation"`-source debit still gets no ledger entries,
 same asymmetry the normal payment path already has.
 
-Deliberately deferred, not built here:
-- **Collecting the fee.** `DebitCreator` still charges exactly `membership->amount`; the
-  `chargeback_fee` ledger entry just sits on the balance. Actually collecting it is the still-unbuilt
-  balance-driven reminder phase's job (resolved decision 2), not something to bolt onto the next
-  regular debit.
-- **Manual admin matching for an unmatched chargeback.** `BankStatementController` only searches
-  `pending` debits today; finding an `executed` one for a manual reversal match is real, separate
-  follow-up work.
+Deliberately deferred at the time, since resolved:
+- **Collecting the fee** — done, see `BankStatementMatcher::settleOutstandingFees()` below (decisions
+  1-2's balance-driven reminders now also drive collection of the fee itself, since it's just more
+  debt on the same balance).
+- **Manual admin matching for an unmatched chargeback** — done, see below.
+
+Still deferred:
 - **A `previous_end_date` that's null** (a debit confirmed before this column existed) skips the
   rollback rather than guessing — moot today since nothing has been deployed with the old shape yet.
 
@@ -664,6 +663,24 @@ figures rather than raising an error. Before the real production cutover, check 
 `civicrm_debit`/`civicrm_recur_contribution` dump for any negative `amount` row; if the legacy
 chargeback-fee quirk (or anything else) ever wrote one there, it needs translating into the new
 `chargeback_fee`/`payment` ledger vocabulary by hand rather than importing verbatim.
+
+**Manual chargeback matching — done.** `matchChargeback()`'s automatic lookup (by end-to-end
+reference, else by mandate) can fail to find the bounced `Debit` — a mandate reused across several
+`executed` debits with no matching end-to-end reference on the return line is the likely real case —
+and the line was previously left permanently unmatched with no admin path to resolve it, since
+`BankStatementController` only ever searched `pending` debits. `BankStatementLine::isChargeback()`
+(`(float) amount < 0`, an exact reconstruction of `BankStatementImporter`'s own admission rule — see
+its docblock — since a negative amount reaching this table is never anything but a chargeback) now
+routes both the detail page and the match action: the candidate search becomes `executed` debits
+instead of `pending` ones, each annotated with the fee it would actually produce
+(`abs(line amount) - candidate amount`, the same formula `confirmChargeback()` itself uses) so an
+admin can tell a plausible candidate from a wrong one before submitting, and the match action calls
+`BankStatementMatcher::confirmChargeback()` instead of `confirm()`. A chargeback can only ever target
+a `Debit` (a specific collection attempt), never a `RecurContribution` (a standing authorization with
+nothing to reverse), so that type is rejected outright. `confirmChargeback()` returning `false` — the
+picked debit isn't `executed` anymore, or the fee comes out non-positive — is surfaced as a rejected
+request rather than a silently-successful redirect, since a manually-picked target is a real
+assertion by the admin that this is the right one.
 
 ### Phase 6b — `assoc:create-debits`
 

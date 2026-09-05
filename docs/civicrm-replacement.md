@@ -360,31 +360,69 @@ things perfectly" only holds for banktransfer — direct-debit members' standing
    channels need different rails: banktransfer/direct-debit-sourced payments get refunded as an
    outgoing SEPA credit transfer, PayPal-sourced payments get refunded through PayPal's API. This
    requires that whatever channel funded a ledger entry stays attached to it, not just an aggregate
-   balance. It also surfaces a real new dependency: **the association will run a Jameica/Hibiscus
-   server**, which becomes the channel for both submitting generated SEPA files (collections *and*
-   refund credit transfers) and pulling bank statements automatically — superseding
-   `BankStatementImporter::importHibiscusXml()`'s current manual-file-upload flow eventually, though
-   that changeover isn't itself decided or needed yet. This directly grows (c)'s scope: it was
-   "generate a pain.008 file"; it now includes submitting that file to the Hibiscus server rather
-   than leaving delivery unspecified. Worth flagging for whoever picks up (c) even before the ledger
-   itself is built.
-   - **The statement side is usually, not always, unattended — this needs the same TAN-blocking
-     handling as the outgoing side, just triggered less often.** With the association's own bank, a
-     daily statement fetch normally goes through without a second factor, but the bank can decide to
-     demand a TAN for it anyway (a bank-side policy, not something this system controls or can
-     predict). So the daily pull can't just assume it always completes unattended: it needs to attempt
-     the fetch automatically as the common case, and when the bank challenges it for a TAN, stop and
-     wait there — surfaced to an admin to complete in Jameica — rather than treating that as a failure
-     to retry or paper over. That's the same "hand off, block on a human's second factor, then resume"
-     shape as submitting an outgoing SEPA batch or a refund below, not a separate mechanism — the
-     difference is only how often each side actually hits it.
-   - **Outgoing money movement is TAN-gated every time.** Submitting a generated SEPA collection batch
-     or sending a refund credit transfer always needs a human to authorize it with their second factor
-     in Jameica; nothing this system does can complete that step unattended, by the nature of online
-     banking, not by choice. So (c) and any refund tooling can *hand off* a job to Hibiscus (a file, a
-     queued transfer), but "was it actually sent" is only known once a person releases it in Jameica
-     and the resulting statement line comes back through the automatic import — the same
-     already-designed shape as (a)'s bank-statement matching confirming a debit, not a new mechanism.
+   balance. It also surfaces a real new dependency: **the association will run the Hibiscus
+   Payment-Server**, which becomes the channel for both submitting generated SEPA files (collections
+   *and* refund credit transfers) and pulling bank statements automatically. See "Jameica/Hibiscus
+   integration design" below for the researched shape of that dependency — it directly grows (c)'s
+   scope beyond "generate a pain.008 file" and supersedes the VNC-based sketch this doc originally had
+   here.
+
+**Jameica/Hibiscus integration design.** The original sketch here assumed running desktop Jameica
+headless and remoting into its GUI (VNC/X11) whenever a TAN was needed. A design-pass spike into
+Jameica/Hibiscus's actual capabilities found a materially better mechanism, so this replaces that
+sketch rather than sitting alongside it:
+
+- **The right target is the Hibiscus Payment-Server** (`willuhn/hibiscus.server`), a separate
+  headless distribution with its own scheduler and REST/XML-RPC APIs — not desktop Jameica's
+  `--server` mode, which is a headless daemon but has neither. Confirmed via Payment-Server's own
+  docs and source (`StartupParams.java`, `de.willuhn.jameica.hbci.payment.Settings`).
+- **TAN handling is an application-level callback, not a remote desktop.** Hibiscus supports a
+  configurable **TAN-Handler**: when it needs a TAN, it makes a blocking XML-RPC call *out to a
+  service you provide* — `(text, accountId, tanType, payload)` — and waits for the response to
+  contain the TAN string (`payload` is the chipTAN flicker code, or a `data:image/…` image for
+  photoTAN/QR-TAN). This means Laravel implements one XML-RPC endpoint; Hibiscus calls into it. No
+  VNC, no exposed remote GUI, no second interactive surface — the earlier plan's main piece of
+  infrastructure turns out to be unnecessary. The association's own GLS Sparda-style TAN procedure is
+  currently QR-TAN (an image challenge, straightforward to render in an admin page) and may move to
+  push-TAN, which Hibiscus can also handle as *decoupled* pushTAN — the handler just waits while the
+  member approves in their banking app, no code/image to display at all.
+- **Statement fetches are TAN-free most of the time for a concrete, PSD2-shaped reason, not an
+  arbitrary bank mood.** A TAN is required on first account access and on any fetch reaching more
+  than 90 days back; inside that window a fetch can stay PIN-only, but only if a TAN-verified fetch
+  already happened within the last 90 days, and banks may grant that exemption at most 4×/day. The
+  Payment-Server's scheduler defaults to a 180-minute interval (8×/day), which is too aggressive
+  against that cap and needs to go to 6+ hours. This matches what's seen operationally against GLS in
+  local Jameica today (a TAN is rarely asked for) — but it's a periodic, bank-policy-governed
+  requirement, not a one-off, so the same TAN-Handler callback above has to cover the statement side
+  too, not just outgoing transfers.
+- **The statement side needs a second adapter, not a replacement of the existing one.** Hibiscus's
+  read APIs (REST/JSON, or XML-RPC) return transactions in a different shape than the "Umsätze
+  exportieren" XML `BankStatementImporter::importHibiscusXml()` already parses. The plan is a second
+  adapter feeding the same `BankStatementMatcher`, triggered by Hibiscus's own notify-URL webhook
+  after each sync (a plain HTTP POST once new data is in) rather than a poll — keeping the existing
+  XML importer as the manual/fallback path, not deleting it.
+- **Outgoing money movement (SEPA collection batches, refund credit transfers) is submitted over
+  XML-RPC**, using Hibiscus's `sepasammellastschrift`/`sepaueberweisung` services — there's an
+  official PHP client (`willuhn/hibiscus.php`) usable directly from this app. It always needs a TAN,
+  routed through the same handler; confirmation that it actually went out is only known once the next
+  statement pull reflects it, the same "hand off, then confirm via import" shape already designed for
+  (a).
+- **Deployment stays single-instance by construction** — Jameica's datastore is lock-file-guarded
+  against concurrent access, so this is a `replicas: 1` StatefulSet (or Deployment with
+  `strategy: Recreate`), one persistent volume holding the workdir (keystore, encrypted wallet, the
+  Hibiscus database), master password supplied non-interactively via a mounted secret file rather
+  than typed at startup, started in `--server --noninteractive` mode so a TAN request deterministically
+  reaches the handler instead of blocking on a console nobody's watching, and port 8080 kept
+  `ClusterIP`-only behind a `NetworkPolicy` scoped to this app's pods — it's both the admin API and,
+  under HTTP Basic auth, effectively the master password, so it must never be ingressed.
+- **Not yet verified — a hands-on spike is needed before building this**: whether GLS actually grants
+  the 90-day PIN-only exemption in practice and how often; the exact XML-RPC method signatures for
+  the SEPA batch services; whether a generated `pain.008` file can be handed to Hibiscus directly or
+  has to be rebuilt as XML-RPC calls order-by-order; the real time budget a human has to answer a TAN
+  callback before the bank-side HBCI dialog times out (the reference PHP client sets no timeout of its
+  own); and Verification-of-Payee behaviour on outgoing transfers, which could silently block the
+  refund path under the EU Instant Payments Regulation. None of these block the shape above, but all
+  of them are implementation-time, not design-time, unknowns.
 
 **Proposed shape** (not yet built): a new ledger table — one row per accrual/payment/adjustment
 event, tied to a membership and, where applicable, to the `Debit`/`BankStatementLine` it came from —

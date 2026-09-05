@@ -40,8 +40,8 @@ class AssocController extends Controller
         abort_unless(in_array($type, ["contact", "company"], true), 404);
 
         $payer = match ($type) {
-            "contact" => Contact::with(["currentMembership", "memberships", "debits", "recurContributions"])->findOrFail($id),
-            "company" => Company::with(["currentMembership", "memberships", "debits", "recurContributions"])->findOrFail($id),
+            "contact" => Contact::with(["currentMembership.ledgerEntries", "memberships.ledgerEntries", "debits", "recurContributions"])->findOrFail($id),
+            "company" => Company::with(["currentMembership.ledgerEntries", "memberships.ledgerEntries", "debits", "recurContributions"])->findOrFail($id),
         };
 
         return response(view("admin.assoc.member", [

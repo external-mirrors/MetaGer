@@ -3,6 +3,7 @@ use App\Http\Controllers\AdminInterface;
 use App\Http\Controllers\AssocController;
 use App\Http\Controllers\BankStatementController;
 use App\Http\Controllers\DonationReceiptController;
+use App\Http\Controllers\LedgerEntryController;
 use App\Http\Controllers\LogsApiController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Middleware\AdminAuthenticate;
@@ -45,6 +46,7 @@ Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], '
     Route::post("assoc/debits/{debitId}/generate-receipt", [DonationReceiptController::class, "generate"])->name("assoc_admin_debit_generate_receipt");
     Route::post("assoc/payers/{type}/{id}/generate-receipt", [DonationReceiptController::class, "generateForPayer"])->name("assoc_admin_payer_generate_receipt");
     Route::post("assoc/payers/{type}/{id}/donation-receipt-preference", [DonationReceiptController::class, "updatePreference"])->name("assoc_admin_payer_update_preference");
+    Route::post("assoc/memberships/{id}/ledger-entries", [LedgerEntryController::class, "store"])->name("assoc_admin_membership_ledger_entry");
     Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');

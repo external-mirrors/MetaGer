@@ -461,6 +461,16 @@ already was: only a `Debit` actually found still `pending` gets either. A `"dona
 `Debit` (from `RecurContribution`) has no `membership_id` and so gets no ledger entries — the
 ledger stays membership-only for now.
 
+`LedgerEntryController` (`ee036814e`) now gives admins the two manual actions from the chargeback
+refinement above — a `waiver` write-off and a `refund` record — on `/admin/assoc/members/*`, shown
+against the current membership and, since both scenarios described there (a waiver on a late
+cancellation, a refund with a retroactive cancellation) target a membership that's just been
+terminated, against each past one too. Both are record-keeping only: a `refund` entry means "this
+amount went back out," not itself moving money — the actual outgoing transfer still happens by hand
+until phase 6c's SEPA generation (and, per the design doc, the Hibiscus Payment-Server) exists. A
+`refund`'s `channel` is restricted to `sepa_credit_transfer`/`paypal` (a waiver isn't a transfer of
+money and carries none); nothing else about `kind`/`channel`'s validity has changed.
+
 **Not yet done, in rough dependency order:**
 - The exact charge-accrual mechanism for banktransfer/other-non-directdebit members (`DebitCreator`
   is now wired for `directdebit` only — an equivalent periodic `charge` entry needs generating for
@@ -472,11 +482,11 @@ ledger stays membership-only for now.
   elsewhere; nothing reverses the `charge`/`payment` pair for it in the ledger.
 - The balance-driven reminder staging (resolved decisions 1-2 above) and the precise reminder-stage
   intervals/copy (assumed ported from legacy pending actual confirmation).
-- Admin UI for the two manual actions from the chargeback refinement above (waiver on a late
-  cancellation, refund with retroactive cancellation) — currently only reachable by creating a
-  `LedgerEntry` directly, no admin form exists.
 - Donation-receipt generation (`DonationReceiptGenerator`) still reads `assoc_debits` directly, not
-  the ledger — the "sums only `payment`-kind entries" rule above isn't implemented yet.
+  the ledger — the "sums only `payment`-kind entries" rule above isn't implemented yet, and is
+  structurally blocked until it is: `assoc_ledger_entries.membership_id` is `NOT NULL`, so a
+  `"donation"`-source `Debit` (no `Membership` at all) can't have a `LedgerEntry` under today's
+  schema.
 
 ### Phase 6b — `assoc:create-debits`
 

@@ -317,4 +317,165 @@ class BankStatementMatcherTest extends TestCase
 
         $this->assertFalse($matched);
     }
+
+    public function testMatchChargebackFindsTheOriginalDebitByEndToEndReference(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact, ["end_date" => "2026-02-01"]);
+        $debit = $this->debit($contact, [
+            "source" => "membership",
+            "membership_id" => $membership->id,
+            "status" => "executed",
+            "previous_end_date" => "2026-01-01",
+            "end_to_end_reference" => "E2E-99",
+            "amount" => "10.00",
+        ]);
+        $line = $this->line(["amount" => "-12.50"]);
+
+        $matched = (new BankStatementMatcher())->matchChargeback($line, mandate: null, endToEndReference: "E2E-99");
+
+        $this->assertTrue($matched);
+        $line->refresh();
+        $this->assertSame("debit_reversal", $line->matched_type);
+        $this->assertSame($debit->id, $line->matched_id);
+        $this->assertSame("mandate_reference", $line->match_method);
+        $this->assertSame("failed", $debit->fresh()->status);
+    }
+
+    public function testMatchChargebackFallsBackToMandateWhenNoEndToEndReferenceMatches(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact, ["end_date" => "2026-02-01"]);
+        $debit = $this->debit($contact, [
+            "source" => "membership",
+            "membership_id" => $membership->id,
+            "status" => "executed",
+            "previous_end_date" => "2026-01-01",
+            "amount" => "10.00",
+        ]);
+        $line = $this->line(["amount" => "-12.50"]);
+
+        $matched = (new BankStatementMatcher())->matchChargeback($line, mandate: "M1", endToEndReference: null);
+
+        $this->assertTrue($matched);
+        $this->assertSame($debit->id, $line->fresh()->matched_id);
+    }
+
+    public function testMatchChargebackDoesNotMatchAPendingDebit(): void
+    {
+        $this->debit($this->contact(), ["status" => "pending"]);
+        $line = $this->line(["amount" => "-12.50"]);
+
+        $matched = (new BankStatementMatcher())->matchChargeback($line, mandate: "M1");
+
+        $this->assertFalse($matched);
+    }
+
+    public function testMatchChargebackLeavesTheLineUnmatchedWhenNoExecutedDebitCorroboratesIt(): void
+    {
+        $line = $this->line(["amount" => "-12.50"]);
+
+        $matched = (new BankStatementMatcher())->matchChargeback($line, mandate: "UNKNOWN");
+
+        $this->assertFalse($matched);
+        $this->assertNull($line->fresh()->matched_type);
+    }
+
+    /**
+     * The chargeback counterpart of testConfirmingAMembershipDuesDebitRecordsAPaymentLedgerEntry:
+     * a refund reverses the earlier payment, and the fee (computed, not
+     * parsed off the statement text — see confirmChargeback()'s docblock)
+     * becomes its own debt.
+     */
+    public function testConfirmingAChargebackRecordsARefundAndAChargebackFeeLedgerEntry(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact, ["payment_method" => "banktransfer", "end_date" => "2026-02-01"]);
+        $debit = $this->debit($contact, [
+            "source" => "membership",
+            "membership_id" => $membership->id,
+            "status" => "executed",
+            "previous_end_date" => "2026-01-01",
+            "amount" => "10.00",
+        ]);
+        $line = $this->line(["amount" => "-12.50"]);
+
+        (new BankStatementMatcher())->confirmChargeback($line, $debit);
+
+        $this->assertSame(2, LedgerEntry::count());
+        $refund = LedgerEntry::where("kind", "refund")->sole();
+        $this->assertSame($debit->id, $refund->debit_id);
+        $this->assertSame($line->id, $refund->bank_statement_line_id);
+        $this->assertSame("10.00", $refund->amount);
+        $this->assertSame("banktransfer", $refund->channel);
+
+        $fee = LedgerEntry::where("kind", "chargeback_fee")->sole();
+        $this->assertSame($debit->id, $fee->debit_id);
+        $this->assertSame("2.50", $fee->amount);
+        $this->assertNull($fee->channel);
+    }
+
+    /**
+     * confirm()'s advance isn't always "add one interval" (see the
+     * resumption-from-payment-date test above), so a chargeback must
+     * restore the exact snapshotted value, not subtract one interval.
+     */
+    public function testConfirmingAChargebackRollsBackEndDateToItsValueBeforeTheOriginalConfirmation(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact, ["end_date" => "2026-02-01"]);
+        $debit = $this->debit($contact, [
+            "source" => "membership",
+            "membership_id" => $membership->id,
+            "status" => "executed",
+            "previous_end_date" => "2026-01-01",
+            "amount" => "10.00",
+        ]);
+        $line = $this->line(["amount" => "-12.50"]);
+
+        (new BankStatementMatcher())->confirmChargeback($line, $debit);
+
+        $this->assertSame("2026-01-01", $membership->fresh()->end_date->format("Y-m-d"));
+    }
+
+    /**
+     * A "donation"-source debit has no Membership — same asymmetry
+     * confirm() already has for a normal payment.
+     */
+    public function testConfirmingAChargebackForADonationDebitRecordsNoLedgerEntry(): void
+    {
+        $debit = $this->debit($this->contact(), ["status" => "executed", "amount" => "10.00"]);
+        $line = $this->line(["amount" => "-12.50"]);
+
+        $matched = (new BankStatementMatcher())->confirmChargeback($line, $debit);
+
+        $this->assertTrue($matched);
+        $this->assertSame("failed", $debit->fresh()->status);
+        $this->assertSame(0, LedgerEntry::count());
+    }
+
+    public function testConfirmingAnAlreadyFailedDebitIsANoOp(): void
+    {
+        $debit = $this->debit($this->contact(), ["status" => "failed", "amount" => "10.00"]);
+        $line = $this->line(["amount" => "-12.50"]);
+
+        $matched = (new BankStatementMatcher())->confirmChargeback($line, $debit);
+
+        $this->assertFalse($matched);
+        $this->assertNull($line->fresh()->matched_type);
+        $this->assertSame(0, LedgerEntry::count());
+    }
+
+    public function testAFeeThatDoesNotComeOutPositiveLeavesTheLineUnmatched(): void
+    {
+        $debit = $this->debit($this->contact(), ["status" => "executed", "amount" => "10.00"]);
+        // The line's amount exactly matches the original debit's — no fee.
+        $line = $this->line(["amount" => "-10.00"]);
+
+        $matched = (new BankStatementMatcher())->confirmChargeback($line, $debit);
+
+        $this->assertFalse($matched);
+        $this->assertSame("executed", $debit->fresh()->status);
+        $this->assertNull($line->fresh()->matched_type);
+    }
 }

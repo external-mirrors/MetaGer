@@ -36,6 +36,11 @@ use Illuminate\Support\Collection;
  *  3. substring — loosest fallback: the mandate id appears anywhere in the free
  *     text, not bounded to a whole word (a member paraphrasing or truncating it).
  *  4. no match — left for manual triage in the admin UI.
+ *
+ * A fifth path, matchChargeback()/confirmChargeback(), handles a
+ * Rücklastschrift: not a payment but a reversal of one already recorded.
+ * BankStatementImporter routes a line here instead of match() when it
+ * recognises one (see its CHARGEBACK_ART_VALUES).
  */
 class BankStatementMatcher
 {
@@ -177,18 +182,123 @@ class BankStatementMatcher
                     LedgerEntry::create([
                         "membership_id" => $membership->id,
                         "debit_id" => $debit->id,
+                        "bank_statement_line_id" => $line->id,
                         "kind" => "payment",
                         "amount" => $debit->amount,
                         "channel" => $membership->payment_method,
                     ]);
 
                     $months = Membership::MONTHS_PER_INTERVAL[$membership->interval];
-                    $onTimeAdvance = $membership->end_date->copy()->addMonths($months);
+                    $previousEndDate = $membership->end_date->copy();
+                    $onTimeAdvance = $previousEndDate->copy()->addMonths($months);
                     $membership->end_date = $onTimeAdvance->greaterThanOrEqualTo($line->booked_at)
                         ? $onTimeAdvance
                         : $line->booked_at->copy()->addMonths($months);
                     $membership->save();
+
+                    // Snapshotted so a later Rücklastschrift can roll this
+                    // back exactly — see confirmChargeback() and the
+                    // migration comment. Not "add one interval" in reverse:
+                    // the resumption branch above means the advance isn't
+                    // always one interval, so only the real prior value
+                    // reverses it correctly.
+                    $debit->update(["previous_end_date" => $previousEndDate]);
                 }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Recognises a Rücklastschrift: BankStatementImporter routes a line here
+     * instead of match() once it sees the bank's own "this was a return"
+     * art value. Looks up the *original* debit among "executed" ones (only
+     * something already collected can bounce), by end-to-end reference
+     * first, then mandate — same cascade shape as matchByMandate(), against
+     * the opposite status.
+     *
+     * @return bool whether the line was matched (and saved)
+     */
+    public function matchChargeback(BankStatementLine $line, ?string $mandate = null, ?string $endToEndReference = null): bool
+    {
+        $debit = null;
+        if ($endToEndReference !== null) {
+            $debit = Debit::where("end_to_end_reference", $endToEndReference)->where("status", "executed")->first();
+        }
+
+        if ($debit === null && $mandate !== null) {
+            $debit = Debit::where("mandate", $mandate)->where("status", "executed")
+                ->orderByDesc("due_date")->first();
+        }
+
+        if ($debit === null) {
+            return false;
+        }
+
+        return $this->confirmChargeback($line, $debit);
+    }
+
+    /**
+     * The chargeback counterpart to confirm(): flips the original Debit to
+     * "failed", and — only when it's a membership-dues debit, same
+     * asymmetry confirm() already has for a "donation"-source one having no
+     * Membership to record a ledger entry against — reverses the earlier
+     * "payment" entry and adds the bank's fee as new debt.
+     *
+     * Guarded to "executed" only, same reasoning confirm() guards to
+     * "pending" only: re-running this against an already-"failed" debit
+     * (e.g. a re-import) must not double the reversal.
+     *
+     * The fee is computed, not parsed off the statement's free text: the
+     * statement nets the original amount and however many fees applied into
+     * one number (see docs/civicrm-replacement.md), and both operands here
+     * — the line's own amount and the original debit's — are already exact.
+     * A fee that doesn't come out positive is left unmatched for manual
+     * triage rather than posting a nonsensical entry.
+     */
+    public function confirmChargeback(BankStatementLine $line, Debit $debit): bool
+    {
+        $debit = Debit::where("id", $debit->id)->where("status", "executed")->first();
+        if ($debit === null) {
+            return false;
+        }
+
+        $fee = round((float) $line->amount * -1 - (float) $debit->amount, 2);
+        if ($fee <= 0) {
+            return false;
+        }
+
+        $line->matched_type = "debit_reversal";
+        $line->matched_id = $debit->id;
+        $line->match_method = "mandate_reference";
+        $line->matched_at = now();
+        $line->save();
+
+        $debit->update(["status" => "failed"]);
+
+        $membership = $debit->membership;
+        if ($membership !== null) {
+            LedgerEntry::create([
+                "membership_id" => $membership->id,
+                "debit_id" => $debit->id,
+                "bank_statement_line_id" => $line->id,
+                "kind" => "refund",
+                "amount" => $debit->amount,
+                "channel" => $membership->payment_method,
+            ]);
+
+            LedgerEntry::create([
+                "membership_id" => $membership->id,
+                "debit_id" => $debit->id,
+                "bank_statement_line_id" => $line->id,
+                "kind" => "chargeback_fee",
+                "amount" => $fee,
+            ]);
+
+            if ($debit->previous_end_date !== null) {
+                $membership->end_date = $debit->previous_end_date;
+                $membership->save();
             }
         }
 

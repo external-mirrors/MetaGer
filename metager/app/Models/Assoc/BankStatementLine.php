@@ -35,6 +35,8 @@ class BankStatementLine extends Model
      * The Debit or RecurContribution this line was matched to, per matched_type.
      * Not a real Eloquent relation — matched_id points into one of two tables
      * depending on matched_type, which a single relation can't express.
+     * "debit_reversal" (a Rücklastschrift) also points at a Debit — the one
+     * it reversed — same as a plain "debit" match.
      */
     public function matched(): Debit|RecurContribution|null
     {
@@ -43,7 +45,7 @@ class BankStatementLine extends Model
         }
 
         return match ($this->matched_type) {
-            "debit" => Debit::find($this->matched_id),
+            "debit", "debit_reversal" => Debit::find($this->matched_id),
             "recur_contribution" => RecurContribution::find($this->matched_id),
         };
     }

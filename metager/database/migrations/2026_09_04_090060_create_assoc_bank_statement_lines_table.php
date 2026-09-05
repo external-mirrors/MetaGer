@@ -20,7 +20,11 @@ return new class extends Migration {
             $table->decimal("amount", 10, 2);
             $table->string("reference")->nullable();
             $table->date("booked_at");
-            $table->enum("matched_type", ["debit", "recur_contribution"])->nullable();
+            // "debit_reversal": a Rücklastschrift reversing a previously
+            // "executed" Debit — matched_id still points at that same
+            // Debit, but the line represents money leaving again, not a
+            // payment. See BankStatementMatcher::confirmChargeback().
+            $table->enum("matched_type", ["debit", "recur_contribution", "debit_reversal"])->nullable();
             $table->uuid("matched_id")->nullable();
             $table->enum("match_method", ["mandate_reference", "regex", "substring", "manual"])->nullable();
             $table->string("matched_by")->nullable();

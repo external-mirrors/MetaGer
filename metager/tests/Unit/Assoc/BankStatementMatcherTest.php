@@ -121,9 +121,9 @@ class BankStatementMatcherTest extends TestCase
     public function testConfirmingAMembershipDuesDebitRecordsAPaymentLedgerEntry(): void
     {
         $contact = $this->contact();
-        $membership = $this->membership($contact);
+        $membership = $this->membership($contact, ["end_date" => "2026-01-01"]);
         $debit = $this->debit($contact, ["source" => "membership", "membership_id" => $membership->id]);
-        $line = $this->line();
+        $line = $this->line(["booked_at" => "2026-02-01"]);
 
         (new BankStatementMatcher())->match($line, mandate: "M1");
 
@@ -133,6 +133,48 @@ class BankStatementMatcherTest extends TestCase
         $this->assertSame("payment", $entry->kind);
         $this->assertSame("10.00", $entry->amount);
         $this->assertSame("directdebit", $entry->channel);
+        // Design decision 1 of the payment-ledger pass: coverage advances by
+        // one interval only once it's actually paid for.
+        $this->assertSame("2026-02-01", $membership->fresh()->end_date->format("Y-m-d"));
+    }
+
+    /**
+     * Same as above, but for a banktransfer membership's debit (see
+     * DebitCreator) — the channel must reflect the payment method that was
+     * actually used, not be hardcoded to directdebit.
+     */
+    public function testConfirmingABanktransferMembershipDuesDebitRecordsThePaymentChannelCorrectly(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact, ["payment_method" => "banktransfer", "end_date" => "2026-01-01"]);
+        $debit = $this->debit($contact, ["source" => "membership", "membership_id" => $membership->id, "iban" => null]);
+        $line = $this->line();
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $entry = LedgerEntry::sole();
+        $this->assertSame("banktransfer", $entry->channel);
+    }
+
+    /**
+     * A member who stopped paying without notice, then resumed: their debit
+     * sat pending for months, so end_date never advanced (see DebitCreator's
+     * docblock — the pending debit itself is what stopped new charges from
+     * accruing on top). Confirming the overdue payment must not tack one
+     * interval onto the now-ancient end_date — coverage restarts fresh from
+     * the day the payment actually landed, per the agreed "takes up again
+     * from that day forward" behaviour.
+     */
+    public function testConfirmingALongOverdueDebitResumesCoverageFromThePaymentDateNotFromTheStaleEndDate(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact, ["end_date" => "2025-06-01"]);
+        $this->debit($contact, ["source" => "membership", "membership_id" => $membership->id, "due_date" => "2025-06-01"]);
+        $line = $this->line(["booked_at" => "2026-02-01"]);
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $this->assertSame("2026-03-01", $membership->fresh()->end_date->format("Y-m-d"));
     }
 
     /**

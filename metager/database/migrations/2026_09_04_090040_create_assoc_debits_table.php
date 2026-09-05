@@ -23,7 +23,11 @@ return new class extends Migration {
             $table->uuid("contact_id")->nullable()->references("id")->on("assoc_contacts");
             $table->uuid("company_id")->nullable()->references("id")->on("assoc_companies");
             $table->enum("source", ["membership", "donation"]);
-            $table->string("iban");
+            // Nullable: a banktransfer membership's debit (see DebitCreator) has
+            // no bank details to snapshot — civicrm_debit.payment_reference for
+            // banktransfer was always a free-text label, never tied to an
+            // account, unlike a SEPA mandate.
+            $table->string("iban")->nullable();
             // Nullable: SEPA generation only needs a BIC for non-SEPA-area IBANs,
             // and civicrm_debit.bic is itself not required — preserved from the
             // source rather than derived, so it stays whatever was captured then.

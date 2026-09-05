@@ -3,6 +3,7 @@
 namespace Tests\Unit\Assoc;
 
 use App\Models\Assoc\Contact;
+use App\Models\Assoc\LedgerEntry;
 use App\Models\Assoc\Membership;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -207,5 +208,69 @@ class MembershipTest extends TestCase
             "payment_method" => "banktransfer",
             "standing" => "not_a_real_standing",
         ]);
+    }
+
+    public function testLedgerBalanceIsZeroWithNoEntries(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "17.00",
+            "payment_method" => "banktransfer",
+        ]);
+
+        $this->assertSame("0.00", $membership->ledgerBalance());
+    }
+
+    /**
+     * charge/chargeback_fee add to what's owed; payment/waiver reduce it —
+     * see Membership::ledgerBalance()'s docblock for the sign convention.
+     * A full payment plus a chargeback fee that's only partially covered
+     * leaves the fee's shortfall as the balance.
+     */
+    public function testLedgerBalanceSumsChargesPaymentsAndFeesByTheirSign(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "60.00",
+            "payment_method" => "directdebit",
+        ]);
+        LedgerEntry::create(["membership_id" => $membership->id, "kind" => "charge", "amount" => "60.00"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "kind" => "payment", "amount" => "60.00", "channel" => "directdebit"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "kind" => "chargeback_fee", "amount" => "8.50"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "kind" => "payment", "amount" => "5.00", "channel" => "banktransfer"]);
+
+        $this->assertSame("3.50", $membership->ledgerBalance());
+    }
+
+    /**
+     * A waiver writes off what's owed without a payment; a refund adds back
+     * what a payment had reduced, since the money it paid down is no longer
+     * with the association.
+     */
+    public function testWaiverAndRefundMoveTheBalanceOppositeDirections(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "60.00",
+            "payment_method" => "banktransfer",
+        ]);
+        LedgerEntry::create(["membership_id" => $membership->id, "kind" => "charge", "amount" => "60.00"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "kind" => "waiver", "amount" => "60.00"]);
+
+        $this->assertSame("0.00", $membership->ledgerBalance());
+
+        LedgerEntry::create(["membership_id" => $membership->id, "kind" => "payment", "amount" => "20.00", "channel" => "banktransfer"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "kind" => "refund", "amount" => "20.00", "channel" => "sepa_credit_transfer"]);
+
+        $this->assertSame("0.00", $membership->fresh()->ledgerBalance());
     }
 }

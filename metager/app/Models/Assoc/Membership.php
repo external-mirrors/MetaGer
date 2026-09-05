@@ -5,6 +5,7 @@ namespace App\Models\Assoc;
 use Illuminate\Database\Eloquent\Concerns\HasVersion4Uuids as HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $id
@@ -57,6 +58,35 @@ class Membership extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, "company_id");
+    }
+
+    public function ledgerEntries(): HasMany
+    {
+        return $this->hasMany(LedgerEntry::class, "membership_id");
+    }
+
+    /**
+     * Derived, not stored — the payment-ledger design pass's whole point
+     * (see docs/civicrm-replacement.md). Positive: still owed. Negative:
+     * overpaid, carried forward as a credit. Zero: settled.
+     *
+     * Sign convention (a decision made when this was built, not itself in
+     * the design doc): charge/chargeback_fee add to what's owed;
+     * payment/waiver reduce it; refund adds back what a payment had
+     * reduced, since the money it paid down is no longer with the
+     * association.
+     */
+    public function ledgerBalance(): string
+    {
+        // Summed in integer cents, not floats or bcmath (ext-bcmath isn't in
+        // the fpm image — see build/fpm/Dockerfile) — decimal(10,2) amounts
+        // never carry more than two fractional digits, so this is exact.
+        $cents = 0;
+        foreach ($this->ledgerEntries as $entry) {
+            $cents += LedgerEntry::BALANCE_SIGN[$entry->kind] * (int) round($entry->amount * 100);
+        }
+
+        return number_format($cents / 100, 2, ".", "");
     }
 
     /**

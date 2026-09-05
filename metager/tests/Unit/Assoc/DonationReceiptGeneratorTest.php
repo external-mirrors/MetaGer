@@ -7,6 +7,7 @@ use App\Assoc\DonationReceiptPdf;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\DonationReceipt;
+use App\Models\Assoc\LedgerEntry;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Storage;
 use Tests\Concerns\UsesInMemorySqlite;
@@ -213,5 +214,59 @@ class DonationReceiptGeneratorTest extends TestCase
         $receipts = $this->generator()->generateAnnualBatch(2026);
 
         $this->assertCount(0, $receipts);
+    }
+
+    /**
+     * A receipt must never include money that was later charged back or
+     * refunded — in full, exclude the debit entirely (see
+     * Debit::netLedgerAmount()).
+     */
+    public function testGenerateSingleRejectsAFullyChargedBackDebit(): void
+    {
+        $debit = $this->debit($this->contact());
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00"]);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "refund", "amount" => "10.00"]);
+
+        $this->expectException(\RuntimeException::class);
+        $this->generator()->generateSingle($debit);
+    }
+
+    public function testAFullyChargedBackDebitIsExcludedFromGenerateImmediate(): void
+    {
+        $contact = $this->contact(["donation_receipt_preference" => "immediate"]);
+        $debit = $this->debit($contact);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00"]);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "refund", "amount" => "10.00"]);
+
+        $receipts = $this->generator()->generateImmediate();
+
+        $this->assertCount(0, $receipts);
+        $this->assertNull($debit->fresh()->donation_receipt_id);
+    }
+
+    public function testAFullyChargedBackDebitIsExcludedFromGenerateForPayer(): void
+    {
+        $contact = $this->contact();
+        $debit = $this->debit($contact);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00"]);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "refund", "amount" => "10.00"]);
+
+        $receipt = $this->generator()->generateForPayer($contact, "donation");
+
+        $this->assertNull($receipt);
+    }
+
+    /**
+     * On a partial refund, receipt only what was actually, finally kept.
+     */
+    public function testAPartiallyRefundedDebitReceiptsOnlyTheNetAmount(): void
+    {
+        $debit = $this->debit($this->contact(), ["amount" => "10.00"]);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00"]);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "refund", "amount" => "4.00"]);
+
+        $receipt = $this->generator()->generateSingle($debit);
+
+        $this->assertSame("6.00", (string) $receipt->total_amount);
     }
 }

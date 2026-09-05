@@ -50,6 +50,9 @@ class DonationReceiptGenerator
         if ($debit->donation_receipt_id !== null) {
             throw new \RuntimeException("Debit {$debit->id} already belongs to a donation receipt.");
         }
+        if ((float) $debit->netLedgerAmount() <= 0) {
+            throw new \RuntimeException("Debit {$debit->id} has nothing left to receipt — fully charged back or refunded.");
+        }
 
         return $this->createReceipt(collect([$debit]), $debit->due_date->year);
     }
@@ -73,7 +76,10 @@ class DonationReceiptGenerator
             ->where("source", $source)
             ->where("status", "executed")
             ->whereNull("donation_receipt_id")
-            ->get();
+            ->with("ledgerEntries")
+            ->get()
+            ->filter(fn (Debit $debit) => (float) $debit->netLedgerAmount() > 0)
+            ->values();
 
         if ($debits->isEmpty()) {
             return null;
@@ -135,8 +141,10 @@ class DonationReceiptGenerator
     {
         return Debit::where("status", "executed")
             ->whereNull("donation_receipt_id")
-            ->with(["contact", "company"])
-            ->get();
+            ->with(["contact", "company", "ledgerEntries"])
+            ->get()
+            ->filter(fn (Debit $debit) => (float) $debit->netLedgerAmount() > 0)
+            ->values();
     }
 
     private function effectivePreference(Debit $debit): string
@@ -183,12 +191,18 @@ class DonationReceiptGenerator
      * installed in the fpm image, and summing as float risks the exact
      * round-trip issue CLAUDE.md's decimal:2 cast rule exists to avoid.
      *
+     * Sums Debit::netLedgerAmount(), not the raw amount — decision 4 of the
+     * payment-ledger design pass plus the refund/chargeback netting rule
+     * (docs/civicrm-replacement.md): never receipt a chargeback fee, and
+     * never receipt more than what was actually, finally kept once any
+     * refund is accounted for.
+     *
      * @param Collection<int, Debit> $debits
      */
     private function sumAmounts(Collection $debits): string
     {
         $cents = $debits->sum(function (Debit $debit) {
-            [$whole, $fraction] = explode(".", (string) $debit->amount);
+            [$whole, $fraction] = explode(".", $debit->netLedgerAmount());
             return ((int) $whole) * 100 + (int) $fraction;
         });
 

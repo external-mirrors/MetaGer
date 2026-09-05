@@ -157,6 +157,74 @@ class BankStatementMatcherTest extends TestCase
     }
 
     /**
+     * Design decision 1 of the payment-ledger pass: an underpayment is
+     * credited to the balance immediately (the ledger records what actually
+     * arrived, not the debit's own amount) but must not by itself push
+     * end_date forward — the shortfall is what PaymentReminderProcessor's
+     * staged reminders exist for.
+     */
+    public function testAnUnderpaymentRecordsTheActualAmountAndDoesNotAdvanceEndDate(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact, ["end_date" => "2026-01-01"]);
+        $debit = $this->debit($contact, ["source" => "membership", "membership_id" => $membership->id]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $debit->id, "kind" => "charge", "amount" => "10.00"]);
+        $line = $this->line(["amount" => "6.00", "booked_at" => "2026-02-01"]);
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $payment = LedgerEntry::where("kind", "payment")->sole();
+        $this->assertSame("6.00", $payment->amount);
+        $this->assertSame("4.00", $membership->fresh()->ledgerBalance());
+        $this->assertSame("2026-01-01", $membership->fresh()->end_date->format("Y-m-d"));
+    }
+
+    /**
+     * A top-up payment against a *later* debit that finally clears the
+     * cumulative balance does advance end_date — the gate is the running
+     * balance across the membership, not "was this specific debit's own
+     * amount matched exactly." The earlier shortfall left end_date stale,
+     * so this exercises the same resumption formula as an overdue debit.
+     */
+    public function testATopUpPaymentThatClearsTheCumulativeBalanceAdvancesEndDate(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact, ["end_date" => "2026-01-01"]);
+        $matcher = new BankStatementMatcher();
+
+        $firstDebit = $this->debit($contact, ["source" => "membership", "membership_id" => $membership->id, "due_date" => "2026-02-01"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $firstDebit->id, "kind" => "charge", "amount" => "10.00"]);
+        $matcher->confirm($this->line(["amount" => "6.00", "booked_at" => "2026-02-01"]), "debit", $firstDebit->id, "manual");
+        $this->assertSame("4.00", $membership->fresh()->ledgerBalance());
+        $this->assertSame("2026-01-01", $membership->fresh()->end_date->format("Y-m-d"));
+
+        $secondDebit = $this->debit($contact, ["source" => "membership", "membership_id" => $membership->id, "due_date" => "2026-03-01"]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $secondDebit->id, "kind" => "charge", "amount" => "10.00"]);
+        $matcher->confirm($this->line(["amount" => "14.00", "booked_at" => "2026-03-01"]), "debit", $secondDebit->id, "manual");
+
+        $this->assertSame("0.00", $membership->fresh()->ledgerBalance());
+        $this->assertSame("2026-04-01", $membership->fresh()->end_date->format("Y-m-d"));
+    }
+
+    /**
+     * An overpayment still advances end_date on time and leaves the
+     * surplus as a negative (credit) balance.
+     */
+    public function testAnOverpaymentAdvancesEndDateAndLeavesACreditBalance(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact, ["end_date" => "2026-01-01"]);
+        $debit = $this->debit($contact, ["source" => "membership", "membership_id" => $membership->id]);
+        LedgerEntry::create(["membership_id" => $membership->id, "debit_id" => $debit->id, "kind" => "charge", "amount" => "10.00"]);
+        $line = $this->line(["amount" => "15.00", "booked_at" => "2026-02-01"]);
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $this->assertSame("-5.00", $membership->fresh()->ledgerBalance());
+        $this->assertSame("2026-02-01", $membership->fresh()->end_date->format("Y-m-d"));
+    }
+
+    /**
      * A member who stopped paying without notice, then resumed: their debit
      * sat pending for months, so end_date never advanced (see DebitCreator's
      * docblock — the pending debit itself is what stopped new charges from

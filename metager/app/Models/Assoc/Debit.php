@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $company_id
  * @property Contact|null $contact
  * @property Company|null $company
+ * @property string|null $membership_id
+ * @property Membership|null $membership
  * @property string $source
  * @property string $iban
  * @property string|null $bic
@@ -33,7 +35,7 @@ class Debit extends Model
 
     protected $table = "assoc_debits";
 
-    protected $fillable = ["civicrm_id", "contact_id", "company_id", "source", "iban", "bic", "account_holder", "amount", "mandate", "mandate_date", "status", "end_to_end_reference", "due_date", "reference", "donation_receipt_id"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_id", "source", "iban", "bic", "account_holder", "amount", "mandate", "mandate_date", "status", "end_to_end_reference", "due_date", "reference", "donation_receipt_id"];
 
     protected $casts = [
         "amount" => "decimal:2",
@@ -49,6 +51,11 @@ class Debit extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, "company_id");
+    }
+
+    public function membership(): BelongsTo
+    {
+        return $this->belongsTo(Membership::class, "membership_id");
     }
 
     public function donationReceipt(): BelongsTo

@@ -4,6 +4,7 @@ namespace App\Assoc;
 
 use App\Models\Assoc\BankStatementLine;
 use App\Models\Assoc\Debit;
+use App\Models\Assoc\LedgerEntry;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Support\Collection;
 
@@ -135,6 +136,12 @@ class BankStatementMatcher
      * any debit regardless of its current status, and this must not silently
      * downgrade an already-"failed" (bounced/returned) collection back to
      * looking executed.
+     *
+     * A membership-dues debit (Debit::membership_id set — see DebitCreator)
+     * also gets a "payment" LedgerEntry here, the other half of the
+     * payment-ledger design pass (see docs/civicrm-replacement.md): a
+     * "donation"-source debit has no Membership to record one against, so it
+     * gets none.
      */
     public function confirm(BankStatementLine $line, string $type, string $id, string $method, ?string $matchedBy = null): bool
     {
@@ -146,7 +153,19 @@ class BankStatementMatcher
         $line->save();
 
         if ($type === "debit") {
-            Debit::where("id", $id)->where("status", "pending")->update(["status" => "executed"]);
+            $debit = Debit::where("id", $id)->where("status", "pending")->first();
+            if ($debit !== null) {
+                $debit->update(["status" => "executed"]);
+                if ($debit->membership_id !== null) {
+                    LedgerEntry::create([
+                        "membership_id" => $debit->membership_id,
+                        "debit_id" => $debit->id,
+                        "kind" => "payment",
+                        "amount" => $debit->amount,
+                        "channel" => "directdebit",
+                    ]);
+                }
+            }
         }
 
         return true;

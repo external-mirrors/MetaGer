@@ -3,6 +3,7 @@
 namespace App\Assoc;
 
 use App\Models\Assoc\Debit;
+use App\Models\Assoc\LedgerEntry;
 use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Support\Carbon;
@@ -94,9 +95,10 @@ class DebitCreator
         $months = self::MONTHS_PER_INTERVAL[$membership->interval];
         $dueDate = $membership->end_date->copy();
 
-        return Debit::create([
+        $debit = Debit::create([
             "contact_id" => $membership->contact_id,
             "company_id" => $membership->company_id,
+            "membership_id" => $membership->id,
             "source" => "membership",
             "iban" => $bankDetails->iban,
             "bic" => $bankDetails->bic,
@@ -109,6 +111,19 @@ class DebitCreator
             "due_date" => $dueDate,
             "reference" => $this->reference("Mitgliedsbeitrag", $dueDate, $months),
         ]);
+
+        // The accrual half of the payment-ledger design pass (see
+        // docs/civicrm-replacement.md): this is what's owed, becoming due —
+        // BankStatementMatcher::confirm() records the other half once it's
+        // actually paid.
+        LedgerEntry::create([
+            "membership_id" => $membership->id,
+            "debit_id" => $debit->id,
+            "kind" => "charge",
+            "amount" => $debit->amount,
+        ]);
+
+        return $debit;
     }
 
     /**

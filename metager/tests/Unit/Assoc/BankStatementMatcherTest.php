@@ -6,6 +6,8 @@ use App\Assoc\BankStatementMatcher;
 use App\Models\Assoc\BankStatementLine;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
+use App\Models\Assoc\LedgerEntry;
+use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concerns\UsesInMemorySqlite;
@@ -45,6 +47,18 @@ class BankStatementMatcherTest extends TestCase
             "status" => "pending",
             "end_to_end_reference" => "E2E-" . uniqid(),
             "due_date" => "2026-02-01",
+        ], $overrides));
+    }
+
+    private function membership(Contact $contact, array $overrides = []): Membership
+    {
+        return Membership::create(array_merge([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "10.00",
+            "payment_method" => "directdebit",
+            "payment_reference" => "M1",
         ], $overrides));
     }
 
@@ -97,6 +111,42 @@ class BankStatementMatcherTest extends TestCase
         (new BankStatementMatcher())->confirm($this->line(), "debit", $debit->id, "manual");
 
         $this->assertSame("failed", $debit->fresh()->status);
+        $this->assertSame(0, LedgerEntry::count());
+    }
+
+    /**
+     * The payment half of the payment-ledger design pass — DebitCreator
+     * records the charge half when the debit is first created.
+     */
+    public function testConfirmingAMembershipDuesDebitRecordsAPaymentLedgerEntry(): void
+    {
+        $contact = $this->contact();
+        $membership = $this->membership($contact);
+        $debit = $this->debit($contact, ["source" => "membership", "membership_id" => $membership->id]);
+        $line = $this->line();
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $entry = LedgerEntry::sole();
+        $this->assertSame($membership->id, $entry->membership_id);
+        $this->assertSame($debit->id, $entry->debit_id);
+        $this->assertSame("payment", $entry->kind);
+        $this->assertSame("10.00", $entry->amount);
+        $this->assertSame("directdebit", $entry->channel);
+    }
+
+    /**
+     * A "donation"-source debit has no Membership to record a ledger entry
+     * against — see Debit::membership_id's migration comment.
+     */
+    public function testConfirmingADonationDebitRecordsNoLedgerEntry(): void
+    {
+        $this->debit($this->contact());
+        $line = $this->line();
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $this->assertSame(0, LedgerEntry::count());
     }
 
     public function testMatchesByStructuredMandateOnAPendingDebit(): void

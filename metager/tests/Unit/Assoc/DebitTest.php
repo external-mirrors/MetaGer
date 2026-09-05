@@ -5,6 +5,7 @@ namespace Tests\Unit\Assoc;
 use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
+use App\Models\Assoc\LedgerEntry;
 use App\Models\Assoc\Membership;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -194,5 +195,80 @@ class DebitTest extends TestCase
 
         $this->assertNull($withoutMembership->fresh()->membership);
         $this->assertTrue($withMembership->fresh()->membership->is($membership));
+    }
+
+    /**
+     * netLedgerAmount() is what donation receipts actually sum (decision 4
+     * of the payment-ledger design pass plus the refund/chargeback netting
+     * rule — see docs/civicrm-replacement.md), and what gates the admin
+     * "Erstellen" button.
+     */
+    public function testNetLedgerAmountFallsBackToTheDebitsOwnAmountWithNoLedgerEntries(): void
+    {
+        // CiviCrmImporter::importDebits() doesn't backfill the ledger for
+        // historical debits — a known, explicitly deferred gap.
+        $debit = Debit::create(array_merge($this->baseAttributes(), [
+            "contact_id" => $this->contact()->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+        ]));
+
+        $this->assertSame("10.00", $debit->netLedgerAmount());
+    }
+
+    public function testNetLedgerAmountIsThePaymentEntrysAmount(): void
+    {
+        $debit = Debit::create(array_merge($this->baseAttributes(), [
+            "contact_id" => $this->contact()->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+        ]));
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00"]);
+
+        $this->assertSame("10.00", $debit->netLedgerAmount());
+    }
+
+    public function testNetLedgerAmountSubtractsAPartialRefund(): void
+    {
+        $debit = Debit::create(array_merge($this->baseAttributes(), [
+            "contact_id" => $this->contact()->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+        ]));
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00"]);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "refund", "amount" => "4.00"]);
+
+        $this->assertSame("6.00", $debit->netLedgerAmount());
+    }
+
+    public function testNetLedgerAmountIsZeroWhenARefundFullyOffsetsThePayment(): void
+    {
+        $debit = Debit::create(array_merge($this->baseAttributes(), [
+            "contact_id" => $this->contact()->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+        ]));
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00"]);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "refund", "amount" => "10.00"]);
+
+        $this->assertSame("0.00", $debit->netLedgerAmount());
+    }
+
+    /**
+     * A chargeback fee always attaches to the *bounced* debit itself, never
+     * to the one currently being collected — but even if it somehow did,
+     * this must never count toward what's receiptable.
+     */
+    public function testNetLedgerAmountNeverCountsAChargebackFee(): void
+    {
+        $debit = Debit::create(array_merge($this->baseAttributes(), [
+            "contact_id" => $this->contact()->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+        ]));
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00"]);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "chargeback_fee", "amount" => "2.50"]);
+
+        $this->assertSame("10.00", $debit->netLedgerAmount());
     }
 }

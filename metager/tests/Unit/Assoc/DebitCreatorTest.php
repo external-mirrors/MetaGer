@@ -286,9 +286,13 @@ class DebitCreatorTest extends TestCase
         $this->assertSame("2026-02-10", $debit->due_date->format("Y-m-d"));
         $this->assertSame("Vielen Dank für Ihre Spende Feb 2026", $debit->reference);
         $this->assertSame("2026-03-10", $recur->fresh()->next_due_date->format("Y-m-d"));
-        // A recurring donation has no Membership to accrue a charge against —
-        // the ledger is membership-only for now, see docs/civicrm-replacement.md.
-        $this->assertSame(0, LedgerEntry::count());
+        // The accrual half of the payment-ledger design pass — a recurring
+        // donation has no Membership, so it's tied by debit_id alone.
+        $entry = LedgerEntry::sole();
+        $this->assertNull($entry->membership_id);
+        $this->assertSame($debit->id, $entry->debit_id);
+        $this->assertSame("charge", $entry->kind);
+        $this->assertSame("10.00", $entry->amount);
     }
 
     public function testFillsInAMissingNextDueDateBeforeCreating(): void

@@ -172,10 +172,10 @@ class DebitCreator
         $months = Membership::MONTHS_PER_INTERVAL[$recurContribution->frequency];
         $dueDate = $recurContribution->next_due_date->copy();
 
-        return Debit::create([
+        $debit = Debit::create([
             "contact_id" => $recurContribution->contact_id,
             "company_id" => $recurContribution->company_id,
-            "source" => "donation",
+            "source" => $recurContribution->source,
             "iban" => $recurContribution->iban,
             "bic" => $recurContribution->bic,
             "account_holder" => $recurContribution->account_holder
@@ -189,6 +189,19 @@ class DebitCreator
             "due_date" => $dueDate,
             "reference" => $this->reference("Vielen Dank für Ihre Spende", $dueDate, $months),
         ]);
+
+        // The accrual half of the payment-ledger design pass (see
+        // docs/civicrm-replacement.md) — mirrors createForMembership()'s own
+        // charge entry. membership_id stays null: a recurring donation has
+        // no Membership, only a payer reached via this Debit's own
+        // contact_id/company_id.
+        LedgerEntry::create([
+            "debit_id" => $debit->id,
+            "kind" => "charge",
+            "amount" => $debit->amount,
+        ]);
+
+        return $debit;
     }
 
     /**

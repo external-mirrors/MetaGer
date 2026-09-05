@@ -246,17 +246,35 @@ class BankStatementMatcherTest extends TestCase
     }
 
     /**
-     * A "donation"-source debit has no Membership to record a ledger entry
-     * against — see Debit::membership_id's migration comment.
+     * A "donation"-source debit has no Membership — the payment entry is
+     * tied by debit_id alone instead, with the channel derived from the
+     * debit's own iban (see BankStatementMatcher::channelFor()).
      */
-    public function testConfirmingADonationDebitRecordsNoLedgerEntry(): void
+    public function testConfirmingADonationDebitRecordsAPaymentLedgerEntry(): void
     {
-        $this->debit($this->contact());
+        $debit = $this->debit($this->contact());
         $line = $this->line();
 
         (new BankStatementMatcher())->match($line, mandate: "M1");
 
-        $this->assertSame(0, LedgerEntry::count());
+        $entry = LedgerEntry::sole();
+        $this->assertNull($entry->membership_id);
+        $this->assertSame($debit->id, $entry->debit_id);
+        $this->assertSame("payment", $entry->kind);
+        $this->assertSame("10.00", $entry->amount);
+        $this->assertSame("directdebit", $entry->channel);
+    }
+
+    public function testConfirmingABanktransferDonationDebitDerivesTheChannelFromTheMissingIban(): void
+    {
+        $debit = $this->debit($this->contact(), ["iban" => null]);
+        $line = $this->line();
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $entry = LedgerEntry::sole();
+        $this->assertSame($debit->id, $entry->debit_id);
+        $this->assertSame("banktransfer", $entry->channel);
     }
 
     public function testMatchesByStructuredMandateOnAPendingDebit(): void
@@ -507,10 +525,10 @@ class BankStatementMatcherTest extends TestCase
     }
 
     /**
-     * A "donation"-source debit has no Membership — same asymmetry
-     * confirm() already has for a normal payment.
+     * A "donation"-source debit has no Membership — both entries are tied by
+     * debit_id alone instead, same as a normal payment.
      */
-    public function testConfirmingAChargebackForADonationDebitRecordsNoLedgerEntry(): void
+    public function testConfirmingAChargebackForADonationDebitRecordsBothLedgerEntries(): void
     {
         $debit = $this->debit($this->contact(), ["status" => "executed", "amount" => "10.00"]);
         $line = $this->line(["amount" => "-12.50"]);
@@ -519,7 +537,76 @@ class BankStatementMatcherTest extends TestCase
 
         $this->assertTrue($matched);
         $this->assertSame("failed", $debit->fresh()->status);
-        $this->assertSame(0, LedgerEntry::count());
+        $refund = LedgerEntry::where("kind", "refund")->sole();
+        $this->assertNull($refund->membership_id);
+        $this->assertSame($debit->id, $refund->debit_id);
+        $this->assertSame("10.00", $refund->amount);
+        $this->assertSame("directdebit", $refund->channel);
+        $fee = LedgerEntry::where("kind", "chargeback_fee")->sole();
+        $this->assertNull($fee->membership_id);
+        $this->assertSame($debit->id, $fee->debit_id);
+        $this->assertSame("2.50", $fee->amount);
+    }
+
+    /**
+     * A member who bounced once and is now paying again has that outstanding
+     * fee settled first — see BankStatementMatcher::settleOutstandingFees().
+     * Only the remainder is credited toward the debit actually being
+     * collected.
+     */
+    public function testAPaymentSettlesAnOutstandingChargebackFeeBeforeCreditingTheCurrentDebit(): void
+    {
+        $contact = $this->contact();
+        $failedDebit = $this->debit($contact, ["status" => "failed", "amount" => "10.00", "due_date" => "2026-01-01"]);
+        LedgerEntry::create(["debit_id" => $failedDebit->id, "kind" => "chargeback_fee", "amount" => "2.50"]);
+        $newDebit = $this->debit($contact, ["due_date" => "2026-02-01", "end_to_end_reference" => "E2E-" . uniqid()]);
+        $line = $this->line(["amount" => "12.50"]);
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $feePayment = LedgerEntry::where("debit_id", $failedDebit->id)->where("kind", "payment")->sole();
+        $this->assertSame("2.50", $feePayment->amount);
+        $chargePayment = LedgerEntry::where("debit_id", $newDebit->id)->where("kind", "payment")->sole();
+        $this->assertSame("10.00", $chargePayment->amount);
+        $this->assertSame("executed", $newDebit->fresh()->status);
+    }
+
+    public function testAPaymentEntirelyConsumedByTheFeeLeavesTheCurrentDebitWithoutAPaymentEntry(): void
+    {
+        $contact = $this->contact();
+        $failedDebit = $this->debit($contact, ["status" => "failed", "amount" => "10.00", "due_date" => "2026-01-01"]);
+        LedgerEntry::create(["debit_id" => $failedDebit->id, "kind" => "chargeback_fee", "amount" => "5.00"]);
+        $newDebit = $this->debit($contact, ["due_date" => "2026-02-01", "end_to_end_reference" => "E2E-" . uniqid()]);
+        $line = $this->line(["amount" => "3.00"]);
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $feePayment = LedgerEntry::where("debit_id", $failedDebit->id)->where("kind", "payment")->sole();
+        $this->assertSame("3.00", $feePayment->amount);
+        $this->assertSame(0, LedgerEntry::where("debit_id", $newDebit->id)->where("kind", "payment")->count());
+        // Status has never meant "paid in full" (decision 1) — it still
+        // flips even though nothing ended up credited to this debit.
+        $this->assertSame("executed", $newDebit->fresh()->status);
+    }
+
+    public function testMultipleOutstandingFeesOnTheSameMandateAreSettledOldestFirst(): void
+    {
+        $contact = $this->contact();
+        $olderFailed = $this->debit($contact, ["status" => "failed", "amount" => "10.00", "due_date" => "2026-01-01"]);
+        LedgerEntry::create(["debit_id" => $olderFailed->id, "kind" => "chargeback_fee", "amount" => "2.00"]);
+        $newerFailed = $this->debit($contact, ["status" => "failed", "amount" => "10.00", "due_date" => "2026-01-15", "end_to_end_reference" => "E2E-" . uniqid()]);
+        LedgerEntry::create(["debit_id" => $newerFailed->id, "kind" => "chargeback_fee", "amount" => "3.00"]);
+        $newDebit = $this->debit($contact, ["due_date" => "2026-02-01", "end_to_end_reference" => "E2E-" . uniqid()]);
+        $line = $this->line(["amount" => "6.00"]);
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $olderPayment = LedgerEntry::where("debit_id", $olderFailed->id)->where("kind", "payment")->sole();
+        $this->assertSame("2.00", $olderPayment->amount);
+        $newerPayment = LedgerEntry::where("debit_id", $newerFailed->id)->where("kind", "payment")->sole();
+        $this->assertSame("3.00", $newerPayment->amount);
+        $chargePayment = LedgerEntry::where("debit_id", $newDebit->id)->where("kind", "payment")->sole();
+        $this->assertSame("1.00", $chargePayment->amount);
     }
 
     public function testConfirmingAnAlreadyFailedDebitIsANoOp(): void

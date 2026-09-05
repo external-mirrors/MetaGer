@@ -17,7 +17,11 @@ return new class extends Migration {
         // being what payment-status is read from.
         Schema::create('assoc_ledger_entries', function (Blueprint $table) {
             $table->uuid('id')->primary(true);
-            $table->uuid("membership_id")->references("id")->on("assoc_memberships");
+            // Nullable: a donation-sourced entry (see assoc_debits.source)
+            // has no Membership at all — its payer is reached via debit_id
+            // instead (every donation-sourced entry, auto or manual, always
+            // carries one — see DebitCreator/BankStatementMatcher).
+            $table->uuid("membership_id")->nullable()->references("id")->on("assoc_memberships");
             // The Debit/BankStatementLine this entry came from, where
             // applicable — a manual admin adjustment (waiver, a refund not
             // yet tied to a specific statement line) has neither.

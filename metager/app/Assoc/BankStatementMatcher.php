@@ -143,11 +143,16 @@ class BankStatementMatcher
      * downgrade an already-"failed" (bounced/returned) collection back to
      * looking executed.
      *
-     * A membership-dues debit (Debit::membership_id set — see DebitCreator)
-     * also gets a "payment" LedgerEntry here, the other half of the
-     * payment-ledger design pass (see docs/civicrm-replacement.md): a
-     * "donation"-source debit has no Membership to record one against, so it
-     * gets none.
+     * Records a "payment" LedgerEntry — the other half of the payment-ledger
+     * design pass (see docs/civicrm-replacement.md) whose accrual half
+     * DebitCreator writes. Membership-tied when the debit is (membership_id
+     * set); a "donation"-source debit has no Membership, so it's tied by
+     * debit_id alone instead.
+     *
+     * Before crediting this debit, settleOutstandingFees() first pays down
+     * any chargeback fee still outstanding on this same mandate (a member
+     * who bounced once and is now catching up) — only the remainder, if any,
+     * is what actually gets credited here. See that method's docblock.
      *
      * It also advances Membership::end_date — design decision 1 of the
      * payment-ledger pass ("coverage only advances once it's actually paid
@@ -162,7 +167,8 @@ class BankStatementMatcher
      * on subsequent assoc:create-debits runs. Nothing here creates a new
      * Membership row — the existing one just continues; multiple
      * memberships are only for a genuinely lapsed-then-rejoined member (see
-     * docs/civicrm-replacement.md's retention section), not this case.
+     * docs/civicrm-replacement.md's retention section), not this case. This
+     * is membership-only — a donation has no "coverage" concept.
      */
     public function confirm(BankStatementLine $line, string $type, string $id, string $method, ?string $matchedBy = null): bool
     {
@@ -178,21 +184,26 @@ class BankStatementMatcher
             if ($debit !== null) {
                 $debit->update(["status" => "executed"]);
                 $membership = $debit->membership;
-                if ($membership !== null) {
+
+                // The amount actually received, not $debit->amount (what was
+                // owed) — decision 1 of the payment-ledger design pass needs
+                // the ledger to see a real under/overpayment, not silently
+                // assume the charge was paid in full just because something
+                // matched. May be less than $line->amount if some of it went
+                // to an outstanding chargeback fee first.
+                $remaining = $this->settleOutstandingFees($debit, $line);
+                if ((float) $remaining > 0) {
                     LedgerEntry::create([
-                        "membership_id" => $membership->id,
+                        "membership_id" => $membership?->id,
                         "debit_id" => $debit->id,
                         "bank_statement_line_id" => $line->id,
                         "kind" => "payment",
-                        // The amount actually received, not $debit->amount
-                        // (what was owed) — decision 1 of the payment-ledger
-                        // design pass needs the ledger to see a real
-                        // under/overpayment, not silently assume the charge
-                        // was paid in full just because something matched.
-                        "amount" => $line->amount,
-                        "channel" => $membership->payment_method,
+                        "amount" => $remaining,
+                        "channel" => $this->channelFor($debit, $membership),
                     ]);
+                }
 
+                if ($membership !== null) {
                     // Coverage only advances once it's actually paid for
                     // (design decision 1): a partial payment is credited to
                     // the balance above but must not by itself push
@@ -222,6 +233,95 @@ class BankStatementMatcher
         }
 
         return true;
+    }
+
+    /**
+     * A member who bounced a collection now owes the association a fee (see
+     * confirmChargeback()) on top of whatever they were already being
+     * collected for — and per an explicit decision, the next payment that
+     * comes in under the same mandate settles that fee first, before any of
+     * it counts toward the current debit. Otherwise the fee would just sit
+     * on the balance forever unless collected as its own separate line, and
+     * a chargeback fee must never look like it was paid toward (and so could
+     * be summed into a receipt for) an actual charge or donation.
+     *
+     * Walks this mandate's "failed" (bounced) debits oldest-first, settling
+     * each one's still-outstanding fee (outstandingFeeCents()) out of
+     * $line->amount before anything is left for the debit actually being
+     * confirmed. A fee-settling payment is tied to the *bounced* debit's own
+     * id, not the one currently being collected — the same debit_id its
+     * chargeback_fee entry already carries, which is what keeps it out of
+     * Debit::netLedgerAmount() for the debit actually being paid, and
+     * (structurally, since a "failed" debit is never receipt-eligible)
+     * out of any donation receipt.
+     *
+     * @return string the decimal amount left over for $matchedDebit itself
+     */
+    private function settleOutstandingFees(Debit $matchedDebit, BankStatementLine $line): string
+    {
+        $remainingCents = (int) round((float) $line->amount * 100);
+
+        $failedDebits = Debit::where("mandate", $matchedDebit->mandate)
+            ->where("status", "failed")
+            ->orderBy("due_date")
+            ->get();
+
+        foreach ($failedDebits as $failedDebit) {
+            if ($remainingCents <= 0) {
+                break;
+            }
+
+            $feeCents = $this->outstandingFeeCents($failedDebit);
+            if ($feeCents <= 0) {
+                continue;
+            }
+
+            $applied = min($feeCents, $remainingCents);
+            LedgerEntry::create([
+                "membership_id" => $failedDebit->membership_id,
+                "debit_id" => $failedDebit->id,
+                "bank_statement_line_id" => $line->id,
+                "kind" => "payment",
+                "amount" => number_format($applied / 100, 2, ".", ""),
+                "channel" => $this->channelFor($failedDebit, $failedDebit->membership),
+            ]);
+            $remainingCents -= $applied;
+        }
+
+        return number_format($remainingCents / 100, 2, ".", "");
+    }
+
+    /**
+     * A bounced debit's chargeback_fee entries (there is only ever one today
+     * — see confirmChargeback() — but this sums rather than assumes that)
+     * minus whatever payment entries have already settled it.
+     */
+    private function outstandingFeeCents(Debit $failedDebit): int
+    {
+        $feeCents = 0;
+        $paidCents = 0;
+        foreach ($failedDebit->ledgerEntries as $entry) {
+            if ($entry->kind === "chargeback_fee") {
+                $feeCents += (int) round($entry->amount * 100);
+            } elseif ($entry->kind === "payment") {
+                $paidCents += (int) round($entry->amount * 100);
+            }
+        }
+
+        return max(0, $feeCents - $paidCents);
+    }
+
+    /**
+     * How the money moved — $membership->payment_method when there's a
+     * Membership to read it from, else derived from the debit's own bank
+     * details: iban set means a SEPA collection (directdebit), null means a
+     * banktransfer collection never had bank details to snapshot in the
+     * first place. Same nullability convention DebitCreator's own docblock
+     * already establishes.
+     */
+    private function channelFor(Debit $debit, ?Membership $membership): string
+    {
+        return $membership?->payment_method ?? ($debit->iban !== null ? "directdebit" : "banktransfer");
     }
 
     /**
@@ -255,10 +355,10 @@ class BankStatementMatcher
 
     /**
      * The chargeback counterpart to confirm(): flips the original Debit to
-     * "failed", and — only when it's a membership-dues debit, same
-     * asymmetry confirm() already has for a "donation"-source one having no
-     * Membership to record a ledger entry against — reverses the earlier
-     * "payment" entry and adds the bank's fee as new debt.
+     * "failed", reverses the earlier "payment" entry and adds the bank's fee
+     * as new debt — for a donation-sourced debit exactly as for a
+     * membership-dues one, tied by debit_id alone when there's no
+     * Membership.
      *
      * Guarded to "executed" only, same reasoning confirm() guards to
      * "pending" only: re-running this against an already-"failed" debit
@@ -292,28 +392,27 @@ class BankStatementMatcher
         $debit->update(["status" => "failed"]);
 
         $membership = $debit->membership;
-        if ($membership !== null) {
-            LedgerEntry::create([
-                "membership_id" => $membership->id,
-                "debit_id" => $debit->id,
-                "bank_statement_line_id" => $line->id,
-                "kind" => "refund",
-                "amount" => $debit->amount,
-                "channel" => $membership->payment_method,
-            ]);
 
-            LedgerEntry::create([
-                "membership_id" => $membership->id,
-                "debit_id" => $debit->id,
-                "bank_statement_line_id" => $line->id,
-                "kind" => "chargeback_fee",
-                "amount" => $fee,
-            ]);
+        LedgerEntry::create([
+            "membership_id" => $membership?->id,
+            "debit_id" => $debit->id,
+            "bank_statement_line_id" => $line->id,
+            "kind" => "refund",
+            "amount" => $debit->amount,
+            "channel" => $this->channelFor($debit, $membership),
+        ]);
 
-            if ($debit->previous_end_date !== null) {
-                $membership->end_date = $debit->previous_end_date;
-                $membership->save();
-            }
+        LedgerEntry::create([
+            "membership_id" => $membership?->id,
+            "debit_id" => $debit->id,
+            "bank_statement_line_id" => $line->id,
+            "kind" => "chargeback_fee",
+            "amount" => $fee,
+        ]);
+
+        if ($membership !== null && $debit->previous_end_date !== null) {
+            $membership->end_date = $debit->previous_end_date;
+            $membership->save();
         }
 
         return true;

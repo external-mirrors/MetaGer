@@ -258,12 +258,17 @@ knowing before touching any of (b)-(e):
     inconsistently or not at all, so two memberships (one lapsed, one current) for the same person
     could easily produce references that don't disambiguate cleanly — the same ambiguity the old
     custom automation had, not yet solved because the matching itself doesn't exist yet.
-  - Fixing the relation is the easy part (`hasOne` → `hasMany`, plus some notion of "the current
-    membership" — most likely "latest by join_date", since `standing` alone doesn't distinguish a
-    lapsed membership from a currently-active one once there can be more than one row). The harder,
-    still-open part is what "current" even means once terminated memberships stick around — e.g.
-    whether a contact can have two `standing => active` rows at once needs an answer before (b)'s
-    `createForDueMemberships()` and the admin views can trust "the" membership again.
+  - **Resolved after discussion: the sequence is cancel-then-rejoin, not concurrent memberships.**
+    Once a member genuinely cancels, that `assoc_memberships` row stays exactly as it is (terminated,
+    not deleted) for the 10-year record; a later rejoin is a new row, not a resurrection of the old
+    one. So a contact is never meant to hold two `standing => active` rows at the same time — "the
+    current membership" is simply "the one row (if any) with `standing => active`", which is what
+    `hasOne` already gets right for someone on their first or only membership. What `hasOne` gets
+    wrong is only the historical rows: `Contact::membership()`/`Company::membership()` need to become
+    `hasMany`, with the existing `hasOne` behaviour kept as a `->firstWhere("standing", "active")`-style
+    "current membership" accessor for (b)'s `createForDueMemberships()` and the admin views to keep
+    using — not a new ambiguity to resolve, just a rename of what already exists plus a way to reach
+    the terminated history alongside it.
   - The retention side is a second, distinct piece: nothing here today is soft-deleted, nothing
     tracks when a record's retention window started or ends, and there is no messages/communication-
     log entity in the `assoc_*` schema at all yet — that part isn't "add a retention flag to an

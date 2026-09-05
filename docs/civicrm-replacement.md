@@ -525,9 +525,61 @@ Deliberately deferred, not built here:
 - **A `previous_end_date` that's null** (a debit confirmed before this column existed) skips the
   rollback rather than guessing — moot today since nothing has been deployed with the old shape yet.
 
+**Balance-driven coverage advancement and reminder staging (resolved decisions 1-2) — done.**
+`BankStatementMatcher::confirm()`'s `payment` ledger entry now records `$line->amount` (what
+actually arrived) instead of `$debit->amount` (what was owed), and the `end_date` advance is gated
+on `$membership->fresh()->ledgerBalance() <= 0` — an underpayment is credited immediately but
+doesn't push coverage forward; a later payment against a *different*, later debit that finally
+clears the cumulative balance does advance it (exercising the same resumption formula as an
+overdue debit, since the earlier shortfall already left `end_date` stale). `Debit::status` still
+flips to `executed` unconditionally, same as before — it means "this collection attempt happened,"
+never "paid in full."
+
+New `Membership::oldestUnpaidChargeDueDate()` answers what a shortfall's age is measured from: a
+FIFO walk that consumes "debt" entries (`charge`/`chargeback_fee`/`refund`, ordered by their
+linked `Debit::due_date`, or the entry's own `created_at` for a debit-less admin refund)
+oldest-first against the pooled total of "reduction" entries (`payment`/`waiver`); the first debt
+entry the pool can't fully cover is the oldest unpaid one. Returns `null` once the balance is
+covered.
+
+New `App\Assoc\PaymentReminderProcessor` (`assoc:send-payment-reminders`, left unscheduled like
+every other `assoc:*` command pending cutover) ports legacy's `MembershipPaymentReminder`/
+`CiviCrm::FIND_*_REMINDER()` staging — 1st reminder at 2 weeks overdue, 2nd at 4 weeks — but keyed
+off `oldestUnpaidChargeDueDate()` instead of the calendar, confirmed against the real, still-running
+legacy command rather than assumed. New `assoc_memberships.reminder_stage` (nullable
+`"first"`/`"second"`) tracks the current escalation, reset to `null` the moment the balance clears.
+**Banktransfer-only**, matching legacy's own confirmed scope — a direct-debit membership's failure
+mode is a Rücklastschrift, already handled by `confirmChargeback()`, not a reminder email. Past 6
+weeks overdue (a new stage, two more weeks past the 4-week mark) the membership is actually
+terminated (`standing => "terminated"`) — new: legacy's own "aborted" stage only ever set a status
+label. A membership with no resolvable email (a company payer with no `contactPerson` — `Contact`
+itself is `NOT NULL` on `email`) is skipped entirely for the run, not just the send, since
+escalating or terminating someone never actually notified isn't defensible.
+
+`App\Mail\Assoc\PaymentReminder` deliberately **reuses** the already-translated
+`membership/mails/payment_reminder` strings (correct in all 12 shipped locales already) rather than
+authoring new copy in every language, since the concept is identical — but with its own view
+(`mail.assoc.payment_reminder`): the legacy view is wired to `CiviCrm::GET_EDIT_ID()` and
+`MembershipApplication`-only fields, so reusing it directly would mean faking a
+`MembershipApplication` rather than a real integration. Per explicit instruction, **the legacy
+SEPA-mandate PDF attachment is dropped entirely, not ported** — it's unused now; the 2nd-stage
+nudge to switch to direct debit is a plain link to the existing `/membership` application form
+instead. That form isn't actually wired to edit an *existing* `assoc_memberships` row (it's the
+`membership_applications` intake flow), and separately doesn't yet capture what it would need to
+for a mandate gathered that way to be legally valid — both flagged as a real, not-yet-designed
+prerequisite for this nudge to lead anywhere, distinct from sending the email itself. Also
+deliberately omits the legacy view's `mastodon`/`key_charge` panels: both claim an action
+("charging paused", "account frozen") nothing in this schema performs yet (phase 6d/`assoc:
+charge-keys` and any Mastodon integration don't exist here) — claiming either would be false.
+
+**Known, accepted limitation, not solved here:** if a member overpays by 2+ full future periods in
+one transaction, the credit fully covers a not-yet-created future charge, but nothing will ever
+arrive to `confirm()` that future debit once `DebitCreator` creates it — it stays `pending`
+forever, and the existing "already-pending" guard freezes further billing for that membership. A
+real, narrow edge case (needs a lump sum spanning multiple periods) outside what was asked in the
+design pass; revisit if it's hit in practice.
+
 **Not yet done, in rough dependency order:**
-- The balance-driven reminder staging (resolved decisions 1-2 above) and the precise reminder-stage
-  intervals/copy (assumed ported from legacy pending actual confirmation).
 - Donation-receipt generation (`DonationReceiptGenerator`) still reads `assoc_debits` directly, not
   the ledger — the "sums only `payment`-kind entries" rule above isn't implemented yet, and is
   structurally blocked until it is: `assoc_ledger_entries.membership_id` is `NOT NULL`, so a

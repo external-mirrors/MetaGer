@@ -430,25 +430,45 @@ sketch rather than sitting alongside it:
   refund path under the EU Instant Payments Regulation. None of these block the shape above, but all
   of them are implementation-time, not design-time, unknowns.
 
-**Proposed shape** (not yet built): a new ledger table — one row per accrual/payment/adjustment
-event, tied to a membership and, where applicable, to the `Debit`/`BankStatementLine` it came from —
-with an entry `kind`: `charge` (accrued from the membership's own stored `amount`/`interval`, the
-source of truth for what's owed — never a payment's amount), `payment` (received, from whatever
+**Shape — table and model done (`22df6625e`), nothing wired to it yet.** A new
+`assoc_ledger_entries` table: one row per accrual/payment/adjustment event, tied to a
+`Membership` and, where applicable, to the `Debit`/`BankStatementLine` it came from — with an
+entry `kind`: `charge` (accrued from the membership's own stored `amount`/`interval`, the source
+of truth for what's owed — never a payment's amount), `payment` (received, from whatever
 channel), `chargeback_fee` (owed, excluded from receipt totals), `waiver` (admin write-off on an
 accepted late cancellation), `refund` (admin-recorded outgoing amount, tagged with the channel it
-went out through: SEPA credit transfer vs. PayPal). A membership's balance is derived by summing
-these, the same "derive, don't store" principle as everywhere else in this schema — `assoc_debits`
-keeps its existing role as "a specific SEPA collection attempt," but stops being the thing
-payment-status is read from; that becomes the membership's ledger balance instead. Donation-receipt
-generation sums only `payment`-kind entries tied to a donation source, explicitly excluding
-`chargeback_fee`.
+went out through: SEPA credit transfer vs. PayPal — a `channel` column, shared with `payment`, so
+a later refund can route the same way the money arrived). `App\Models\Assoc\LedgerEntry` +
+`Membership::ledgerEntries()`/`ledgerBalance()`. `ledgerBalance()` sums in integer cents, not
+floats or bcmath — `ext-bcmath` isn't in the fpm image, and `decimal(10,2)` amounts never carry
+more than two fractional digits, so cents are exact. The sign convention (a decision made
+building this, not itself asked about in the design pass): `charge`/`chargeback_fee` add to what's
+owed, `payment`/`waiver` reduce it, `refund` adds back what a `payment` had reduced, since that
+money is no longer with the association — positive balance is owed, negative is a credit carried
+forward. `assoc_debits` keeps its existing role as "a specific SEPA collection attempt," but
+stops being the thing payment-status is read from; that becomes the membership's ledger balance
+instead. Donation-receipt generation sums only `payment`-kind entries tied to a donation source,
+explicitly excluding `chargeback_fee` — not yet wired up, see below.
 
-Not yet designed: the exact charge-accrual mechanism for banktransfer/other-non-directdebit members
-(today only `DebitCreator` creates anything resembling a periodic charge, and only for `directdebit`
-— an equivalent periodic `charge` entry needs generating for every payment method for the balance to
-mean anything), and the precise reminder-stage intervals/copy (assumed ported from legacy pending
-actual confirmation). Both are implementation-time questions once this is picked up, not blocking
-the shape above.
+**Not yet done, in rough dependency order:**
+- Nothing writes a `LedgerEntry` yet. `DebitCreator`, `BankStatementMatcher::confirm()`, and every
+  other place currently reading `assoc_debits.status` as the payment-status source of truth are
+  untouched — this phase only lands the shape, per the design pass's own scoping.
+- The exact charge-accrual mechanism for banktransfer/other-non-directdebit members (today only
+  `DebitCreator` creates anything resembling a periodic charge, and only for `directdebit` — an
+  equivalent periodic `charge` entry needs generating for every payment method for the balance to
+  mean anything).
+- Rücklastschrift detection in `BankStatementImporter`/`BankStatementMatcher` (recognising a
+  return line, linking it back to the original `executed` `Debit`, parsing the bank's fee off the
+  statement) — see resolved decision 3 above; this is what would actually create `chargeback_fee`
+  entries.
+- The balance-driven reminder staging (resolved decisions 1-2 above) and the precise reminder-stage
+  intervals/copy (assumed ported from legacy pending actual confirmation).
+- Admin UI for the two manual actions from the chargeback refinement above (waiver on a late
+  cancellation, refund with retroactive cancellation) — currently only reachable by creating a
+  `LedgerEntry` directly, no admin form exists.
+- Donation-receipt generation (`DonationReceiptGenerator`) still reads `assoc_debits` directly, not
+  the ledger — the "sums only `payment`-kind entries" rule above isn't implemented yet.
 
 ### Phase 6b — `assoc:create-debits`
 

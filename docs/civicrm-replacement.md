@@ -430,7 +430,7 @@ sketch rather than sitting alongside it:
   refund path under the EU Instant Payments Regulation. None of these block the shape above, but all
   of them are implementation-time, not design-time, unknowns.
 
-**Shape — table and model done (`22df6625e`), nothing wired to it yet.** A new
+**Shape done (`22df6625e`); directdebit collection now writes to it (`9a578f253`).** A new
 `assoc_ledger_entries` table: one row per accrual/payment/adjustment event, tied to a
 `Membership` and, where applicable, to the `Debit`/`BankStatementLine` it came from — with an
 entry `kind`: `charge` (accrued from the membership's own stored `amount`/`interval`, the source
@@ -450,18 +450,26 @@ stops being the thing payment-status is read from; that becomes the membership's
 instead. Donation-receipt generation sums only `payment`-kind entries tied to a donation source,
 explicitly excluding `chargeback_fee` — not yet wired up, see below.
 
+`Debit` gained a nullable `membership_id`, decorative FK to `assoc_memberships` — the mandate
+string alone isn't a reliable enough link back to the Membership a `"membership"`-source `Debit`
+collects for (it isn't unique across memberships, see `assoc_debits`' own migration comment), and
+`DebitCreator` already has the `Membership` in hand when it creates that row. `DebitCreator` now
+writes a `charge` `LedgerEntry` there too — the amount becoming due — and
+`BankStatementMatcher::confirm()` writes the matching `payment` entry (`channel: "directdebit"`)
+when it flips that `Debit` from `pending` to `executed`. Guarded the same way the status flip
+already was: only a `Debit` actually found still `pending` gets either. A `"donation"`-source
+`Debit` (from `RecurContribution`) has no `membership_id` and so gets no ledger entries — the
+ledger stays membership-only for now.
+
 **Not yet done, in rough dependency order:**
-- Nothing writes a `LedgerEntry` yet. `DebitCreator`, `BankStatementMatcher::confirm()`, and every
-  other place currently reading `assoc_debits.status` as the payment-status source of truth are
-  untouched — this phase only lands the shape, per the design pass's own scoping.
-- The exact charge-accrual mechanism for banktransfer/other-non-directdebit members (today only
-  `DebitCreator` creates anything resembling a periodic charge, and only for `directdebit` — an
-  equivalent periodic `charge` entry needs generating for every payment method for the balance to
-  mean anything).
+- The exact charge-accrual mechanism for banktransfer/other-non-directdebit members (`DebitCreator`
+  is now wired for `directdebit` only — an equivalent periodic `charge` entry needs generating for
+  every payment method for the balance to mean anything for them).
 - Rücklastschrift detection in `BankStatementImporter`/`BankStatementMatcher` (recognising a
   return line, linking it back to the original `executed` `Debit`, parsing the bank's fee off the
   statement) — see resolved decision 3 above; this is what would actually create `chargeback_fee`
-  entries.
+  entries. Today a returned collection still only flips `assoc_debits.status` to `failed`
+  elsewhere; nothing reverses the `charge`/`payment` pair for it in the ledger.
 - The balance-driven reminder staging (resolved decisions 1-2 above) and the precise reminder-stage
   intervals/copy (assumed ported from legacy pending actual confirmation).
 - Admin UI for the two manual actions from the chargeback refinement above (waiver on a late

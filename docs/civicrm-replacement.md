@@ -471,10 +471,31 @@ until phase 6c's SEPA generation (and, per the design doc, the Hibiscus Payment-
 `refund`'s `channel` is restricted to `sepa_credit_transfer`/`paypal` (a waiver isn't a transfer of
 money and carries none); nothing else about `kind`/`channel`'s validity has changed.
 
+**Banktransfer charge-accrual — done.** `DebitCreator`/`BankStatementMatcher` now cover
+`payment_method = banktransfer` too, not just `directdebit` — reusing the existing `Debit`/matcher
+machinery rather than a parallel path, since the doc's own framing of the gap ("banktransfer
+memberships get no `assoc_debits` row at all") already pointed there. `assoc_debits.iban` is now
+nullable (a banktransfer collection has no bank details to snapshot — `bic` was already nullable for
+the same reason); `account_holder` falls back to the payer's own name, same pattern
+`createForRecurContribution()` already used for donations. `DebitCreator`'s existing
+"already-pending" guard needs no new "in arrears" concept to satisfy the agreed behaviour (stop
+accruing new charges once someone stops paying, resume forward once they pay again) — a member who
+stops paying just leaves their last debit `pending`, which already blocks a new one. `paypal`/`card`
+memberships are explicitly excluded, pending the still-open "exact scope of the rebuilt module vs.
+what MetaGer's `membership_applications`/`Membership` code already does" decision above — they're
+already billed by that separate, pre-existing system.
+
+Fixed in passing: `BankStatementMatcher::confirm()` never advanced `Membership::end_date` on a
+confirmed payment, so the *next* `assoc:create-debits` run would offer the exact same just-paid
+period again — a latent bug, not yet hit because phase 6a is very new. It now advances by one
+interval on confirm, and (per an explicit decision) a debit that sat pending well past its due date
+— someone who stopped paying, then resumed — restarts coverage fresh from the day the resuming
+payment was booked rather than compounding forward one stale interval from wherever `end_date` had
+been stuck; the membership itself is untouched (same row continues, no new `Membership` created) —
+also fixed the `payment` `LedgerEntry`'s `channel`, previously hardcoded to `"directdebit"`
+regardless of which payment method the underlying membership actually used.
+
 **Not yet done, in rough dependency order:**
-- The exact charge-accrual mechanism for banktransfer/other-non-directdebit members (`DebitCreator`
-  is now wired for `directdebit` only — an equivalent periodic `charge` entry needs generating for
-  every payment method for the balance to mean anything for them).
 - Rücklastschrift detection in `BankStatementImporter`/`BankStatementMatcher` (recognising a
   return line, linking it back to the original `executed` `Debit`, parsing the bank's fee off the
   statement) — see resolved decision 3 above; this is what would actually create `chargeback_fee`

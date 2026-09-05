@@ -301,6 +301,94 @@ knowing before touching any of (b)-(e):
     admin member views, `DebitCreator::createForDueMemberships()`'s membership query, and a new
     scheduled command alongside `assoc:create-debits`/`assoc:import-civicrm` for the actual purge.
 
+### Payment-ledger design pass
+
+Requested explicitly as its own design pass rather than folded into (c)/(e), on the condition that
+anywhere the design was unclear it should ask rather than guess how the association actually
+handles it — four questions were asked and answered; this section is the resulting shape. Nothing
+below is implemented yet.
+
+**Grounding: what legacy actually does today for banktransfer members**, read from
+`Civi\Api4\Action\Membership\{UpdatePaymentStatus,Renew}.php`, because "should follow how we handle
+things perfectly" only holds for banktransfer — direct-debit members' standing already comes from
+`end_date`/`assoc_debits` (see the phase 6 findings above), untouched by any of this:
+
+- `Renew.php` advances a membership's `end_date` by one period the moment *any* `Completed`
+  Member-Dues contribution is recorded against it — it never checks whether the amount matches the
+  fee. This is very likely how underpayments went unnoticed in the first place.
+- `UpdatePaymentStatus.php` runs independently and stages purely off how far in the past `end_date`
+  is: Okay → 1st reminder at `end_date + 2 weeks` → 2nd reminder at `end_date + 4 weeks` (which also
+  attaches the SEPA-mandate PDF, nudging a switch to direct debit) → "Unterbrochen" past
+  `end_date + 4 weeks`. It never reads the received amount either. Nothing in the read code actually
+  terminates a membership automatically past that point — "Unterbrochen" is a status value, not a
+  standing change; if legacy ever force-cancelled for non-payment, it happened manually.
+
+**Resolved decisions:**
+
+1. **Coverage only advances once it's actually paid for.** Unlike `Renew.php`, a membership's
+   covered-through date does not move forward until the cumulative amount received actually covers
+   what's owed for that period. A partial payment is credited to the balance immediately (it isn't
+   held in limbo) but does not by itself extend coverage — the shortfall is what a reminder is for.
+2. **Reminders stay staged, but the trigger becomes the balance, not the calendar.** The nudge-
+   toward-SEPA-then-eventually-cancel escalation is worth keeping — it's a real, working part of how
+   the association gets people to switch payment methods — but gating it on "how long since
+   `end_date`" is exactly the mechanism that let underpayments through unremarked, since it never
+   looked at whether anything was actually short. The new trigger is "the ledger balance has been in
+   shortfall for N weeks," measured from the oldest unpaid charge's due date rather than `end_date`,
+   reusing legacy's own staging (assumption, not re-confirmed: the same 2/4-week intervals, 1st
+   reminder → 2nd reminder with the mandate PDF attached → termination) since only the trigger
+   condition was asked about, not the specific intervals. If a payment clears the balance at any
+   point, the escalation resets — the reason for it is gone. Termination-for-non-payment past the
+   final stage is a real standing change here (`active` → `terminated`), which is new: legacy's own
+   code never went that far automatically as far as this read shows.
+3. **A chargeback's fee is parsed from the bank statement, never entered manually or read from
+   config** — the association's own bank charges these fees and they vary per bank/case, so there is
+   no fixed amount to configure and no reliable way for an admin to know the figure except by reading
+   it off the same Hibiscus export the return itself arrives in. This is new `BankStatementImporter`/
+   `BankStatementMatcher` work — recognising a Rücklastschrift return line, linking it back to the
+   original `executed` `Debit` (mandate/end-to-end reference, same as any other match), and
+   separately identifying the fee the bank charged the association for it — and, like the IBAN-field
+   uncertainty already flagged in `BankStatementImporter`'s docblock, the exact shape a real
+   Hibiscus Rücklastschrift export takes isn't nailed down yet; flagging rather than guessing a
+   field name.
+4. **A chargeback fee is money the member owes, never a donation.** It becomes its own ledger entry
+   that adds to what's owed, but must never be summed into a donation-receipt total even when the
+   underlying collection it's attached to was a donation — a bank fee isn't tax-deductible. This
+   means the ledger needs to distinguish entries by kind for receipt purposes, not just net everything
+   into one "amount received" figure (see the entry kinds below).
+5. **Refunds and outgoing payments route by how the money actually arrived**, because different
+   channels need different rails: banktransfer/direct-debit-sourced payments get refunded as an
+   outgoing SEPA credit transfer, PayPal-sourced payments get refunded through PayPal's API. This
+   requires that whatever channel funded a ledger entry stays attached to it, not just an aggregate
+   balance. It also surfaces a real new dependency: **the association will run a Jameica/Hibiscus
+   server**, which becomes the channel for both submitting generated SEPA files (collections *and*
+   refund credit transfers) and pulling bank statements automatically — superseding
+   `BankStatementImporter::importHibiscusXml()`'s current manual-file-upload flow eventually, though
+   that changeover isn't itself decided or needed yet. This directly grows (c)'s scope: it was
+   "generate a pain.008 file"; it now includes submitting that file to the Hibiscus server rather
+   than leaving delivery unspecified. Worth flagging for whoever picks up (c) even before the ledger
+   itself is built.
+
+**Proposed shape** (not yet built): a new ledger table — one row per accrual/payment/adjustment
+event, tied to a membership and, where applicable, to the `Debit`/`BankStatementLine` it came from —
+with an entry `kind`: `charge` (accrued from the membership's own stored `amount`/`interval`, the
+source of truth for what's owed — never a payment's amount), `payment` (received, from whatever
+channel), `chargeback_fee` (owed, excluded from receipt totals), `waiver` (admin write-off on an
+accepted late cancellation), `refund` (admin-recorded outgoing amount, tagged with the channel it
+went out through: SEPA credit transfer vs. PayPal). A membership's balance is derived by summing
+these, the same "derive, don't store" principle as everywhere else in this schema — `assoc_debits`
+keeps its existing role as "a specific SEPA collection attempt," but stops being the thing
+payment-status is read from; that becomes the membership's ledger balance instead. Donation-receipt
+generation sums only `payment`-kind entries tied to a donation source, explicitly excluding
+`chargeback_fee`.
+
+Not yet designed: the exact charge-accrual mechanism for banktransfer/other-non-directdebit members
+(today only `DebitCreator` creates anything resembling a periodic charge, and only for `directdebit`
+— an equivalent periodic `charge` entry needs generating for every payment method for the balance to
+mean anything), and the precise reminder-stage intervals/copy (assumed ported from legacy pending
+actual confirmation). Both are implementation-time questions once this is picked up, not blocking
+the shape above.
+
 ### Phase 6b — `assoc:create-debits`
 
 Ported `Membership.CreateDebits`/`RecurContribution.CreateDebits` as one command (`assoc:create-

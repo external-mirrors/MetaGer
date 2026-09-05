@@ -40,6 +40,13 @@ services:
     depends_on:
       assets:
         condition: service_completed_successfully
+      # Nothing user-facing works without it — the authorization path and the
+      # search path's Redis::brpop both reach it directly, cache store aside
+      # (see CLAUDE.md's "Running things"). Declared here rather than left to
+      # convention, so `docker compose run fpm ...` starts it too, not just a
+      # plain `up`.
+      valkey:
+        condition: service_healthy
     networks:
       - metager
     volumes:

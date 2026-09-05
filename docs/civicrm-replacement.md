@@ -642,6 +642,29 @@ before the real production cutover import runs, `importDebits()` should be revis
 matching `payment` entry for every already-`executed` debit it brings in, or historical
 donations/dues become permanently unreceiptable through this generator.
 
+**Known historical data quirk to check before that backfill is written: legacy chargeback fees were
+recorded as a negative transaction.** Historically (pre-this-project), a bounced membership payment
+was handled entirely by hand in CiviCRM: the original completed contribution was marked
+"chargeback", a *new* pending contribution was created for the membership-fee amount (so the member
+owed the fee again), and the fee itself was booked as a single manually-entered transaction of
+*minus* the fee amount — so paying it off required paying more than the new pending contribution
+alone. This was the only place the legacy system ever used a negative transaction amount; nothing
+else there ever went negative.
+
+`CiviCrmImporter` never reads this history at all — `importDebits()`/`importRecurContributions()`
+only read the donation-debit extension's own `civicrm_debit`/`civicrm_recur_contribution` tables,
+never CiviCRM core's `civicrm_contribution`/`civicrm_financial_trxn`, which is where this pattern
+would actually live. So as written today the importer can't encounter it. But nothing enforces that
+guarantee structurally: neither `assoc_debits.amount` nor `assoc_ledger_entries.amount` is
+`unsigned()` or otherwise constrained against negative values, and every balance/netting computation
+that reads them (`Debit::netLedgerAmount()`, `Membership::ledgerBalance()`, `LedgerEntry::
+BALANCE_SIGN`) assumes the amount is always non-negative and encodes sign entirely through `kind` —
+a negative `amount` slipping in from anywhere would silently double the sign and corrupt those
+figures rather than raising an error. Before the real production cutover, check the actual
+`civicrm_debit`/`civicrm_recur_contribution` dump for any negative `amount` row; if the legacy
+chargeback-fee quirk (or anything else) ever wrote one there, it needs translating into the new
+`chargeback_fee`/`payment` ledger vocabulary by hand rather than importing verbatim.
+
 ### Phase 6b — `assoc:create-debits`
 
 Ported `Membership.CreateDebits`/`RecurContribution.CreateDebits` as one command (`assoc:create-

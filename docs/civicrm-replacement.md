@@ -579,12 +579,68 @@ forever, and the existing "already-pending" guard freezes further billing for th
 real, narrow edge case (needs a lump sum spanning multiple periods) outside what was asked in the
 design pass; revisit if it's hit in practice.
 
-**Not yet done, in rough dependency order:**
-- Donation-receipt generation (`DonationReceiptGenerator`) still reads `assoc_debits` directly, not
-  the ledger — the "sums only `payment`-kind entries" rule above isn't implemented yet, and is
-  structurally blocked until it is: `assoc_ledger_entries.membership_id` is `NOT NULL`, so a
-  `"donation"`-source `Debit` (no `Membership` at all) can't have a `LedgerEntry` under today's
-  schema.
+**Donations wired into the ledger, and net-of-refund receipting (decision 4) — done.**
+`assoc_ledger_entries.membership_id` is now nullable — the only schema change needed. A
+donation-sourced entry (auto or manual) has no `Membership` at all; its payer is reached via
+`debit_id` instead, since every donation-sourced entry, without exception, carries one (donations
+have no free-standing per-payer balance the way a membership does — a manual admin action against
+one is scoped to a specific `Debit`, see below). `DebitCreator::createForRecurContribution()` now
+accrues a `charge` entry the same way `createForMembership()` always has.
+
+`BankStatementMatcher::confirm()`/`confirmChargeback()` stopped gating every ledger write on
+`Membership !== null` — a donation-sourced debit can bounce too, it's still a SEPA collection, and
+leaving it excluded would have made this very decision's stated concern (a chargeback fee attached
+to a donation) unable to exist as data at all. Only the `end_date`/`previous_end_date` logic stays
+membership-only, since donations have no "coverage" concept. New `channelFor()` derives the channel
+from the debit's own `iban` (`directdebit` vs `banktransfer`) when there's no `Membership` to read
+`payment_method` from.
+
+**Chargeback fees are settled before anything else, on the next payment under the same mandate.**
+New `BankStatementMatcher::settleOutstandingFees()` walks that mandate's `failed` debits oldest-first
+and, for each with a still-unsettled `chargeback_fee` (`outstandingFeeCents()`: its fee entries minus
+whatever `payment` entries already settled it), creates a `payment` entry tied to *that bounced
+debit's own id* for as much of the incoming amount as it covers — before any of it is credited
+toward the debit actually being collected. This is what keeps a fee-settling payment from ever
+looking like a real charge/donation payment: it's tied to a `failed` debit, which is structurally
+never receipt-eligible (see below) and never `netLedgerAmount()`'s target debit. If the incoming
+amount is smaller than the outstanding fee, all of it goes to the fee and the currently-matched
+debit gets no payment entry at all — it still flips to `executed` regardless, same "status ≠ paid in
+full" precedent decision 1 already established.
+
+**A `Debit`'s full history is now a real admin page.** New `Debit::ledgerEntries()` (`hasMany` on
+`debit_id`) is the single source of truth an admin needs to answer "when did this bounce, what was
+the fee, when was it paid off, when was the rest paid" — every one of those events already carries
+this same `debit_id`. `GET /admin/assoc/debits/{id}` (`AssocController::debit()`) lists them
+chronologically (by the linked `BankStatementLine::booked_at` where one exists, not `created_at`,
+which is only ever import/processing time — `_ledger.blade.php`'s membership-balance view was
+switched to the same real date while this was being built). The entry table and manual waiver/refund
+form were extracted into a shared `_ledger_entries.blade.php` partial, reused by both views. Manual
+donation-side refunds/waivers (`LedgerEntryController::storeForDebit()`,
+`POST /admin/assoc/debits/{id}/ledger-entries`) are scoped to one specific `Debit` — "refund/waive
+this one donation" — not a running per-payer balance the way a membership's `store()` action is,
+since a donation collection is its own event with nothing equivalent to "coverage" to carry a
+balance for.
+
+**A receipt must never include money later charged back or refunded — in full, exclude the debit
+entirely; on a partial refund, receipt only what was actually, finally kept.** New
+`Debit::netLedgerAmount()` is the single figure both `DonationReceiptGenerator` and the admin
+"Erstellen" button now use: that debit's own `payment` entries minus its own `refund` entries,
+clamped to a minimum of 0 — never a `chargeback_fee`, which structurally can't appear here (a fee
+always attaches to the *bounced* debit, never the one currently being collected), so decision 4's
+"never sum a chargeback fee into a receipt" holds without needing to special-case it. A debit that's
+been fully charged back or refunded nets to 0 and is excluded from every generation path
+(`generateSingle()` throws, `generateImmediate()`/`generateAnnualBatch()`/`generateForPayer()` skip
+it silently); a partial refund reduces the receipted amount to what's left. Netting happens *per
+Debit*, not per individual payment transaction, deliberately: a debit that received two partial
+payments and was later refunded still produces one correct net figure with no need to guess which
+specific transfer the refund reduces.
+
+Falls back to `$this->amount` when a debit has no ledger entries at all —
+`CiviCrmImporter::importDebits()` doesn't backfill the ledger for historical debits, so an imported
+one would otherwise look completely unpaid. A known, explicitly deferred gap, not solved here:
+before the real production cutover import runs, `importDebits()` should be revisited to write a
+matching `payment` entry for every already-`executed` debit it brings in, or historical
+donations/dues become permanently unreceiptable through this generator.
 
 ### Phase 6b — `assoc:create-debits`
 

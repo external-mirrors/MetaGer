@@ -4,7 +4,12 @@
 
 @section('content')
     <div class="card">
-        <h1>Geldeingang zuordnen</h1>
+        <h1>{{ $line->isChargeback() ? "Rücklastschrift zuordnen" : "Geldeingang zuordnen" }}</h1>
+
+        @if($line->isChargeback())
+            <p>Diese Zeile ist ein negativer Betrag und damit eine Rücklastschrift — sie storniert eine
+                bereits ausgeführte Lastschrift und schlägt der zugehörigen Buchung eine Bankgebühr zu.</p>
+        @endif
 
         <table>
             <tr>
@@ -25,7 +30,7 @@
             </tr>
         </table>
 
-        <h2>Lastschrift oder Dauerauftrag suchen</h2>
+        <h2>{{ $line->isChargeback() ? "Ursprüngliche Lastschrift suchen" : "Lastschrift oder Dauerauftrag suchen" }}</h2>
         <form method="GET" action="{{ route('assoc_admin_bank_statement', ['id' => $line->id]) }}">
             <input type="text" name="q" value="{{ $search }}" placeholder="Name oder Mandatsreferenz">
             <input type="submit" value="Suchen" class="btn btn-default">
@@ -42,6 +47,9 @@
                         <th>Betrag</th>
                         <th>Mandat</th>
                         <th>Fällig</th>
+                        @if($line->isChargeback())
+                            <th>Gebühr</th>
+                        @endif
                         <th></th>
                     </thead>
                     <tbody>
@@ -53,6 +61,9 @@
                                 <td>{{ number_format($model->amount, 2, ",", ".") }}&euro;</td>
                                 <td>{{ $model->mandate }}</td>
                                 <td>{{ $candidate["type"] === "debit" ? $model->due_date?->format("d.m.Y") : $model->next_due_date?->format("d.m.Y") }}</td>
+                                @if($line->isChargeback())
+                                    <td>{{ number_format($candidate["fee"], 2, ",", ".") }}&euro;</td>
+                                @endif
                                 <td>
                                     <form method="POST" action="{{ route('assoc_admin_bank_statement_match', ['id' => $line->id]) }}">
                                         <input type="hidden" name="type" value="{{ $candidate["type"] }}">

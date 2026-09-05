@@ -86,4 +86,21 @@ class BankStatementLineTest extends TestCase
 
         $this->assertTrue($line->matched()->is($recur));
     }
+
+    public function testIsChargebackIsTrueOnlyForANegativeAmount(): void
+    {
+        $payment = BankStatementLine::create([
+            "iban" => "DE02120300000000202051",
+            "amount" => "10.00",
+            "booked_at" => "2026-02-01",
+        ]);
+        $chargeback = BankStatementLine::create([
+            "iban" => "DE02120300000000202051",
+            "amount" => "-12.50",
+            "booked_at" => "2026-02-01",
+        ]);
+
+        $this->assertFalse($payment->isChargeback());
+        $this->assertTrue($chargeback->isChargeback());
+    }
 }

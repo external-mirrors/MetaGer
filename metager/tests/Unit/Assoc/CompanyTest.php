@@ -41,7 +41,33 @@ class CompanyTest extends TestCase
             "payment_method" => "banktransfer",
         ]);
 
-        $this->assertTrue($company->membership()->first()->is($membership));
+        $this->assertTrue($company->currentMembership()->first()->is($membership));
+        $this->assertTrue($company->memberships()->first()->is($membership));
+    }
+
+    public function testCurrentMembershipIgnoresTerminatedHistoryButMembershipsKeepsIt(): void
+    {
+        $company = Company::create(["name" => "Analytical Engines Ltd"]);
+        Membership::create([
+            "company_id" => $company->id,
+            "membership_type" => "company",
+            "interval" => "annual",
+            "amount" => "16.00",
+            "payment_method" => "banktransfer",
+            "standing" => "terminated",
+            "end_date" => "2024-01-01",
+        ]);
+        $current = Membership::create([
+            "company_id" => $company->id,
+            "membership_type" => "company",
+            "interval" => "monthly",
+            "amount" => "10.00",
+            "payment_method" => "directdebit",
+            "standing" => "active",
+        ]);
+
+        $this->assertTrue($company->currentMembership()->first()->is($current));
+        $this->assertCount(2, $company->memberships()->get());
     }
 
     public function testCivicrmIdMustBeUniqueWhenPresent(): void

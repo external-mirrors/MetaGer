@@ -18,12 +18,12 @@ class AssocController extends Controller
         // display_name set (see the assoc_contacts migration) has null
         // first_name/last_name, which would otherwise cluster them at one
         // end of the list regardless of what their name actually is.
-        $contacts = Contact::with("membership")
+        $contacts = Contact::with("currentMembership")
             ->orderByRaw("COALESCE(last_name, display_name)")
             ->orderByRaw("COALESCE(first_name, '')")
             ->paginate(50, ["*"], "contacts_page")
             ->withQueryString();
-        $companies = Company::with("membership")
+        $companies = Company::with("currentMembership")
             ->orderBy("name")
             ->paginate(50, ["*"], "companies_page")
             ->withQueryString();
@@ -40,8 +40,8 @@ class AssocController extends Controller
         abort_unless(in_array($type, ["contact", "company"], true), 404);
 
         $payer = match ($type) {
-            "contact" => Contact::with(["membership", "debits", "recurContributions"])->findOrFail($id),
-            "company" => Company::with(["membership", "debits", "recurContributions"])->findOrFail($id),
+            "contact" => Contact::with(["currentMembership", "memberships", "debits", "recurContributions"])->findOrFail($id),
+            "company" => Company::with(["currentMembership", "memberships", "debits", "recurContributions"])->findOrFail($id),
         };
 
         return response(view("admin.assoc.member", [

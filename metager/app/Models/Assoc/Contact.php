@@ -41,9 +41,21 @@ class Contact extends Model
         return $this->display_name ?? trim("{$this->first_name} {$this->last_name}");
     }
 
-    public function membership(): HasOne
+    public function memberships(): HasMany
     {
-        return $this->hasOne(Membership::class, "contact_id");
+        return $this->hasMany(Membership::class, "contact_id");
+    }
+
+    /**
+     * A contact is never meant to hold two `standing => active` memberships
+     * at once (cancel-then-rejoin, not concurrent) — see the CRM-replacement
+     * doc's "retention" discussion — so "the current membership" is simply
+     * the one active row, if any, alongside whatever terminated history
+     * memberships() also exposes.
+     */
+    public function currentMembership(): HasOne
+    {
+        return $this->hasOne(Membership::class, "contact_id")->where("standing", "active");
     }
 
     public function debits(): HasMany

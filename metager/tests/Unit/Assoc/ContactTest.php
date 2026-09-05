@@ -41,7 +41,8 @@ class ContactTest extends TestCase
     public function testAContactHasAMembershipRelation(): void
     {
         $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
-        $this->assertNull($contact->membership);
+        $this->assertNull($contact->currentMembership);
+        $this->assertCount(0, $contact->memberships);
 
         $membership = Membership::create([
             "contact_id" => $contact->id,
@@ -51,7 +52,41 @@ class ContactTest extends TestCase
             "payment_method" => "banktransfer",
         ]);
 
-        $this->assertTrue($contact->membership()->first()->is($membership));
+        $this->assertTrue($contact->currentMembership()->first()->is($membership));
+        $this->assertTrue($contact->memberships()->first()->is($membership));
+    }
+
+    /**
+     * A contact is never meant to hold two `standing => active` memberships
+     * at once — a rejoin is a new row, the old one stays `terminated` for the
+     * 10-year record rather than being deleted (see the CRM-replacement
+     * doc's "retention" discussion). currentMembership() must see only the
+     * active row; memberships() must still expose the terminated history.
+     */
+    public function testCurrentMembershipIgnoresTerminatedHistoryButMembershipsKeepsIt(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $old = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "17.00",
+            "payment_method" => "banktransfer",
+            "standing" => "terminated",
+            "end_date" => "2024-01-01",
+        ]);
+        $current = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "5.00",
+            "payment_method" => "directdebit",
+            "standing" => "active",
+        ]);
+
+        $this->assertTrue($contact->currentMembership()->first()->is($current));
+        $this->assertCount(2, $contact->memberships()->get());
+        $this->assertTrue($contact->memberships()->get()->contains(fn ($m) => $m->is($old)));
     }
 
     /**

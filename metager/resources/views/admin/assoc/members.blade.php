@@ -26,13 +26,13 @@
                         </td>
                         <td>{{ $contact->email }}</td>
                         <td>{{ $contact->city }}</td>
-                        @if($contact->membership !== null)
+                        @if($contact->currentMembership !== null)
                             <td>
-                                {{ number_format($contact->membership->amount, 2, ",", ".") }}&euro;
-                                {{ $contact->membership->intervalLabel() }}
+                                {{ number_format($contact->currentMembership->amount, 2, ",", ".") }}&euro;
+                                {{ $contact->currentMembership->intervalLabel() }}
                             </td>
-                            <td>{{ $contact->membership->paymentMethodLabel() }}</td>
-                            <td>{{ $contact->membership->standingLabel() }}</td>
+                            <td>{{ $contact->currentMembership->paymentMethodLabel() }}</td>
+                            <td>{{ $contact->currentMembership->standingLabel() }}</td>
                         @else
                             <td colspan="3">Keine Mitgliedschaft</td>
                         @endif
@@ -60,13 +60,13 @@
                             </a>
                         </td>
                         <td>{{ $company->city }}</td>
-                        @if($company->membership !== null)
+                        @if($company->currentMembership !== null)
                             <td>
-                                {{ number_format($company->membership->amount, 2, ",", ".") }}&euro;
-                                {{ $company->membership->intervalLabel() }}
+                                {{ number_format($company->currentMembership->amount, 2, ",", ".") }}&euro;
+                                {{ $company->currentMembership->intervalLabel() }}
                             </td>
-                            <td>{{ $company->membership->paymentMethodLabel() }}</td>
-                            <td>{{ $company->membership->standingLabel() }}</td>
+                            <td>{{ $company->currentMembership->paymentMethodLabel() }}</td>
+                            <td>{{ $company->currentMembership->standingLabel() }}</td>
                         @else
                             <td colspan="3">Keine Mitgliedschaft</td>
                         @endif

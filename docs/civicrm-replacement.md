@@ -159,12 +159,13 @@ it.**
 4. ~~Shadow-mode bank-statement matching~~ — done, see below.
 5. ~~Donation receipts~~ — done, see below.
 6. **Cutover** — in progress, being built as five separable pieces (see below): (a) ~~flip phase
-   4's matcher live~~ — done, see below; (b) `assoc:create-debits`, porting the two `CreateDebits`
-   cron jobs; (c) the SEPA-generation port (`de.suma-ev.donation-debit`'s pain.008.001.02 logic);
-   (d) `assoc:charge-keys`, wiring `ChargeKeys`-equivalent keymanager charging onto this schema
-   (reuse the existing production keymanager credential — already decided, no new credential
-   needed); (e) derived (not stored) payment-status reminder emails and the `Membership.Renew`
-   equivalent. `ChargeKeys.php`'s hardcoded bearer token needs rotating once (d) replaces it (see
+   4's matcher live~~ — done, see below; (b) ~~`assoc:create-debits`~~ — done, see below,
+   porting the two `CreateDebits` cron jobs; (c) the SEPA-generation port (`de.suma-ev.donation-
+   debit`'s pain.008.001.02 logic); (d) `assoc:charge-keys`, wiring `ChargeKeys`-equivalent
+   keymanager charging onto this schema (reuse the existing production keymanager credential —
+   already decided, no new credential needed); (e) derived (not stored) payment-status reminder
+   emails and the `Membership.Renew` equivalent, **now scoped to also cover chargebacks** (see
+   below). `ChargeKeys.php`'s hardcoded bearer token needs rotating once (d) replaces it (see
    extension inventory above).
 7. **Mass email** — deliberately last, per explicit prior instruction. Still undecided between
    keeping/improving the WordPress+Newsletter-plugin setup or adopting listmonk.
@@ -201,6 +202,47 @@ knowing before touching any of (b)-(e):
   `ChargeKeys` and the payment-status reminders are separate, independently-scheduled jobs reading
   the resulting state afterward, not triggered by the match itself — matches how (a) below and phase
   5's receipt generation are already split apart.
+- **New requirement (not in the original 5-piece scoping): chargebacks (Rücklastschriften) need both
+  an automatic and a manual path**, added after (a)/(b) were already built. Today a returned SEPA
+  collection has no representation at all — `BankStatementMatcher` only ever moves a debit
+  `pending → executed`, never `→ failed`, and nothing records the bank's chargeback fee. Still to
+  design/build, folded into the remaining pieces rather than a new one:
+  - (a)-extension: `BankStatementMatcher` needs a tier that recognises a Hibiscus chargeback line
+    (return-code/booking-text fields, not yet confirmed against a real export — same "not
+    re-verified" caveat as phase 4's IBAN field) and flips the original debit to `failed` instead of
+    `executed`. Must stay reachable manually too — the admin triage UI already lets a human pick any
+    debit/status by hand; a chargeback is a manual match with `failed` as the outcome, not a new UI.
+  - Fee tracking has no home yet: `assoc_debits` has no fee column and no link back to "which
+    original collection did this fee arise from." Needs a schema decision before (a)-extension can
+    write anything — options not yet weighed: a nullable `assoc_debits.chargeback_fee`, or a second
+    `Debit` row (`source` gains a `chargeback_fee` value) reusing the existing mandate so it rides
+    the same SEPA batch as the next regular collection.
+  - (e): the derived payment-status reminder text must mention a `failed` debit and its fee (once fee
+    tracking exists) — this was always going to read `assoc_debits.status`, so a `failed` value is a
+    new branch in existing logic, not new plumbing.
+
+### Phase 6b — `assoc:create-debits`
+
+Ported `Membership.CreateDebits`/`RecurContribution.CreateDebits` as one command (`assoc:create-
+debits`), backed by `App\Assoc\DebitCreator`. Both legacy actions used a foreign key
+(`Beitrag.Zahlungsstatus`, `civicrm_debit.recur_contribution_id`) neither exists here to avoid
+re-offering a due payment that already has a debit in flight — this schema has neither, so both are
+derived instead from a pending `assoc_debits` row already sharing the same mandate.
+
+A membership-dues-specific gap surfaced while porting: `assoc_memberships` carries no
+iban/bic/account_holder of its own (legacy kept those on Membership custom fields 33-35, which
+`CiviCrmImporter::importMemberships()` never pulled in). A new due membership's bank details are
+snapshotted from its own most recent `assoc_debits` row sharing the mandate instead — the same
+per-row-snapshot pattern every historical imported debit already uses — and a membership with no
+debit history at all (a brand-new direct-debit sign-up never yet billed) is skipped rather than
+guessed at. In practice this only affects members who joined after cutover and have never been
+billed; every migrated CiviCRM member has billing history to snapshot from.
+
+```
+metager/app/Assoc/DebitCreator.php
+metager/app/Console/Commands/CreateDebits.php                      assoc:create-debits
+metager/tests/Unit/Assoc/{DebitCreator,CreateDebitsCommand}Test.php
+```
 
 ### Phase 6a — bank-statement matcher is live
 

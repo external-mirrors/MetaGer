@@ -202,21 +202,26 @@ knowing before touching any of (b)-(e):
   `ChargeKeys` and the payment-status reminders are separate, independently-scheduled jobs reading
   the resulting state afterward, not triggered by the match itself — matches how (a) below and phase
   5's receipt generation are already split apart.
-- **New requirement (not in the original 5-piece scoping): chargebacks (Rücklastschriften) need both
-  an automatic and a manual path**, added after (a)/(b) were already built. Today a returned SEPA
-  collection has no representation at all — `BankStatementMatcher` only ever moves a debit
-  `pending → executed`, never `→ failed`, and nothing records the bank's chargeback fee. Still to
-  design/build, folded into the remaining pieces rather than a new one:
-  - (a)-extension: `BankStatementMatcher` needs a tier that recognises a Hibiscus chargeback line
-    (return-code/booking-text fields, not yet confirmed against a real export — same "not
-    re-verified" caveat as phase 4's IBAN field) and flips the original debit to `failed` instead of
-    `executed`. Must stay reachable manually too — the admin triage UI already lets a human pick any
-    debit/status by hand; a chargeback is a manual match with `failed` as the outcome, not a new UI.
-  - Fee tracking has no home yet: `assoc_debits` has no fee column and no link back to "which
-    original collection did this fee arise from." Needs a schema decision before (a)-extension can
-    write anything — options not yet weighed: a nullable `assoc_debits.chargeback_fee`, or a second
-    `Debit` row (`source` gains a `chargeback_fee` value) reusing the existing mandate so it rides
-    the same SEPA batch as the next regular collection.
+- **New requirement (not in the original 5-piece scoping), status: design not started, deliberately
+  deferred — see below.** A returned SEPA collection (Rücklastschrift) needs both an automatic and a
+  manual detection path, and the fee the bank charges the association for it needs to be collected
+  back from the member and reflected in the payment-status reminders. Raised mid-implementation of
+  (b), after discussing it: **`assoc_debits.status` (`pending`/`executed`/`failed`) is the wrong
+  shape for this, not just missing a value.** A collection isn't only paid-or-not — a member can
+  wire an amount that doesn't match what's owed (under/overpayment, entirely outside any bank-return
+  mechanism) with no notice, and a chargeback adds a fee on top of the original amount rather than
+  simply failing it. CiviCRM's own model for this is `civicrm_contribution` +
+  `civicrm_financial_trxn`: a contribution carries a status (Completed/Partially Paid/Pending/
+  Failed/Cancelled) *derived from* however many transaction rows have been applied against it, not a
+  single flag written once. The likely shape here is the same — a small ledger of transactions per
+  `Debit` (the bank-statement amount actually received, a fee, a correction) that `status` gets
+  derived from, replacing today's single write in `BankStatementMatcher::confirm()` — rather than
+  another enum value or a bolted-on fee column. This is a real schema change (new table, likely
+  changes to how phase 5's receipts and (a)'s matcher read "is this paid"), not a small addition to
+  (a)/(e), so it needs its own design pass before any of it is built. Everywhere in phases 4-6 that
+  currently treats a debit as binary pending/executed/failed will need revisiting once this lands:
+  `BankStatementMatcher::confirm()`, `DebitCreator`'s "does a pending debit already exist" guards,
+  phase 5's receipt generation, and (e)'s reminder text.
   - (e): the derived payment-status reminder text must mention a `failed` debit and its fee (once fee
     tracking exists) — this was always going to read `assoc_debits.status`, so a `failed` value is a
     new branch in existing logic, not new plumbing.

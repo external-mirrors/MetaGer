@@ -284,12 +284,16 @@ knowing before touching any of (b)-(e):
     not deleted) for the 10-year record; a later rejoin is a new row, not a resurrection of the old
     one. So a contact is never meant to hold two `standing => active` rows at the same time — "the
     current membership" is simply "the one row (if any) with `standing => active`", which is what
-    `hasOne` already gets right for someone on their first or only membership. What `hasOne` gets
-    wrong is only the historical rows: `Contact::membership()`/`Company::membership()` need to become
-    `hasMany`, with the existing `hasOne` behaviour kept as a `->firstWhere("standing", "active")`-style
-    "current membership" accessor for (b)'s `createForDueMemberships()` and the admin views to keep
-    using — not a new ambiguity to resolve, just a rename of what already exists plus a way to reach
-    the terminated history alongside it.
+    `hasOne` already got right for someone on their first or only membership. What `hasOne` got wrong
+    was only the historical rows.
+  - **Done (`5b7f4a186`).** `Contact::membership()`/`Company::membership()` are now `memberships():
+    HasMany`, with `currentMembership(): HasOne` (scoped to `standing = "active"`) as the accessor
+    everything that only ever cared about "the" membership keeps using —
+    `AssocController`/`resources/views/admin/assoc/{members,member}.blade.php` were the only call
+    sites, both switched over; `DebitCreator::createForDueMemberships()` was already querying
+    `Membership` directly with its own `where` clauses, not through the relation, so it needed no
+    change. The member detail page now also lists terminated memberships as history underneath the
+    current one, rather than a rejoin making the old row invisible.
   - The retention side is a second, distinct piece: nothing here today is soft-deleted, nothing
     tracks when a record's retention window started or ends, and there is no messages/communication-
     log entity in the `assoc_*` schema at all yet — that part isn't "add a retention flag to an
@@ -297,9 +301,11 @@ knowing before touching any of (b)-(e):
     scheduled cron reading it) likely wants designing once, applied consistently across memberships,
     debits, donation receipts, and whatever the messages entity ends up being, rather than bolted onto
     each table separately.
-  - Likely touches, once designed: `assoc_memberships`' migration and both `hasOne` relations, the
-    admin member views, `DebitCreator::createForDueMemberships()`'s membership query, and a new
-    scheduled command alongside `assoc:create-debits`/`assoc:import-civicrm` for the actual purge.
+  - Likely touches, once designed: a soft-delete/retention-window column (or a new migration) on
+    `assoc_memberships`, `assoc_debits`, `assoc_donation_receipts` and whatever the messages entity
+    ends up being, and a new scheduled command alongside `assoc:create-debits`/`assoc:import-civicrm`
+    for the actual purge. The `hasOne`→`hasMany` relation change this depended on is already done
+    (see above).
 
 ### Payment-ledger design pass
 

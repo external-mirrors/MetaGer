@@ -49,4 +49,18 @@ class BankStatementLine extends Model
             "recur_contribution" => RecurContribution::find($this->matched_id),
         };
     }
+
+    /**
+     * A Rücklastschrift, never a normal incoming payment — BankStatementImporter
+     * only ever lets a negative amount through when it recognised the bank's own
+     * chargeback `art` value at import time (every other negative line is
+     * outgoing money with no counterpart here and gets skipped on import), so a
+     * negative amount is exactly this and nothing else. Used to route an
+     * unmatched line to chargeback-specific manual-matching (search executed
+     * debits, confirm via confirmChargeback()) instead of the normal path.
+     */
+    public function isChargeback(): bool
+    {
+        return (float) $this->amount < 0;
+    }
 }

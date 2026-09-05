@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
+use App\Models\Assoc\Debit;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -40,14 +41,30 @@ class AssocController extends Controller
         abort_unless(in_array($type, ["contact", "company"], true), 404);
 
         $payer = match ($type) {
-            "contact" => Contact::with(["currentMembership.ledgerEntries", "memberships.ledgerEntries", "debits", "recurContributions"])->findOrFail($id),
-            "company" => Company::with(["currentMembership.ledgerEntries", "memberships.ledgerEntries", "debits", "recurContributions"])->findOrFail($id),
+            "contact" => Contact::with(["currentMembership.ledgerEntries.bankStatementLine", "memberships.ledgerEntries.bankStatementLine", "debits.ledgerEntries", "recurContributions"])->findOrFail($id),
+            "company" => Company::with(["currentMembership.ledgerEntries.bankStatementLine", "memberships.ledgerEntries.bankStatementLine", "debits.ledgerEntries", "recurContributions"])->findOrFail($id),
         };
 
         return response(view("admin.assoc.member", [
             "title" => "Mitglied",
             "type" => $type,
             "payer" => $payer,
+        ]));
+    }
+
+    /**
+     * One Debit's full history — every ledger event tied to it (the charge
+     * that accrued it, a chargeback's refund/fee if it bounced, whatever
+     * later settled either) — plus the manual waiver/refund action scoped to
+     * it (see LedgerEntryController::storeForDebit()).
+     */
+    public function debit(string $id): Response
+    {
+        $debit = Debit::with(["ledgerEntries.bankStatementLine", "contact", "company", "membership"])->findOrFail($id);
+
+        return response(view("admin.assoc.debit", [
+            "title" => "Buchung",
+            "debit" => $debit,
         ]));
     }
 }

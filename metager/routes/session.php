@@ -37,6 +37,7 @@ Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], '
     Route::post("membership/deny", [MembershipController::class, "adminDeny"])->name("membership_admin_deny");
     Route::get("assoc/members", [AssocController::class, "members"])->name("assoc_admin_members");
     Route::get("assoc/members/{type}/{id}", [AssocController::class, "member"])->name("assoc_admin_member");
+    Route::get("assoc/debits/{id}", [AssocController::class, "debit"])->name("assoc_admin_debit");
     Route::get("assoc/bank-statements", [BankStatementController::class, "index"])->name("assoc_admin_bank_statements");
     Route::get("assoc/bank-statements/{id}", [BankStatementController::class, "show"])->name("assoc_admin_bank_statement");
     Route::post("assoc/bank-statements/{id}/match", [BankStatementController::class, "match"])->name("assoc_admin_bank_statement_match");
@@ -47,6 +48,7 @@ Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], '
     Route::post("assoc/payers/{type}/{id}/generate-receipt", [DonationReceiptController::class, "generateForPayer"])->name("assoc_admin_payer_generate_receipt");
     Route::post("assoc/payers/{type}/{id}/donation-receipt-preference", [DonationReceiptController::class, "updatePreference"])->name("assoc_admin_payer_update_preference");
     Route::post("assoc/memberships/{id}/ledger-entries", [LedgerEntryController::class, "store"])->name("assoc_admin_membership_ledger_entry");
+    Route::post("assoc/debits/{id}/ledger-entries", [LedgerEntryController::class, "storeForDebit"])->name("assoc_admin_debit_ledger_entry");
     Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');

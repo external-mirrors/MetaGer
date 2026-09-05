@@ -5,6 +5,7 @@ namespace Tests\Unit\Assoc;
 use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
+use App\Models\Assoc\Membership;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concerns\UsesInMemorySqlite;
@@ -160,5 +161,38 @@ class DebitTest extends TestCase
 
         $this->assertTrue($contactDebit->contact->is($contact));
         $this->assertTrue($companyDebit->company->is($company));
+    }
+
+    /**
+     * Only "membership"-source rows have one — see this column's migration
+     * comment for why the mandate string alone isn't a reliable enough link.
+     */
+    public function testMembershipIdIsNullableAndLinksBackToTheDuesItCollects(): void
+    {
+        $contact = $this->contact();
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "10.00",
+            "payment_method" => "directdebit",
+        ]);
+
+        $withoutMembership = Debit::create(array_merge($this->baseAttributes(), [
+            "contact_id" => $contact->id,
+            "amount" => "10.00",
+            "mandate" => "S1",
+        ]));
+        $withMembership = Debit::create(array_merge($this->baseAttributes(), [
+            "contact_id" => $contact->id,
+            "amount" => "10.00",
+            "mandate" => "S2",
+            "end_to_end_reference" => "E2E-2",
+            "membership_id" => $membership->id,
+            "source" => "membership",
+        ]));
+
+        $this->assertNull($withoutMembership->fresh()->membership);
+        $this->assertTrue($withMembership->fresh()->membership->is($membership));
     }
 }

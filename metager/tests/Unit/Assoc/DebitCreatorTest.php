@@ -5,6 +5,7 @@ namespace Tests\Unit\Assoc;
 use App\Assoc\DebitCreator;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
+use App\Models\Assoc\LedgerEntry;
 use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -94,6 +95,29 @@ class DebitCreatorTest extends TestCase
         $this->assertSame("2026-02-10", $debit->due_date->format("Y-m-d"));
         $this->assertSame("Mitgliedsbeitrag Feb 2026", $debit->reference);
         $this->assertStringStartsWith("P", $debit->end_to_end_reference);
+    }
+
+    /**
+     * The accrual half of the payment-ledger design pass — see
+     * BankStatementMatcher for the payment half, recorded once the collection
+     * is actually confirmed.
+     */
+    public function testCreatingADueDebitAlsoAccruesAChargeLedgerEntry(): void
+    {
+        $contact = $this->contact();
+        $this->pastDebit($contact);
+        $membership = $this->membership($contact);
+
+        $created = (new DebitCreator())->createForDueMemberships();
+        $debit = $created->first();
+
+        $this->assertSame($membership->id, $debit->membership_id);
+        $entry = LedgerEntry::sole();
+        $this->assertSame($membership->id, $entry->membership_id);
+        $this->assertSame($debit->id, $entry->debit_id);
+        $this->assertSame("charge", $entry->kind);
+        $this->assertSame("5.00", $entry->amount);
+        $this->assertNull($entry->channel);
     }
 
     public function testBuildsASpanningReferenceForAQuarterlyMembership(): void
@@ -189,6 +213,9 @@ class DebitCreatorTest extends TestCase
         $this->assertSame("2026-02-10", $debit->due_date->format("Y-m-d"));
         $this->assertSame("Vielen Dank für Ihre Spende Feb 2026", $debit->reference);
         $this->assertSame("2026-03-10", $recur->fresh()->next_due_date->format("Y-m-d"));
+        // A recurring donation has no Membership to accrue a charge against —
+        // the ledger is membership-only for now, see docs/civicrm-replacement.md.
+        $this->assertSame(0, LedgerEntry::count());
     }
 
     public function testFillsInAMissingNextDueDateBeforeCreating(): void

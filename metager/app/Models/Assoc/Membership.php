@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Contact|null $contact
  * @property Company|null $company
  * @property string $membership_type
+ * @property string $category
  * @property bool $reduced
  * @property string $interval
  * @property string $amount
@@ -36,7 +37,7 @@ class Membership extends Model
 
     protected $table = "assoc_memberships";
 
-    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "standing", "start_date", "end_date", "renewed_at", "reduced_until", "locale", "key_id", "mastodon_id"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "category", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "standing", "start_date", "end_date", "renewed_at", "reduced_until", "locale", "key_id", "mastodon_id"];
 
     protected $casts = [
         "reduced" => "boolean",

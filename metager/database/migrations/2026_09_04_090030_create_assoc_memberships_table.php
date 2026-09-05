@@ -22,6 +22,12 @@ return new class extends Migration {
             $table->uuid("contact_id")->nullable()->references("id")->on("assoc_contacts");
             $table->uuid("company_id")->nullable()->references("id")->on("assoc_companies");
             $table->enum("membership_type", ["person", "company"]);
+            // Vollmitglied vs. Fördermitglied. Schema-only prep for now: the Satzung
+            // doesn't define Fördermitgliedschaft yet (see the Satzungsänderung
+            // drafted alongside this migration), so every row stays "full" until a
+            // Mitgliederversammlung passes that change and it's registered — nothing
+            // reads this column for voting/invitation/receipt behaviour yet.
+            $table->enum("category", ["full", "supporting"])->default("full");
             $table->boolean("reduced")->default(false);
             $table->enum("interval", ["monthly", "quarterly", "six-monthly", "annual"]);
             $table->decimal("amount", 10, 2);

@@ -79,6 +79,30 @@ class MembershipTest extends TestCase
         }
     }
 
+    /**
+     * "supporting" (Fördermitglied) is schema-only prep: suma-ev's Satzung
+     * doesn't define that category yet (a Satzungsänderung is drafted, not
+     * passed/registered), so nothing sets this value today and nothing reads
+     * it — this only pins that the column exists, defaults every existing
+     * membership to "full", and accepts "supporting" once it's needed.
+     */
+    public function testCategoryDefaultsToFullAndAcceptsSupporting(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "17.00",
+            "payment_method" => "banktransfer",
+        ]);
+
+        $this->assertSame("full", $membership->fresh()->category);
+
+        $membership->update(["category" => "supporting"]);
+        $this->assertSame("supporting", $membership->fresh()->category);
+    }
+
     public function testPaymentMethodAndAmountRoundTrip(): void
     {
         $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);

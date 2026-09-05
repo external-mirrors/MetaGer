@@ -36,9 +36,18 @@ class Company extends Model
         return $this->belongsTo(Contact::class, "contact_person_id");
     }
 
-    public function membership(): HasOne
+    public function memberships(): HasMany
     {
-        return $this->hasOne(Membership::class, "company_id");
+        return $this->hasMany(Membership::class, "company_id");
+    }
+
+    /**
+     * See Contact::currentMembership() — same "cancel-then-rejoin, never
+     * concurrent" reasoning applies to a company payer.
+     */
+    public function currentMembership(): HasOne
+    {
+        return $this->hasOne(Membership::class, "company_id")->where("standing", "active");
     }
 
     public function debits(): HasMany

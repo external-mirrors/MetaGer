@@ -23,8 +23,8 @@
             <p>CiviCRM-ID: {{ $payer->civicrm_id }}</p>
         @endif
 
-        @if($payer->membership !== null)
-            @php($membership = $payer->membership)
+        @if($payer->currentMembership !== null)
+            @php($membership = $payer->currentMembership)
             <h2>Mitgliedschaft</h2>
             <table>
                 <tr>
@@ -84,6 +84,31 @@
             </table>
         @else
             <p>Keine Mitgliedschaft.</p>
+        @endif
+
+        @php($pastMemberships = $payer->memberships->where('standing', '!=', 'active'))
+        @if($pastMemberships->isNotEmpty())
+            <h2>Frühere Mitgliedschaften</h2>
+            <table>
+                <thead>
+                    <th>Typ</th>
+                    <th>Beitrag</th>
+                    <th>Status</th>
+                    <th>Beitritt</th>
+                    <th>Ende</th>
+                </thead>
+                <tbody>
+                    @foreach($pastMemberships as $pastMembership)
+                        <tr>
+                            <td>{{ $pastMembership->membership_type }}{{ $pastMembership->reduced ? " (ermäßigt)" : "" }}</td>
+                            <td>{{ number_format($pastMembership->amount, 2, ",", ".") }}&euro; {{ $pastMembership->intervalLabel() }}</td>
+                            <td>{{ $pastMembership->standingLabel() }}</td>
+                            <td>{{ $pastMembership->join_date?->format("d.m.Y") }}</td>
+                            <td>{{ $pastMembership->end_date?->format("d.m.Y") ?? "—" }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         @endif
 
         @include('admin.assoc._debits', ['debits' => $payer->debits])

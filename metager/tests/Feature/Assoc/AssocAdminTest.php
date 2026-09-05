@@ -233,6 +233,54 @@ class AssocAdminTest extends TestCase
         $secondPage->assertSee("Contact 51");
     }
 
+    /**
+     * A rejoin after a lapse is a new assoc_memberships row, not a
+     * resurrection of the old one (see the CRM-replacement doc's "retention"
+     * discussion) — both the list and detail pages must show only the
+     * active row as "the" membership, with the terminated one reachable as
+     * history on the detail page rather than fighting the active row for
+     * the single-membership display.
+     */
+    public function testARejoinedMemberShowsTheActiveMembershipAndKeepsTheTerminatedOneAsHistory(): void
+    {
+        $contact = Contact::create([
+            "first_name" => "Ada",
+            "last_name" => "Lovelace",
+            "email" => "ada@example.com",
+            "city" => "London",
+        ]);
+        Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "annual",
+            "amount" => "60.00",
+            "payment_method" => "banktransfer",
+            "standing" => "terminated",
+            "join_date" => "2018-01-01",
+            "end_date" => "2020-01-01",
+        ]);
+        Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "5.00",
+            "payment_method" => "directdebit",
+            "standing" => "active",
+            "join_date" => "2026-01-01",
+        ]);
+
+        $listResponse = $this->get("/admin/assoc/members");
+        $listResponse->assertOk();
+        $listResponse->assertSee("Lastschrift");
+        $listResponse->assertDontSee("Überweisung");
+
+        $detailResponse = $this->get("/admin/assoc/members/contact/{$contact->id}");
+        $detailResponse->assertOk();
+        $detailResponse->assertSee("Lastschrift");
+        $detailResponse->assertSee("Frühere Mitgliedschaften");
+        $detailResponse->assertSee("Ausgetreten");
+    }
+
     public function testAnUnknownMemberTypeIs404(): void
     {
         $contact = Contact::create(["first_name" => "A", "last_name" => "B", "email" => "a@b.com"]);

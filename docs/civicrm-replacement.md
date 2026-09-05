@@ -495,12 +495,37 @@ been stuck; the membership itself is untouched (same row continues, no new `Memb
 also fixed the `payment` `LedgerEntry`'s `channel`, previously hardcoded to `"directdebit"`
 regardless of which payment method the underlying membership actually used.
 
+**Rücklastschrift detection — done.** Resolved decision 3's real export shape is now confirmed
+(a Hibiscus export supplied for this pass, not fabricated): a chargeback arrives as its own line,
+`art` "Retourenbelastung", negative `betrag`, carrying the original collection's end-to-end
+reference/mandate exactly. `BankStatementImporter` routes such a line to a new
+`BankStatementMatcher::matchChargeback()`/`confirmChargeback()` pair instead of the normal
+`match()`/`confirm()`, looked up among `executed` (not `pending`) debits. The fee is *computed*
+(`abs(line amount) - original debit amount`), not parsed off the purpose text — the statement nets
+the original amount and however many fees applied into one number, and the purpose text itself can
+wrap a number's digits mid-string across `zweck`/`zweck2`/`zweck3` (confirmed against the same real
+export; fixed the general concatenation, not just for chargebacks, since a long line of any kind was
+silently truncated before). A confirmed chargeback flips the `Debit` to `failed`, records a `refund`
+entry (reversing the earlier `payment`, tagged with the *original* payment channel rather than
+`sepa_credit_transfer` — nothing was sent out, the collection un-happened) and a `chargeback_fee`
+entry (new debt, `channel: null`) against its `Membership`, and rolls `Membership::end_date` back to
+exactly what it was before that payment's confirmation — a new nullable `assoc_debits.previous_end_date`
+snapshot column makes this exact rather than assuming "subtract one interval," which isn't always
+right (see the resumption case above). A `"donation"`-source debit still gets no ledger entries,
+same asymmetry the normal payment path already has.
+
+Deliberately deferred, not built here:
+- **Collecting the fee.** `DebitCreator` still charges exactly `membership->amount`; the
+  `chargeback_fee` ledger entry just sits on the balance. Actually collecting it is the still-unbuilt
+  balance-driven reminder phase's job (resolved decision 2), not something to bolt onto the next
+  regular debit.
+- **Manual admin matching for an unmatched chargeback.** `BankStatementController` only searches
+  `pending` debits today; finding an `executed` one for a manual reversal match is real, separate
+  follow-up work.
+- **A `previous_end_date` that's null** (a debit confirmed before this column existed) skips the
+  rollback rather than guessing — moot today since nothing has been deployed with the old shape yet.
+
 **Not yet done, in rough dependency order:**
-- Rücklastschrift detection in `BankStatementImporter`/`BankStatementMatcher` (recognising a
-  return line, linking it back to the original `executed` `Debit`, parsing the bank's fee off the
-  statement) — see resolved decision 3 above; this is what would actually create `chargeback_fee`
-  entries. Today a returned collection still only flips `assoc_debits.status` to `failed`
-  elsewhere; nothing reverses the `charge`/`payment` pair for it in the ledger.
 - The balance-driven reminder staging (resolved decisions 1-2 above) and the precise reminder-stage
   intervals/copy (assumed ported from legacy pending actual confirmation).
 - Donation-receipt generation (`DonationReceiptGenerator`) still reads `assoc_debits` directly, not

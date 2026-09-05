@@ -70,7 +70,11 @@ class DonationReceiptPdf
      */
     private function line(Debit $debit): array
     {
-        [$whole, $cents] = explode(".", (string) $debit->amount);
+        // What was actually, finally kept — never the nominal amount,
+        // see Debit::netLedgerAmount(). Never a chargeback fee, and never
+        // more than what's left after a refund.
+        $amount = $debit->netLedgerAmount();
+        [$whole, $cents] = explode(".", $amount);
 
         $words = NumberToGermanWords::convert((int) $whole) . " EURO";
         if ((int) $cents > 0) {
@@ -78,7 +82,7 @@ class DonationReceiptPdf
         }
 
         return [
-            "amount" => number_format($debit->amount, 2, ",", "."),
+            "amount" => number_format($amount, 2, ",", "."),
             "amountWords" => mb_strtoupper($words),
             "date" => $debit->due_date->format("d.m.Y"),
         ];

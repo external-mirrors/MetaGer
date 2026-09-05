@@ -225,6 +225,27 @@ knowing before touching any of (b)-(e):
   - (e): the derived payment-status reminder text must mention a `failed` debit and its fee (once fee
     tracking exists) — this was always going to read `assoc_debits.status`, so a `failed` value is a
     new branch in existing logic, not new plumbing.
+  - **Refinement after further discussion — this changes the unit the ledger attaches to.** Real
+    member behaviour from the association's history: people change what they pay without telling
+    anyone (a quiet underpayment, needs a reminder — silently accepting a short payment as "paid" is
+    wrong), pay out of order relative to due dates, or send amounts that match no single due charge
+    but whose running total still covers what's owed overall. **The source of truth for what's owed
+    is always the fee stored on the membership (`amount`/`interval`), never the amount of any
+    incoming payment** — a payment doesn't redefine the charge, it's applied against it. That last
+    case (out-of-order, non-matching-but-sufficient-in-aggregate amounts) doesn't fit "a ledger of
+    transactions per `Debit`" as sketched above: it needs a running balance kept per membership
+    (received-to-date minus owed-to-date), with individual `Debit`/expected-charge rows as accrual
+    line items the balance is checked against, not as the specific thing each payment must match one
+    to one. `BankStatementMatcher::matchByMandate()`'s current design — pick the pending debit whose
+    amount matches exactly, else the earliest-due one — is a best-effort guess at which debit a
+    payment was "for"; it should keep doing that for SEPA-collected debits (still useful for
+    per-collection SEPA reporting) without being the thing payment-status/reminders actually trust.
+  - Overpayment is carried forward, not refunded automatically — refunding only happens if the member
+    asks. Two more manual, admin-triggered actions the new interface needs to support (not
+    automation): accepting a cancellation after a charge was already due (waiving what's outstanding),
+    and refunding the most recently paid fee together with a retroactive cancellation. Both are
+    ledger-adjustment entries an admin makes, not derived states, and the ledger design needs an entry
+    "kind" for them (waiver, refund) alongside the automatic ones (received amount, chargeback fee).
 - **New requirement (not in the original 5-piece scoping), status: design not started, deliberately
   deferred.** Raised separately from the chargeback discussion above: a lapsed member who later
   rejoins must not require deleting their old membership, and every record tied to a person/company

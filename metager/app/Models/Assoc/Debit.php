@@ -5,6 +5,7 @@ namespace App\Models\Assoc;
 use Illuminate\Database\Eloquent\Concerns\HasVersion4Uuids as HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $id
@@ -68,5 +69,55 @@ class Debit extends Model
     public function payer(): Contact|Company|null
     {
         return $this->contact ?? $this->company;
+    }
+
+    /**
+     * Every ledger event tied to this specific collection attempt — the
+     * charge that accrued it, a chargeback's refund/fee if it bounced, and
+     * any payment that settled either. This is the whole history an admin
+     * looking at one Debit needs (see AssocController::debit()).
+     */
+    public function ledgerEntries(): HasMany
+    {
+        return $this->hasMany(LedgerEntry::class, "debit_id");
+    }
+
+    /**
+     * What was actually, finally kept from this debit — payment entries add,
+     * a refund (whether an automatic chargeback reversal or a manual admin
+     * refund, see LedgerEntryController::storeForDebit()) subtracts. Never a
+     * chargeback_fee: that kind only ever attaches to the *bounced* debit
+     * itself (LedgerEntry::create() in BankStatementMatcher::
+     * confirmChargeback()), never to the debit currently being collected, so
+     * it structurally can't appear in this sum — a bank fee is never a
+     * donation or a dues payment, and this is decision 4 of the
+     * payment-ledger design pass (docs/civicrm-replacement.md) satisfied
+     * without needing to special-case it here.
+     *
+     * Clamped to a minimum of 0 — a debit that was fully charged back or
+     * refunded must never look receiptable as a negative amount.
+     *
+     * Falls back to $this->amount when there are no ledger entries at all —
+     * CiviCrmImporter::importDebits() doesn't backfill the ledger for
+     * historical debits, so an imported one would otherwise look completely
+     * unpaid; a known, explicitly deferred gap (see
+     * docs/civicrm-replacement.md), not solved here.
+     */
+    public function netLedgerAmount(): string
+    {
+        if ($this->ledgerEntries->isEmpty()) {
+            return $this->amount;
+        }
+
+        $cents = 0;
+        foreach ($this->ledgerEntries as $entry) {
+            if ($entry->kind === "payment") {
+                $cents += (int) round($entry->amount * 100);
+            } elseif ($entry->kind === "refund") {
+                $cents -= (int) round($entry->amount * 100);
+            }
+        }
+
+        return number_format(max(0, $cents) / 100, 2, ".", "");
     }
 }

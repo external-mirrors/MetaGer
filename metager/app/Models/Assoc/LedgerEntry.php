@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * One accrual/payment/adjustment event against a Membership — see the
- * "Payment-ledger design pass" section of docs/civicrm-replacement.md.
- * Nothing in phases 4-6 reads this yet; Membership::ledgerBalance() is the
- * only consumer so far.
+ * One accrual/payment/adjustment event against a Membership or, for a
+ * donation-sourced Debit with no Membership at all, reached via debit_id
+ * instead — see the "Payment-ledger design pass" section of
+ * docs/civicrm-replacement.md.
  *
  * @property string $id
- * @property string $membership_id
- * @property Membership $membership
+ * @property string|null $membership_id
+ * @property Membership|null $membership
  * @property string|null $debit_id
  * @property Debit|null $debit
  * @property string|null $bank_statement_line_id

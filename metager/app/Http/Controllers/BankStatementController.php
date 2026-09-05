@@ -12,12 +12,11 @@ use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Shadow-mode bank-statement matching — see docs/civicrm-replacement.md phase
- * 4. Unlike AssocController this does write: it records a human's manual
- * match decision, and lets one re-run the automatic cascade. It never writes
- * to assoc_debits/assoc_recur_contributions, only to the
- * assoc_bank_statement_lines row itself — see BankStatementMatcher's docblock
- * for why matching a line doesn't flip a debit to "executed" yet.
+ * Bank-statement matching triage — see docs/civicrm-replacement.md phase 4/6.
+ * Unlike AssocController this does write: it records a human's manual match
+ * decision, and lets one re-run the automatic cascade. A manual match goes
+ * through BankStatementMatcher::confirm(), same as the automatic cascade, so
+ * matching a line to a debit flips that debit to "executed" either way.
  */
 class BankStatementController extends Controller
 {
@@ -55,7 +54,7 @@ class BankStatementController extends Controller
         ]));
     }
 
-    public function match(Request $request, string $id): RedirectResponse
+    public function match(Request $request, string $id, BankStatementMatcher $matcher): RedirectResponse
     {
         $line = BankStatementLine::whereNull("matched_type")->findOrFail($id);
 
@@ -66,12 +65,7 @@ class BankStatementController extends Controller
             ? Debit::findOrFail($request->input("target_id"))
             : RecurContribution::findOrFail($request->input("target_id"));
 
-        $line->matched_type = $type;
-        $line->matched_id = $target->id;
-        $line->match_method = "manual";
-        $line->matched_by = Auth::user()?->email ?? "admin";
-        $line->matched_at = now();
-        $line->save();
+        $matcher->confirm($line, $type, $target->id, "manual", Auth::user()?->email ?? "admin");
 
         return redirect(route("assoc_admin_bank_statements"));
     }

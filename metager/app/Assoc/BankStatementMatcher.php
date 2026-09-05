@@ -15,13 +15,12 @@ use Illuminate\Support\Collection;
  * The original had to round-trip through CiviCRM's API to collect known mandates
  * from Membership/RecurContribution; here it's two indexed queries.
  *
- * Runs purely in shadow mode: it only ever writes matched_type/matched_id/
- * match_method/matched_at back onto the BankStatementLine itself. It never
- * touches Debit/RecurContribution status — unlike the CiviCRM original, which
- * flipped a Debit to "executed" the moment it matched. The point of this phase
- * is to see how well the cascade performs against real traffic before trusting
- * it to drive state, so a match here is a proposal for a human to confirm via
- * the admin UI, not an executed reconciliation.
+ * Phase 6 turned this live: a match now also flips the matched Debit from
+ * "pending" to "executed", same as the CiviCRM original did the moment
+ * IncomingPayment.Auto resolved a payment. Only a "debit" match has anything
+ * to flip — a "recur_contribution" match means the payment arrived before any
+ * per-collection assoc_debits row existed for it (see matchByMandate()), and
+ * there is no status on RecurContribution itself to change.
  *
  * Four-tier cascade, matching the assoc_bank_statement_lines.match_method enum:
  *  1. mandate_reference — an exact match on a structured identifier the bank
@@ -50,7 +49,7 @@ class BankStatementMatcher
         if ($endToEndReference !== null) {
             $debit = $this->pendingDebits()->firstWhere("end_to_end_reference", $endToEndReference);
             if ($debit !== null) {
-                return $this->assign($line, "debit", $debit->id, "mandate_reference");
+                return $this->confirm($line, "debit", $debit->id, "mandate_reference");
             }
         }
 
@@ -118,24 +117,37 @@ class BankStatementMatcher
         $debit = $candidates->first(fn (Debit $d) => (string) $d->amount === (string) $line->amount)
             ?? $candidates->first();
         if ($debit !== null) {
-            return $this->assign($line, "debit", $debit->id, $method);
+            return $this->confirm($line, "debit", $debit->id, $method);
         }
 
         $recur = $this->activeRecurContributions()->firstWhere("mandate", $mandate);
         if ($recur !== null) {
-            return $this->assign($line, "recur_contribution", $recur->id, $method);
+            return $this->confirm($line, "recur_contribution", $recur->id, $method);
         }
 
         return false;
     }
 
-    private function assign(BankStatementLine $line, string $type, string $id, string $method): bool
+    /**
+     * Records a match — automatic or, via BankStatementController::match(),
+     * manual — and, for a "debit" match, flips that Debit from "pending" to
+     * "executed". Guarded to "pending" only: a manual match lets an admin pick
+     * any debit regardless of its current status, and this must not silently
+     * downgrade an already-"failed" (bounced/returned) collection back to
+     * looking executed.
+     */
+    public function confirm(BankStatementLine $line, string $type, string $id, string $method, ?string $matchedBy = null): bool
     {
         $line->matched_type = $type;
         $line->matched_id = $id;
         $line->match_method = $method;
+        $line->matched_by = $matchedBy;
         $line->matched_at = now();
         $line->save();
+
+        if ($type === "debit") {
+            Debit::where("id", $id)->where("status", "pending")->update(["status" => "executed"]);
+        }
 
         return true;
     }

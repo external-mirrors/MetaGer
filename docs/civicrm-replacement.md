@@ -225,6 +225,35 @@ knowing before touching any of (b)-(e):
   - (e): the derived payment-status reminder text must mention a `failed` debit and its fee (once fee
     tracking exists) — this was always going to read `assoc_debits.status`, so a `failed` value is a
     new branch in existing logic, not new plumbing.
+- **New requirement (not in the original 5-piece scoping), status: design not started, deliberately
+  deferred.** Raised separately from the chargeback discussion above: a lapsed member who later
+  rejoins must not require deleting their old membership, and every record tied to a person/company
+  — memberships, debits, receipts, and (not yet modelled at all) messages sent to them — must stay
+  intact and viewable in the admin UI for the statutory 10-year retention period, with a cron doing
+  the actual deletion once that window passes rather than an admin action.
+  - This isn't just a UI gap. `Contact::membership()`/`Company::membership()` are `hasOne`
+    (`app/Models/Assoc/Contact.php`, `Company.php`), and both admin views
+    (`resources/views/admin/assoc/{members,member}.blade.php`) read `$contact->membership`/
+    `$company->membership` as a single row — the legacy "delete the old one to add a new one"
+    constraint is built into this schema's relations, not merely inherited UI behaviour. Nothing in
+    `assoc_memberships` (civicrm_id aside) stops a second row from existing for the same contact
+    today; the relation just can't see it.
+  - Fixing the relation is the easy part (`hasOne` → `hasMany`, plus some notion of "the current
+    membership" — most likely "latest by join_date", since `standing` alone doesn't distinguish a
+    lapsed membership from a currently-active one once there can be more than one row). The harder,
+    still-open part is what "current" even means once terminated memberships stick around — e.g.
+    whether a contact can have two `standing => active` rows at once needs an answer before (b)'s
+    `createForDueMemberships()` and the admin views can trust "the" membership again.
+  - The retention side is a second, distinct piece: nothing here today is soft-deleted, nothing
+    tracks when a record's retention window started or ends, and there is no messages/communication-
+    log entity in the `assoc_*` schema at all yet — that part isn't "add a retention flag to an
+    existing table," it's a net-new entity. A general retention/purge mechanism (soft-delete date +
+    scheduled cron reading it) likely wants designing once, applied consistently across memberships,
+    debits, donation receipts, and whatever the messages entity ends up being, rather than bolted onto
+    each table separately.
+  - Likely touches, once designed: `assoc_memberships`' migration and both `hasOne` relations, the
+    admin member views, `DebitCreator::createForDueMemberships()`'s membership query, and a new
+    scheduled command alongside `assoc:create-debits`/`assoc:import-civicrm` for the actual purge.
 
 ### Phase 6b — `assoc:create-debits`
 

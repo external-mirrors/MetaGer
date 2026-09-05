@@ -70,6 +70,33 @@ class BankStatementMatcherTest extends TestCase
         $this->assertSame($debit->id, $line->matched_id);
         $this->assertSame("mandate_reference", $line->match_method);
         $this->assertNotNull($line->matched_at);
+        $this->assertSame("executed", $debit->fresh()->status);
+    }
+
+    /**
+     * Phase 6: a match now confirms the collection, not just proposes it — the
+     * matched Debit flips from "pending" to "executed" the same moment
+     * CiviCRM's IncomingPayment.Auto did. A "recur_contribution" match has no
+     * per-collection Debit to flip, so nothing else happens for it (see
+     * testMatchesByStructuredMandateOnAnActiveRecurContribution — unaffected).
+     */
+    public function testConfirmingAMatchFlipsTheDebitFromPendingToExecuted(): void
+    {
+        $debit = $this->debit($this->contact());
+        $line = $this->line();
+
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $this->assertSame("executed", $debit->fresh()->status);
+    }
+
+    public function testConfirmingAMatchDoesNotDowngradeAnAlreadyFailedDebit(): void
+    {
+        $debit = $this->debit($this->contact(), ["status" => "failed"]);
+
+        (new BankStatementMatcher())->confirm($this->line(), "debit", $debit->id, "manual");
+
+        $this->assertSame("failed", $debit->fresh()->status);
     }
 
     public function testMatchesByStructuredMandateOnAPendingDebit(): void

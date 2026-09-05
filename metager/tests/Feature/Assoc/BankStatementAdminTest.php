@@ -144,6 +144,7 @@ class BankStatementAdminTest extends TestCase
         $this->assertSame($debit->id, $line->matched_id);
         $this->assertSame("manual", $line->match_method);
         $this->assertNotNull($line->matched_at);
+        $this->assertSame("executed", $debit->fresh()->status);
     }
 
     public function testAnAlreadyMatchedLineCannotBeMatchedAgain(): void
@@ -203,5 +204,6 @@ class BankStatementAdminTest extends TestCase
         $line->refresh();
         $this->assertSame($debit->id, $line->matched_id);
         $this->assertSame("regex", $line->match_method);
+        $this->assertSame("executed", $debit->fresh()->status);
     }
 }

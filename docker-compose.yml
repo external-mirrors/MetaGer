@@ -83,6 +83,11 @@ services:
     restart: unless-stopped
     entrypoint: /usr/local/bin/php
     command: artisan schedule:work-mg
+    # SchedulerHeartbeat reads its stamp with Redis::get directly — see fpm's
+    # depends_on above.
+    depends_on:
+      valkey:
+        condition: service_healthy
     networks:
       - metager
     volumes:
@@ -102,6 +107,11 @@ services:
     # The chart cannot do that — there the default is `database` — and runs a second
     # worker for this queue instead; see chart/templates/deployment-queue.yaml.
     command: artisan queue:work --backoff=60 --tries=5 --sleep=1 --queue=donations,default,general,broadcasts
+    # The queue connection this actually drains outside of testing is
+    # Redis-backed — see fpm's depends_on above.
+    depends_on:
+      valkey:
+        condition: service_healthy
     networks:
       - metager
     extra_hosts:
@@ -116,6 +126,11 @@ services:
     restart: unless-stopped
     entrypoint: /usr/local/bin/php
     command: artisan requests:fetcher
+    # Fetches upstream results and pushes them back onto Redis — see "Search
+    # request flow" in CLAUDE.md and fpm's depends_on above.
+    depends_on:
+      valkey:
+        condition: service_healthy
     networks:
       - metager
     extra_hosts:
@@ -134,6 +149,10 @@ services:
     restart: unless-stopped
     entrypoint: /usr/local/bin/php
     command: artisan reverb:start --debug
+    # Same reasoning as fpm's depends_on above.
+    depends_on:
+      valkey:
+        condition: service_healthy
     # The metager image inherits STOPSIGNAL SIGQUIT from the php-fpm base image
     # (it is the right default for the fpm service, which does run php-fpm).
     # Reverb is a plain PHP process, not fpm, and only subscribes to

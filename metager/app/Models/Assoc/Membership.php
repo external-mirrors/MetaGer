@@ -36,6 +36,18 @@ class Membership extends Model
 {
     use HasUuids;
 
+    /**
+     * Shared by DebitCreator (computing a due date/spanning reference) and
+     * BankStatementMatcher (advancing end_date once a charge is confirmed
+     * paid — see confirm()'s docblock).
+     */
+    public const MONTHS_PER_INTERVAL = [
+        "monthly" => 1,
+        "quarterly" => 3,
+        "six-monthly" => 6,
+        "annual" => 12,
+    ];
+
     protected $table = "assoc_memberships";
 
     protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_type", "category", "reduced", "interval", "amount", "payment_method", "payment_reference", "paypal_vault_id", "join_date", "standing", "start_date", "end_date", "renewed_at", "reduced_until", "locale", "key_id", "mastodon_id"];

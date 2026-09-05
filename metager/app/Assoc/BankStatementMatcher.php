@@ -5,6 +5,7 @@ namespace App\Assoc;
 use App\Models\Assoc\BankStatementLine;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\LedgerEntry;
+use App\Models\Assoc\Membership;
 use App\Models\Assoc\RecurContribution;
 use Illuminate\Support\Collection;
 
@@ -142,6 +143,21 @@ class BankStatementMatcher
      * payment-ledger design pass (see docs/civicrm-replacement.md): a
      * "donation"-source debit has no Membership to record one against, so it
      * gets none.
+     *
+     * It also advances Membership::end_date — design decision 1 of the
+     * payment-ledger pass ("coverage only advances once it's actually paid
+     * for"). On-time, this is just end_date + one interval, the same
+     * calculation DebitCreator used to set the debit's own due date. A debit
+     * that sat pending past its due date (a member who stopped paying, then
+     * resumed — see the class docblock's design-pass reference) would leave
+     * end_date stale if simply advanced by one interval from wherever it
+     * still was; instead coverage restarts fresh from the day the payment
+     * was booked, so the membership "takes up again from that day forward"
+     * as agreed, rather than slowly catching up one skipped period at a time
+     * on subsequent assoc:create-debits runs. Nothing here creates a new
+     * Membership row — the existing one just continues; multiple
+     * memberships are only for a genuinely lapsed-then-rejoined member (see
+     * docs/civicrm-replacement.md's retention section), not this case.
      */
     public function confirm(BankStatementLine $line, string $type, string $id, string $method, ?string $matchedBy = null): bool
     {
@@ -156,14 +172,22 @@ class BankStatementMatcher
             $debit = Debit::where("id", $id)->where("status", "pending")->first();
             if ($debit !== null) {
                 $debit->update(["status" => "executed"]);
-                if ($debit->membership_id !== null) {
+                $membership = $debit->membership;
+                if ($membership !== null) {
                     LedgerEntry::create([
-                        "membership_id" => $debit->membership_id,
+                        "membership_id" => $membership->id,
                         "debit_id" => $debit->id,
                         "kind" => "payment",
                         "amount" => $debit->amount,
-                        "channel" => "directdebit",
+                        "channel" => $membership->payment_method,
                     ]);
+
+                    $months = Membership::MONTHS_PER_INTERVAL[$membership->interval];
+                    $onTimeAdvance = $membership->end_date->copy()->addMonths($months);
+                    $membership->end_date = $onTimeAdvance->greaterThanOrEqualTo($line->booked_at)
+                        ? $onTimeAdvance
+                        : $line->booked_at->copy()->addMonths($months);
+                    $membership->save();
                 }
             }
         }

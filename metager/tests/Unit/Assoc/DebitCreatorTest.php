@@ -2,7 +2,9 @@
 
 namespace Tests\Unit\Assoc;
 
+use App\Assoc\BankStatementMatcher;
 use App\Assoc\DebitCreator;
+use App\Models\Assoc\BankStatementLine;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\LedgerEntry;
@@ -154,7 +156,18 @@ class DebitCreatorTest extends TestCase
         $this->assertSame(1, Debit::count());
     }
 
-    public function testSkipsANonDirectDebitMembership(): void
+    public function testSkipsAPaypalOrCardMembership(): void
+    {
+        $contact = $this->contact();
+        $this->membership($contact, ["payment_method" => "paypal"]);
+        $this->membership($contact, ["payment_method" => "card", "payment_reference" => "M2"]);
+
+        $created = (new DebitCreator())->createForDueMemberships();
+
+        $this->assertCount(0, $created);
+    }
+
+    public function testSkipsABanktransferMembershipWithNoPaymentReference(): void
     {
         $contact = $this->contact();
         $this->membership($contact, ["payment_method" => "banktransfer", "payment_reference" => null]);
@@ -162,6 +175,41 @@ class DebitCreatorTest extends TestCase
         $created = (new DebitCreator())->createForDueMemberships();
 
         $this->assertCount(0, $created);
+    }
+
+    /**
+     * Unlike directdebit, a banktransfer membership has nothing to
+     * collect via SEPA — this debit only ever gets waited on and matched
+     * against an incoming bank-statement line (see BankStatementMatcher).
+     */
+    public function testCreatesADebitForADueBanktransferMembership(): void
+    {
+        $contact = $this->contact();
+        $this->membership($contact, ["payment_method" => "banktransfer"]);
+
+        $created = (new DebitCreator())->createForDueMemberships();
+
+        $this->assertCount(1, $created);
+        $debit = $created->first();
+        $this->assertSame("membership", $debit->source);
+        $this->assertNull($debit->iban);
+        $this->assertNull($debit->bic);
+        $this->assertSame("Ada Lovelace", $debit->account_holder);
+        $this->assertSame("5.00", $debit->amount);
+        $this->assertSame("M1", $debit->mandate);
+        $this->assertSame("pending", $debit->status);
+    }
+
+    public function testSkipsABanktransferMembershipThatAlreadyHasAPendingDebit(): void
+    {
+        $contact = $this->contact();
+        $this->membership($contact, ["payment_method" => "banktransfer"]);
+        (new DebitCreator())->createForDueMemberships();
+
+        $created = (new DebitCreator())->createForDueMemberships();
+
+        $this->assertCount(0, $created);
+        $this->assertSame(1, Debit::count());
     }
 
     public function testSkipsATerminatedMembership(): void
@@ -175,7 +223,7 @@ class DebitCreatorTest extends TestCase
         $this->assertCount(0, $created);
     }
 
-    public function testSkipsADueMembershipWithNoDebitHistoryToSnapshotBankDetailsFrom(): void
+    public function testSkipsADueDirectDebitMembershipWithNoDebitHistoryToSnapshotBankDetailsFrom(): void
     {
         $contact = $this->contact();
         $this->membership($contact);
@@ -184,6 +232,31 @@ class DebitCreatorTest extends TestCase
 
         $this->assertCount(0, $created);
         $this->assertSame(0, Debit::count());
+    }
+
+    /**
+     * Regression: without BankStatementMatcher::confirm() advancing
+     * end_date, this exact period would look due again on the very next
+     * run, creating a second debit for it.
+     */
+    public function testDoesNotReofferTheSamePeriodOnceItsDebitIsConfirmedPaid(): void
+    {
+        $contact = $this->contact();
+        $this->pastDebit($contact);
+        $membership = $this->membership($contact);
+
+        $debit = (new DebitCreator())->createForDueMemberships()->first();
+        $line = BankStatementLine::create([
+            "iban" => $debit->iban,
+            "amount" => $debit->amount,
+            "booked_at" => "2026-02-10",
+        ]);
+        (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $reoffered = (new DebitCreator())->createForDueMemberships();
+
+        $this->assertCount(0, $reoffered);
+        $this->assertSame("2026-03-10", $membership->fresh()->end_date->format("Y-m-d"));
     }
 
     public function testCreatesADebitForADueRecurContribution(): void

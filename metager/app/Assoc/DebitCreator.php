@@ -12,9 +12,11 @@ use Illuminate\Support\Collection;
 /**
  * Ported from de.suma-ev.donation-debit's Membership.CreateDebits and
  * RecurContribution.CreateDebits API4 actions — the two cron jobs that
- * generate the assoc_debits rows a SEPA batch (phase 6c) later collects.
- * "Membership" here means direct-debit membership dues; RecurContribution
- * covers recurring donations only — civicrm_recur_contribution never had a
+ * generate the assoc_debits rows a SEPA batch (phase 6c) later collects (for
+ * directdebit memberships only — a banktransfer debit, see below, is never
+ * SEPA-collected, only ever accrued and waited on). "Membership" here means
+ * membership dues (directdebit or banktransfer); RecurContribution covers
+ * recurring donations only — civicrm_recur_contribution never had a
  * membership_id, dues were always driven off the membership row itself (see
  * CiviCrmImporter::importRecurContributions()).
  *
@@ -25,26 +27,27 @@ use Illuminate\Support\Collection;
  * (assoc_debits carries no membership_id/recur_contribution_id — see the
  * migration), so both are derived instead from the one thing that does link a
  * Debit back to its origin: a pending row already sharing the same mandate.
+ * This guard is also what makes a member who silently stops paying stop
+ * accruing new charges on top of the unpaid one: their last debit just stays
+ * pending, blocking a new one, until it's confirmed or the membership is
+ * cancelled elsewhere — no separate "in arrears" check needed.
  *
  * Membership dues have a second gap the recurring-donation side doesn't:
  * assoc_memberships carries no iban/bic/account_holder of its own (legacy
  * kept those on Membership custom fields 33-35, never imported — see
- * CiviCrmImporter::importMemberships()). A new due membership's bank details
- * are instead snapshotted from its own most recent assoc_debits row sharing
- * the same mandate, the same per-row-snapshot pattern every historical
- * imported debit already uses. A membership with no debit history at all
- * (a brand-new direct-debit sign-up never yet billed) has nothing to
- * snapshot from and is skipped rather than guessed at.
+ * CiviCrmImporter::importMemberships()). A new due directdebit membership's
+ * bank details are instead snapshotted from its own most recent assoc_debits
+ * row sharing the same mandate, the same per-row-snapshot pattern every
+ * historical imported debit already uses. A directdebit membership with no
+ * debit history at all (a brand-new direct-debit sign-up never yet billed)
+ * has nothing to snapshot from and is skipped rather than guessed at. A
+ * banktransfer membership has no bank details to snapshot in the first
+ * place — its assoc_debits.iban/bic stay null — so it is never skipped for
+ * lack of history; its account_holder falls back to the payer's own name,
+ * the same fallback createForRecurContribution() already uses for donations.
  */
 class DebitCreator
 {
-    private const MONTHS_PER_INTERVAL = [
-        "monthly" => 1,
-        "quarterly" => 3,
-        "six-monthly" => 6,
-        "annual" => 12,
-    ];
-
     /** Membership.CreateDebits: 12 days of its own headroom + the 14-day SEPA forerun. */
     private const MEMBERSHIP_DUE_WITHIN_DAYS = 26;
 
@@ -58,7 +61,7 @@ class DebitCreator
     {
         $cutoff = Carbon::today()->addDays(self::MEMBERSHIP_DUE_WITHIN_DAYS);
 
-        $due = Membership::where("payment_method", "directdebit")
+        $due = Membership::whereIn("payment_method", ["directdebit", "banktransfer"])
             ->where("standing", "active")
             ->whereNotNull("payment_reference")
             ->whereNotNull("end_date")
@@ -86,13 +89,16 @@ class DebitCreator
         $bankDetails = Debit::where("mandate", $membership->payment_reference)
             ->orderByDesc("due_date")
             ->first();
-        if ($bankDetails === null) {
+        if ($bankDetails === null && $membership->payment_method === "directdebit") {
             // No collection history to snapshot bank details from — see the
             // class docblock. Left for manual handling rather than guessed at.
+            // Doesn't apply to banktransfer: there is never anything to
+            // snapshot for it (see the iban/bic null-safety below), so a
+            // first-ever charge is not blocked on prior history.
             return null;
         }
 
-        $months = self::MONTHS_PER_INTERVAL[$membership->interval];
+        $months = Membership::MONTHS_PER_INTERVAL[$membership->interval];
         $dueDate = $membership->end_date->copy();
 
         $debit = Debit::create([
@@ -100,12 +106,14 @@ class DebitCreator
             "company_id" => $membership->company_id,
             "membership_id" => $membership->id,
             "source" => "membership",
-            "iban" => $bankDetails->iban,
-            "bic" => $bankDetails->bic,
-            "account_holder" => $bankDetails->account_holder,
+            "iban" => $bankDetails?->iban,
+            "bic" => $bankDetails?->bic,
+            "account_holder" => $bankDetails?->account_holder
+                ?? $membership->contact?->name()
+                ?? $membership->company?->name,
             "amount" => $membership->amount,
             "mandate" => $membership->payment_reference,
-            "mandate_date" => $membership->join_date ?? $bankDetails->mandate_date,
+            "mandate_date" => $membership->join_date ?? $bankDetails?->mandate_date,
             "status" => "pending",
             "end_to_end_reference" => $this->uniqueEndToEndReference(),
             "due_date" => $dueDate,
@@ -151,7 +159,7 @@ class DebitCreator
                 $created->push($this->createForRecurContribution($recurContribution));
             }
 
-            $months = self::MONTHS_PER_INTERVAL[$recurContribution->frequency];
+            $months = Membership::MONTHS_PER_INTERVAL[$recurContribution->frequency];
             $recurContribution->next_due_date = $recurContribution->next_due_date->copy()->addMonths($months);
             $recurContribution->save();
         }
@@ -161,7 +169,7 @@ class DebitCreator
 
     private function createForRecurContribution(RecurContribution $recurContribution): Debit
     {
-        $months = self::MONTHS_PER_INTERVAL[$recurContribution->frequency];
+        $months = Membership::MONTHS_PER_INTERVAL[$recurContribution->frequency];
         $dueDate = $recurContribution->next_due_date->copy();
 
         return Debit::create([

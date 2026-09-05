@@ -14,7 +14,7 @@
                 <tr>
                     <td>{{ $debit->due_date?->format("d.m.Y") }}</td>
                     <td>{{ number_format($debit->amount, 2, ",", ".") }}&euro;</td>
-                    <td>{{ iban_to_human_format($debit->iban) }}</td>
+                    <td>{{ $debit->iban !== null ? iban_to_human_format($debit->iban) : "—" }}</td>
                     <td>{{ $debit->status }}</td>
                     <td>{{ $debit->source }}</td>
                     <td>

@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $membership_id
  * @property Membership|null $membership
  * @property string $source
- * @property string $iban
+ * @property string|null $iban
  * @property string|null $bic
  * @property string $account_holder
  * @property string $amount

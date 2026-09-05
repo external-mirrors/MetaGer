@@ -26,10 +26,24 @@ use App\Models\Assoc\BankStatementLine;
  * isn't nailed down against a real export in this pass, so several plausible
  * names are tried; BankStatementImporterTest pins whichever the first real
  * import confirms.
+ *
+ * A Rücklastschrift (chargeback) arrives as its own negative line, `art`
+ * "Retourenbelastung" — confirmed against one real export
+ * (docs/civicrm-replacement.md), open to another value showing up later the
+ * same way IBAN_FIELDS is. It's routed to BankStatementMatcher::matchChargeback()
+ * instead of match(), ahead of the normal "skip non-positive amounts" check.
+ *
+ * Hibiscus wraps a long purpose text across zweck/zweck2/zweck3, sometimes
+ * mid-word or mid-number, with no guaranteed document order — a real
+ * Rücklastschrift line split "ORG.BETR.: 12" / "0,00 EUR" across two of
+ * them is what surfaced this. Reading only `zweck` (as before) silently
+ * truncated any line long enough to wrap, chargeback or not.
  */
 class BankStatementImporter
 {
     private const IBAN_FIELDS = ["empfaenger_iban", "gegenkonto_iban", "iban"];
+
+    private const CHARGEBACK_ART_VALUES = ["Retourenbelastung"];
 
     public function __construct(private BankStatementMatcher $matcher)
     {
@@ -37,7 +51,7 @@ class BankStatementImporter
 
     /**
      * @param int[] $accountIds Hibiscus konto_id values to accept; empty means accept all.
-     * @return array{created: int, duplicates: int, skipped_outgoing: int, skipped_account: int, skipped_invalid: int, matched: array<string,int>, unmatched: int}
+     * @return array{created: int, duplicates: int, skipped_outgoing: int, skipped_account: int, skipped_invalid: int, matched: array<string,int>, unmatched: int, chargebacks: array{matched: int, unmatched: int}}
      */
     public function importHibiscusXml(string $path, array $accountIds = []): array
     {
@@ -54,6 +68,7 @@ class BankStatementImporter
             "skipped_invalid" => 0,
             "matched" => ["mandate_reference" => 0, "regex" => 0, "substring" => 0],
             "unmatched" => 0,
+            "chargebacks" => ["matched" => 0, "unmatched" => 0],
         ];
 
         foreach ($xml->object as $payment) {
@@ -63,11 +78,16 @@ class BankStatementImporter
                 continue;
             }
 
+            $isChargeback = in_array(trim((string) ($payment->art ?? "")), self::CHARGEBACK_ART_VALUES, true);
+
             $amount = filter_var((string) $payment->betrag, FILTER_VALIDATE_FLOAT);
             // Only incoming money is reconciled here, same as the original —
             // outgoing payments (refunds, admin transfers) have no counterpart
-            // in assoc_debits/assoc_recur_contributions to match against.
-            if ($amount === false || $amount <= 0) {
+            // in assoc_debits/assoc_recur_contributions to match against. A
+            // Rücklastschrift is also a negative line but is exactly the one
+            // outgoing case that does have a counterpart (the Debit it
+            // reverses), so a negative amount is let through when it's one.
+            if ($amount === false || ($isChargeback ? $amount >= 0 : $amount <= 0)) {
                 $summary["skipped_outgoing"]++;
                 continue;
             }
@@ -79,7 +99,8 @@ class BankStatementImporter
             }
 
             $iban = $this->extractIban($payment);
-            $reference = trim((string) ($payment->zweck ?? ""));
+            $reference = str_replace("\n", "", (string) $payment->zweck . (string) ($payment->zweck2 ?? "") . (string) ($payment->zweck3 ?? ""));
+            $reference = trim($reference);
             $reference = $reference !== "" ? $reference : null;
 
             $mandate = null;
@@ -117,7 +138,13 @@ class BankStatementImporter
             ]);
             $summary["created"]++;
 
-            if ($this->matcher->match($line, $mandate, $endToEndReference)) {
+            if ($isChargeback) {
+                if ($this->matcher->matchChargeback($line, $mandate, $endToEndReference)) {
+                    $summary["chargebacks"]["matched"]++;
+                } else {
+                    $summary["chargebacks"]["unmatched"]++;
+                }
+            } elseif ($this->matcher->match($line, $mandate, $endToEndReference)) {
                 $summary["matched"][$line->match_method]++;
             } else {
                 $summary["unmatched"]++;

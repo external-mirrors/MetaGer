@@ -44,6 +44,8 @@ class ImportBankStatement extends Command
             $this->line("Automatisch zugeordnet ({$method}): {$count}");
         }
         $this->line("Nicht zugeordnet (manuelle Prüfung nötig): {$summary['unmatched']}");
+        $this->line("Rücklastschriften zugeordnet: {$summary['chargebacks']['matched']}");
+        $this->line("Rücklastschriften nicht zugeordnet (manuelle Prüfung nötig): {$summary['chargebacks']['unmatched']}");
 
         return self::SUCCESS;
     }

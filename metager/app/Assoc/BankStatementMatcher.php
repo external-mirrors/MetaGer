@@ -184,17 +184,31 @@ class BankStatementMatcher
                         "debit_id" => $debit->id,
                         "bank_statement_line_id" => $line->id,
                         "kind" => "payment",
-                        "amount" => $debit->amount,
+                        // The amount actually received, not $debit->amount
+                        // (what was owed) — decision 1 of the payment-ledger
+                        // design pass needs the ledger to see a real
+                        // under/overpayment, not silently assume the charge
+                        // was paid in full just because something matched.
+                        "amount" => $line->amount,
                         "channel" => $membership->payment_method,
                     ]);
 
-                    $months = Membership::MONTHS_PER_INTERVAL[$membership->interval];
+                    // Coverage only advances once it's actually paid for
+                    // (design decision 1): a partial payment is credited to
+                    // the balance above but must not by itself push
+                    // end_date forward. previous_end_date is still
+                    // snapshotted unconditionally below so a later
+                    // Rücklastschrift's rollback is always a well-defined
+                    // no-op when nothing actually advanced.
                     $previousEndDate = $membership->end_date->copy();
-                    $onTimeAdvance = $previousEndDate->copy()->addMonths($months);
-                    $membership->end_date = $onTimeAdvance->greaterThanOrEqualTo($line->booked_at)
-                        ? $onTimeAdvance
-                        : $line->booked_at->copy()->addMonths($months);
-                    $membership->save();
+                    if ($membership->fresh()->ledgerBalance() <= 0) {
+                        $months = Membership::MONTHS_PER_INTERVAL[$membership->interval];
+                        $onTimeAdvance = $previousEndDate->copy()->addMonths($months);
+                        $membership->end_date = $onTimeAdvance->greaterThanOrEqualTo($line->booked_at)
+                            ? $onTimeAdvance
+                            : $line->booked_at->copy()->addMonths($months);
+                        $membership->save();
+                    }
 
                     // Snapshotted so a later Rücklastschrift can roll this
                     // back exactly — see confirmChargeback() and the

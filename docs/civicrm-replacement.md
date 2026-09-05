@@ -231,13 +231,33 @@ knowing before touching any of (b)-(e):
   — memberships, debits, receipts, and (not yet modelled at all) messages sent to them — must stay
   intact and viewable in the admin UI for the statutory 10-year retention period, with a cron doing
   the actual deletion once that window passes rather than an admin action.
-  - This isn't just a UI gap. `Contact::membership()`/`Company::membership()` are `hasOne`
-    (`app/Models/Assoc/Contact.php`, `Company.php`), and both admin views
-    (`resources/views/admin/assoc/{members,member}.blade.php`) read `$contact->membership`/
-    `$company->membership` as a single row — the legacy "delete the old one to add a new one"
-    constraint is built into this schema's relations, not merely inherited UI behaviour. Nothing in
-    `assoc_memberships` (civicrm_id aside) stops a second row from existing for the same contact
-    today; the relation just can't see it.
+  - **Correction after discussion: CiviCRM itself always supported multiple memberships per
+    contact — this was never a CRM schema limit.** The actual failure was in the custom automation
+    built on top of it (`de.suma-ev.donation-debit`/`de.suma-ev.bescheinigungen`): it couldn't
+    reliably tell which of a contact's memberships an incoming contribution belonged to once an old,
+    inactive one was also on file, so deleting the lapsed membership was the workaround staff used to
+    disambiguate for the automation, not something CiviCRM required. That's the bar this system needs
+    to clear — not "allow a second row" (trivial) but "keep automatic contribution/debit
+    attribution unambiguous once a second row exists."
+  - Where this schema already stands relative to that bar: `Contact::membership()`/
+    `Company::membership()` are `hasOne` today (`app/Models/Assoc/Contact.php`, `Company.php`), read
+    as a single row by both admin views (`resources/views/admin/assoc/{members,member}.blade.php`),
+    so a second membership isn't even visible yet, let alone disambiguated — nothing in
+    `assoc_memberships` (civicrm_id aside) stops a second row from existing for the same contact,
+    the relation just can't see it. On the automation side, `BankStatementMatcher` already narrows
+    its candidates to `pending` debits and `active` recur contributions only
+    (`pendingDebits()`/`activeRecurContributions()` in `app/Assoc/BankStatementMatcher.php`), so a
+    lapsed direct-debit membership's old mandate has no pending debit left to be confused with a new
+    one — that specific case is already safe by construction, not by design intent. The gap is
+    banktransfer: `Membership.payment_reference` is imported for every payment method
+    (`CiviCrmImporter::importMemberships()`, `zahlungsreferenz_36`) but the matcher never reads it —
+    banktransfer memberships get no `assoc_debits` row at all (`DebitCreator` only handles
+    `directdebit`) and aren't in `knownMandates()`, so there is currently no automatic
+    contribution-matching path for them, safe or not. Building one is exactly where this failure mode
+    would resurface: unlike a SEPA mandate, a banktransfer reference is free text a payer may type
+    inconsistently or not at all, so two memberships (one lapsed, one current) for the same person
+    could easily produce references that don't disambiguate cleanly — the same ambiguity the old
+    custom automation had, not yet solved because the matching itself doesn't exist yet.
   - Fixing the relation is the easy part (`hasOne` → `hasMany`, plus some notion of "the current
     membership" — most likely "latest by join_date", since `standing` alone doesn't distinguish a
     lapsed membership from a currently-active one once there can be more than one row). The harder,

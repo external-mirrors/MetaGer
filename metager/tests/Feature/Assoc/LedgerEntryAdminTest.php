@@ -3,6 +3,7 @@
 namespace Tests\Feature\Assoc;
 
 use App\Models\Assoc\Contact;
+use App\Models\Assoc\Debit;
 use App\Models\Assoc\LedgerEntry;
 use App\Models\Assoc\Membership;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -153,5 +154,84 @@ class LedgerEntryAdminTest extends TestCase
         $response->assertSee("Kontostand");
         $response->assertSee("12,34");
         $response->assertSee(route("assoc_admin_membership_ledger_entry", ["id" => $membership->id]), false);
+    }
+
+    private function donationDebit(array $overrides = []): Debit
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+
+        return Debit::create(array_merge([
+            "contact_id" => $contact->id,
+            "source" => "donation",
+            "iban" => "DE02120300000000202051",
+            "account_holder" => "Ada Lovelace",
+            "amount" => "10.00",
+            "mandate" => "S1",
+            "mandate_date" => "2026-01-01",
+            "status" => "executed",
+            "end_to_end_reference" => "E2E-" . uniqid(),
+            "due_date" => "2026-02-01",
+        ], $overrides));
+    }
+
+    /**
+     * The donation-side counterpart of the membership tests above — a manual
+     * waiver/refund scoped to one specific Debit rather than an ongoing
+     * balance (see LedgerEntryController::storeForDebit()'s docblock).
+     */
+    public function testRecordingARefundForADebitTiesItToThatDebit(): void
+    {
+        $debit = $this->donationDebit();
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00"]);
+
+        $response = $this->post("/admin/assoc/debits/{$debit->id}/ledger-entries", [
+            "kind" => "refund",
+            "amount" => "4.00",
+            "channel" => "sepa_credit_transfer",
+        ]);
+
+        $response->assertRedirect();
+        $entry = LedgerEntry::where("kind", "refund")->sole();
+        $this->assertNull($entry->membership_id);
+        $this->assertSame($debit->id, $entry->debit_id);
+        $this->assertSame("4.00", $entry->amount);
+        $this->assertSame("6.00", $debit->netLedgerAmount());
+    }
+
+    public function testRecordingAWaiverForADebitTiesItToThatDebit(): void
+    {
+        $debit = $this->donationDebit();
+
+        $this->post("/admin/assoc/debits/{$debit->id}/ledger-entries", [
+            "kind" => "waiver",
+            "amount" => "5.00",
+        ])->assertRedirect();
+
+        $entry = LedgerEntry::sole();
+        $this->assertSame($debit->id, $entry->debit_id);
+        $this->assertSame("waiver", $entry->kind);
+    }
+
+    public function testAMissingDebitIs404(): void
+    {
+        $this->post("/admin/assoc/debits/00000000-0000-4000-8000-000000000000/ledger-entries", [
+            "kind" => "waiver",
+            "amount" => "10.00",
+        ])->assertNotFound();
+    }
+
+    public function testTheDebitPageShowsItsLedgerHistoryAndLetsAnAdminBookAnAdjustment(): void
+    {
+        $debit = $this->donationDebit();
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "charge", "amount" => "10.00"]);
+        LedgerEntry::create(["debit_id" => $debit->id, "kind" => "payment", "amount" => "10.00", "channel" => "directdebit"]);
+
+        $response = $this->get("/admin/assoc/debits/{$debit->id}");
+
+        $response->assertOk();
+        $response->assertSee("Buchungsverlauf");
+        $response->assertSee("Belastung");
+        $response->assertSee("Zahlung");
+        $response->assertSee(route("assoc_admin_debit_ledger_entry", ["id" => $debit->id]), false);
     }
 }

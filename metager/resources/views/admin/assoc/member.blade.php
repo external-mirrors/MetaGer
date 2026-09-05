@@ -82,6 +82,8 @@
                     </tr>
                 @endif
             </table>
+
+            @include('admin.assoc._ledger', ['membership' => $membership])
         @else
             <p>Keine Mitgliedschaft.</p>
         @endif
@@ -109,6 +111,15 @@
                     @endforeach
                 </tbody>
             </table>
+
+            {{-- A waiver on an accepted late cancellation, or a refund with a
+                 retroactive cancellation, both land against the terminated
+                 membership itself, not whatever's active now — see the
+                 payment-ledger design pass in docs/civicrm-replacement.md. --}}
+            @foreach($pastMemberships as $pastMembership)
+                <h3>Buchungen: {{ $pastMembership->intervalLabel() }}e Mitgliedschaft bis {{ $pastMembership->end_date?->format("d.m.Y") ?? "—" }}</h3>
+                @include('admin.assoc._ledger', ['membership' => $pastMembership])
+            @endforeach
         @endif
 
         @include('admin.assoc._debits', ['debits' => $payer->debits])

@@ -53,6 +53,34 @@ class LedgerEntry extends Model
         return $this->belongsTo(Membership::class, "membership_id");
     }
 
+    /**
+     * German-only, same reasoning as Membership's own label methods — these
+     * feed admin views only (see AssocController's docblock).
+     */
+    public function kindLabel(): string
+    {
+        return match ($this->kind) {
+            "charge" => "Belastung",
+            "payment" => "Zahlung",
+            "chargeback_fee" => "Rücklastschriftgebühr",
+            "waiver" => "Erlass",
+            "refund" => "Erstattung",
+            default => $this->kind,
+        };
+    }
+
+    public function channelLabel(): ?string
+    {
+        return match ($this->channel) {
+            null => null,
+            "directdebit" => "Lastschrift",
+            "banktransfer" => "Überweisung",
+            "paypal" => "PayPal",
+            "sepa_credit_transfer" => "SEPA-Überweisung",
+            default => $this->channel,
+        };
+    }
+
     public function debit(): BelongsTo
     {
         return $this->belongsTo(Debit::class, "debit_id");

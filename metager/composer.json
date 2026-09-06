@@ -10,7 +10,6 @@
     "require": {
         "php": "^8.4",
         "composer/class-map-generator": "^1.6",
-        "digitick/sepa-xml": "^2.0",
         "endroid/qr-code": "^5.0",
         "globalcitizen/php-iban": "^4.2.3",
         "invoiceninja/sdk-php": "^1.4",
@@ -21,7 +20,6 @@
         "matomo/device-detector": "^6.3",
         "mcamara/laravel-localization": "^2.4",
         "mlocati/ip-lib": "^1.22",
-        "mpdf/mpdf": "^8.3",
         "nesbot/carbon": "^3.0",
         "predis/predis": "^3.2",
         "promphp/prometheus_client_php": "^2.14",

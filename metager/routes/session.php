@@ -1,12 +1,7 @@
 <?php
 use App\Http\Controllers\AdminInterface;
-use App\Http\Controllers\AssocController;
-use App\Http\Controllers\BankStatementController;
-use App\Http\Controllers\DonationReceiptController;
-use App\Http\Controllers\LedgerEntryController;
 use App\Http\Controllers\LogsApiController;
 use App\Http\Controllers\MembershipController;
-use App\Http\Controllers\SepaBatchController;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Mail\LogsLoginCode;
 use Illuminate\Http\Request;
@@ -36,23 +31,6 @@ Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], '
     Route::post("membership/reduction/accept", [MembershipController::class, "adminMembershipReductionAccept"])->name("membership_admin_reduction_accept");
     Route::post("membership/accept", [MembershipController::class, "adminAccept"])->name("membership_admin_accept");
     Route::post("membership/deny", [MembershipController::class, "adminDeny"])->name("membership_admin_deny");
-    Route::get("assoc/members", [AssocController::class, "members"])->name("assoc_admin_members");
-    Route::get("assoc/members/{type}/{id}", [AssocController::class, "member"])->name("assoc_admin_member");
-    Route::get("assoc/debits/{id}", [AssocController::class, "debit"])->name("assoc_admin_debit");
-    Route::get("assoc/bank-statements", [BankStatementController::class, "index"])->name("assoc_admin_bank_statements");
-    Route::get("assoc/bank-statements/{id}", [BankStatementController::class, "show"])->name("assoc_admin_bank_statement");
-    Route::post("assoc/bank-statements/{id}/match", [BankStatementController::class, "match"])->name("assoc_admin_bank_statement_match");
-    Route::post("assoc/bank-statements/rematch", [BankStatementController::class, "rematch"])->name("assoc_admin_bank_statements_rematch");
-    Route::get("assoc/donation-receipts", [DonationReceiptController::class, "index"])->name("assoc_admin_donation_receipts");
-    Route::get("assoc/donation-receipts/{id}/download", [DonationReceiptController::class, "download"])->name("assoc_admin_donation_receipt_download");
-    Route::post("assoc/debits/{debitId}/generate-receipt", [DonationReceiptController::class, "generate"])->name("assoc_admin_debit_generate_receipt");
-    Route::post("assoc/payers/{type}/{id}/generate-receipt", [DonationReceiptController::class, "generateForPayer"])->name("assoc_admin_payer_generate_receipt");
-    Route::post("assoc/payers/{type}/{id}/donation-receipt-preference", [DonationReceiptController::class, "updatePreference"])->name("assoc_admin_payer_update_preference");
-    Route::post("assoc/memberships/{id}/ledger-entries", [LedgerEntryController::class, "store"])->name("assoc_admin_membership_ledger_entry");
-    Route::post("assoc/debits/{id}/ledger-entries", [LedgerEntryController::class, "storeForDebit"])->name("assoc_admin_debit_ledger_entry");
-    Route::get("assoc/sepa-batches", [SepaBatchController::class, "index"])->name("assoc_admin_sepa_batches");
-    Route::post("assoc/sepa-batches", [SepaBatchController::class, "generate"])->name("assoc_admin_sepa_batches_generate");
-    Route::get("assoc/sepa-batches/{id}/download", [SepaBatchController::class, "download"])->name("assoc_admin_sepa_batch_download");
     Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');

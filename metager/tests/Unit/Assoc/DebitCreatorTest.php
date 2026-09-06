@@ -156,6 +156,22 @@ class DebitCreatorTest extends TestCase
         $this->assertSame(1, Debit::count());
     }
 
+    public function testSkipsAMembershipThatAlreadyHasASubmittedDebit(): void
+    {
+        // "submitted" — already sent out in a SEPA batch, see
+        // SepaDirectDebitBatchGenerator — has to block a new debit exactly
+        // like "pending" does, or the same period would get offered again
+        // while the first collection is still in flight at the bank.
+        $contact = $this->contact();
+        $this->pastDebit($contact, ["status" => "submitted"]);
+        $this->membership($contact);
+
+        $created = (new DebitCreator())->createForDueMemberships();
+
+        $this->assertCount(0, $created);
+        $this->assertSame(1, Debit::count());
+    }
+
     public function testSkipsAPaypalOrCardMembership(): void
     {
         $contact = $this->contact();

@@ -223,7 +223,10 @@ class DebitCreator
             return false;
         }
 
-        return Debit::where("mandate", $mandate)->where("status", "pending")->exists();
+        // "submitted" counts too: a debit already sent out in a SEPA batch is
+        // still unresolved, just no longer eligible for a fresh one — see
+        // SepaDirectDebitBatchGenerator and the assoc_debits status comment.
+        return Debit::where("mandate", $mandate)->whereIn("status", ["pending", "submitted"])->exists();
     }
 
     private function reference(string $prefix, Carbon $start, int $months): string

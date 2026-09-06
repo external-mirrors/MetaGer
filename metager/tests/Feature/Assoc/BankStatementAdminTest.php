@@ -113,6 +113,39 @@ class BankStatementAdminTest extends TestCase
         $response->assertSee("Familie Lovelace");
     }
 
+    /**
+     * "submitted" — already sent out in a SEPA batch, see
+     * SepaDirectDebitBatchGenerator — has to remain findable for manual
+     * matching too, same as "pending": an admin resolving an unmatched line
+     * must be able to pick a debit that's already been submitted to the bank.
+     */
+    public function testTheDetailPageSearchesSubmittedDebitsByAccountHolderToo(): void
+    {
+        $line = BankStatementLine::create([
+            "iban" => "DE02120300000000202051",
+            "amount" => "10.00",
+            "reference" => "Beitrag",
+            "booked_at" => "2026-01-05",
+        ]);
+        Debit::create([
+            "contact_id" => $this->contact()->id,
+            "source" => "donation",
+            "iban" => "DE02120300000000202051",
+            "account_holder" => "Familie Lovelace",
+            "amount" => "10.00",
+            "mandate" => "M1",
+            "mandate_date" => "2026-01-01",
+            "status" => "submitted",
+            "end_to_end_reference" => "E2E-1",
+            "due_date" => "2026-01-05",
+        ]);
+
+        $response = $this->get("/admin/assoc/bank-statements/{$line->id}?q=Lovelace");
+
+        $response->assertOk();
+        $response->assertSee("Familie Lovelace");
+    }
+
     public function testManuallyMatchingALineToADebitRecordsTheMethodAndAssignsTheDebit(): void
     {
         $line = BankStatementLine::create([

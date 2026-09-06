@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $reference
  * @property string|null $donation_receipt_id
  * @property DonationReceipt|null $donationReceipt
+ * @property string|null $sepa_batch_id
+ * @property SepaBatch|null $sepaBatch
  */
 class Debit extends Model
 {
@@ -37,7 +39,7 @@ class Debit extends Model
 
     protected $table = "assoc_debits";
 
-    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_id", "source", "iban", "bic", "account_holder", "amount", "mandate", "mandate_date", "status", "end_to_end_reference", "due_date", "previous_end_date", "reference", "donation_receipt_id"];
+    protected $fillable = ["civicrm_id", "contact_id", "company_id", "membership_id", "source", "iban", "bic", "account_holder", "amount", "mandate", "mandate_date", "status", "end_to_end_reference", "due_date", "previous_end_date", "reference", "donation_receipt_id", "sepa_batch_id"];
 
     protected $casts = [
         "amount" => "decimal:2",
@@ -64,6 +66,11 @@ class Debit extends Model
     public function donationReceipt(): BelongsTo
     {
         return $this->belongsTo(DonationReceipt::class, "donation_receipt_id");
+    }
+
+    public function sepaBatch(): BelongsTo
+    {
+        return $this->belongsTo(SepaBatch::class, "sepa_batch_id");
     }
 
     public function payer(): Contact|Company|null

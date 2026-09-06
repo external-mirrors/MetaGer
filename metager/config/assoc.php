@@ -43,4 +43,35 @@ return [
     "donation_receipt_signee_name" => env("ASSOC_DONATION_RECEIPT_SIGNEE_NAME"),
     "donation_receipt_signature_path" => env("ASSOC_DONATION_RECEIPT_SIGNATURE_PATH"),
 
+    /*
+    |--------------------------------------------------------------------------
+    | SEPA creditor identity
+    |--------------------------------------------------------------------------
+    |
+    | Used by SepaDirectDebitBatchGenerator to fill in every pain.008.001.02
+    | collection batch's <Cdtr>/<CdtrAcct>/<CdtrAgt>/<CdtrSchmeId> blocks —
+    | the association's own name, account and Gläubiger-ID, real production
+    | values nobody has supplied yet. Env-only, deliberately not committed,
+    | same reasoning as the donation-receipt signee above and config/sumas.json:
+    | a fresh checkout has none, and whoever actually runs a batch against the
+    | real accounts sources and sets these.
+    |
+    | The name must be SEPA-charset-safe (Latin letters, digits and a small
+    | punctuation set — no umlauts or ß): the legacy extension's hardcoded
+    | value spelled it "fuer", not "für", for exactly this reason. Nothing
+    | here transliterates it automatically; get it right when setting the
+    | env var.
+    |
+    | A missing value throws from the generator rather than silently
+    | producing a batch with blank creditor fields — a config/ops problem,
+    | left uncaught to surface as a 500, unlike DonationReceiptGenerator's
+    | caught RuntimeExceptions, which are per-debit business-rule rejections.
+    |
+    */
+
+    "sepa_creditor_name" => env("ASSOC_SEPA_CREDITOR_NAME"),
+    "sepa_creditor_iban" => env("ASSOC_SEPA_CREDITOR_IBAN"),
+    "sepa_creditor_bic" => env("ASSOC_SEPA_CREDITOR_BIC"),
+    "sepa_creditor_id" => env("ASSOC_SEPA_CREDITOR_ID"),
+
 ];

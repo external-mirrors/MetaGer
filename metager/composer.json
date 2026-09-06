@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.4",
         "composer/class-map-generator": "^1.6",
+        "digitick/sepa-xml": "^2.0",
         "endroid/qr-code": "^5.0",
         "globalcitizen/php-iban": "^4.2.3",
         "invoiceninja/sdk-php": "^1.4",

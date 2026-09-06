@@ -161,7 +161,9 @@ it.**
 6. **Cutover** — in progress, being built as five separable pieces (see below): (a) ~~flip phase
    4's matcher live~~ — done, see below; (b) ~~`assoc:create-debits`~~ — done, see below,
    porting the two `CreateDebits` cron jobs; (c) the SEPA-generation port (`de.suma-ev.donation-
-   debit`'s pain.008.001.02 logic); (d) `assoc:charge-keys`, wiring `ChargeKeys`-equivalent
+   debit`'s pain.008.001.02 logic) — **~~pain.008 generation itself~~ done, see below; the live
+   Hibiscus Payment-Server submission is still open, needing the hands-on spike already called
+   out**; (d) `assoc:charge-keys`, wiring `ChargeKeys`-equivalent
    keymanager charging onto this schema (reuse the existing production keymanager credential —
    already decided, no new credential needed); (e) derived (not stored) payment-status reminder
    emails and the `Membership.Renew` equivalent, **now scoped to also cover chargebacks** (see
@@ -194,10 +196,11 @@ knowing before touching any of (b)-(e):
   `Membership.Mastodonpendingaccounts`, `Membership.CreateDebits`) — the 9th may have been a core
   CiviCRM job (e.g. `UpdateMembershipStatuses`) counted alongside the two extensions'. Not chased
   further; flagging rather than guessing which one.
-- `assoc_debits.status` today is `pending`/`executed`/`failed`. The legacy flow has a fourth,
+- ~~`assoc_debits.status` today is `pending`/`executed`/`failed`. The legacy flow has a fourth,
   intermediate state — "included in a generated SEPA file, submitted to the bank, awaiting
   confirmation" — that this schema doesn't have yet; (c) will need it (so `Membership.CreateDebits`'
-  ~26-day and (c)'s admin-confirmed batch don't both keep re-offering the same still-pending debits).
+  ~26-day and (c)'s admin-confirmed batch don't both keep re-offering the same still-pending
+  debits).~~ **Done** — `status` gained `"submitted"`, see the pain.008-generation write-up below.
 - Confirming a payment has exactly one side effect in the legacy flow: the debit flips to executed.
   `ChargeKeys` and the payment-status reminders are separate, independently-scheduled jobs reading
   the resulting state afterward, not triggered by the match itself — matches how (a) below and phase
@@ -429,6 +432,55 @@ sketch rather than sitting alongside it:
   own); and Verification-of-Payee behaviour on outgoing transfers, which could silently block the
   refund path under the EU Instant Payments Regulation. None of these block the shape above, but all
   of them are implementation-time, not design-time, unknowns.
+- **Deployment decision: Hibiscus Payment-Server gets its own project/chart**, separate from both
+  MetaGer's `chart/` and keymanager's (also its own separate project — MetaGer's chart has zero
+  references to keymanager anywhere, it's reached purely as an external URL + bearer token, so this
+  matches the existing one-project-per-deployable-service pattern). Isolates a stateful singleton
+  holding live bank credentials and a master password from MetaGer's chart, which is built entirely
+  for stateless, horizontally-scaled search pods (`chart/templates/deployment.yaml` etc.) — a
+  `replicas: 1` StatefulSet with a persistent encrypted wallet and a `NetworkPolicy`-scoped,
+  never-ingressed admin API is a fundamentally different deployment shape that doesn't belong mixed
+  into either. That chart itself is a separate repo, not built here.
+
+**pain.008.001.02 collection-batch generation — done, `SepaDirectDebitBatchGenerator`.** This is
+only the first half of (c) — generating the SEPA XML itself, ported from
+`CRM_DonationDebit_Form_ExecuteDebits::generateSepaXML()`/`createPaymentInfos()` via
+`digitick/sepa-xml`, the same library the legacy extension used. Handing the resulting file to the
+bank/Hibiscus still happens by hand today, same as CiviCRM's admin always did — the actual Hibiscus
+Payment-Server integration above (TAN handling, XML-RPC submission, the statement webhook adapter)
+is still open, needing the hands-on spike already called out.
+
+Every currently `"pending"` directdebit `Debit` (`whereNotNull("iban")` — banktransfer debits have
+no mandate to collect via SEPA at all) gets folded into one batch, admin-triggered from a new
+`/admin/assoc/sepa-batches` page. This is the schema gap the phase-6 findings above flagged
+(`assoc_debits.status` had no state for "included in a generated batch, awaiting confirmation"):
+`status` gained a fourth value, `"submitted"`, and every place that treated `"pending"` as "not yet
+acted on" — `DebitCreator::hasPendingDebit()`, `BankStatementMatcher::pendingDebits()`/`confirm()`'s
+status guard, `BankStatementController::searchCandidates()` — now treats `"pending"` or
+`"submitted"` that way, so `assoc:create-debits` doesn't re-offer a charge already in flight at the
+bank, and a payment against a submitted debit still confirms it to `"executed"` exactly as before.
+A new `assoc_sepa_batches` table (one row per generated file, `Debit.sepa_batch_id` linking back)
+gives an admin a download link and an audit trail, mirroring `assoc_donation_receipts`' shape.
+
+Two real bugs in the legacy code were fixed rather than preserved (neither is a characterization-test
+quirk the way `ResultDeduplicator`'s/`LinkBuilder`'s are — this is what a *port*, not a
+*reproduction*, should do): it registered all three payment-name groups
+(`-onetime`/`-first`/`-recurring`) every time the collection date changed regardless of which ones
+actually got a transfer that day, and `digitick/sepa-xml`'s `asXML()` emits a `<PmtInf>` block for
+every registered group with no transfer-count check — so most runs would have produced one or two
+empty, schema-invalid `<PmtInf>` blocks; this generator creates a group lazily, the moment its first
+transfer needs it, keyed by (collection date, sequence type). It also gave every group's id
+(`PmtInfId`) the literal, repeated string `'firstPayment'` — groups here get a unique id instead.
+
+Also dropped, from this generator specifically: the `-onetime`/`OOFF` case, which only ever applied
+to a debit with neither a `recur_contribution_id` nor a `membership_id` at all. Every `Debit`
+`DebitCreator` creates comes from either a `Membership` or a `RecurContribution`, so that case can't
+occur in a pain.008 collection batch — not a claim that one-off SEPA messages never happen anywhere
+in this system. A manual refund's eventual outgoing transfer
+(`LedgerEntryController::storeForDebit()`'s `refund`/`sepa_credit_transfer` kind, record-keeping only
+today) will, once wired to Hibiscus, go out as a one-off **pain.001 SEPA Credit Transfer**
+(`sepaueberweisung`, see above) — a different message format needing its own generator, built
+alongside the actual Hibiscus submission work, not this one.
 
 **Shape done (`22df6625e`); directdebit collection now writes to it (`9a578f253`).** A new
 `assoc_ledger_entries` table: one row per accrual/payment/adjustment event, tied to a

@@ -230,6 +230,23 @@ class PaymentReminderProcessorTest extends TestCase
         Mail::assertNothingSent();
     }
 
+    /**
+     * The mail itself must actually pick up Membership::resolvedLocale() —
+     * see MembershipTest for the fallback chain itself. A contact's own
+     * assoc_contacts.locale must win even when the membership's own
+     * (CiviCRM-imported) locale disagrees.
+     */
+    public function testTheSentReminderUsesTheContactsOwnLocaleOverTheMembershipsImportedOne(): void
+    {
+        Mail::fake();
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com", "locale" => "fr"]);
+        $this->overdueMembership($contact, 2, ["locale" => "de-DE"]);
+
+        (new PaymentReminderProcessor())->process();
+
+        Mail::assertSent(PaymentReminder::class, fn (PaymentReminder $mail) => $mail->recipientLocale === "fr");
+    }
+
     public function testBalanceClearingResetsTheReminderStage(): void
     {
         Mail::fake();

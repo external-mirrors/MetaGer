@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Assoc;
 
+use App\Models\Assoc\Company;
 use App\Models\Assoc\Contact;
 use App\Models\Assoc\Debit;
 use App\Models\Assoc\LedgerEntry;
@@ -397,5 +398,76 @@ class MembershipTest extends TestCase
         $dueDate = $membership->fresh()->oldestUnpaidChargeDueDate();
         $this->assertNotNull($dueDate);
         $this->assertSame($entry->created_at->toDateTimeString(), $dueDate->toDateTimeString());
+    }
+
+    /**
+     * resolvedLocale()'s fallback chain: assoc_contacts.locale (the payer's
+     * own property) wins over assoc_memberships.locale (CiviCRM's
+     * Beitrag.Locale, imported per-membership before Contact had anywhere to
+     * put it), which in turn wins over config's assoc.default_locale.
+     */
+    public function testResolvedLocalePrefersTheContactsOwnLocaleOverTheMembershipsImportedOne(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com", "locale" => "fr"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "10.00",
+            "payment_method" => "banktransfer",
+            "locale" => "de-DE",
+        ]);
+
+        $this->assertSame("fr", $membership->resolvedLocale());
+    }
+
+    public function testResolvedLocaleFallsBackToTheMembershipsImportedLocaleWhenTheContactHasNone(): void
+    {
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "10.00",
+            "payment_method" => "banktransfer",
+            "locale" => "de-DE",
+        ]);
+
+        $this->assertSame("de-DE", $membership->resolvedLocale());
+    }
+
+    public function testResolvedLocaleFallsBackToTheConfiguredDefaultWhenNothingIsSet(): void
+    {
+        config(["assoc.default_locale" => "de"]);
+        $contact = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com"]);
+        $membership = Membership::create([
+            "contact_id" => $contact->id,
+            "membership_type" => "person",
+            "interval" => "monthly",
+            "amount" => "10.00",
+            "payment_method" => "banktransfer",
+        ]);
+
+        $this->assertSame("de", $membership->resolvedLocale());
+    }
+
+    /**
+     * A company payer has no locale of its own — its contactPerson stands
+     * in, same fallback PaymentReminderProcessor::recipient() already uses
+     * for email/name.
+     */
+    public function testResolvedLocaleUsesACompanysContactPersonWhenThePayerIsACompany(): void
+    {
+        $contactPerson = Contact::create(["first_name" => "Ada", "last_name" => "Lovelace", "email" => "ada@example.com", "locale" => "en"]);
+        $company = Company::create(["name" => "ACME GmbH", "contact_person_id" => $contactPerson->id]);
+        $membership = Membership::create([
+            "company_id" => $company->id,
+            "membership_type" => "company",
+            "interval" => "monthly",
+            "amount" => "10.00",
+            "payment_method" => "banktransfer",
+        ]);
+
+        $this->assertSame("en", $membership->resolvedLocale());
     }
 }

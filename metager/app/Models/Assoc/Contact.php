@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $city
  * @property string|null $country
  * @property string|null $donation_receipt_preference
+ * @property string|null $locale
  */
 class Contact extends Model
 {
@@ -28,7 +29,7 @@ class Contact extends Model
 
     protected $table = "assoc_contacts";
 
-    protected $fillable = ["civicrm_id", "first_name", "last_name", "display_name", "email", "street", "postal_code", "city", "country", "donation_receipt_preference"];
+    protected $fillable = ["civicrm_id", "first_name", "last_name", "display_name", "email", "street", "postal_code", "city", "country", "donation_receipt_preference", "locale"];
 
     /**
      * Almost every contact has first_name+last_name. display_name exists for

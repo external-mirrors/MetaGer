@@ -67,7 +67,7 @@ class PaymentReminder extends Mailable
     ) {
         $this->name = $recipientName;
         $this->to(new Address($recipientEmail, $recipientName));
-        $this->recipientLocale = $membership->locale ?? config("app.locale");
+        $this->recipientLocale = $membership->resolvedLocale();
         $this->locale($this->recipientLocale);
 
         $this->stage = $stage;

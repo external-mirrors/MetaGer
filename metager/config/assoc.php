@@ -74,4 +74,19 @@ return [
     "sepa_creditor_bic" => env("ASSOC_SEPA_CREDITOR_BIC"),
     "sepa_creditor_id" => env("ASSOC_SEPA_CREDITOR_ID"),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default correspondence locale
+    |--------------------------------------------------------------------------
+    |
+    | Last resort for Membership::resolvedLocale() when neither the payer
+    | (assoc_contacts.locale) nor the membership itself (assoc_memberships.
+    | locale, imported from CiviCRM's Beitrag.Locale) has one set. suma-ev is
+    | a German association; unlike app.locale this is never negotiated from a
+    | browser, since nothing here renders in response to a request.
+    |
+    */
+
+    "default_locale" => env("ASSOC_DEFAULT_LOCALE", "de"),
+
 ];

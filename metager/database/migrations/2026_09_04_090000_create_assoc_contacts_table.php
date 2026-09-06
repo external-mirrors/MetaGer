@@ -33,6 +33,13 @@ return new class extends Migration {
             $table->string("postal_code")->nullable();
             $table->string("city")->nullable();
             $table->string("country")->nullable();
+            // Which language to send this payer's correspondence (reminders,
+            // future receipt emails) in — the payer's own property, not a
+            // particular membership's. assoc_memberships.locale predates this
+            // (CiviCRM's Beitrag.Locale custom field only ever lived on the
+            // membership) and stays as a fallback for data already imported
+            // from there; see Membership::resolvedLocale().
+            $table->string("locale")->nullable();
             $table->timestamps();
         });
     }

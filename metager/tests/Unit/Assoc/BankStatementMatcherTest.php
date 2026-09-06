@@ -115,6 +115,23 @@ class BankStatementMatcherTest extends TestCase
     }
 
     /**
+     * "submitted" — already sent out in a SEPA batch, see
+     * SepaDirectDebitBatchGenerator — is still exactly what an incoming
+     * payment should confirm, same as "pending": once a debit is submitted
+     * it must not become impossible to ever confirm.
+     */
+    public function testConfirmingAMatchFlipsASubmittedDebitToExecutedToo(): void
+    {
+        $debit = $this->debit($this->contact(), ["status" => "submitted"]);
+        $line = $this->line();
+
+        $matched = (new BankStatementMatcher())->match($line, mandate: "M1");
+
+        $this->assertTrue($matched);
+        $this->assertSame("executed", $debit->fresh()->status);
+    }
+
+    /**
      * The payment half of the payment-ledger design pass — DebitCreator
      * records the charge half when the debit is first created.
      */

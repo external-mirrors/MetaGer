@@ -109,7 +109,7 @@ class BankStatementController extends Controller
      */
     private function searchCandidates(string $search): \Illuminate\Support\Collection
     {
-        $debits = Debit::where("status", "pending")
+        $debits = Debit::whereIn("status", ["pending", "submitted"])
             ->where(function ($q) use ($search) {
                 $q->where("account_holder", "like", "%{$search}%")->orWhere("mandate", "like", "%{$search}%");
             })

@@ -39,7 +39,13 @@ return new class extends Migration {
             // legitimately repeats across rows here.
             $table->string("mandate")->index();
             $table->date("mandate_date");
-            $table->enum("status", ["pending", "executed", "failed"])->default("pending");
+            // "submitted": included in a generated SEPA collection batch, sent
+            // to the bank, awaiting confirmation via BankStatementMatcher —
+            // see SepaDirectDebitBatchGenerator. Anywhere "pending" used to
+            // mean "not yet acted on" now has to mean "pending or submitted"
+            // instead, since a submitted debit is still unresolved, just no
+            // longer eligible for a fresh batch.
+            $table->enum("status", ["pending", "submitted", "executed", "failed"])->default("pending");
             // The per-transaction identifier — this is what's actually
             // unique per collection, not the mandate.
             $table->string("end_to_end_reference")->unique();

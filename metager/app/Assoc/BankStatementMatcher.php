@@ -137,11 +137,11 @@ class BankStatementMatcher
 
     /**
      * Records a match — automatic or, via BankStatementController::match(),
-     * manual — and, for a "debit" match, flips that Debit from "pending" to
-     * "executed". Guarded to "pending" only: a manual match lets an admin pick
-     * any debit regardless of its current status, and this must not silently
-     * downgrade an already-"failed" (bounced/returned) collection back to
-     * looking executed.
+     * manual — and, for a "debit" match, flips that Debit from "pending" or
+     * "submitted" to "executed". Guarded to those two only: a manual match
+     * lets an admin pick any debit regardless of its current status, and
+     * this must not silently downgrade an already-"failed" (bounced/
+     * returned) collection back to looking executed.
      *
      * Records a "payment" LedgerEntry — the other half of the payment-ledger
      * design pass (see docs/civicrm-replacement.md) whose accrual half
@@ -180,7 +180,10 @@ class BankStatementMatcher
         $line->save();
 
         if ($type === "debit") {
-            $debit = Debit::where("id", $id)->where("status", "pending")->first();
+            // "submitted" is guarded here too, same reasoning as
+            // pendingDebits(): a debit already sent out in a SEPA batch is
+            // still exactly what a matching payment should confirm.
+            $debit = Debit::where("id", $id)->whereIn("status", ["pending", "submitted"])->first();
             if ($debit !== null) {
                 $debit->update(["status" => "executed"]);
                 $membership = $debit->membership;
@@ -436,7 +439,11 @@ class BankStatementMatcher
 
     private function pendingDebits(): Collection
     {
-        return $this->pendingDebits ??= Debit::where("status", "pending")->get();
+        // "submitted" too: once SepaDirectDebitBatchGenerator has sent a
+        // debit out, it's still waiting on this same confirmation, just no
+        // longer eligible for a fresh batch — see the assoc_debits status
+        // comment.
+        return $this->pendingDebits ??= Debit::whereIn("status", ["pending", "submitted"])->get();
     }
 
     private function activeRecurContributions(): Collection

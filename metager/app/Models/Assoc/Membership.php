@@ -74,6 +74,24 @@ class Membership extends Model
         return $this->belongsTo(Company::class, "company_id");
     }
 
+    /**
+     * Which language to render this membership's correspondence in.
+     * assoc_contacts.locale is the payer's own property and wins; a company
+     * payer has none of its own, so its contactPerson stands in — the same
+     * fallback PaymentReminderProcessor::recipient() already uses for email/
+     * name. assoc_memberships.locale (CiviCRM's Beitrag.Locale, imported
+     * per-membership before Contact had anywhere to put it) is the next
+     * fallback, so already-imported data isn't discarded; config's
+     * assoc.default_locale is the last resort.
+     */
+    public function resolvedLocale(): string
+    {
+        return $this->contact?->locale
+            ?? $this->company?->contactPerson?->locale
+            ?? $this->locale
+            ?? config("assoc.default_locale");
+    }
+
     public function ledgerEntries(): HasMany
     {
         return $this->hasMany(LedgerEntry::class, "membership_id");

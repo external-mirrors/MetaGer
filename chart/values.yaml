@@ -169,6 +169,53 @@ valkey:
   architecture: replication
   replicaCount: 3
 
+  # A voluntary disruption (node drain) goes through the Eviction API, which
+  # honours a PodDisruptionBudget; an involuntary one (node loss, OOM-kill)
+  # does not. This chart's default is disabled, so an undrained deploy has no
+  # protection at all: a drain can evict two of the three pods back to back,
+  # which is a lost quorum (sentinel.quorum below), not a failover. minAvailable
+  # 2 caps voluntary disruption at one pod at a time — the drain of the second
+  # node stalls until the first pod is back and Ready, which is the graceful
+  # behaviour a planned drain should have.
+  pdb:
+    enabled: true
+    minAvailable: 2
+
+  # Nothing else stops all 3 replicas landing on one node, which turns any
+  # single node loss — planned or not — into a lost quorum regardless of the
+  # PDB above (that only governs the Eviction API, not a node dying outright).
+  # Preferred, same as the app Deployments (chart/templates/deployment.yaml
+  # and friends), rather than required: this only bites where replicaCount > 1
+  # anyway (development and review run a single replica —
+  # .gitlab/development.yaml, .gitlab/review.yaml), so a hard requirement's
+  # only cost would ever land on production, and a scheduling failure there
+  # trades a quorum risk for an availability one. Weighted above the app's own
+  # 50 because losing 2 of 3 sentinel-quorum members is a full search outage,
+  # not just shed capacity. `app.kubernetes.io/instance` is left out of the
+  # selector on purpose: it isn't available here (values.yaml isn't
+  # templated), and matching on name alone is sufficient since every
+  # environment gets its own namespace.
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: valkey
+            topologyKey: kubernetes.io/hostname
+
+  # The chart default (30s) is shorter than its own preStop hook can take
+  # (sentinel.preStop and the valkey container's prestop.sh together can run
+  # up to ~45s: a 22s write pause, then up to 20s waiting for Sentinel to
+  # confirm the failover, then a few seconds of settle time). Below that
+  # figure, a drained master pod gets SIGKILLed mid-failover instead of
+  # completing it — the abrupt close is what surfaces to the app as
+  # read/socket errors and a window of -READONLY, rather than a clean
+  # handoff. 60s, as the subchart's own values.yaml recommends for Sentinel
+  # setups.
+  terminationGracePeriodSeconds: 60
+
   sentinel:
     enabled: true
     # 2 of 3. Left at the chart default, stated here because it has to move with

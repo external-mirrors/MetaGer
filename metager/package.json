@@ -14,7 +14,7 @@
     "laravel-vite-plugin": "^3.2.0",
     "less": "^4.9.1",
     "vite": "^8.2.2",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.0"
   },
   "dependencies": {
     "@paypal/paypal-js": "^10.1.0",

@@ -36,6 +36,18 @@ class AppDownloadTest extends TestCase
         $response->assertHeader("Location", self::STABLE_APK);
     }
 
+    /**
+     * Real users arrive on a locale-prefixed path (the link on /app is
+     * localized). ResolveLocale strips the prefix before routing and
+     * AppServiceProvider's URL hook re-adds it to generated paths — neither must
+     * leak into an `away()` Location, or the download breaks for every non-default
+     * locale.
+     */
+    public function testTheRedirectIgnoresTheLocalePrefix(): void
+    {
+        $this->get("/de-DE/app/metager")->assertRedirect(self::STABLE_APK);
+    }
+
     /** The link on /app points at this route. */
     public function testTheAppPageLinksToIt(): void
     {

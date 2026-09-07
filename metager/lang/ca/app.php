@@ -25,5 +25,17 @@ return [
             '1' => 'Accés a les dades de posició => Amb el GPS activat podem oferir millors resultats de cerca. Amb això obteniu accés a la navegació pas a pas. <b>Evidentment, no desem cap de les vostres dades ni les cedim a tercers.</b>',
             '2' => 'L\'APK per a la instal·lació manual porta un actualitzador integrat. Perquè funcioni, l\'aplicació demanarà permís per enviar notificacions i així avisar-vos quan hi hagi una actualització disponible, i utilitza el permís d\'Android REQUEST_INSTALL_PACKAGES per poder demanar-vos d\'instal·lar l\'actualització.',
         ],
-    ]
+    ],
+    'obtainium' => [
+        'title' => 'Instal·la l\'aplicació MetaGer amb Obtainium',
+        'intro' => 'Obtainium manté al dia les aplicacions d\'Android instal·lades manualment directament des del seu origen. Aquesta pàgina és una font d\'actualitzacions a punt per a la versió distribuïda directament com a APK (la instal·lació «manual») de l\'aplicació MetaGer.',
+        'add_button' => 'Afegeix a Obtainium',
+        'direct' => 'O baixeu l\'APK directament:',
+        'to_beta' => 'Segueix el canal beta',
+        'to_stable' => 'Segueix el canal estable',
+        'channel_note' => 'L\'estable és la versió publicada. La beta rep cada compilació de desenvolupament, igual que el canal de proves obertes de Google Play.',
+        'manual_head' => 'Afegir l\'origen manualment',
+        'manual_intro' => 'Si afegiu aquest URL a Obtainium vosaltres mateixos en lloc d\'usar el botó, configureu aquestes opcions perquè detecti un número de versió real:',
+        'back' => 'Totes les aplicacions de MetaGer',
+    ],
 ];

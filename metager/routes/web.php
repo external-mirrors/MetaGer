@@ -1,5 +1,6 @@
 <?php
 
+use App\Landing\AppRelease;
 use App\Landing\KeymanagerLinks;
 use App\Landing\KeyPrice;
 use Illuminate\Support\Facades\Vite;
@@ -748,9 +749,26 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             // (open-source/app-en@latest) is also frozen at 5.1.12 forever by the
             // direct-APK updater contract — see app-en docs/12; `manual-stable` is
             // the pointer the in-app updater and F-Droid already follow.
-            return redirect()->away(
-                "https://gitlab.metager.de/metager/metager-app/-/releases/manual-stable/downloads/app-release_manual.apk"
-            );
+            return redirect()->away(AppRelease::apkUrl("stable"));
+        });
+
+        Route::get('obtainium', function (Request $request) {
+            // A well-formed update source for Obtainium (and a plain download
+            // page for anyone else). Obtainium's built-in GitLab source only
+            // speaks to gitlab.com and, against this repo's channel-pointer
+            // releases, would hand a "stable" user whatever beta build is
+            // newest — so this page stands in as the source instead.
+            $channel = $request->query('channel') === 'beta' ? 'beta' : 'stable';
+
+            return view('app-obtainium')
+                ->with('title', trans('titles.app'))
+                ->with('navbarFocus', 'dienste')
+                ->with('channel', $channel)
+                ->with('version', AppRelease::version($channel))
+                ->with('apkUrl', AppRelease::apkUrl($channel))
+                ->with('sourceUrl', AppRelease::pageUrl($channel))
+                ->with('deepLink', AppRelease::obtainiumDeepLink($channel))
+                ->with('versionRegex', AppRelease::VERSION_REGEX);
         });
         Route::get(
             'maps',

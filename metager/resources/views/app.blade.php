@@ -18,6 +18,7 @@
 	<p><a href="https://play.google.com/store/apps/details?id=de.metager.metagerapp">{{ trans('app.metager.playstore')
 			}}</a></p>
 	<p><a href="{!! url('app/metager') !!}">{{ trans('app.metager.manuell') }}</a></p>
+	<p><a href="{!! url('app/obtainium') !!}">{{ trans('app.obtainium.title') }}</a></p>
 </div>
 <div class="card">
 	<h1>{{ trans('app.head.3') }}</h1>

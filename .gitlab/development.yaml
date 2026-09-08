@@ -66,3 +66,11 @@ valkey:
     # Has to move with replicaCount. The chart default is 2 (of 3); left at 2
     # against a single node, Sentinel could never reach quorum.
     quorum: 1
+  # The base chart's minAvailable: 2 (chart/values.yaml) is sized for the
+  # production replicaCount of 3 and does not move with the override above.
+  # Left on, a single pod can never satisfy it — disruptionsAllowed stays 0
+  # forever — so a node drain hits an unclearable PDB and update_k8s_nodes
+  # stalls (2026-09-08, worker5). Nothing here is worth protecting anyway:
+  # one replica has no quorum to lose.
+  pdb:
+    enabled: false

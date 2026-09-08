@@ -1,5 +1,6 @@
 <?php
 
+use App\Landing\AppRelease;
 use App\Landing\KeymanagerLinks;
 use App\Landing\KeyPrice;
 use Illuminate\Support\Facades\Vite;
@@ -739,31 +740,36 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
                     ->with('navbarFocus', 'dienste');
             }
         );
-        Route::get(
-            'metager',
-            function () {
-                return response()->streamDownload(
-                    function () {
-                        $fh = null;
-                        try {
-                            $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
-                            while (!feof($fh)) {
-                                echo (fread($fh, 1024));
-                            }
-                        } catch (\Exception $e) {
-                            abort(404);
-                        } finally {
-                            if ($fh != null) {
-                                fclose($fh);
-                            }
-                        }
-                    }
-                    ,
-                    'MetaGerSearch.apk',
-                    ["Content-Type" => "application/vnd.android.package-archive"]
-                );
-            }
-        );
+        Route::get('metager', function () {
+            // Redirect to GitLab's stable-channel permalink rather than streaming
+            // the APK through here. The release_manual build is ~100 MB now (React
+            // Native), and the production FPM pool terminates any request after 30s
+            // (build/fpm/configuration/fpm/www_01_production.conf), so a slow
+            // client's download would be truncated. The previous URL
+            // (open-source/app-en@latest) is also frozen at 5.1.12 forever by the
+            // direct-APK updater contract — see app-en docs/12; `manual-stable` is
+            // the pointer the in-app updater and F-Droid already follow.
+            return redirect()->away(AppRelease::apkUrl("stable"));
+        });
+
+        Route::get('obtainium', function (Request $request) {
+            // A well-formed update source for Obtainium (and a plain download
+            // page for anyone else). Obtainium's built-in GitLab source only
+            // speaks to gitlab.com and, against this repo's channel-pointer
+            // releases, would hand a "stable" user whatever beta build is
+            // newest — so this page stands in as the source instead.
+            $channel = $request->query('channel') === 'beta' ? 'beta' : 'stable';
+
+            return view('app-obtainium')
+                ->with('title', trans('titles.app'))
+                ->with('navbarFocus', 'dienste')
+                ->with('channel', $channel)
+                ->with('version', AppRelease::version($channel))
+                ->with('apkUrl', AppRelease::apkUrl($channel))
+                ->with('sourceUrl', AppRelease::pageUrl($channel))
+                ->with('deepLink', AppRelease::obtainiumDeepLink($channel))
+                ->with('versionRegex', AppRelease::VERSION_REGEX);
+        });
         Route::get(
             'maps',
             function () {

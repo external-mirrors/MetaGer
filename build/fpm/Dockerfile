@@ -1,4 +1,4 @@
-FROM php:8.5.9-fpm-trixie AS composer
+FROM php:8.5.10-fpm-trixie AS composer
 
 # Add Composer installation to image
 ADD build/fpm/installcomposer.sh /usr/bin/installcomposer

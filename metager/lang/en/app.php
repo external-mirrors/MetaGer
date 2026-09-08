@@ -25,5 +25,17 @@ return [
             '1' => 'Access to positioning data => With GPS activated we can provide better search results. With this you get access to the step-by-step navigation. <b> Of course, we don\'t store any of your data and we don\'t give any of your data to third persons.</b>',
             '2' => 'The APK for manual installation has an integrated updater. For the updater to work the app will ask for permission to post notifications in order to notify you of an available update and uses the Android permission REQUEST_INSTALL_PACKAGES so it can ask you to install the app update',
         ],
-    ]
+    ],
+    'obtainium' => [
+        'title' => 'Install the MetaGer App with Obtainium',
+        'intro' => 'Obtainium keeps sideloaded Android apps up to date straight from their source. This page is a ready-made update source for the direct-APK ("manual") build of the MetaGer App.',
+        'add_button' => 'Add to Obtainium',
+        'direct' => 'Or download the APK directly:',
+        'to_beta' => 'Follow the beta channel instead',
+        'to_stable' => 'Follow the stable channel instead',
+        'channel_note' => 'Stable is the released version. Beta receives every development build, the same as Google Play\'s open testing track.',
+        'manual_head' => 'Adding the source by hand',
+        'manual_intro' => 'If you add this URL in Obtainium yourself instead of using the button, set these options so it reads a real version number:',
+        'back' => 'All MetaGer apps',
+    ],
 ];

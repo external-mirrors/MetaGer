@@ -26,4 +26,16 @@ return [
     'disclaimer' => [
         '1' => 'Op dit moment hebben we alleen een Android-versie van onze app.',
     ],
+    'obtainium' => [
+        'title' => 'Installeer de MetaGer-app met Obtainium',
+        'intro' => 'Obtainium houdt via sideloading geïnstalleerde Android-apps rechtstreeks vanuit de bron up-to-date. Deze pagina is een kant-en-klare updatebron voor de directe APK-versie („handmatig”) van de MetaGer-app.',
+        'add_button' => 'Toevoegen aan Obtainium',
+        'direct' => 'Of download de APK direct:',
+        'to_beta' => 'Volg in plaats daarvan het bètakanaal',
+        'to_stable' => 'Volg in plaats daarvan het stabiele kanaal',
+        'channel_note' => '"Stable" is de officiële versie. "Beta" ontvangt alle ontwikkelingsversies, net als het open testtraject van Google Play.',
+        'manual_head' => 'De bron handmatig toevoegen',
+        'manual_intro' => 'Als je deze URL zelf in Obtainium toevoegt in plaats van de knop te gebruiken, stel dan deze opties zo in dat er een echt versienummer wordt gelezen:',
+        'back' => 'Alle MetaGer-apps',
+    ],
 ];

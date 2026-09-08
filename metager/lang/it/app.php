@@ -26,4 +26,16 @@ return [
         'fdroid' => 'Negozio F-Droid',
         'manuell' => 'Installazione manuale',
     ],
+    'obtainium' => [
+        'title' => 'Installa l\'app MetaGer con Obtainium',
+        'intro' => 'Obtainium mantiene aggiornate le app Android installate tramite sideload direttamente dalla loro fonte. Questa pagina è una fonte di aggiornamenti già pronta per la versione APK diretta ("manuale") dell\'app MetaGer.',
+        'add_button' => 'Aggiungi a Obtainium',
+        'direct' => 'Oppure scarica direttamente il file APK:',
+        'to_beta' => 'Segui invece il canale beta',
+        'to_stable' => 'Segui invece il canale stabile',
+        'channel_note' => 'La versione "Stabile" è quella rilasciata. La versione "Beta" riceve tutte le build di sviluppo, proprio come il canale di test aperto di Google Play.',
+        'manual_head' => 'Aggiunta manuale della fonte',
+        'manual_intro' => 'Se aggiungi tu stesso questo URL in Obtainium invece di utilizzare il pulsante, imposta queste opzioni in modo che venga letto un numero di versione effettivo:',
+        'back' => 'Tutte le app MetaGer',
+    ],
 ];

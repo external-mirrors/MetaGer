@@ -26,4 +26,16 @@ return [
         ],
         '4' => 'Ensimmäisen käynnistyksen jälkeen sinulta kysytään seuraavat oikeudet:',
     ],
+    'obtainium' => [
+        'title' => 'Asenna MetaGer-sovellus Obtainiumin avulla',
+        'intro' => 'Obtainium pitää sivuladatut Android-sovellukset ajan tasalla suoraan niiden lähteestä. Tämä sivu on valmiiksi koottu päivityslähde MetaGer-sovelluksen suoraan APK-tiedostona (”manuaalisesti”) asennettavalle versiolle.',
+        'add_button' => 'Lisää Obtainiumiin',
+        'direct' => 'Tai lataa APK-tiedosto suoraan:',
+        'to_beta' => 'Seuraa sen sijaan beta-kanavaa',
+        'to_stable' => 'Seuraa sen sijaan vakaata kanavaa',
+        'channel_note' => '”Stable” on julkaistu versio. ”Beta”-versioon toimitetaan kaikki kehitysvaiheen versiot, aivan kuten Google Playn avoimessa testausohjelmassa.',
+        'manual_head' => 'Lähteen lisääminen käsin',
+        'manual_intro' => 'Jos lisäät tämän URL-osoitteen Obtainiumiin itse painikkeen sijaan, määritä nämä asetukset niin, että se lukee oikean versionumeron:',
+        'back' => 'Kaikki MetaGer-sovellukset',
+    ],
 ];

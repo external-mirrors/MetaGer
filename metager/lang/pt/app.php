@@ -26,4 +26,16 @@ return [
     'disclaimer' => [
         '1' => 'Atualmente, só dispomos de uma versão Android da nossa aplicação.',
     ],
+    'obtainium' => [
+        'title' => 'Instale a aplicação MetaGer com o Obtainium',
+        'intro' => 'O Obtainium mantém as aplicações Android instaladas por via alternativa atualizadas diretamente a partir da sua fonte. Esta página é uma fonte de atualização pronta a usar para a compilação direta do APK («manual») da aplicação MetaGer.',
+        'add_button' => 'Adicionar ao Obtainium',
+        'direct' => 'Ou descarregue o APK diretamente:',
+        'to_beta' => 'Em vez disso, siga o canal beta',
+        'to_stable' => 'Em vez disso, siga o canal estável',
+        'channel_note' => 'A versão «Stable» é a versão lançada. A versão «Beta» recebe todas as compilações de desenvolvimento, tal como acontece na via de testes aberta do Google Play.',
+        'manual_head' => 'Adicionar a fonte manualmente',
+        'manual_intro' => 'Se adicionar esta URL no Obtainium manualmente, em vez de utilizar o botão, defina estas opções para que seja lido um número de versão válido:',
+        'back' => 'Todas as aplicações da MetaGer',
+    ],
 ];

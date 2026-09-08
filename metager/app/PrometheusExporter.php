@@ -4,16 +4,62 @@ namespace App;
 
 use Illuminate\Support\Facades\Log;
 use Prometheus\CollectorRegistry;
-use Prometheus\Exception\StorageException;
+use Throwable;
 
+/**
+ * Counters and timings for the things worth watching, none of which are worth
+ * a page.
+ *
+ * Every method here goes through {@see record}, which swallows whatever the
+ * metrics backend throws. That is not defensive habit, it is the finding from
+ * the 2026-09-08 node drains: of 118 production errors across four drain
+ * windows, 109 came from this class — `LocaleDecision` alone, because
+ * LocalizationRedirect calls it on every single request before routing, so a
+ * blip in the Redis holding the counters was a broken page for every visitor
+ * on the site regardless of what they had asked for.
+ *
+ * `LocaleDecision` had *tried* to guard that, and the guard never once fired.
+ * It caught `Prometheus\Exception\StorageException`, which the library
+ * documents on the Redis adapter (`@throws StorageException` all over
+ * Storage\AbstractRedis) and then does not actually throw: `PHPRedis::eval()`
+ * calls `\Redis::eval()` bare, so an ext-redis `RedisException` — a
+ * `RuntimeException`, unrelated to `StorageException` — goes straight past it.
+ * The predis client leaks `Predis\Connection\ConnectionException` the same
+ * way. Hence `Throwable` here rather than a tidier list: the whole point is
+ * that the exception this throws is not knowable from its signature, and
+ * getting the class wrong a second time would look exactly like it did the
+ * first — green tests, and a 500 for everyone the next time a node is drained.
+ *
+ * The /metrics endpoint (App\Http\Controllers\Prometheus) deliberately does
+ * not go through here. A scrape that cannot reach storage should fail and be
+ * seen to fail; it has no user waiting on it.
+ */
 class PrometheusExporter
 {
+    /**
+     * Record something, or don't, but never fail the request over it.
+     *
+     * The log line is the entire fallback. It is deliberately not a rethrow,
+     * not a queued retry and not a fallback storage: a lost counter tick costs
+     * a gap in a graph, and anything more elaborate would reintroduce the
+     * failure mode this exists to remove.
+     */
+    private static function record(callable $operation): void
+    {
+        try {
+            $operation();
+        } catch (Throwable $e) {
+            Log::warning('Dropped a Prometheus metric: ' . $e->getMessage());
+        }
+    }
 
     public static function Duration($duration, $type)
     {
-        $registry = CollectorRegistry::getDefault();
-        $histogram = $registry->getOrRegisterHistogram('metager', 'request_time', 'Loading Times for different cases', ['type'], [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0, 30.0, 35.0]);
-        $histogram->observe($duration, [$type]);
+        self::record(function () use ($duration, $type) {
+            $registry = CollectorRegistry::getDefault();
+            $histogram = $registry->getOrRegisterHistogram('metager', 'request_time', 'Loading Times for different cases', ['type'], [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0, 30.0, 35.0]);
+            $histogram->observe($duration, [$type]);
+        });
     }
 
     /**
@@ -22,42 +68,56 @@ class PrometheusExporter
      */
     public static function PreferredLanguage($language, $type)
     {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter("metager", $language, 'counts preferred language usages', ['type']);
-        $counter->inc($type);
+        self::record(function () use ($language, $type) {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter("metager", $language, 'counts preferred language usages', ['type']);
+            $counter->inc($type);
+        });
     }
 
     public static function OvertureFail()
     {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter("metager", "overture_failed", "counts how often overture failed a response");
-        $counter->inc();
+        self::record(function () {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter("metager", "overture_failed", "counts how often overture failed a response");
+            $counter->inc();
+        });
     }
 
     public static function KeyUsed(float $amount, string $source, bool $cached)
     {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter("metager", "key_used", "Counts MetaGer Key Usage", ["source", "cached"]);
-        $counter->incBy($amount, [$source, json_encode($cached)]);
+        self::record(function () use ($amount, $source, $cached) {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter("metager", "key_used", "Counts MetaGer Key Usage", ["source", "cached"]);
+            $counter->incBy($amount, [$source, json_encode($cached)]);
+        });
     }
+
     public static function UpdateKeyStatus($key, $tokens, $owner)
     {
-        $registry = CollectorRegistry::getDefault();
-        $gauge = $registry->getOrRegisterGauge("metager", "key_status", "Tracks status of the Key", ["key", "owner"]);
-        $gauge->set($tokens, [$key, $owner]);
+        self::record(function () use ($key, $tokens, $owner) {
+            $registry = CollectorRegistry::getDefault();
+            $gauge = $registry->getOrRegisterGauge("metager", "key_status", "Tracks status of the Key", ["key", "owner"]);
+            $gauge->set($tokens, [$key, $owner]);
+        });
     }
+
     public static function CreditcardDonation(string $status)
     {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter("metager", "donation_card", "Card Payment started", ["status"]);
-        $counter->inc([$status]);
+        self::record(function () use ($status) {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter("metager", "donation_card", "Card Payment started", ["status"]);
+            $counter->inc([$status]);
+        });
     }
 
     public static function SuggestionResult(string $httpcode)
     {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter("metager", "suggestion_results", "Suggestion Requests answered", ["httpcode"]);
-        $counter->inc([$httpcode]);
+        self::record(function () use ($httpcode) {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter("metager", "suggestion_results", "Suggestion Requests answered", ["httpcode"]);
+            $counter->inc([$httpcode]);
+        });
     }
 
     /**
@@ -75,23 +135,19 @@ class PrometheusExporter
      */
     public static function LocaleDecision(string $reason)
     {
-        // Runs in LocalizationRedirect on every request, before routing. A
-        // metrics backend hiccup (GlitchTip METAGER-K/H/E: the Redis storing
-        // Prometheus counters timed out) must not turn into a 500 for every
-        // visitor — losing this counter's tick is far cheaper than that.
-        try {
+        self::record(function () use ($reason) {
             $registry = CollectorRegistry::getDefault();
             $counter = $registry->getOrRegisterCounter("metager", "locale_decisions", "Locale resolutions, by what the request was answered with", ["reason"]);
             $counter->inc([$reason]);
-        } catch (StorageException $e) {
-            Log::warning("Failed to record locale decision metric: " . $e->getMessage());
-        }
+        });
     }
 
     public static function SuggestionSessionCounter()
     {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter("metager", "suggestion_sessions", "Suggestion Requests answered");
-        $counter->inc();
+        self::record(function () {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter("metager", "suggestion_sessions", "Suggestion Requests answered");
+            $counter->inc();
+        });
     }
 }

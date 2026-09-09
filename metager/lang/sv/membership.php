@@ -40,6 +40,7 @@ return [
         'later' => 'Den första påfyllnaden sker efter att din ansökan har behandlats',
         'now' => 'Den är redan laddad och kan användas omedelbart.',
         'heading' => 'Din nyckel',
+        'label' => 'Nyckel',
     ],
     'success' => 'Tack så mycket för att du har skickat in din ansökan om medlemskap. Vi kommer att behandla den så snabbt som möjligt. Du kommer sedan att få ett e-postmeddelande med ytterligare information från oss på den adress som du har angett.',
     'next' => [

@@ -41,6 +41,7 @@ return [
         'later' => 'La prima ricarica avviene dopo che la domanda è stata esaminata',
         'now' => 'È già carico e può essere utilizzato immediatamente.',
         'heading' => 'La tua chiave',
+        'label' => 'Legenda',
     ],
     'next' => [
         'review' => 'Esaminiamo la tua richiesta manualmente. Una volta completata la verifica, riceverai un’e-mail all’indirizzo sopra indicato — in ogni caso.',

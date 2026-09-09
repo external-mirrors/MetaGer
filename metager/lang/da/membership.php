@@ -9,6 +9,7 @@ return [
         'later' => 'Den første supplering finder sted, når din ansøgning er blevet behandlet.',
         'now' => 'Den er allerede opladet og kan bruges med det samme.',
         'heading' => 'Din nøgle',
+        'label' => 'Nøgle',
     ],
     'application' => [
         'description' => 'Tak, fordi du overvejer <a href="https://suma-ev.de/en/mitglieder/" target="_blank">medlemskab</a> i vores almennyttige forening. For at kunne behandle din ansøgning har vi kun brug for nogle få oplysninger, som du kan udfylde her.',

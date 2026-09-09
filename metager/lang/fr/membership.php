@@ -30,6 +30,7 @@ return [
         'now' => 'Il est déjà chargé et peut être utilisé immédiatement.',
         'description' => 'Pour utiliser MetaGer, la clé suivante est utilisée et rechargée par nos soins. Si vous étiez déjà connecté, votre clé existante a été utilisée.',
         'heading' => 'Votre clé',
+        'label' => 'Clé',
     ],
     'success' => 'Nous vous remercions d\'avoir soumis votre demande d\'adhésion. Nous la traiterons le plus rapidement possible. Vous recevrez ensuite un e-mail contenant des informations complémentaires à l\'adresse indiquée.',
     'application' => [

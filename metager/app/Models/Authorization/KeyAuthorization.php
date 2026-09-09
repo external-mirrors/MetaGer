@@ -3,6 +3,7 @@
 namespace App\Models\Authorization;
 
 use App\PrometheusExporter;
+use App\Support\RedisFailover;
 use Illuminate\Support\Facades\Redis;
 
 class KeyAuthorization extends Authorization
@@ -44,9 +45,13 @@ class KeyAuthorization extends Authorization
             "name" => "Key Login",
         ];
         $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+        // The Keymanager login round trip. Retried across a failover rather
+        // than answered with an error: a planned drain must not log anyone
+        // out or make a key look unusable. GlitchTip issue 1159/1160 is this
+        // call site during the 2026-09-08 drains.
+        RedisFailover::retry(fn() => Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission));
 
-        $result = Redis::brpop($result_hash, 10);
+        $result = RedisFailover::retry(fn() => Redis::brpop($result_hash, 10));
         try {
             if ($result && \is_array($result) && sizeof($result) === 2) {
                 $result = \json_decode($result[1]);
@@ -91,7 +96,7 @@ class KeyAuthorization extends Authorization
             ]
         ];
         $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+        RedisFailover::retry(fn() => Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission));
 
 
         /** @var array $uniMainzKeys */

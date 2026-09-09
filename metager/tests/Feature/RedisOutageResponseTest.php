@@ -31,6 +31,24 @@ class RedisOutageResponseTest extends TestCase
         Route::get('/__test/prometheus-outage', function () {
             throw new StorageException("Can't connect to Redis server. Connection timed out");
         });
+        Route::get('/__test/ext-redis-outage', function () {
+            throw new \RedisException("READONLY You can't write against a read only replica.");
+        });
+    }
+
+    /**
+     * Two drivers reach Redis in this app and only predis' exceptions were
+     * named here, which is why the 2026-09-08 drains produced 500s rather than
+     * 503s: the metrics adapter goes through ext-redis (\Redis), so its
+     * failures arrived as `RedisException` — a plain `RuntimeException`,
+     * related to neither `PredisException` nor `StorageException` — and matched
+     * nothing.
+     */
+    public function testAnExtRedisExceptionBecomesA503(): void
+    {
+        $response = $this->get('/__test/ext-redis-outage');
+
+        $response->assertStatus(503);
     }
 
     public function testAPredisExceptionBecomesA503(): void

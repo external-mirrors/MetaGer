@@ -4,6 +4,7 @@ namespace App\Authentication;
 
 use App\Events\KeyChanged;
 use App\PrometheusExporter;
+use App\Support\RedisFailover;
 use Arr;
 use Cache;
 use Http;
@@ -378,10 +379,18 @@ class KeyUser implements Authenticatable
 
             // The claim and the deadline it expires on are one statement about
             // this request, and nothing between them depends on the other.
-            $this->claimsConnection()->pipeline(function ($pipe) use ($token_cost, $claim_duration_seconds) {
+            //
+            // Retried across a Sentinel failover: this runs from
+            // AuthenticationValidation on every authenticated search, so an
+            // unguarded `-READONLY` here is a key holder's search answered
+            // with an error page during a node drain. The claim is this
+            // request's own field ($this->id is unique to this KeyUser), so a
+            // retry after a lost reply can only re-apply our own increment —
+            // and the field expires with the claim regardless.
+            RedisFailover::retry(fn() => $this->claimsConnection()->pipeline(function ($pipe) use ($token_cost, $claim_duration_seconds) {
                 $pipe->hincrbyfloat($this->claimsKey(), $this->id, $token_cost);
                 $pipe->hexpireat($this->claimsKey(), now()->addSeconds($claim_duration_seconds)->timestamp, [$this->id]);
-            });
+            }));
         }
         return $current_charge >= 0;
     }

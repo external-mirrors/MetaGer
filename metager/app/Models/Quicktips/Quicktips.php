@@ -4,10 +4,12 @@ namespace App\Models\Quicktips;
 
 use App;
 use App\SearchSettings;
+use App\Support\RedisFailover;
 use Cache;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Redis;
 use Log;
+use Predis\PredisException;
 
 class Quicktips
 {
@@ -53,8 +55,16 @@ class Quicktips
         $url = $this->quicktipUrl . "?" . http_build_query(data: $parameters, encoding_type: PHP_QUERY_RFC3986);
         $this->hash = md5($url);
 
-        if (!Cache::has($this->hash)) {
-            if (!Redis::exists($this->hash)) {
+        // A quicktip is a box above the results, not the results. Retried
+        // across a Sentinel failover like everything else on the result page,
+        // but where the search itself would rather 503 than pretend it ran,
+        // this would rather render the page without its box: nobody's search
+        // should fail because the info panel above it could not be queued.
+        try {
+            RedisFailover::retry(function () use ($url) {
+                if (Cache::has($this->hash) || Redis::exists($this->hash)) {
+                    return;
+                }
 
                 // Queue this search
                 $mission = [
@@ -71,7 +81,9 @@ class Quicktips
                 $mission = json_encode($mission);
 
                 Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-            }
+            });
+        } catch (PredisException $e) {
+            Log::warning("Could not queue a quicktip: " . $e->getMessage());
         }
     }
 

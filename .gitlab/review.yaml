@@ -33,3 +33,8 @@ valkey:
   replicaCount: 1
   sentinel:
     quorum: 1
+  # See development.yaml: the base chart's minAvailable: 2 is sized for
+  # production and does not move with replicaCount, so a single pod can
+  # never satisfy it and a node drain hits an unclearable PDB.
+  pdb:
+    enabled: false

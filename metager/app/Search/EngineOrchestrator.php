@@ -7,9 +7,11 @@ use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
 use App\Models\Searchengine;
 use App\SearchSettings;
+use App\Support\RedisFailover;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Predis\PredisException;
 
 /**
  * Asks the search engines, waits for them, and reads what came back.
@@ -86,9 +88,18 @@ class EngineOrchestrator
             return;
         }
 
-        $bodies = Cache::many(array_values(array_unique(
-            array_map(fn(Searchengine $engine) => $engine->getHash(), $engines)
-        )));
+        // A cache that cannot be read is a cache miss with extra steps: every
+        // engine that does not load here is queued for a fetch instead, which
+        // is exactly what would have happened on a cold cache.
+        try {
+            $bodies = RedisFailover::retry(fn() => Cache::many(array_values(array_unique(
+                array_map(fn(Searchengine $engine) => $engine->getHash(), $engines)
+            ))));
+        } catch (PredisException $e) {
+            Log::warning('Could not read the engine cache: ' . $e->getMessage());
+
+            return;
+        }
 
         foreach ($engines as $engine) {
             $body = $bodies[$engine->getHash()] ?? null;
@@ -121,7 +132,18 @@ class EngineOrchestrator
             return;
         }
 
-        Redis::rpush(MetaGer::FETCHQUEUE_KEY, ...$missions);
+        // The one Redis call in a search that has no degraded form: an
+        // unqueued mission is an engine that will never answer, so there is
+        // nothing to render with. Retried across a failover and then allowed
+        // to propagate — bootstrap/app.php turns it into a 503 with a
+        // meta-refresh, which is the honest answer if Redis is genuinely gone.
+        //
+        // Retrying a write means a mission can be queued twice if the reply
+        // was lost rather than the write: the worker fetches it twice and the
+        // second answer sits on the same list until ANSWER_TTL drops it.
+        // Cheap, bounded, and much better than the alternative of answering a
+        // user with an error page during a planned drain.
+        RedisFailover::retry(fn() => Redis::rpush(MetaGer::FETCHQUEUE_KEY, ...$missions));
     }
 
     /**
@@ -152,17 +174,37 @@ class EngineOrchestrator
                 break;
             }
 
-            $answer = Redis::brpop($waitingFor, self::WAIT_SECONDS);
+            // A failover mid-wait must not cost the page. Retrying reconnects
+            // through HAProxy, which by then has seen the promotion; giving up
+            // stops the waiting rather than failing the request, because
+            // whatever loaded from the cache is still worth rendering and
+            // collectResults gets one more chance at the rest.
+            try {
+                $answer = RedisFailover::retry(fn() => Redis::brpop($waitingFor, self::WAIT_SECONDS));
+            } catch (PredisException $e) {
+                Log::warning('Stopped waiting for engine results: ' . $e->getMessage());
+                return;
+            }
+
             if ($answer === null) {
                 continue;
             }
 
             [$hash, $payload] = $answer;
 
-            Redis::pipeline(function ($pipe) use ($hash, $payload) {
-                $pipe->lpush($hash, $payload);
-                $pipe->expire($hash, self::ANSWER_TTL);
-            });
+            // Putting the answer back is for load-more, which comes back for
+            // the same list later. The payload is already in hand, so failing
+            // to rotate it costs a later load-more, not this page — losing the
+            // result we are holding because we could not write it back would
+            // be strictly worse than rendering it and moving on.
+            try {
+                RedisFailover::retry(fn() => Redis::pipeline(function ($pipe) use ($hash, $payload) {
+                    $pipe->lpush($hash, $payload);
+                    $pipe->expire($hash, self::ANSWER_TTL);
+                }));
+            } catch (PredisException $e) {
+                Log::warning('Could not return an engine answer for load-more: ' . $e->getMessage());
+            }
 
             foreach ($engines as $engine) {
                 if ($engine->getHash() === $hash) {
@@ -238,12 +280,23 @@ class EngineOrchestrator
             return [];
         }
 
-        $replies = Redis::pipeline(function ($pipe) use ($hashes) {
-            foreach ($hashes as $hash) {
-                $pipe->rpoplpush($hash, $hash);
-                $pipe->expire($hash, self::ANSWER_TTL);
-            }
-        });
+        // The last Redis call of the request, and the most degradable one: an
+        // engine with nothing readable here is indistinguishable from an
+        // engine that simply has not answered, which the page already renders
+        // without. Failing the whole search at this point — after the results
+        // have been waited for — would throw away work that is already done.
+        try {
+            $replies = RedisFailover::retry(fn() => Redis::pipeline(function ($pipe) use ($hashes) {
+                foreach ($hashes as $hash) {
+                    $pipe->rpoplpush($hash, $hash);
+                    $pipe->expire($hash, self::ANSWER_TTL);
+                }
+            }));
+        } catch (PredisException $e) {
+            Log::warning('Could not read engine answers: ' . $e->getMessage());
+
+            return [];
+        }
 
         $answers = [];
         foreach ($hashes as $index => $hash) {

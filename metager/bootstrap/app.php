@@ -144,8 +144,18 @@ return Application::configure(basePath: dirname(__DIR__))
          * meta-refresh — Redis outages of this kind are typically over
          * within seconds, so telling the browser to just try again shortly
          * is more useful to a user than a dead-end error page.
+         *
+         * `RedisException` is ext-redis's, and it is here because leaving it
+         * out was the difference between a 503 and a 500 on 2026-09-08: two
+         * drivers reach Redis in this app, and only predis' exceptions were
+         * named. The metrics adapter (Prometheus\Storage\Redis, wired in
+         * AppServiceProvider) uses \Redis directly, so every one of the 109
+         * PrometheusExporter errors that day arrived as a RedisException,
+         * matched nothing here, and became an uncaught 500. Those are guarded
+         * at the source now, but any other ext-redis call site would have
+         * fallen through exactly the same way.
          */
-        $exceptions->renderable(function (PredisException|StorageException $e) {
+        $exceptions->renderable(function (PredisException|StorageException|RedisException $e) {
             throw new ServiceUnavailableHttpException(5, $e->getMessage(), $e);
         });
     })->create();

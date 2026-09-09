@@ -40,5 +40,11 @@ return [
         'description' => 'MetaGerin käyttämiseen käytetään seuraavaa avainta, jota me täydennämme. Jos olit jo kirjautunut sisään, käytettiin olemassa olevaa avaintasi.',
         'later' => 'Ensimmäinen lisäys tehdään sen jälkeen, kun hakemuksesi on käsitelty.',
         'now' => 'Se on jo ladattu ja sitä voidaan käyttää välittömästi.',
+        'heading' => 'Avain',
+    ],
+    'next' => [
+        'review' => 'Käsittelemme hakemuksesi manuaalisesti. Kun käsittely on valmis, saat sähköpostiviestin yllä mainittuun osoitteeseen – joka tapauksessa.',
+        'search' => 'Aloita haku',
+        'app' => 'Takaisin MetaGer-sovellukseen',
     ],
 ];

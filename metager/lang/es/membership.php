@@ -8,6 +8,7 @@ return [
         'later' => 'La primera recarga tiene lugar después de que se haya tramitado su solicitud',
         'now' => 'Ya está cargada y puede utilizarse inmediatamente.',
         'heading' => 'Tu clave',
+        'label' => 'Clave',
     ],
     'application' => [
         'description' => 'Gracias por considerar la posibilidad de afiliarse a <a href="https://suma-ev.de/en/mitglieder/" target="_blank"></a> en nuestra asociación sin ánimo de lucro. Para tramitar su solicitud, sólo necesitamos unos pocos datos, que puede rellenar aquí.',

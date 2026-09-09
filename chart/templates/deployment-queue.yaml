@@ -50,7 +50,20 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
           command: ["/usr/local/bin/php"]
-          args: ["artisan", "queue:work", "--backoff=60", "--tries=5", "--sleep=1", "--queue=donations,default,general"]
+          # --max-time recycles the process every 5 minutes. The point is not
+          # memory: it is that this is a long-lived daemon holding one PDO
+          # connection, and nothing inside a held connection can notice a
+          # Postgres primary changing under it. After a CNPG failover the worker
+          # keeps the socket to the old primary; the database queue driver opens
+          # a transaction per pop(), and once Laravel's transaction counter
+          # desyncs from PDO's state every subsequent pop() throws "There is
+          # already an active transaction" forever — reported to GlitchTip once
+          # a second, with pgrep still passing so k8s never restarts it (issue
+          # 1387, the cluster outage of 2026-09-09). max-time is a clean
+          # self-exit after the current job, so it bounds that wedge to ~5min
+          # and picks up the new primary on the next start. A real
+          # progress-based probe is the proper fix and is still owed.
+          args: ["artisan", "queue:work", "--backoff=60", "--tries=5", "--sleep=1", "--max-time=300", "--queue=donations,default,general"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
           {{- include "chart.env" (dict "root" .) | nindent 10 }}
@@ -59,9 +72,9 @@ spec:
           {{- include "chart.mounts.config" . | nindent 10 }}
           {{- include "chart.mounts.storage" . | nindent 10 }}
           # Unchanged from the sidecar. pgrep only proves the process exists, not
-          # that it is draining anything — but a queue worker has no equivalent of
-          # the scheduler's heartbeat to check against, and inventing one is not
-          # part of moving it between pods.
+          # that it is draining anything — a queue worker has no equivalent of
+          # the scheduler's heartbeat to check against. Until it grows one, the
+          # --max-time above is what bounds an alive-but-wedged worker.
           livenessProbe:
             exec:
               command:

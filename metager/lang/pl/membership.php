@@ -40,6 +40,7 @@ return [
         'later' => 'Pierwsze doładowanie ma miejsce po rozpatrzeniu wniosku.',
         'now' => 'Jest już naładowany i może być natychmiast użyty.',
         'heading' => 'Twój klucz',
+        'label' => 'Klucz',
     ],
     'success' => 'Dziękujemy za przesłanie wniosku o członkostwo. Przetworzymy go tak szybko, jak to możliwe. Następnie otrzymasz od nas wiadomość e-mail z dalszymi informacjami na podany adres.',
     'next' => [

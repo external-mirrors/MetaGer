@@ -162,7 +162,7 @@ class ProgressiveEnhancementTest extends DuskTestCase
                 // Ebenso wenig die Kopierknöpfe: ohne Zwischenablage täten sie
                 // nichts, und die Felder daneben lassen sich von Hand
                 // markieren.
-                ->assertMissing(".create-key__copy");
+                ->assertMissing(".keybackup-key__copy");
 
             $key = $browser->value("#new-key");
             $this->assertMatchesRegularExpression(

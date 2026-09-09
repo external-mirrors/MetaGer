@@ -36,9 +36,16 @@ return [
         ],
     ],
     'key' => [
+        'heading' => 'Ihr Schlüssel',
+        'label' => 'Schlüssel',
         'description' => 'Für die Nutzung von MetaGer wird der folgende Schlüssel verwendet und von uns aufgeladen. Falls Sie bereits angemeldet waren wurde Ihr bestehender Schlüssel benutzt.',
         'later' => 'Die erste Aufladung erfolgt nach Bearbeitung Ihres Antrags',
         'now' => 'Er ist bereits aufgeladen und kann sofort verwendet werden.',
+    ],
+    'next' => [
+        'review' => 'Ihren Antrag prüfen wir von Hand. Sobald das geschehen ist, erhalten Sie in jedem Fall eine Mail an die oben genannte Adresse.',
+        'search' => 'Jetzt suchen',
+        'app' => 'Zurück zur MetaGer-App',
     ],
     'back' => 'Zurück zur Startseite',
 ];

@@ -14,6 +14,17 @@
 @php
     $application_id = $application !== null && $application->id !== null ? $application->id : null;
 @endphp
+{{--
+    Der Keyserver hat gerade keinen Schlüssel hergegeben. Der erste Schritt legt
+    einen an — er ist das, was die Mitgliedschaft später auflädt —, und ohne ihn
+    wird der Antrag gar nicht erst angelegt, statt als Antrag ohne Schlüssel
+    liegen zu bleiben. Nichts, was jemand richtig machen kann, deshalb ein
+    eigener Satz und keine Feldmarkierung; derselbe Text wie auf
+    /schluessel-erstellen, weil es dieselbe Lage ist.
+--}}
+@if(!empty($keyError))
+<div class="membership-key-error" role="alert">@lang("key-create.errors.$keyError")</div>
+@endif
 <form id="membership-form" method="POST" enctype="multipart/form-data" action="{{ route("membership_form", array_merge(request()->except("edit"), ["application_id" => $application_id])) }}">
     <input type="hidden" name="_token" value="{{$csrf_token}}" autocomplete="off">
     @php

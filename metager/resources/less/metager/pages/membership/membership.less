@@ -521,13 +521,61 @@
     }
   }
 
-  #key {
+  // Der Schlüssel, den der erste Schritt still erstellt hat. Der Block darin —
+  // Kennung, Feld, QR-Code, Lesezeichen-URL — kommt aus parts/key-backup und
+  // bringt sein eigenes Stylesheet mit (metager/key-backup.less, als zweiter
+  // <link> auf dieser Seite). Hier steht nur, was ihn einfasst.
+  .membership-key {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 
-    .description {
-      display: inline-block;
+    .membership-key__heading {
+      margin: 0;
+      font-size: 1.1rem;
     }
+
+    .membership-key__description {
+      margin: 0;
+    }
+  }
+
+  // Wie es weitergeht: der Satz, den auch jemand mitnehmen muss, der gleich in
+  // die App zurückspringt, und genau eine Handlung darunter.
+  .membership-next {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    padding-top: 1.25rem;
+    border-top: 1px solid @border-color;
+
+    .membership-next__review {
+      margin: 0;
+    }
+
+    .membership-next__action {
+      padding: 0.7rem 1.4rem;
+      border: 0;
+      border-radius: 8px;
+      background-color: @metager-orange;
+      color: @color-black;
+      font-weight: bold;
+      text-decoration: none;
+
+      &:hover,
+      &:focus-visible {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Der Keyserver hat gerade keinen Schlüssel hergegeben — siehe
+  // MembershipController::formAgain(). Wie .error darüber, nur nicht an einem
+  // Feld: es gibt keins, an dem es läge.
+  .membership-key-error {
+    padding: 0.7rem 0.9rem;
+    border-radius: 6px;
+    background-color: @form-error-background;
+    color: @form-error-color;
   }
 }

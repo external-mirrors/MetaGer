@@ -29,7 +29,13 @@
     </a>
   </h1>
 
+  {{-- data-login-check: resources/js/startpage/staleLoginCheck.js asks this
+       endpoint once if the browser restores *this* render from the back/forward
+       cache, where "signed out" can be a photograph taken before the visitor
+       signed in. It hangs here rather than in the script because the URL is
+       localized and the script is not. --}}
   <div id="searchbar-replacement"
+    data-login-check="{{ route('startpage:loggedin') }}"
     data-welcome-back-hook="@lang('index.searchbar-replacement.welcome_back')"
     data-welcome-back-message="@lang('index.searchbar-replacement.welcome_back_message')"
     data-welcome-back-button="@lang('index.searchbar-replacement.welcome_back_button')">

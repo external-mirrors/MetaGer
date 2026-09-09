@@ -44,15 +44,40 @@ class KeyAuthGuard implements StatefulGuard
 
         $key = "";
         if (Cookie::has('key')) {
-            $key = Cookie::get('key');
-            $this->login_method = "cookie";
+            $cookie = trim((string) Cookie::get('key'));
+            if ($cookie === "") {
+                // A `key` cookie that holds nothing usable is not the same as no
+                // cookie, and the difference used to be a trap with no way out of
+                // it from inside the site: this guard reads it as "nobody" (the
+                // startpage renders the landing hero), while every caller that
+                // asked `cookie("key") !== null` read it as "somebody" —
+                // LoginController::show() bounced such a visitor to /konto, which
+                // found no user and bounced back, so the login form itself became
+                // unreachable. Nothing in this application writes an empty value
+                // (Symfony renders one as a deletion), so it arrives from outside:
+                // a content script clearing the cookie with `document.cookie =
+                // "key="` rather than an expiry in the past, or any other client
+                // that sets rather than deletes.
+                //
+                // Whoever wrote it, the fix is to stop carrying it. Removing it
+                // here means the state heals on the next page view instead of
+                // locking someone out of their own key for good.
+                Cookie::queue(Cookie::forget('key', '/'));
+            } else {
+                $key = $cookie;
+                $this->login_method = "cookie";
+            }
         }
-        if (Request::hasHeader("key")) {
-            $key = Request::header("key");
+        // Trimmed and only when there is something left, for the same reason the
+        // cookie is: a header carrying only whitespace would otherwise *override*
+        // a perfectly good cookie with nothing. `filled()` already answers this
+        // way for the query — it is false for a blank value.
+        if (Request::hasHeader("key") && trim((string) Request::header("key")) !== "") {
+            $key = trim((string) Request::header("key"));
             $this->login_method = "header"; // Header takes precedence over cookie
         }
         if (Request::filled('key')) {
-            $key = Request::input('key');
+            $key = trim((string) Request::input('key'));
             $this->login_method = "query"; // Query parameter takes precedence over header and cookie
         }
 

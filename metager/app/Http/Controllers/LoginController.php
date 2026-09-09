@@ -91,11 +91,7 @@ final class LoginController extends Controller
         // geprüft wird nur, *ob* etwas da ist: was davon ein gültiger
         // Schlüssel ist, weiß nur der Keyserver, und der wird beim
         // Weiterleiten ohnehin gefragt.
-        if (
-            $request->filled("key")
-            || $request->hasHeader("key")
-            || $request->cookie("key") !== null
-        ) {
+        if ($this->carriesKey($request)) {
             return redirect()->to(KeymanagerLinks::accountForVisitor($request));
         }
 
@@ -145,6 +141,42 @@ final class LoginController extends Controller
             // Eingabe des Besuchers. Nichts davon gehört in einen Cache, weder
             // in einen gemeinsamen noch in den des Browsers.
             ->header("Cache-Control", "no-store, private");
+    }
+
+    /**
+     * Ob diese Anfrage einen Schlüssel mitbringt — dieselbe Frage, die
+     * {@see \App\Authentication\KeyAuthGuard::user()} stellt, und deshalb
+     * dieselbe Antwort.
+     *
+     * Vorher stand hier `$request->cookie("key") !== null`, und das ist für ein
+     * leeres Cookie wahr, während der Guard es als „niemand" liest. Aus diesem
+     * einen Zeichen Unterschied wurde ein Kreis: `/anmelden` schickte den
+     * Besucher auf `/konto`, dort fand {@see AccountController::show()} keinen
+     * Benutzer und schickte ihn zurück auf `/anmelden` — das Formular war nicht
+     * mehr erreichbar, und die Startseite bat gleichzeitig ums Anmelden.
+     *
+     * Die beiden Bedingungen sind jetzt komplementär, nicht nur zufällig
+     * verschieden: der Guard nimmt aus Cookie, Header und Query genau die
+     * Werte an, die nach `trim()` etwas übrig lassen, und das tut diese Prüfung
+     * auch. Der Anonymous-Token-Zweig des Guards gehört bewusst nicht dazu —
+     * wer mit einem anonymen Token der Erweiterung unterwegs ist, soll sich
+     * hier mit einem echten Schlüssel anmelden können.
+     */
+    private function carriesKey(Request $request): bool
+    {
+        $candidates = [
+            $request->input("key"),
+            $request->header("key"),
+            $request->cookie("key"),
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (is_string($candidate) && trim($candidate) !== "") {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

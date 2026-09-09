@@ -138,14 +138,18 @@ class CookieBlindNoticeTest extends TestCase
     }
 
     /**
-     * The startpage sets no Cache-Control of its own — worth pinning
-     * explicitly, because a page that might now embed a key in a link must
-     * never be shared-cacheable, and it would be easy to assume that needed
-     * a deliberate fix here. It doesn't: Symfony's ResponseHeaderBag
-     * computes `no-cache, private` for any response that never set a cache
-     * directive of its own (ResponseHeaderBag::computeCacheControlValue(),
-     * "conservative by default") — the same protection every other page
-     * that carries the key gets, without this page needing to do anything.
+     * A page that might embed a key in a link must never be shared-cacheable.
+     *
+     * This used to be true by accident and was pinned as such: the startpage
+     * set no Cache-Control at all, and Symfony's ResponseHeaderBag computes
+     * `no-cache, private` for any response that never set a directive of its
+     * own (computeCacheControlValue(), "conservative by default"). It is now
+     * deliberate — HttpCache::revalidatable() — and the assertion moved with
+     * it, but what it protects has not changed: `private` is the half that
+     * matters here, and it is still there.
+     *
+     * The rest of that header, and the validator that came with it, are
+     * {@see \Tests\Feature\StartpageCacheHeadersTest}'s subject.
      */
     public function testTheCarryingStartpageResponseIsNeverSharedCacheable(): void
     {
@@ -153,7 +157,11 @@ class CookieBlindNoticeTest extends TestCase
 
         $response = $this->get("/?key=" . self::KEY)->assertOk();
 
-        $response->assertHeader("Cache-Control", "no-cache, private");
+        $this->assertStringContainsString(
+            "private",
+            $response->headers->get("Cache-Control"),
+            "The startpage became shared-cacheable while it can carry a key in its links."
+        );
     }
 
     // ── The account page ─────────────────────────────────────────────────

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Authentication\CookieSupport;
+use App\Http\Middleware\HttpCache;
 use App\Localization;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class StartpageController extends Controller
 
         $tiles = TilesController::TILES();
 
-        return view('index')
+        $view = view('index')
             ->with('title', trans('titles.index'))
             ->with('focus', $request->input('focus', 'web'))
             ->with('request', $request->input('request', 'GET'))
@@ -54,6 +55,13 @@ class StartpageController extends Controller
             ->with('cookieNotice', CookieSupport::justAuthenticatedWithoutCookie($request)
                 ? trans('login.no_cookies_notice')
                 : null);
+
+        // This page has two bodies — the landing page and the search bar — and
+        // the key guard picks which. Say so on the wire, and give the browser
+        // something to revalidate against; HttpCache::revalidatable() has the
+        // reasoning, including why the validator is the body's hash and not an
+        // enumerated tuple the way the result page's is.
+        return HttpCache::revalidatable($request, Response::make($view));
     }
 
     /**

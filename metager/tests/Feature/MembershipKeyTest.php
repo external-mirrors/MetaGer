@@ -182,6 +182,77 @@ class MembershipKeyTest extends TestCase
             && $request->method() === "POST");
     }
 
+    // ── Und er bleibt nicht in der Adresszeile stehen ────────────────────────
+
+    /**
+     * Der Schlüssel reist nicht als `?key=` durch das restliche Formular.
+     *
+     * Er kommt dort an: die Weiterleitung von load-settings hängt ihn an das
+     * Ziel, weil `CookieSupport::carryIntoUrl()` in jener Anfrage einen
+     * Schlüssel in der Query und noch kein Cookie sieht — das Cookie liegt zu
+     * dem Zeitpunkt erst in der Antwort. Das ist für einen geteilten Link
+     * gewollt und hier das Gegenteil davon: das Formular baut den nächsten URL
+     * aus allem, was ankam, also stünde der Schlüssel ab da in jedem Schritt,
+     * im Referer und am Ende im URL der Erfolgsseite — genau der Umweg, den der
+     * Umzug des Kontos abgeschafft hat.
+     *
+     * Aufgefallen erst, als das Erstellen wieder verlässlich funktionierte:
+     * solange gar kein Schlüssel entstand, gab es auch keinen, der hätte
+     * mitreisen können.
+     */
+    public function testTheKeyDoesNotRideAlongInTheFormsUrls(): void
+    {
+        $this->keyserverAnswers(Http::response(["key" => self::FRESH_KEY]));
+
+        // Schritt zwei, so wie der Browser ihn nach dem Anmelde-Hop abschickt:
+        // mit dem Schlüssel im URL und im Cookie.
+        $application = MembershipApplication::create(["locale" => "de-DE"]);
+        $application->contact()->create([
+            "title" => "Neutral",
+            "first_name" => "Test",
+            "last_name" => "Person",
+            "email" => "test@example.com",
+            "application_id" => $application->id,
+        ]);
+
+        $location = $this->withHeaders(["Origin" => config("app.url")])
+            ->withUnencryptedCookies(["key" => self::FRESH_KEY])
+            ->post("/de-DE/membership/" . $application->id . "?key=" . self::FRESH_KEY, [
+                "_token" => Crypt::encrypt(now()->addHour()),
+                "amount" => "10.00",
+            ])
+            ->headers->get("Location");
+
+        $this->assertStringNotContainsString(self::FRESH_KEY, $location);
+        $this->assertStringContainsString("#membership-payment", $location);
+    }
+
+    /**
+     * Auch das Formular selbst baut den Schlüssel nicht wieder ein.
+     *
+     * Das `action` entsteht im Blade aus `request()->except(...)` und nicht aus
+     * dem, was der Controller weitergibt — die eine Stelle greift also nicht
+     * für die andere. Genau daran ist der erste Anlauf gescheitert: die
+     * Weiterleitung war sauber, die Seite, auf der sie endete, stellte den
+     * Schlüssel aber sofort wieder in ihr eigenes Ziel.
+     */
+    public function testTheFormDoesNotPutTheKeyBackIntoItsAction(): void
+    {
+        // Angemeldet gerendert: die Seite fragt den Keyserver nach dem Konto,
+        // zu dem das Cookie gehört. Hier ist das Kulisse.
+        Http::fake(["*" => Http::response(["key" => self::FRESH_KEY, "charge" => 0])]);
+
+        $application = MembershipApplication::create(["locale" => "de-DE"]);
+
+        $response = $this->withUnencryptedCookies(["key" => self::FRESH_KEY])
+            ->get("/de-DE/membership/" . $application->id . "?key=" . self::FRESH_KEY);
+
+        preg_match('/<form id="membership-form"[^>]*action="([^"]*)"/', $response->getContent(), $action);
+
+        $this->assertNotEmpty($action, "Das Formular hat kein action-Attribut.");
+        $this->assertStringNotContainsString(self::FRESH_KEY, $action[1]);
+    }
+
     // ── Wenn der Keyserver nicht antwortet ───────────────────────────────────
 
     /**

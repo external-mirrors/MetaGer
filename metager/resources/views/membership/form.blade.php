@@ -25,7 +25,20 @@
 @if(!empty($keyError))
 <div class="membership-key-error" role="alert">@lang("key-create.errors.$keyError")</div>
 @endif
-<form id="membership-form" method="POST" enctype="multipart/form-data" action="{{ route("membership_form", array_merge(request()->except("edit"), ["application_id" => $application_id])) }}">
+{{--
+    Das Formular schickt an den URL zurück, mit dem diese Seite geholt wurde:
+    so trägt es seinen Zustand über die Schritte, und so reisen die Marker der
+    MetaGer-App mit (App\Landing\AppCallback).
+
+    Ohne `key`. Die Weiterleitung, die den Besucher nach dem Anmelden hierher
+    bringt, hängt ihn an — CookieSupport::carryIntoUrl() sieht dort einen
+    Schlüssel in der Query und noch kein Cookie —, und stünde er im `action`,
+    ginge er von hier aus in jeden weiteren Schritt, in den Referer und am Ende
+    in den URL der Erfolgsseite. Das Cookie ist gesetzt; im Formular gebraucht
+    wird er nur einmal, im ersten Schritt, und dort liest ihn der Controller
+    direkt aus der Anfrage (MembershipController::keyOfVisitor()).
+--}}
+<form id="membership-form" method="POST" enctype="multipart/form-data" action="{{ route("membership_form", array_merge(request()->except(["edit", "key"]), ["application_id" => $application_id])) }}">
     <input type="hidden" name="_token" value="{{$csrf_token}}" autocomplete="off">
     @php
         $editable = $application === null || ($application->contact === null && $application->company === null);

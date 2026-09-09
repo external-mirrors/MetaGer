@@ -52,7 +52,10 @@ class MembershipController extends Controller
             $application = null;
             if ($application_id !== null) {
                 $application = uuid_is_valid($application_id) ? MembershipApplication::find($application_id) : null;
-                $request_data = array_merge($request->except("edit"), ["application_id" => $application_id]);
+                // Ohne `key`, aus demselben Grund wie unten in
+                // submitMembershipForm(): was hier zusammengebaut wird, ist der
+                // URL des nächsten Schritts.
+                $request_data = array_merge($request->except(["edit", "key"]), ["application_id" => $application_id]);
                 if ($application === null) {
                     $edit_data = json_decode(base64_decode($application_id), true);
                     if ($edit_data === null) {
@@ -403,7 +406,28 @@ class MembershipController extends Controller
             $application = MembershipApplication::create(["locale" => Localization::getLanguage() . "-" . Localization::getRegion()]);
         }
 
-        $request_data = array_merge($request->except(["edit", "_token"]), ["application_id" => $application->id]);
+        /**
+         * Alles, was ankam, geht in den nächsten Schritt — außer dem Schlüssel.
+         *
+         * So trägt das Formular seinen Zustand: `$request_data` wird zum
+         * `action` des nächsten Formulars, kommt als Body zurück und wird
+         * wieder zum nächsten URL. Die Marker der App reisen genau so mit
+         * ({@see AppCallback}).
+         *
+         * `key` darf da nicht hinein. Die Weiterleitung von load-settings hängt
+         * ihn an — `CookieSupport::carryIntoUrl()` sieht in *dieser* Anfrage
+         * einen Schlüssel in der Query und noch kein Cookie, weil das Cookie
+         * eben erst in die Antwort gelegt wurde —, und von dort aus stünde er
+         * ab jetzt in jedem weiteren Schritt, im Referer und am Ende im URL der
+         * Erfolgsseite. Das Cookie ist zu diesem Zeitpunkt gesetzt; gebraucht
+         * wird er im Formular ohnehin nur einmal, im ersten Schritt, und dort
+         * liest {@see keyOfVisitor()} ihn direkt aus der Anfrage.
+         *
+         * Wessen Browser das Cookie nicht behält, verliert dadurch nichts:
+         * Der Schlüssel steht seit dem ersten Schritt auf dem Antrag, und die
+         * Erfolgsseite zeigt ihn samt QR-Code und Lesezeichen-URL.
+         */
+        $request_data = array_merge($request->except(["edit", "_token", "key"]), ["application_id" => $application->id]);
         $membership_form_url = route("membership_form", $request_data);
 
         if ($application->contact === null && $application->company === null) {

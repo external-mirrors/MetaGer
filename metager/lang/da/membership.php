@@ -8,6 +8,8 @@ return [
         'description' => 'For at bruge MetaGer bruges følgende nøgle, som fyldes op af os. Hvis du allerede var logget ind, blev din eksisterende nøgle brugt.',
         'later' => 'Den første supplering finder sted, når din ansøgning er blevet behandlet.',
         'now' => 'Den er allerede opladet og kan bruges med det samme.',
+        'heading' => 'Din nøgle',
+        'label' => 'Nøgle',
     ],
     'application' => [
         'description' => 'Tak, fordi du overvejer <a href="https://suma-ev.de/en/mitglieder/" target="_blank">medlemskab</a> i vores almennyttige forening. For at kunne behandle din ansøgning har vi kun brug for nogle få oplysninger, som du kan udfylde her.',
@@ -40,5 +42,10 @@ return [
         'amount' => "Medlemskontingent",
         'email' => 'E-mail-adresse',
         'name' => 'Navn',
+    ],
+    'next' => [
+        'review' => 'Vi gennemgår din ansøgning manuelt. Når det er gjort, vil du modtage en e-mail på ovenstående adresse — under alle omstændigheder.',
+        'search' => 'Start søgningen',
+        'app' => 'Tilbage til MetaGer-appen',
     ],
 ];

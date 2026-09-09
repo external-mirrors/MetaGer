@@ -39,6 +39,13 @@ return [
         'description' => 'Aby korzystać z MetaGer, następujący klucz jest używany i doładowywany przez nas. Jeśli byłeś już zalogowany, Twój istniejący klucz został użyty.',
         'later' => 'Pierwsze doładowanie ma miejsce po rozpatrzeniu wniosku.',
         'now' => 'Jest już naładowany i może być natychmiast użyty.',
+        'heading' => 'Twój klucz',
+        'label' => 'Klucz',
     ],
     'success' => 'Dziękujemy za przesłanie wniosku o członkostwo. Przetworzymy go tak szybko, jak to możliwe. Następnie otrzymasz od nas wiadomość e-mail z dalszymi informacjami na podany adres.',
+    'next' => [
+        'review' => 'Twoje zgłoszenie sprawdzamy ręcznie. Gdy to zrobimy, otrzymasz wiadomość e-mail na podany powyżej adres — w każdym przypadku.',
+        'search' => 'Rozpocznij wyszukiwanie',
+        'app' => 'Powrót do aplikacji MetaGer',
+    ],
 ];

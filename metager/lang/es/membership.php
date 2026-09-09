@@ -7,6 +7,8 @@ return [
         'description' => 'Para utilizar MetaGer, se utiliza la siguiente clave, que nosotros recargamos. Si ya estaba conectado, se utilizó su clave existente.',
         'later' => 'La primera recarga tiene lugar después de que se haya tramitado su solicitud',
         'now' => 'Ya está cargada y puede utilizarse inmediatamente.',
+        'heading' => 'Tu clave',
+        'label' => 'Clave',
     ],
     'application' => [
         'description' => 'Gracias por considerar la posibilidad de afiliarse a <a href="https://suma-ev.de/en/mitglieder/" target="_blank"></a> en nuestra asociación sin ánimo de lucro. Para tramitar su solicitud, sólo necesitamos unos pocos datos, que puede rellenar aquí.',
@@ -41,4 +43,9 @@ return [
         'name' => 'Nombre',
     ],
     'success' => 'Muchas gracias por enviar su solicitud de afiliación. La tramitaremos lo antes posible. Le enviaremos un correo electrónico con más información a la dirección indicada.',
+    'next' => [
+        'review' => 'Revisamos tu solicitud manualmente. Una vez hecho esto, recibirás un correo electrónico en la dirección indicada anteriormente —en cualquier caso—.',
+        'search' => 'Empezar a buscar',
+        'app' => 'Volver a la aplicación MetaGer',
+    ],
 ];

@@ -30,6 +30,7 @@ return [
         'later' => 'De eerste aanvulling vindt plaats nadat je aanvraag is verwerkt',
         'now' => 'Hij is al opgeladen en kan onmiddellijk worden gebruikt.',
         'heading' => 'Je sleutel',
+        'label' => 'Legenda',
     ],
     'success' => 'Hartelijk dank voor het indienen van je lidmaatschapsaanvraag. We zullen deze zo snel mogelijk verwerken. Je ontvangt dan een e-mail met verdere informatie van ons op het opgegeven adres.',
     'application' => [

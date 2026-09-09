@@ -7,6 +7,8 @@ return [
         'description' => 'Para utilizar o MetaGer, a seguinte chave é utilizada e carregada por nós. Se já estava registado, foi utilizada a sua chave existente.',
         'later' => 'A primeira recarga é efectuada após o processamento da candidatura',
         'now' => 'Já está carregado e pode ser utilizado imediatamente.',
+        'heading' => 'A tua chave',
+        'label' => 'Chave',
     ],
     'application' => [
         'description' => 'Obrigado por considerar a adesão ao <a href="https://suma-ev.de/en/mitglieder/" target="_blank"></a> na nossa associação sem fins lucrativos. Para podermos processar a sua candidatura, precisamos apenas de algumas informações, que pode preencher aqui.',
@@ -41,4 +43,9 @@ return [
         'name' => 'Nome',
     ],
     'success' => 'Muito obrigado por ter enviado o seu pedido de adesão. Iremos processá-lo o mais rapidamente possível. Receberá então uma mensagem eletrónica com mais informações da nossa parte para o endereço fornecido.',
+    'next' => [
+        'review' => 'Analisamos a sua candidatura manualmente. Assim que isso estiver concluído, receberá um e-mail no endereço acima indicado — em qualquer caso.',
+        'search' => 'Começar a pesquisar',
+        'app' => 'Voltar à aplicação MetaGer',
+    ],
 ];

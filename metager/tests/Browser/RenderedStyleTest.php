@@ -238,10 +238,10 @@ class RenderedStyleTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) use ($theme) {
             $this->revealTheKey($browser, $theme)
-                ->assertVisible(".create-save__qr img");
+                ->assertVisible(".keybackup-save__qr img");
 
             $background = $browser->script(
-                "return getComputedStyle(document.querySelector('.create-save__qr img'))"
+                "return getComputedStyle(document.querySelector('.keybackup-save__qr img'))"
                     . ".backgroundColor;"
             )[0];
 
@@ -253,7 +253,7 @@ class RenderedStyleTest extends DuskTestCase
                 min($channels),
                 "Der Grund hinter dem QR-Code ist in der Palette „{$theme}“ {$background}. "
                     . "Die Module des Codes sind schwarz — auf einem dunklen Grund liest ihn "
-                    . "keine Kamera mehr. resources/less/metager/pages/key-create.less setzt "
+                    . "keine Kamera mehr. resources/less/metager/key-backup.less setzt "
                     . "dafür ein festes Weiß hinter das Bild."
             );
         });
@@ -274,7 +274,7 @@ class RenderedStyleTest extends DuskTestCase
             $this->revealTheKey($browser, $theme);
 
             $heights = $browser->script(
-                "return Array.from(document.querySelectorAll('.create-save__option'))"
+                "return Array.from(document.querySelectorAll('.keybackup-save__option'))"
                     . ".map((tile) => Math.round(tile.getBoundingClientRect().height));"
             )[0];
 
@@ -283,7 +283,7 @@ class RenderedStyleTest extends DuskTestCase
                 1,
                 array_unique($heights),
                 "Die beiden Wege sind unterschiedlich hoch (" . implode(", ", $heights)
-                    . " px). Das Raster in resources/less/metager/pages/key-create.less braucht "
+                    . " px). Das Raster in resources/less/metager/key-backup.less braucht "
                     . "grid-auto-rows: 1fr, und der Hinweis darin margin-top: auto."
             );
         });

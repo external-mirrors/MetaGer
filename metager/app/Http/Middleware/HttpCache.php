@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class HttpCache
 {
@@ -65,6 +66,70 @@ class HttpCache
     public static function resultPageVary(): string
     {
         return "Cookie, Key, Anonymous-Token-Key, Mg-App";
+    }
+
+    /**
+     * A rendered page that depends on who is asking: always revalidated, never
+     * shared, and cheap to revalidate.
+     *
+     * The startpage is the case this exists for. It has two entirely different
+     * bodies — the landing page and the search bar — chosen by the key guard,
+     * and it had no cache headers of its own at all: what went out was
+     * Symfony's conservative default (`no-cache, private`, because nothing set
+     * `Cache-Control` and there is no `Last-Modified`) with no validator
+     * anywhere. That is the worst of both ends. `no-cache` means a stored copy
+     * may never be reused without asking, and with no ETag and no
+     * `Last-Modified` there is nothing to ask *with* — so every single load of
+     * the busiest page in the product is a full render and a full transfer,
+     * and the conditional request that should have cost 304 bytes cannot be
+     * made at all.
+     *
+     * **The ETag is the hash of the body, not of an enumerated tuple.** The
+     * result page does enumerate ({@see resultPageEtag()}), and it can: its URL
+     * carries the `mgv` that makes each search distinct. The startpage's URL is
+     * `/` for everyone forever, and its body moves with the balance in the
+     * sidebar, the exhausted-key alert, the locale, the theme, the tiles
+     * setting and the asset build. An enumeration that misses one of those
+     * serves somebody a page that is quietly wrong — the same failure this
+     * class's own docblock records for `If-Modified-Since`, where one stale
+     * entry became a permanent one. Hashing the body cannot be wrong by
+     * construction.
+     *
+     * What that buys and what it does not: the render still happens, so this
+     * saves the transfer and the client's re-parse, not the server's work. It
+     * is worth having anyway — the landing page is byte-identical for every
+     * anonymous visitor in a locale, so the common case revalidates to a 304.
+     * Skipping the render too would mean enumerating, and that trade is not
+     * this page's to take.
+     *
+     * `must-revalidate` next to `no-cache` is belt and braces: `no-cache`
+     * already forbids reuse without revalidation, and `must-revalidate` says
+     * what happens when we cannot be reached — serve an error, not the stale
+     * balance.
+     */
+    public static function revalidatable(Request $request, SymfonyResponse $response): SymfonyResponse
+    {
+        $etag = '"' . sha1((string) $response->getContent()) . '"';
+
+        $response->headers->set("Cache-Control", "private, no-cache, must-revalidate");
+        $response->headers->set("ETag", $etag);
+        // Assigned, not appended: ResolveLocale::declareVariance() runs after
+        // this and adds Accept-Language and Cookie to whatever is here, so the
+        // list that ends up on the wire is this one plus those two.
+        $response->headers->set("Vary", self::resultPageVary());
+
+        if ($request->isMethodCacheable() && self::matchesEtag($request->headers->get("If-None-Match"), $etag)) {
+            $response->setStatusCode(SymfonyResponse::HTTP_NOT_MODIFIED);
+            $response->setContent("");
+            // A 304 carries no body, so nothing may describe one. Symfony's
+            // prepare() strips these on send; doing it here too means the
+            // response is already correct for anything that reads it before
+            // then — a test, or another middleware on the way out.
+            $response->headers->remove("Content-Type");
+            $response->headers->remove("Content-Length");
+        }
+
+        return $response;
     }
 
     private static function asString($value): string

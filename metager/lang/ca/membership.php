@@ -37,8 +37,15 @@ return [
         ]
     ],
     'key' => [
+        'heading' => 'La vostra clau',
+        'label' => 'Clau',
         'description' => 'Per fer servir MetaGer s\'utilitza la clau següent, que nosaltres recarreguem. Si ja teníeu la sessió iniciada, s\'ha fet servir la vostra clau existent.',
         'later' => 'La primera recàrrega es fa un cop tramitada la vostra sol·licitud',
         'now' => 'Ja està carregada i es pot fer servir immediatament.',
+    ],
+    'next' => [
+        'review' => 'Revisem la vostra sol·licitud a mà. Un cop feta, en qualsevol cas rebreu un correu a l\'adreça indicada més amunt.',
+        'search' => 'Comença a cercar',
+        'app' => 'Torna a l\'aplicació MetaGer',
     ],
 ];

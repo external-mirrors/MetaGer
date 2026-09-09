@@ -1,0 +1,267 @@
+@import "./variables.less";
+
+// Der Block, mit dem man einen Schlüssel behält.
+//
+// Kennung, Schlüsselfeld, QR-Code, Lesezeichen-URL — dreimal dasselbe auf zwei
+// Seiten, die sonst nichts miteinander zu tun haben:
+//
+//   /schluessel-erstellen   pages/key-create.less importiert diese Datei; der
+//                           Ausgang dieser Seite ist unverändert derselbe.
+//   /membership/success     lädt sie als eigenes Stylesheet daneben. Die
+//                           Mitgliedsseiten sind noch ein Hell-/Dunkel-Paar mit
+//                           media-Attribut am <link>; hier hineinimportiert
+//                           stünde der Block zweimal im Ausgang, und die
+//                           data-theme-Umschaltung griffe darin nicht.
+//
+// Beide Paletten kommen deshalb aus den Tokens in variables.less und nicht aus
+// einer zweiten Übersetzung dieser Datei.
+//
+// Die Klassen hießen `create-*`, solange es die Seite zum Erstellen allein gab.
+// `.create-card[data-state]` in pages/key-create.less schaltet `.keybackup-save`
+// weiterhin mit, weil der Block dort innerhalb der Karte steht.
+
+// ── Die Kennung des neuen Kontos ─────────────────────────────────────────────
+// Marke und die letzten sechs Zeichen, genau wie sie von hier an in der Ecke
+// jeder Seite stehen (parts/account.less). Etwas größer als dort: hier wird sie
+// zum ersten Mal gezeigt und soll gemerkt werden, dort wird sie nur wiedererkannt.
+.keybackup-identity {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.15rem 0.6rem;
+  margin: 0;
+
+  .account-mark {
+    width: 28px;
+    height: 28px;
+    grid-row: span 2;
+  }
+
+  .keybackup-identity__code {
+    font-weight: bold;
+    // Sechs Hexzeichen, die verglichen und nicht gelesen werden.
+    font-variant-numeric: tabular-nums;
+  }
+
+  .keybackup-identity__hint {
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+.keybackup-key {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+
+  .keybackup-key__label {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .keybackup-key__input {
+    width: 100%;
+    padding: 0.7rem 0.75rem;
+    border: 1px solid @border-color;
+    border-radius: 6px;
+    background-color: @input-background;
+    color: @input-text;
+    // Wie im Anmeldefeld: eine Zeichenfolge, die Zeichen für Zeichen mit einer
+    // Vorlage verglichen wird, gehört in eine Schrift mit gleich breiten
+    // Zeichen. Hier zusätzlich, weil sie beim Würfeln zeichenweise wechselt und
+    // ohne feste Breite die ganze Zeile zappeln würde.
+    font-family: monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+
+    @media (max-width: 26rem) {
+      font-size: 0.8rem;
+    }
+
+    &:focus-visible {
+      border-color: @metager-orange;
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .keybackup-key__copy {
+    justify-self: start;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    background-color: transparent;
+    color: @text-color;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+
+    // Steht `hidden` in der Vorlage: ohne Zwischenablage wäre er ein Knopf, der
+    // nichts tut, und das Feld daneben lässt sich von Hand markieren.
+    &[hidden] {
+      display: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .keybackup-key__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Aufbewahren ──────────────────────────────────────────────────────────────
+.keybackup-save {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid @border-color;
+
+  .keybackup-save__heading {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .keybackup-save__text {
+    margin: 0;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+  }
+
+  .keybackup-save__options {
+    display: grid;
+    // Zwei gleiche Spalten und nicht `max-content 1fr`: der QR-Code ist
+    // schmal, sein Hinweis ist es nicht, und `max-content` misst den Hinweis
+    // als eine einzige Zeile.
+    grid-template-columns: 1fr 1fr;
+    // Beide Kacheln so hoch wie die höhere, damit ihre Rahmen auf einer Linie
+    // enden — derselbe Griff wie bei den Alternativen auf der Anmeldeseite.
+    grid-auto-rows: 1fr;
+    gap: 0.75rem;
+
+    @media (max-width: 30rem) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .keybackup-save__option {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid @border-color;
+    border-radius: 8px;
+  }
+
+  // Bild und Herunterladen in einem: der ganze Block ist der Link.
+  .keybackup-save__qr {
+    display: grid;
+    justify-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+
+    > img {
+      display: block;
+      width: 140px;
+      height: 140px;
+      // Ein QR-Code ist schwarz auf weiß und bleibt es auch im dunklen Thema —
+      // ohne diesen Grund stünden die dunklen Module auf der dunklen Karte.
+      background-color: @color-white;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .keybackup-save__action {
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid @metager-orange;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+  }
+
+  .keybackup-save__label {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .keybackup-save__input {
+    width: 100%;
+    // Ein 100 % breites Feld in einer Rasterspalte misst sich trotzdem an
+    // seinem Inhalt, und der Inhalt ist hier ein URL ohne eine einzige Stelle
+    // zum Umbrechen.
+    min-width: 0;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    background-color: @input-background;
+    color: @input-text;
+    font-family: monospace;
+    font-size: 0.75rem;
+
+    &:focus-visible {
+      border-color: @metager-orange;
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .keybackup-save__copy {
+    align-self: start;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    background-color: transparent;
+    color: @text-color;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+
+    &[hidden] {
+      display: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .keybackup-save__hint {
+    // Nach unten gedrückt, damit die Hinweise beider Kacheln auf einer Linie
+    // stehen, auch wenn der eine zwei Zeilen braucht und der andere eine.
+    margin: auto 0 0;
+    font-size: 0.75rem;
+    color: @text-color-alpha-70;
+  }
+
+  .keybackup-save__no-cookies {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 6px;
+    background-color: @form-error-background;
+    color: @form-error-color;
+    font-size: 0.8rem;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+}

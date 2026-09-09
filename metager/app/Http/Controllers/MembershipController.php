@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Vite;
 use App;
+use App\Authentication\KeyBackup;
+use App\Authentication\KeyIssuer;
+use App\Landing\AppCallback;
 use App\Localization;
 use App\Mail\Membership\ApplicationDeny;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\ReductionDeny;
 use App\Mail\Membership\WelcomeMail;
-use App\Models\Authorization\KeyAuthorization;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
 use App\Models\Membership\MembershipPaymentPaypal;
@@ -28,7 +30,6 @@ use RateLimiter;
 use Exception;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Redis;
 use Validator;
 
 
@@ -51,7 +52,10 @@ class MembershipController extends Controller
             $application = null;
             if ($application_id !== null) {
                 $application = uuid_is_valid($application_id) ? MembershipApplication::find($application_id) : null;
-                $request_data = array_merge($request->except("edit"), ["application_id" => $application_id]);
+                // Ohne `key`, aus demselben Grund wie unten in
+                // submitMembershipForm(): was hier zusammengebaut wird, ist der
+                // URL des nächsten Schritts.
+                $request_data = array_merge($request->except(["edit", "key"]), ["application_id" => $application_id]);
                 if ($application === null) {
                     $edit_data = json_decode(base64_decode($application_id), true);
                     if ($edit_data === null) {
@@ -135,7 +139,7 @@ class MembershipController extends Controller
                         ($application->payment_method === "directdebit" && $application->directdebit !== null)
                     )
                 ) {
-                    return redirect(route("membership_success", ["application_id" => $application->id]));
+                    return redirect(route("membership_success", array_merge(["application_id" => $application->id], AppCallback::markers($request))));
                 }
             }
 
@@ -166,6 +170,20 @@ class MembershipController extends Controller
         return redirect(route("membership_form"));
     }
 
+    /**
+     * Der Antrag ist abgeschickt — und der Schlüssel ist neu.
+     *
+     * Diese Seite ist für die meisten Mitglieder die *einzige* Gelegenheit,
+     * ihren Schlüssel zu sehen. Er wurde beim ersten Schritt still im
+     * Hintergrund erstellt und per Cookie gesetzt; die Willkommensmail nennt
+     * ihn erst, wenn der Antrag bearbeitet ist, und bis dahin können Tage
+     * vergehen. Wessen Cookie in der Zwischenzeit verlorengeht, hat ohne diese
+     * Seite nichts in der Hand.
+     *
+     * Deshalb steht hier derselbe Block wie auf /schluessel-erstellen — QR-Code
+     * und Lesezeichen-URL, {@see \App\Authentication\KeyBackup} — und nicht
+     * bloß der Schlüssel zum Abschreiben.
+     */
     public function success(Request $request, ?string $application_id = null)
     {
         $application = null;
@@ -177,15 +195,61 @@ class MembershipController extends Controller
         } else {
             return redirect(route("membership_form"));
         }
+
+        $key = $application->key;
+
+        /**
+         * Der Weg von hier weg, und es sind zwei.
+         *
+         * Aus dem Custom Tab der App heraus ist es der verifizierte App Link,
+         * über den der Schlüssel zurückgeht — sonst hat die App ihn nie
+         * gesehen ({@see AppCallback}). Sonst ist es die Startseite: für viele
+         * ist der Aufnahmeantrag der erste Kontakt mit MetaGer, und was sie als
+         * Nächstes wollen, ist suchen.
+         *
+         * Anders als beim Konto ist das hier ein *Knopf* und keine
+         * Weiterleitung: die Seite, die er verlässt, ist die einzige, die den
+         * Schlüssel zeigt, und der Hinweis darauf, dass wir uns melden, steht
+         * ebenfalls nur hier.
+         */
+        $handback = null;
+        if ($key !== null && AppCallback::isHandback($request)) {
+            $handback = AppCallback::handbackUrl(
+                $key,
+                $request->input("keystore"),
+                $request->input("variant"),
+                // Ein Antrag lädt erst auf, wenn er bearbeitet ist; bei PayPal
+                // ist das bereits geschehen. Bis dahin kann der Schlüssel
+                // nichts bezahlen, und die App soll den Benutzer auf den
+                // Aufladen-Abschnitt setzen statt den Tab nur zu schließen.
+                !in_array($application->payment_method, ["paypal", "card"], true)
+            );
+        }
+
         return response(view(
             "membership.success",
             [
                 "application" => $application,
                 "title" => __("titles.membership"),
-                "css" => [Vite::asset('resources/less/metager/pages/membership/base.less')],
-                "darkcss" => [Vite::asset('resources/less/metager/pages/membership/base-dark.less')]
+                "css" => [
+                    Vite::asset('resources/less/metager/pages/membership/base.less'),
+                    // Eigenes Stylesheet und nicht in base.less hineinimportiert:
+                    // die Mitgliedsseiten sind noch ein Hell-/Dunkel-Paar mit
+                    // media-Attribut, key-backup.less trägt beide Paletten
+                    // selbst. Importiert stünde es zweimal im Ausgang und die
+                    // data-theme-Umschaltung griffe darin nicht.
+                    Vite::asset('resources/less/metager/key-backup.less'),
+                ],
+                "darkcss" => [Vite::asset('resources/less/metager/pages/membership/base-dark.less')],
+                "js" => [Vite::asset('resources/js/membership-success.js')],
+                "key" => $key,
+                "settingsUrl" => $key === null ? null : KeyBackup::settingsUrl($request, $key),
+                "qrUri" => $key === null ? null : KeyBackup::qrDataUri($key),
+                "handback" => $handback,
             ]
-        ));
+        // Auf dieser Seite steht ein Schlüssel. Er gehört in keinen Cache,
+        // weder in einen gemeinsamen noch in den des Browsers.
+        ), 200, ["Cache-Control" => "no-store, private"]);
     }
 
     public function getToken(Request $request)
@@ -204,7 +268,7 @@ class MembershipController extends Controller
         }
     }
 
-    public function submitMembershipForm(Request $request, $application_id = null)
+    public function submitMembershipForm(Request $request, KeyIssuer $issuer, $application_id = null)
     {
         $application = null;
         if ($application_id !== null) {
@@ -300,49 +364,81 @@ class MembershipController extends Controller
         });
 
         if ($validator->fails()) {
-            $csrf_token = Crypt::encrypt(now()->addHour());
-
-            $application = null;
-            if ($application_id !== null) {
-                $application = MembershipApplication::find($application_id);
-            }
-
-            return response(
-                view(
-                    "membership.form",
-                    [
-                        'csrf_token' => $csrf_token,
-                        "title" => __("titles.membership"),
-                        "css" => [Vite::asset('resources/less/metager/pages/membership/base.less')],
-                        "darkcss" => [Vite::asset('resources/less/metager/pages/membership/base-dark.less')],
-                        "js" => [Vite::asset('resources/js/membership.js')],
-                        "errors" => $validator->errors(),
-                        "application" => $application
-                    ]
-                )
-            );
+            return $this->formAgain($application_id, $validator->errors());
         }
 
         $form_data = $validator->validated();
 
-        if ($application === null) {
-            if ($application_id !== null) {
-                return redirect(route("membership_form"));
+        // Eine application_id, zu der es nichts gibt: zurück auf das leere
+        // Formular. Vor der Schlüsselfrage, damit ein ausgedachter URL keinen
+        // Aufruf beim Keyserver kostet.
+        if ($application === null && $application_id !== null) {
+            return redirect(route("membership_form"));
+        }
+
+        /**
+         * Der Schlüssel gehört zum ersten Schritt, und zwar zu ihm allein.
+         *
+         * Er ist das, was die Mitgliedschaft auflädt — ein Antrag ohne
+         * Schlüssel ist einer, den die Verwaltung später von Hand reparieren
+         * muss —, und alles nach diesem Schritt geschieht ohnehin als dieser
+         * Schlüssel: die Weiterleitung unten meldet den Besucher an ihm an.
+         *
+         * Steht vor MembershipApplication::create() und nicht darin: kann der
+         * Keyserver gerade keinen ausgeben, soll kein leerer Antrag
+         * zurückbleiben, den niemand je zu Ende ausfüllt.
+         */
+        $key = null;
+        $key_is_fresh = false;
+        if ($application === null || ($application->contact === null && $application->company === null)) {
+            $key = $this->keyOfVisitor($request);
+            if ($key === null) {
+                $key = $issuer->issue();
+                $key_is_fresh = true;
+
+                if ($key === null) {
+                    return $this->formAgain($application_id, null, "keyserver_unreachable");
+                }
             }
+        }
+
+        if ($application === null) {
             $application = MembershipApplication::create(["locale" => Localization::getLanguage() . "-" . Localization::getRegion()]);
         }
 
-        $request_data = array_merge($request->except(["edit", "_token"]), ["application_id" => $application->id]);
+        /**
+         * Alles, was ankam, geht in den nächsten Schritt — außer dem Schlüssel.
+         *
+         * So trägt das Formular seinen Zustand: `$request_data` wird zum
+         * `action` des nächsten Formulars, kommt als Body zurück und wird
+         * wieder zum nächsten URL. Die Marker der App reisen genau so mit
+         * ({@see AppCallback}).
+         *
+         * `key` darf da nicht hinein. Die Weiterleitung von load-settings hängt
+         * ihn an — `CookieSupport::carryIntoUrl()` sieht in *dieser* Anfrage
+         * einen Schlüssel in der Query und noch kein Cookie, weil das Cookie
+         * eben erst in die Antwort gelegt wurde —, und von dort aus stünde er
+         * ab jetzt in jedem weiteren Schritt, im Referer und am Ende im URL der
+         * Erfolgsseite. Das Cookie ist zu diesem Zeitpunkt gesetzt; gebraucht
+         * wird er im Formular ohnehin nur einmal, im ersten Schritt, und dort
+         * liest {@see keyOfVisitor()} ihn direkt aus der Anfrage.
+         *
+         * Wessen Browser das Cookie nicht behält, verliert dadurch nichts:
+         * Der Schlüssel steht seit dem ersten Schritt auf dem Antrag, und die
+         * Erfolgsseite zeigt ihn samt QR-Code und Lesezeichen-URL.
+         */
+        $request_data = array_merge($request->except(["edit", "_token", "key"]), ["application_id" => $application->id]);
         $membership_form_url = route("membership_form", $request_data);
 
         if ($application->contact === null && $application->company === null) {
-            $key = null;
-            $authorization = app(\App\Models\Authorization\Authorization::class);
             $success_url = $membership_form_url . "#membership-fee";
-            if ($authorization instanceof KeyAuthorization && !empty($authorization->key)) {
-                $key = $authorization->key;
-            } else {
-                $key = $this->generateNewKey();
+            if ($key_is_fresh) {
+                // Der frische Schlüssel wird hier auch gleich gesetzt: der
+                // Besucher füllt den Rest des Formulars als er aus, und ohne
+                // Cookie hätte er ihn nur in der Mail, die erst nach der
+                // Bearbeitung kommt. loadSettings ist die Stelle, die das
+                // Cookie setzt, und der signierte redirect_url führt von dort
+                // zurück auf den nächsten Schritt.
                 $expires = now()->addMinutes(1)->timestamp;
                 $signature = hash_hmac("sha256", $success_url . $expires, config("app.key"));
                 $success_url = route("loadSettings", ["key" => $key, "redirect_url" => $success_url, "expires" => $expires, "signature" => $signature]);
@@ -410,7 +506,7 @@ class MembershipController extends Controller
                     return $this->createPayPalAuthorizeOrder(
                         $application,
                         $form_data["payment-method"],
-                        route("membership_success", ["application_id" => $application->id]),
+                        route("membership_success", array_merge(["application_id" => $application->id], AppCallback::markers($request))),
                         $membership_form_url . "#membership-payment-method"
                     );
             }
@@ -420,7 +516,12 @@ class MembershipController extends Controller
             }
             return redirect($membership_form_url);
         } else {
-            return redirect(route("membership_success", ["key" => $application->key]));
+            // application_id und nicht key: `key` ist hier kein Routenparameter,
+            // sondern landete als Query am Ziel — ein Erfolgs-URL ohne
+            // application_id, den success() nicht auflösen kann und der
+            // deshalb zurück auf das Formular führte. Der Schlüssel stand dabei
+            // in der Adresszeile, in der er nichts zu suchen hat.
+            return redirect(route("membership_success", array_merge(["application_id" => $application->id], AppCallback::markers($request))));
         }
     }
 
@@ -903,6 +1004,83 @@ class MembershipController extends Controller
         return redirect(route("membership_admin_overview", ["success" => "Membership Request deleted"]));
     }
 
+    /**
+     * Der Schlüssel, den diese Anfrage mitbringt, oder null.
+     *
+     * Wer schon angemeldet ist, bekommt keinen zweiten: sein Guthaben hängt am
+     * ersten, und ein neuer bekäme ein eigenes, getrenntes.
+     *
+     * Dieselbe Reihenfolge und dieselbe `trim()`-Regel wie in
+     * {@see \App\Authentication\KeyAuthGuard::user()} und
+     * {@see LoginController::carriesKey()} — nur gibt diese Frage den Wert
+     * zurück, weil er auf dem Antrag landet.
+     *
+     * Hier stand `app(Authorization::class)`, und das war an dieser Stelle die
+     * falsche Naht. Der Container baut die Klasse einmal beim Registrieren der
+     * Provider und liest den Schlüssel *dabei* aus der Anfrage; wer sie
+     * auflöst, bevor eine Anfrage gebunden ist, bekommt sie für den Rest des
+     * Prozesses ohne Schlüssel. Im FPM geht das gut, weil der Kernel die
+     * Anfrage vor dem Registrieren bindet — in jedem anderen Zusammenhang, ein
+     * Feature-Test eingeschlossen, ist ein angemeldeter Besucher damit nicht
+     * darstellbar.
+     *
+     * Nicht auf UUID-Form geprüft: der Keyserver faltet alte
+     * Nicht-UUID-Schlüssel per MD5 in denselben Raum ({@see KeyIssuer}), und
+     * wer noch einen davon hat, soll ihn behalten.
+     */
+    private function keyOfVisitor(Request $request): ?string
+    {
+        $candidates = [
+            $request->input("key"),
+            $request->header("key"),
+            $request->cookie("key"),
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (is_string($candidate) && trim($candidate) !== "") {
+                return trim($candidate);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Das Formular noch einmal, mit dem, was schiefging.
+     *
+     * Zwei Anlässe, und für den Besucher sehen sie verschieden aus, weil sie
+     * es sind: eine Eingabe, die nicht durch die Prüfung kam, steht am Feld;
+     * ein Keyserver, der gerade nicht antwortet, ist nichts, was jemand
+     * richtig machen kann, und steht deshalb als eigener Satz über dem
+     * Formular. Der Wert ist ein Übersetzungsschlüssel, aus demselben Grund
+     * wie in {@see KeyCreationController::ERRORS}.
+     */
+    private function formAgain(?string $application_id, $errors = null, ?string $key_error = null)
+    {
+        $application = null;
+        if ($application_id !== null) {
+            $application = MembershipApplication::find($application_id);
+        }
+
+        return response(
+            view(
+                "membership.form",
+                [
+                    // Ein frisches Token: das mitgeschickte ist verbraucht,
+                    // sobald es einmal durch die Prüfung ging.
+                    'csrf_token' => Crypt::encrypt(now()->addHour()),
+                    "title" => __("titles.membership"),
+                    "css" => [Vite::asset('resources/less/metager/pages/membership/base.less')],
+                    "darkcss" => [Vite::asset('resources/less/metager/pages/membership/base-dark.less')],
+                    "js" => [Vite::asset('resources/js/membership.js')],
+                    "errors" => $errors,
+                    "keyError" => $key_error,
+                    "application" => $application
+                ]
+            )
+        );
+    }
+
     private function createPayPalAuthorizeOrder(MembershipApplication $application, string $payment_method, string $success_url, string $error_url)
     {
         $parameters = ["application_id" => $application->id, "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
@@ -949,45 +1127,6 @@ class MembershipController extends Controller
         return \Request::wantsJson() ? response()->json(["message" => "Error creating order", "cancel_url" => $error_url], 400) : redirect($error_url);
     }
 
-    private function generateNewKey()
-    {
-        $start_time = now();
-        do {
-            $key = uuid_create();
-            $resulthash = md5("membership:key" . microtime(true));
-            $mission = [
-                "resulthash" => $resulthash,
-                "url" => config("metager.metager.keymanager.server") . "/api/json/key/$key",
-                "useragent" => "MetaGer",
-                "cacheDuration" => 0,   // We'll cache seperately
-                "headers" => [
-                    "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
-                ],
-                "proxy" => false,
-                "name" => "PayPal",
-            ];
-            $mission = json_encode($mission);
-            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-            $results = Redis::brpop($resulthash, 10);
-            if (!is_array($results)) {
-                sleep(1);
-                continue;
-            }
-
-            $results = json_decode($results[1], true);
-            if (!in_array($results["info"]["http_code"], [200])) {
-                sleep(1);
-                continue;
-            }
-            $body = json_decode($results["body"], true);
-            if ($body["charge"] === 0) {
-                return $key;
-            }
-        } while (now()->diffInSeconds($start_time, true) < 10);
-
-
-        return null;
-    }
 
 
 

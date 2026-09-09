@@ -271,6 +271,33 @@ else
         "two of the three sentinel-quorum members could land on the same node"
 fi
 
+# ---------------------------------------------------------------------------
+# The queue worker recycles itself on a timer.
+# ---------------------------------------------------------------------------
+#
+# queue:work is a long-lived daemon on the database queue driver, holding one
+# PDO connection. A CNPG primary failover leaves that connection pinned to the
+# old primary; the database driver's per-pop() transaction then desyncs and
+# every subsequent pop() throws "There is already an active transaction" — once
+# a second, forever, with the pgrep liveness probe still passing so k8s never
+# restarts the pod (GlitchTip issue 1387, 2026-09-09). --max-time is the only
+# thing that ends that state without a human: it is a clean self-exit that the
+# worker checks every loop iteration whether or not a job was popped, so a
+# wedged worker still hits it. --max-jobs would not — a wedged worker processes
+# zero jobs and that counter never advances.
+
+echo
+echo "The queue worker recycles on a timer:"
+
+queue_args="$(capture grep -oE '"artisan", "queue:work"[^]]*' "$WORK/rendered.yaml" | sort -u)"
+
+if grep -qE -- '--max-time=[0-9]+' <<<"$queue_args"; then
+    pass "queue:work carries --max-time ($(grep -oE -- '--max-time=[0-9]+' <<<"$queue_args"))"
+else
+    fail "queue:work has no --max-time" \
+        "an alive-but-wedged worker after a DB failover would never restart"
+fi
+
 echo
 if [[ $failures -eq 0 ]]; then
     echo "All chart assertions passed."

@@ -1,8 +1,10 @@
 import "./tiles";
 import { initializeSuggestions } from "../suggest";
 import { initAccountBreadcrumb } from "../accountBreadcrumb";
+import { initStaleLoginCheck } from "./staleLoginCheck";
 
 initAccountBreadcrumb();
+initStaleLoginCheck();
 
 // Register Keyboard listener for quicklinks on startpage
 (async () => {

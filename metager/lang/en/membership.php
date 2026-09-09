@@ -37,8 +37,15 @@ return [
         ]
     ],
     'key' => [
+        'heading' => 'Your key',
+        'label' => 'Key',
         'description' => 'To use MetaGer, the following key is used and topped up by us. If you were already logged in, your existing key was used.',
         'later' => 'The first top-up takes place after your application has been processed',
         'now' => 'It is already charged and can be used immediately.',
+    ],
+    'next' => [
+        'review' => 'We review your application by hand. Once that is done you will receive an email at the address above — in any case.',
+        'search' => 'Start searching',
+        'app' => 'Back to the MetaGer app',
     ],
 ];

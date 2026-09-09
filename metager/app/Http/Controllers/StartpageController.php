@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Authentication\CookieSupport;
+use App\Http\Middleware\HttpCache;
 use App\Localization;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class StartpageController extends Controller
 
         $tiles = TilesController::TILES();
 
-        return view('index')
+        $view = view('index')
             ->with('title', trans('titles.index'))
             ->with('focus', $request->input('focus', 'web'))
             ->with('request', $request->input('request', 'GET'))
@@ -54,19 +55,45 @@ class StartpageController extends Controller
             ->with('cookieNotice', CookieSupport::justAuthenticatedWithoutCookie($request)
                 ? trans('login.no_cookies_notice')
                 : null);
+
+        // This page has two bodies — the landing page and the search bar — and
+        // the key guard picks which. Say so on the wire, and give the browser
+        // something to revalidate against; HttpCache::revalidatable() has the
+        // reasoning, including why the validator is the body's hash and not an
+        // enumerated tuple the way the result page's is.
+        return HttpCache::revalidatable($request, Response::make($view));
     }
 
     /**
-     * The chrome extension has currently a problem when loading MetaGer as a startpage
-     * The extension is not yet initialized when the startpage is loaded and as such the key is not loaded on first load
-     * As a temporary fix we can check the login status asynchroniously on the startpage for a few seconds and reload if status changes
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @return void
+     * "Would the startpage render me as signed in right now?"
+     *
+     * Written for the chrome extension, which did not inject its key in time
+     * for the first page load of a browser session and so had the startpage
+     * render anonymously underneath it; resources/js/utility.js polled this for
+     * five seconds and reloaded when the answer changed. Declarative net
+     * request rules removed that race, and the poll went with it (e504c185a,
+     * "no longer necessary") — leaving this endpoint without a caller.
+     *
+     * It has one again, and a narrower one: resources/js/startpage/staleLoginCheck.js
+     * asks exactly once, and only when the browser has just restored this page
+     * from the back/forward cache. A bfcached page is a photograph — it can
+     * show "you are logged out" long after the visitor logged in, and nothing
+     * in the HTTP cache headers can prevent that (only `no-store` keeps a page
+     * out of the bfcache, and that would cost the startpage its validator).
+     *
+     * The predicate has to be *the page's*, not a second opinion: it is
+     * `index.blade.php`'s `$signedIn`, both halves of it. Reading only the
+     * legacy Authorization service — as this did — answers 401 for a
+     * webextension visitor holding an anonymous token, whom the guard resolves
+     * and for whom the page renders the search bar. The re-check would then
+     * confirm a staleness that isn't there and leave the real one unnoticed.
      */
     public function isLoggedIn(Request $request)
     {
-        if (app(abstract: \App\Models\Authorization\Authorization::class)->loggedIn) {
+        $signedIn = \Auth::guard("key")->user() !== null
+            || app(abstract: \App\Models\Authorization\Authorization::class)->loggedIn;
+
+        if ($signedIn) {
             return response()->json([
                 "is_bugged_extension" => $request->hasHeader("mg-webext") && $request->header("mg-webext", "") === "1.2"
             ], 200);

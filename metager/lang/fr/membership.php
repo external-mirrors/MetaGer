@@ -29,6 +29,8 @@ return [
         'later' => 'Le premier rechargement a lieu après le traitement de votre demande.',
         'now' => 'Il est déjà chargé et peut être utilisé immédiatement.',
         'description' => 'Pour utiliser MetaGer, la clé suivante est utilisée et rechargée par nos soins. Si vous étiez déjà connecté, votre clé existante a été utilisée.',
+        'heading' => 'Votre clé',
+        'label' => 'Clé',
     ],
     'success' => 'Nous vous remercions d\'avoir soumis votre demande d\'adhésion. Nous la traiterons le plus rapidement possible. Vous recevrez ensuite un e-mail contenant des informations complémentaires à l\'adresse indiquée.',
     'application' => [
@@ -40,5 +42,10 @@ return [
         'description' => 'Nous vous remercions d\'envisager d\'adhérer à <a href="https://suma-ev.de/en/mitglieder/" target="_blank"></a> à notre association sans but lucratif. Afin de traiter votre demande, nous n\'avons besoin que de quelques informations, que vous pouvez remplir ici.',
         'payment_block' => 'Nous essaierons d\'autoriser le paiement de votre prochaine cotisation afin de valider votre mode de paiement, mais le paiement ne sera exécuté que s\'il est dû dans les deux semaines à venir et sera annulé dans le cas contraire.',
         'update' => 'Vous trouverez ci-dessous les informations que nous avons stockées pour votre adhésion. Vous pouvez modifier ces informations en cliquant sur "Modifier". Il n\'est pas possible de modifier vos coordonnées ici. Si elles ont changé, veuillez nous envoyer un courriel à <a href=":contact_link" target="_blank"></a> avec vos nouvelles informations.',
+    ],
+    'next' => [
+        'review' => 'Nous examinons votre candidature manuellement. Une fois cette étape terminée, vous recevrez un e-mail à l\'adresse indiquée ci-dessus — dans tous les cas.',
+        'search' => 'Lancer la recherche',
+        'app' => 'Retour à l\'application MetaGer',
     ],
 ];

@@ -40,5 +40,12 @@ return [
         'description' => 'Per utilizzare MetaGer, viene utilizzata la seguente chiave, che viene ricaricata da noi. Se eravate già connessi, viene utilizzata la vostra chiave esistente.',
         'later' => 'La prima ricarica avviene dopo che la domanda è stata esaminata',
         'now' => 'È già carico e può essere utilizzato immediatamente.',
+        'heading' => 'La tua chiave',
+        'label' => 'Legenda',
+    ],
+    'next' => [
+        'review' => 'Esaminiamo la tua richiesta manualmente. Una volta completata la verifica, riceverai un’e-mail all’indirizzo sopra indicato — in ogni caso.',
+        'search' => 'Inizia la ricerca',
+        'app' => 'Torna all\'app MetaGer',
     ],
 ];

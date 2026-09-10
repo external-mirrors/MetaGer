@@ -9,11 +9,56 @@ use Arr;
 use Cache;
 use Http;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Request;
 
 class KeyUser implements Authenticatable
 {
+    /**
+     * How long this class is willing to wait for the keyserver.
+     *
+     * Both calls below run while a user is waiting for the start page or a
+     * result page, and both used to carry Laravel's defaults — 10s to connect,
+     * 30s to read (Illuminate\Http\Client\PendingRequest::__construct) — with
+     * no catch. Every other caller of this keyserver already sets a timeout of
+     * its own (KeyIssuer, LoginCodeIssuer, ChargeOrderIssuer, KeyPrice and the
+     * rest, 2-10s); these two were simply missed, and they are the two on the
+     * hot paths.
+     *
+     * Two seconds because that is roughly the search's own tolerance for a
+     * single upstream (EngineOrchestrator::WAIT_SECONDS is 6 for *all* the
+     * engines together), and because the answer is cached for ten seconds
+     * afterwards — a slow keyserver is paid for once per key per ten seconds,
+     * not once per request.
+     *
+     * The connect timeout matters more than the read timeout here and is the
+     * one the default got most wrong: a keyserver pod that is being rescheduled
+     * does not answer slowly, it does not answer at all, and ten seconds of
+     * that on the start page is indistinguishable from the site being down.
+     */
+    private const TIMEOUT_SECONDS = 2;
+    private const CONNECT_TIMEOUT_SECONDS = 1;
+
+    /**
+     * How long the last answer the keyserver gave stays usable as a fallback.
+     *
+     * Separate from the ten-second hot cache, and read only when the keyserver
+     * cannot be reached at all. Without it an unreachable keyserver means
+     * getKeyData() returns null, which reads as "no charge" everywhere
+     * downstream: the account is rendered logged out, every paid engine is
+     * disabled, and the search redirects to the start page. A user whose key is
+     * perfectly good is told it is not, because something they do not own is
+     * being restarted.
+     *
+     * An hour, not a day: while this is being used nothing is being charged
+     * either (the discharge POST is failing for the same reason), so the window
+     * is also how long a key can overspend. An hour covers every planned drain
+     * and failover by a wide margin and bounds the giveaway to something
+     * comparable to a single top-up.
+     */
+    private const STALE_FALLBACK_SECONDS = 3600;
 
     public string $id;
 
@@ -155,6 +200,12 @@ class KeyUser implements Authenticatable
      *
      * Geleert, nicht geladen: die Anfrage passiert beim nächsten Lesen, also
      * gar nicht, wenn niemand mehr fragt.
+     *
+     * Der Rückfall-Eintrag (`…:last`, {@see rememberedKeyDataKey}) wird
+     * absichtlich *nicht* mitgelöscht. Er wird nur gelesen, wenn der Keyserver
+     * gar nicht antwortet, und dann ist der Stand von vorhin die beste Antwort,
+     * die es gibt — besser jedenfalls als „kein Schlüssel". Antwortet der
+     * Keyserver, wird er ohnehin sofort überschrieben.
      */
     public function refresh(): void
     {
@@ -416,13 +467,34 @@ class KeyUser implements Authenticatable
         $token_cost = max($token_cost, 0); // Ensure we don't process negative costs
         if (abs($token_cost - 0) < PHP_FLOAT_EPSILON)
             return true;
-        $key_response = Http::withHeaders([
-            "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
-            "Content-Type" => "application/json",
-            "X-Forwarded-For" => Request::ip(),
-        ])->post($this->keyserver . "/key/" . urlencode($this->key) . "/discharge", [
-                    "amount" => $token_cost,
-                ]);
+        try {
+            $key_response = Http::timeout(self::TIMEOUT_SECONDS)
+                ->connectTimeout(self::CONNECT_TIMEOUT_SECONDS)
+                ->withHeaders([
+                    "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
+                    "Content-Type" => "application/json",
+                    "X-Forwarded-For" => Request::ip(),
+                ])->post($this->keyserver . "/key/" . urlencode($this->key) . "/discharge", [
+                        "amount" => $token_cost,
+                    ]);
+        } catch (ConnectionException $e) {
+            // The charge did not happen, so this says so. `false` is safe on
+            // both callers: MetaGerSearch discharges once for the whole search
+            // *after* it has already been answered and ignores the result, and
+            // AuthenticationValidation only reaches this for a non-zero
+            // suggestion debt (makePayment(0) returns above without a request).
+            // So an unreachable keyserver costs the operator the fee for that
+            // search, not the user their page.
+            //
+            // Losing the fee is the part that wants fixing, and the fix is not
+            // "return true" — it is to stop making this call in the foreground
+            // at all, queue the discharge the way QueryLogger queues a search
+            // log and settle it from a worker. Until then this is at least
+            // honest about what happened.
+            Log::warning("keyserver discharge unreachable: " . $e->getMessage());
+
+            return false;
+        }
 
         if ($key_response->successful()) {
             $key_response = $key_response->json();
@@ -436,6 +508,7 @@ class KeyUser implements Authenticatable
                 PrometheusExporter::UpdateKeyStatus(key: $this->key, tokens: $current_charge, owner: "mainz");
             }
             Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
+            $this->rememberKeyData($key_response);
             $this->key_data = $key_response; // Store the key data for future use
             $new_claim_amount = Arr::get($this->claims ?? [], $this->id, 0) - $token_cost;
             $this->claims[$this->id] = $new_claim_amount;
@@ -474,10 +547,22 @@ class KeyUser implements Authenticatable
         }
         if (!$key_response = Cache::get("keyserver:key:" . $this->key)) {
             // Fetch key data from the keyserver
-            $key_response = Http::withHeaders([
-                "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
-                "X-Forwarded-For" => Request::ip(),
-            ])->get($this->keyserver . "/key/" . urlencode($this->key));
+            try {
+                $key_response = Http::timeout(self::TIMEOUT_SECONDS)
+                    ->connectTimeout(self::CONNECT_TIMEOUT_SECONDS)
+                    ->withHeaders([
+                        "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
+                        "X-Forwarded-For" => Request::ip(),
+                    ])->get($this->keyserver . "/key/" . urlencode($this->key));
+            } catch (ConnectionException $e) {
+                // Unreachable, refused, or slower than the timeout above. Not
+                // an error the visitor can do anything with, and not a reason
+                // to tell them their key is gone — fall back to the last answer
+                // this keyserver gave for it.
+                Log::warning("keyserver key lookup unreachable: " . $e->getMessage());
+
+                return $this->rememberedKeyData();
+            }
 
             if ($key_response->successful()) {
                 $key_response = $key_response->json();
@@ -487,15 +572,65 @@ class KeyUser implements Authenticatable
                     return null;
                 }
                 Cache::put("keyserver:key:" . $this->key, $key_response, now()->addSeconds(10)); // Cache for 10 seconds
+                $this->rememberKeyData($key_response);
                 KeyChanged::dispatch($this->key, 0, $current_charge);
                 $this->key_data = $key_response; // Store the key data for future use
                 return $key_response;
             } else {
+                // An answer, just not a usable one — a 404 for a key that does
+                // not exist, a 401 for a bad access token. Deliberately *not*
+                // falling back: the keyserver is reachable and has told us
+                // something about this key, so a remembered charge would be
+                // contradicting it rather than covering for it.
                 return null;
             }
         } else {
             $this->key_data = $key_response; // Store the key data for future use
             return $this->key_data;
         }
+    }
+
+    /**
+     * Where the fallback lives.
+     *
+     * A second entry rather than a longer TTL on `keyserver:key:<key>`: that
+     * one's ten seconds are what make the charge on the page current, and the
+     * whole suite writes it directly to stand in for the keyserver
+     * (tests/Concerns/FakesSearchEngines and friends). Widening it would change
+     * what "cached charge" means everywhere to fix something that only happens
+     * when the network does not work.
+     */
+    private function rememberedKeyDataKey(): string
+    {
+        return "keyserver:key:" . $this->key . ":last";
+    }
+
+    private function rememberKeyData(array $key_response): void
+    {
+        Cache::put(
+            $this->rememberedKeyDataKey(),
+            $key_response,
+            now()->addSeconds(self::STALE_FALLBACK_SECONDS)
+        );
+    }
+
+    /**
+     * The last answer the keyserver gave for this key, or null if there is
+     * none — a first visit during an outage genuinely cannot be answered.
+     */
+    private function rememberedKeyData(): array|null
+    {
+        $remembered = Cache::get($this->rememberedKeyDataKey());
+
+        if (!is_array($remembered)) {
+            return null;
+        }
+
+        // Onto the instance, but pointedly not into `keyserver:key:<key>`: this
+        // request may use it, the next one should try the keyserver again
+        // rather than find a stale entry someone else left behind.
+        $this->key_data = $remembered;
+
+        return $remembered;
     }
 }

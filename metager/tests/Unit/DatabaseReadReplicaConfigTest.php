@@ -19,24 +19,75 @@ use Tests\TestCase;
  * connection byte-for-byte what it was — that is the rollback path, and it is
  * what compose, the review environments and this suite run on.
  *
- * config/database.php reads env() directly, so the file is re-evaluated after
- * putenv() rather than read back through config(), which was resolved at boot.
- * Same approach as {@see RedisSentinelConfigTest}, and booted for the same
- * reason: the file calls database_path().
+ * config/database.php reads env() directly, so the file is re-evaluated with
+ * the environment set rather than read back through config(), which was
+ * resolved at boot. Same approach as {@see RedisSentinelConfigTest}, and booted
+ * for the same reason: the file calls database_path(). Unlike that one it has to
+ * clear the variables as well as set them — see {@see forgetEnv()}.
  *
  * @see \App\Console\Commands\ScheduleWorker::releaseStickyReads()
  */
 class DatabaseReadReplicaConfigTest extends TestCase
 {
+    private const KEYS = ['DB_HOST', 'DB_PORT', 'DB_READ_HOST', 'DB_READ_PORT', 'DB_STICKY'];
+
+    /**
+     * @var array<string, mixed>
+     */
+    private array $restore = [];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        foreach (self::KEYS as $key) {
+            $this->restore[$key] = [$_ENV[$key] ?? null, $_SERVER[$key] ?? null, getenv($key)];
+            $this->forgetEnv($key);
+        }
+    }
+
     protected function tearDown(): void
     {
-        putenv('DB_READ_HOST');
-        putenv('DB_READ_PORT');
-        putenv('DB_STICKY');
-        putenv('DB_HOST');
-        putenv('DB_PORT');
+        foreach ($this->restore as $key => [$env, $server, $putenv]) {
+            $this->forgetEnv($key);
+
+            if ($env !== null) {
+                $_ENV[$key] = $env;
+            }
+            if ($server !== null) {
+                $_SERVER[$key] = $server;
+            }
+            if ($putenv !== false) {
+                putenv("{$key}={$putenv}");
+            }
+        }
 
         parent::tearDown();
+    }
+
+    /**
+     * All three layers, not just putenv().
+     *
+     * Laravel reads env() through a repository whose adapters are $_SERVER,
+     * $_ENV and getenv(), in that order, and Dotenv populates all three from
+     * the .env file. `putenv('KEY')` clears only the last of them — so a test
+     * that unsets a variable that way still reads whatever .env said, and the
+     * CI test job runs against a copy of the production .env
+     * (.gitlab/ci/integrationtest.yml). The moment DB_READ_HOST is set there,
+     * {@see testWithoutAReadHostTheConnectionIsUnsplit} would be asserting the
+     * opposite of what it says, in CI only.
+     */
+    private function forgetEnv(string $key): void
+    {
+        unset($_ENV[$key], $_SERVER[$key]);
+        putenv($key);
+    }
+
+    private function setEnv(string $key, string $value): void
+    {
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
+        putenv("{$key}={$value}");
     }
 
     /**
@@ -46,7 +97,7 @@ class DatabaseReadReplicaConfigTest extends TestCase
     private function pgsqlConfigWith(array $env): array
     {
         foreach ($env as $key => $value) {
-            putenv("{$key}={$value}");
+            $this->setEnv($key, $value);
         }
 
         $config = require base_path('config/database.php');

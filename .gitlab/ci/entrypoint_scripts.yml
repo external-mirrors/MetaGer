@@ -1,0 +1,21 @@
+# The entrypoint scripts are the container's PID 1. Nothing else in the pipeline
+# exercises them: they are ADDed into the fpm image, so a mistake here builds
+# clean, deploys clean, and then shows up as a pod that will not stay up — or
+# worse, as one Kubernetes calls healthy while no work is being done. Their
+# tests run before anything is built, like the chart and deployment-script
+# checks, because that is cheaper than an image build to discover.
+#
+# $DEPLOY_KUBERNETES_IMAGE is alpine, so the tests are written against busybox:
+# no GNU-only flags, and nothing that depends on `timeout`'s exit status (124
+# under coreutils, 143 under busybox).
+entrypoint_scripts:
+  stage: build_dependency_images
+  image: $DEPLOY_KUBERNETES_IMAGE
+  tags:
+    - kubernetes
+  needs: []
+  script:
+    - build/fpm/entrypoint/tests/run.sh
+  rules:
+    - changes:
+        - build/fpm/entrypoint/**/*

@@ -73,6 +73,29 @@ return [
             'connection' => env('REDIS_CACHE_CONNECTION', 'default'),
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
         ],
+
+        /*
+         * The same Redis, over the fetch worker's bounded connection.
+         *
+         * `requests:fetcher` caches each engine's response body as it reads it
+         * (RequestFetcher::readMultiCurl). That write is on the store, not the
+         * Redis facade, so pointing the worker's own calls at the 'fetcher'
+         * connection would have left this one on 'default' — and one call in
+         * the loop that can block for ever is all it takes to wedge the loop.
+         * The Cache::put is already wrapped in a try/catch, which catches an
+         * exception and does nothing at all for a hang.
+         *
+         * `prefix` is global to the cache config rather than per store, so
+         * these are the same keys the result page reads back through the
+         * default store (EngineOrchestrator::cachedBodies -> Cache::many).
+         * Same server, same database, same keys — only the socket options
+         * differ.
+         */
+        'fetcher' => [
+            'driver' => env('REDIS_CACHE_DRIVER', 'redis'),
+            'connection' => 'fetcher',
+            'lock_connection' => 'fetcher',
+        ],
         'dynamodb' => [
             'driver' => 'dynamodb',
             'key' => env('AWS_ACCESS_KEY_ID'),

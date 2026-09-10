@@ -56,7 +56,26 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
-          command: ["/usr/local/bin/php"]
+          # Not php directly: php-daemon runs it as a child and translates the
+          # stop signal (build/fpm/entrypoint/php_daemon.sh).
+          #
+          # The CRI stops a container with the *image's* STOPSIGNAL, not with
+          # SIGTERM — this image inherits SIGQUIT from php-fpm, where it is the
+          # graceful stop and therefore the right default for the fpm container
+          # and the wrong one here. Reverb's StartServer subscribes to SIGINT,
+          # SIGTERM and SIGTSTP, and PID 1 has no default action applied for a
+          # signal it does not handle, so the SIGQUIT it was actually sent did
+          # nothing whatsoever. Every reverb pod then sat in Terminating for the
+          # full terminationGracePeriodSeconds below and was SIGKILLed —
+          # measured at 301s in production on 2026-09-10, with the websockets
+          # never closed and "Gracefully terminating connections." never
+          # reaching the log.
+          #
+          # `lifecycle.stopSignal: SIGTERM` would say this declaratively and is
+          # the better answer once it can be used: the field exists on 1.35 but
+          # the ContainerStopSignals gate is off here, and a spec carrying it
+          # comes back from a server dry-run with the field stripped. Silently.
+          command: ["/usr/local/bin/php-daemon"]
           args: ["artisan", "reverb:start", "--port=8081"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:

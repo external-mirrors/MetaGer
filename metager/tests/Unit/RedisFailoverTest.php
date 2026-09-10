@@ -8,6 +8,8 @@ use Predis\Connection\ConnectionException;
 use Predis\Connection\NodeConnectionInterface;
 use Predis\Connection\Resource\Exception\StreamInitException;
 use Predis\Response\ServerException;
+use Predis\TimeoutException;
+use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 
 /**
@@ -29,6 +31,11 @@ class RedisFailoverTest extends TestCase
             $this->createMock(NodeConnectionInterface::class),
             'Error while reading line from the server.'
         );
+    }
+
+    private function timeoutException(): TimeoutException
+    {
+        return new TimeoutException($this->createMock(NodeConnectionInterface::class));
     }
 
     /**
@@ -118,6 +125,97 @@ class RedisFailoverTest extends TestCase
         });
 
         $this->assertSame(2, $attempts);
+    }
+
+    /**
+     * The shape a Valkey master produces when its node dies outright rather
+     * than being drained: the pod goes without a preStop hook, so nothing
+     * closes the socket and nothing sends an RST. Reads into it simply never
+     * answer.
+     *
+     * There is no such exception on the `default` connection, whose
+     * read_write_timeout is -1 — that read blocks for ever, which is how the
+     * fetch worker wedged on 2026-09-10. It only becomes a retryable error at
+     * all because RequestFetcher::REDIS_CONNECTION bounds the read; see
+     * FetcherRedisConnectionTest.
+     */
+    public function testATimedOutReadIsRetried(): void
+    {
+        $attempts = 0;
+
+        $result = RedisFailover::retry(function () use (&$attempts) {
+            $attempts++;
+            if ($attempts === 1) {
+                throw $this->timeoutException();
+            }
+
+            return 'written';
+        });
+
+        $this->assertSame('written', $result);
+        $this->assertSame(2, $attempts, 'a read that timed out should be retried on a fresh connection');
+    }
+
+    /**
+     * Giving up must still drop the socket.
+     *
+     * For a request this barely matters, since the process is about to end. For
+     * a long-lived daemon it is the whole difference between recovering and
+     * not: the manager pools the connection, so the next loop iteration would
+     * make its calls on the same dead socket, time out again, give up again,
+     * for ever. That is what turned one lost Valkey master into fifteen minutes
+     * of empty result pages on 2026-09-10 — and it is reachable precisely when
+     * a single timeout is longer than the whole budget, which is the normal
+     * case for a bounded read timeout.
+     */
+    public function testGivingUpStillDropsTheConnection(): void
+    {
+        $disconnects = [];
+
+        Redis::swap(new class ($disconnects) {
+            /** @param array<int, string|null> $disconnects */
+            public function __construct(private array &$disconnects) {}
+
+            public function connection(?string $name = null): mixed
+            {
+                return new class ($this->disconnects, $name) {
+                    /** @param array<int, string|null> $disconnects */
+                    public function __construct(private array &$disconnects, private ?string $name) {}
+
+                    public function client(): mixed
+                    {
+                        return new class ($this->disconnects, $this->name) {
+                            /** @param array<int, string|null> $disconnects */
+                            public function __construct(private array &$disconnects, private ?string $name) {}
+
+                            public function disconnect(): void
+                            {
+                                $this->disconnects[] = $this->name;
+                            }
+                        };
+                    }
+                };
+            }
+        });
+
+        try {
+            RedisFailover::retry(
+                fn() => throw $this->timeoutException(),
+                // Shorter than a single attempt would take in production, which
+                // is the point: the budget is gone before any retry is possible.
+                0.01,
+                'fetcher'
+            );
+            $this->fail('a persistent timeout should still have been rethrown');
+        } catch (TimeoutException $expected) {
+            // The rethrow is covered elsewhere; what matters is the side effect.
+        }
+
+        $this->assertSame(
+            ['fetcher'],
+            $disconnects,
+            'the connection must be dropped on the way out, and it must be the named one'
+        );
     }
 
     /**

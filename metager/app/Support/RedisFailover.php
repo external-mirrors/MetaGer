@@ -92,19 +92,29 @@ class RedisFailover
                     throw $e;
                 }
 
+                // The connection is pinned to a node that just stopped being
+                // the master. Dropping it is the point of the retry: a fresh
+                // one is routed by HAProxy again, which by now has seen the
+                // promotion. Retrying on the same socket would only collect
+                // the same -READONLY.
+                //
+                // Done *before* the budget check, so giving up drops the
+                // socket too. For a request that hardly matters — the process
+                // is about to end. For a long-lived daemon it is the difference
+                // between recovering and not: a connection this failed on is
+                // not going to start working, and the manager pools it, so
+                // whatever the next loop iteration does would inherit it. The
+                // fetch worker hit exactly that on 2026-09-10 — one timeout
+                // exhausts a budget shorter than the timeout, so every retry
+                // afterwards would have been made on the same dead socket.
+                self::reconnect($connection);
+
                 // Sleeping past the deadline and trying anyway would make the
                 // budget a lie, so the last attempt is the one that still fits.
                 $remaining = $deadline - microtime(true);
                 if ($remaining <= $backoff / 1000000) {
                     throw $e;
                 }
-
-                // The connection is pinned to a node that just stopped being
-                // the master. Dropping it is the point of the retry: a fresh
-                // one is routed by HAProxy again, which by now has seen the
-                // promotion. Retrying on the same socket would only collect
-                // the same -READONLY.
-                self::reconnect($connection);
 
                 usleep($backoff);
                 $backoff *= 2;

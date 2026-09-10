@@ -7,12 +7,14 @@ use App\Models\Authorization\LogsAuthGuard;
 use App\Models\Authorization\LogsUser;
 use App\Models\Logs\LogsAccountProvider;
 use App\Localization\MetaGerLocalization;
+use App\Queue\FailoverRedisConnector;
 use App\Routing\CookieCarryingUrlGenerator;
 use App\Support\Browser;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 use App\Support\UpstreamUserAgent;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Request;
@@ -123,6 +125,50 @@ class AppServiceProvider extends ServiceProvider
                 'persistent_connections' => false
             ]
         );
+
+        /*
+         * The Redis queue, built to survive a Valkey failover.
+         *
+         * Registered over the framework's own `redis` connector rather than
+         * under a driver name of its own, so config/queue.php cannot opt out of
+         * it by accident. See App\Queue\FailoverRedisQueue for what a failover
+         * does to an unwrapped `queue:work`.
+         *
+         * In boot() rather than register(): every provider's register() has run
+         * by now, including QueueServiceProvider's, so this replaces its
+         * connector instead of racing it — and nothing resolves a queue
+         * connection that early, so no already-built queue survives the swap.
+         */
+        Queue::extend('redis', function () {
+            return new FailoverRedisConnector($this->app['redis']);
+        });
+
+        /*
+         * Stop the workers polling the application cache in their loop.
+         *
+         * Worker::daemon reaches the cache twice per iteration even with an
+         * empty queue: getNextJob() asks which queues are paused (a many() over
+         * the cache store) and stopIfNecessary() reads
+         * `illuminate:queue:restart`. Both go to the *cache* connection — the
+         * shared, 35s-bounded one, which cannot be tightened because the same
+         * connection carries AnonymousToken's 30s payment wait — and neither is
+         * covered by App\Queue\FailoverRedisQueue, which only wraps pop(). Two
+         * calls per iteration that a failover can hang, on a socket nothing
+         * drops.
+         *
+         * They buy signals nothing here sends: `queue:restart` and
+         * `queue:pause` appear nowhere in this repo, in the chart or in CI. The
+         * workers are recycled by --max-time inside their supervisor
+         * (build/fpm/entrypoint/queue_worker.sh) and replaced by rolling the
+         * Deployment. Turning the polling off leaves pop() as the only Redis
+         * call the broadcast worker's loop makes, which is what lets that one
+         * wrapper be the whole fix, and takes the database worker's loop off
+         * Redis entirely.
+         *
+         * Re-enabling it means those two commands start working again — and the
+         * loops start depending on the shared connection again.
+         */
+        Queue::withoutInterruptionPolling();
 
         $this->app->bind(LogsUser::class, function ($app) {
             return new LogsUser();

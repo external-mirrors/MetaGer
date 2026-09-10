@@ -34,7 +34,17 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
-          command: ["/usr/local/bin/php"]
+          # Not php directly: php-daemon runs it as a child and forwards SIGTERM
+          # (build/fpm/entrypoint/php_daemon.sh).
+          #
+          # A container in this image is stopped with the image's STOPSIGNAL —
+          # SIGQUIT, from php-fpm — not with SIGTERM. This command does exit on
+          # it, but only incidentally: Symfony's signal registration exits 0 the
+          # moment it arrives, with no chance for the fetches in flight to be delivered. The grace
+          # period below is what that costs. Run as a child it receives SIGTERM
+          # instead, which is the signal a Laravel command is written to handle,
+          # and the same wrapper stops reverb hanging outright (2026-09-10).
+          command: ["/usr/local/bin/php-daemon"]
           args: ["artisan", "requests:fetcher"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
@@ -45,24 +55,63 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          # The backstop, not the failover mechanism.
+          #
+          # A node drain happens several times a week, so the worker survives a
+          # Valkey promotion on its own: RequestFetcher::REDIS_CONNECTION bounds
+          # the read timeout, so a master that vanishes without closing its
+          # sockets raises Predis\TimeoutException instead of blocking for ever,
+          # and App\Support\RedisFailover drops the socket and reconnects
+          # through the master proxy. Measured at 3.6s from black-holing the
+          # master's socket to the fetch loop running again, no restart
+          # involved. Being restarted by a probe on every drain is not an
+          # answer.
+          #
+          # What these probes are for is the hang that mechanism does not reach.
+          # They are still not pgrep: `pgrep -f requests:fetcher` proves a
+          # process exists, and this worker's characteristic failure is a
+          # process that exists and has stopped working. It passed throughout
+          # the outage of 2026-09-10 — mailu's drain hit a CephFS kernel panic,
+          # the node rebooted instantly, and the worker sat in a dead socket
+          # while fetcher.queue grew to ~1200 missions and every search rendered
+          # empty for fifteen minutes. Single replica, so that one process was
+          # all of search.
+          #
+          # fetcher:healthcheck reads the heartbeat the loop stamps at the top of
+          # every iteration, so it fails whichever call inside the loop is the
+          # one hanging. See App\Support\FetcherHeartbeat for the tolerance and
+          # why it is deliberately loose.
+          #
+          # timeoutSeconds is set explicitly because the default is 1s: the
+          # command takes ~130ms, but its own Redis read can take up to the
+          # bounded timeout, and that should be reported as the failure it is
+          # rather than as a probe that ran out of time.
           livenessProbe:
             exec:
-              command:
-              - pgrep
-              - -f
-              - requests:fetcher
+              command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          # Nothing routes traffic here — no Service selects these pods — so
+          # readiness is not about load balancing. It is kept because
+          # `helm upgrade --wait` gates on it: a fetcher that comes up unable to
+          # reach Redis should fail the deploy rather than sit there silently
+          # not fetching.
           readinessProbe:
             exec:
-              command:
-              - pgrep
-              - -f
-              - requests:fetcher
+              command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          # The first stamp lands on the first loop iteration, which is
+          # immediate — but handle() retries Redis up to ten times before
+          # reaching the loop, and the Laravel boot itself takes a moment.
           startupProbe:
             exec:
-              command:
-              - pgrep
-              - -f
-              - requests:fetcher
+              command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 24
           resources:
             requests:
               {{- toYaml .Values.resources.requests.worker | nindent 14 }}

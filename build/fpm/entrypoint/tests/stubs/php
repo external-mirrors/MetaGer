@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+#
+# Stands in for `php` so queue_worker.sh can be tested without a PHP toolchain,
+# a database or a queue. The supervisor calls `php` unqualified, so putting this
+# first on PATH is enough.
+#
+# Behaviour is driven by the environment:
+#
+#   STUB_ARGV_FILE      one line appended per invocation, holding the full argv
+#   STUB_RUN_SECONDS    how long to stay up before exiting on its own, standing
+#                       in for a --max-time recycle
+#   STUB_EXIT_STATUS    what to exit with when that time is up
+#   STUB_DRAIN_SECONDS  how long to keep running after SIGTERM, standing in for
+#                       queue:work finishing the job in hand
+#   STUB_EVENT_FILE     one line appended per lifecycle event, so a test can
+#                       assert on the order signals and exits happened in
+#   STUB_SIGNAL_PARENT  a signal to send back to the caller once the trap below
+#                       is installed, so a test can drive a wrapper that is
+#                       running in the *foreground*
+#
+# That last one exists because of how a shell treats asynchronous commands.
+# POSIX has it set SIGINT and SIGQUIT to SIG_IGN for anything started with `&`,
+# and a signal ignored on entry to a shell cannot be trapped or reset — so a
+# backgrounded wrapper cannot be tested with SIGQUIT at all, and would look
+# broken while being perfectly correct. `set -m` only avoids that where job
+# control can really be established, which needs a controlling terminal that
+# neither `docker run` nor CI has (measured: SigIgn 0x4 on the child under
+# alpine, with `$-` still reporting `m`). Signalling from here instead lets the
+# wrapper run in the foreground with the default dispositions it has as PID 1.
+set -uo pipefail
+
+event() { [[ -n "${STUB_EVENT_FILE:-}" ]] && printf '%s\n' "$1" >>"$STUB_EVENT_FILE"; return 0; }
+
+printf '%s\n' "$*" >>"${STUB_ARGV_FILE:-/dev/null}"
+event "started"
+
+_term() {
+    event "term-received"
+    sleep "${STUB_DRAIN_SECONDS:-0}"
+    event "drained"
+    exit 0
+}
+
+trap _term SIGTERM
+
+if [[ -n "${STUB_SIGNAL_PARENT:-}" ]]; then
+    # After the trap, so the signal cannot beat it. Delayed a second for the
+    # same reason on the other side: the wrapper starts this process and records
+    # its pid on the next line, and a signal landing between the two would find
+    # nothing to forward to.
+    (sleep 1; kill -s "$STUB_SIGNAL_PARENT" "$PPID" 2>/dev/null) &
+fi
+
+# Backgrounded so the trap runs promptly: a foreground `sleep` in bash is only
+# interrupted once it returns, which would hide a supervisor that signals late.
+sleep "${STUB_RUN_SECONDS:-1}" &
+wait $!
+
+event "self-exit"
+exit "${STUB_EXIT_STATUS:-0}"

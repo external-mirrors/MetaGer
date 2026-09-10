@@ -63,11 +63,36 @@ return [
             'after_commit' => false,
         ],
 
+        /*
+         * Drained by chart/templates/deployment-queue.yaml's `queue-broadcasts`
+         * container, and — via config/broadcasting.php's `queue_connection` —
+         * the only thing pushed onto it is a ShouldBroadcast event.
+         *
+         * Built by App\Queue\FailoverRedisConnector, not the framework's, so a
+         * Valkey failover costs the worker a reconnect rather than its loop.
+         * See App\Queue\FailoverRedisQueue.
+         */
         'redis' => [
             'driver' => 'redis',
-            'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
+            /*
+             * Its own Redis connection, not the shared one. A daemon holding a
+             * socket for the life of the pod needs a read timeout measured in
+             * seconds; the default connection has to stay slack enough for
+             * AnonymousToken's 30s payment wait. config/database.php has the
+             * full reasoning on both.
+             */
+            'connection' => env('REDIS_QUEUE_CONNECTION', 'queue'),
             'queue' => env('REDIS_QUEUE', 'default'),
             'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 90),
+            /*
+             * Stays null, and not only as a default. A non-null value makes
+             * RedisQueue::retrieveNextJob() blpop for that many seconds, and
+             * the 'queue' connection's read timeout is 3s — so anything at or
+             * above it would abort every single poll with a
+             * Predis\TimeoutException while the client was waiting exactly as
+             * configured. Polling with an eval per --sleep interval costs one
+             * round trip a second, which for this queue is nothing.
+             */
             'block_for' => null,
             'after_commit' => false,
         ],

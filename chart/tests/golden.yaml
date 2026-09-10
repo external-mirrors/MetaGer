@@ -627,9 +627,11 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           image: "registry.metager.de/open-source/metager/fpm:golden"
-          command: ["/usr/local/bin/php"]
-          # --max-time recycles the process every 5 minutes. The point is not
-          # memory: it is that this is a long-lived daemon holding one PDO
+          # Not php directly: queue-worker is a supervisor that runs
+          # `artisan queue:work` in a loop (build/fpm/entrypoint/queue_worker.sh).
+          #
+          # --max-time recycles the *worker process* every 5 minutes. The point
+          # is not memory: it is that this is a long-lived daemon holding one PDO
           # connection, and nothing inside a held connection can notice a
           # Postgres primary changing under it. After a CNPG failover the worker
           # keeps the socket to the old primary; the database queue driver opens
@@ -637,11 +639,17 @@ spec:
           # desyncs from PDO's state every subsequent pop() throws "There is
           # already an active transaction" forever — reported to GlitchTip once
           # a second, with pgrep still passing so k8s never restarts it (issue
-          # 1387, the cluster outage of 2026-09-09). max-time is a clean
-          # self-exit after the current job, so it bounds that wedge to ~5min
-          # and picks up the new primary on the next start. A real
-          # progress-based probe is the proper fix and is still owed.
-          args: ["artisan", "queue:work", "--backoff=60", "--tries=5", "--sleep=1", "--max-time=300", "--queue=donations,default,general"]
+          # 1387, the cluster outage of 2026-09-09).
+          #
+          # The supervisor is what keeps that recycle from being a container
+          # restart. Run as the container's own process, the self-exit was paced
+          # by CrashLoopBackOff like any other exit — 301s of work, then 81-95s
+          # of backoff, measured in production on 2026-09-10. That is no worker
+          # at all for ~22% of the time and ten restarts an hour per container,
+          # reported as "Back-off restarting failed container" for a worker that
+          # exited 0. Recycling inside the container costs neither.
+          command: ["/usr/local/bin/queue-worker"]
+          args: ["--backoff=60", "--tries=5", "--sleep=1", "--max-time=300", "--queue=donations,default,general"]
           imagePullPolicy: IfNotPresent
           env:
           - name: APP_ENV
@@ -704,10 +712,18 @@ spec:
             mountPath: /metager/metager_app/database/databases
           - name: fast-logs
             mountPath: /metager/metager_app/storage/metager/fast_dir
-          # Unchanged from the sidecar. pgrep only proves the process exists, not
-          # that it is draining anything — a queue worker has no equivalent of
-          # the scheduler's heartbeat to check against. Until it grows one, the
-          # --max-time above is what bounds an alive-but-wedged worker.
+          # pgrep only proves a worker process exists, not that it is draining
+          # anything — a queue worker has no equivalent of the scheduler's
+          # heartbeat to check against, and the wedge above does not stop the
+          # worker's loop (pop() throws, gets reported, sleeps a second and
+          # continues), so a probe hung off Looping would keep passing too.
+          # Until one exists that keys off consecutive pop failures, the
+          # --max-time recycle is what bounds an alive-but-wedged worker.
+          #
+          # Matches the worker process, not the supervisor: "queue-worker" does
+          # not contain "queue:work", so this asks about the thing that does the
+          # work. The sub-second gap between one worker exiting and the next
+          # starting is covered by failureThreshold 3 at a 10s period.
           livenessProbe:
             exec:
               command:
@@ -737,12 +753,20 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           image: "registry.metager.de/open-source/metager/fpm:golden"
-          command: ["/usr/local/bin/php"]
-          # --max-time for the same reason as the worker above, minus the PDO
-          # part: this one holds a Predis connection through a Valkey failover
-          # instead. Recycling bounds anything that wedge could produce, and a
-          # broadcast worker has nothing in flight worth protecting.
-          args: ["artisan", "queue:work", "redis", "--tries=1", "--sleep=1", "--max-time=300", "--queue=broadcasts"]
+          # --max-time, and the supervisor that absorbs it, for the same reasons
+          # as the worker above — minus the PDO part: this one holds a Predis
+          # connection through a Valkey failover instead.
+          #
+          # That wedge is fixed in the application now, not bounded here. The
+          # `redis` queue connection has its own bounded Redis connection and is
+          # built by App\Queue\FailoverRedisConnector, so a failover costs this
+          # worker a reconnect inside one pop rather than up to five minutes of
+          # undelivered balance updates (config/queue.php, config/database.php).
+          # The recycle stays as the backstop for whatever that does not
+          # anticipate — a broadcast worker has nothing in flight worth
+          # protecting, so restarting it is close to free.
+          command: ["/usr/local/bin/queue-worker"]
+          args: ["redis", "--tries=1", "--sleep=1", "--max-time=300", "--queue=broadcasts"]
           imagePullPolicy: IfNotPresent
           env:
           - name: APP_ENV
@@ -811,6 +835,13 @@ spec:
             mountPath: /metager/metager_app/storage/metager/fast_dir
           # Containers in a pod do not share a PID namespace unless asked to, so
           # each of these two pgreps sees only its own worker.
+          #
+          # Still pgrep and not a progress probe, for the reason given next door:
+          # a wedged worker's loop keeps running. What makes that acceptable here
+          # rather than merely bounded is that this worker's only Redis call is a
+          # pop that reconnects itself — see App\Queue\FailoverRedisQueue, and
+          # Tests\Unit\QueueRedisConnectionTest for why pop() being the whole
+          # loop is a pinned invariant and not an accident.
           livenessProbe:
             exec:
               command:
@@ -912,7 +943,26 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           image: "registry.metager.de/open-source/metager/fpm:golden"
-          command: ["/usr/local/bin/php"]
+          # Not php directly: php-daemon runs it as a child and translates the
+          # stop signal (build/fpm/entrypoint/php_daemon.sh).
+          #
+          # The CRI stops a container with the *image's* STOPSIGNAL, not with
+          # SIGTERM — this image inherits SIGQUIT from php-fpm, where it is the
+          # graceful stop and therefore the right default for the fpm container
+          # and the wrong one here. Reverb's StartServer subscribes to SIGINT,
+          # SIGTERM and SIGTSTP, and PID 1 has no default action applied for a
+          # signal it does not handle, so the SIGQUIT it was actually sent did
+          # nothing whatsoever. Every reverb pod then sat in Terminating for the
+          # full terminationGracePeriodSeconds below and was SIGKILLed —
+          # measured at 301s in production on 2026-09-10, with the websockets
+          # never closed and "Gracefully terminating connections." never
+          # reaching the log.
+          #
+          # `lifecycle.stopSignal: SIGTERM` would say this declaratively and is
+          # the better answer once it can be used: the field exists on 1.35 but
+          # the ContainerStopSignals gate is off here, and a spec carrying it
+          # comes back from a server dry-run with the field stripped. Silently.
+          command: ["/usr/local/bin/php-daemon"]
           args: ["artisan", "reverb:start", "--port=8081"]
           imagePullPolicy: IfNotPresent
           env:
@@ -1117,7 +1167,17 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           image: "registry.metager.de/open-source/metager/fpm:golden"
-          command: ["/usr/local/bin/php"]
+          # Not php directly: php-daemon runs it as a child and forwards SIGTERM
+          # (build/fpm/entrypoint/php_daemon.sh).
+          #
+          # A container in this image is stopped with the image's STOPSIGNAL —
+          # SIGQUIT, from php-fpm — not with SIGTERM. This command does exit on
+          # it, but only incidentally: Symfony's signal registration exits 0 the
+          # moment it arrives, with no chance for a running scheduled task to finish. The grace
+          # period below is what that costs. Run as a child it receives SIGTERM
+          # instead, which is the signal a Laravel command is written to handle,
+          # and the same wrapper stops reverb hanging outright (2026-09-10).
+          command: ["/usr/local/bin/php-daemon"]
           args: ["artisan", "schedule:work-mg"]
           imagePullPolicy: IfNotPresent
           env:
@@ -1279,7 +1339,17 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           image: "registry.metager.de/open-source/metager/fpm:golden"
-          command: ["/usr/local/bin/php"]
+          # Not php directly: php-daemon runs it as a child and forwards SIGTERM
+          # (build/fpm/entrypoint/php_daemon.sh).
+          #
+          # A container in this image is stopped with the image's STOPSIGNAL —
+          # SIGQUIT, from php-fpm — not with SIGTERM. This command does exit on
+          # it, but only incidentally: Symfony's signal registration exits 0 the
+          # moment it arrives, with no chance for the fetches in flight to be delivered. The grace
+          # period below is what that costs. Run as a child it receives SIGTERM
+          # instead, which is the signal a Laravel command is written to handle,
+          # and the same wrapper stops reverb hanging outright (2026-09-10).
+          command: ["/usr/local/bin/php-daemon"]
           args: ["artisan", "requests:fetcher"]
           imagePullPolicy: IfNotPresent
           env:
@@ -1325,24 +1395,63 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          # The backstop, not the failover mechanism.
+          #
+          # A node drain happens several times a week, so the worker survives a
+          # Valkey promotion on its own: RequestFetcher::REDIS_CONNECTION bounds
+          # the read timeout, so a master that vanishes without closing its
+          # sockets raises Predis\TimeoutException instead of blocking for ever,
+          # and App\Support\RedisFailover drops the socket and reconnects
+          # through the master proxy. Measured at 3.6s from black-holing the
+          # master's socket to the fetch loop running again, no restart
+          # involved. Being restarted by a probe on every drain is not an
+          # answer.
+          #
+          # What these probes are for is the hang that mechanism does not reach.
+          # They are still not pgrep: `pgrep -f requests:fetcher` proves a
+          # process exists, and this worker's characteristic failure is a
+          # process that exists and has stopped working. It passed throughout
+          # the outage of 2026-09-10 — mailu's drain hit a CephFS kernel panic,
+          # the node rebooted instantly, and the worker sat in a dead socket
+          # while fetcher.queue grew to ~1200 missions and every search rendered
+          # empty for fifteen minutes. Single replica, so that one process was
+          # all of search.
+          #
+          # fetcher:healthcheck reads the heartbeat the loop stamps at the top of
+          # every iteration, so it fails whichever call inside the loop is the
+          # one hanging. See App\Support\FetcherHeartbeat for the tolerance and
+          # why it is deliberately loose.
+          #
+          # timeoutSeconds is set explicitly because the default is 1s: the
+          # command takes ~130ms, but its own Redis read can take up to the
+          # bounded timeout, and that should be reported as the failure it is
+          # rather than as a probe that ran out of time.
           livenessProbe:
             exec:
-              command:
-              - pgrep
-              - -f
-              - requests:fetcher
+              command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          # Nothing routes traffic here — no Service selects these pods — so
+          # readiness is not about load balancing. It is kept because
+          # `helm upgrade --wait` gates on it: a fetcher that comes up unable to
+          # reach Redis should fail the deploy rather than sit there silently
+          # not fetching.
           readinessProbe:
             exec:
-              command:
-              - pgrep
-              - -f
-              - requests:fetcher
+              command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          # The first stamp lands on the first loop iteration, which is
+          # immediate — but handle() retries Redis up to ten times before
+          # reaching the loop, and the Laravel boot itself takes a moment.
           startupProbe:
             exec:
-              command:
-              - pgrep
-              - -f
-              - requests:fetcher
+              command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 24
           resources:
             requests:
               cpu: 250m

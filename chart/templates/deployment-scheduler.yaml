@@ -52,7 +52,17 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
-          command: ["/usr/local/bin/php"]
+          # Not php directly: php-daemon runs it as a child and forwards SIGTERM
+          # (build/fpm/entrypoint/php_daemon.sh).
+          #
+          # A container in this image is stopped with the image's STOPSIGNAL —
+          # SIGQUIT, from php-fpm — not with SIGTERM. This command does exit on
+          # it, but only incidentally: Symfony's signal registration exits 0 the
+          # moment it arrives, with no chance for a running scheduled task to finish. The grace
+          # period below is what that costs. Run as a child it receives SIGTERM
+          # instead, which is the signal a Laravel command is written to handle,
+          # and the same wrapper stops reverb hanging outright (2026-09-10).
+          command: ["/usr/local/bin/php-daemon"]
           args: ["artisan", "schedule:work-mg"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:

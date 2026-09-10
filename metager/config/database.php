@@ -189,8 +189,44 @@ return [
 
         'client' => env('REDIS_CLIENT', 'predis'),
 
+        /*
+         * Bounded, but only just — this has to clear the longest blocking read
+         * anyone makes on it.
+         *
+         * That is AnonymousToken::PAYMENT_WAIT_SECONDS (30s); after it come the
+         * 10s brpops in Suggestions, KeyAuthorization, PayPal and CiviCrm, and
+         * EngineOrchestrator's WAIT_SECONDS on the result page. A timeout under
+         * any of those would abort a caller that was waiting exactly as
+         * intended, which is why this cannot simply be tightened to match the
+         * 'fetcher' connection below.
+         *
+         * It used to be -1: block in the socket read for ever. `read_write_timeout`
+         * governs waiting for a *reply*, so that applied to every command, not
+         * just the blocking ones — a plain GET on a socket whose peer has
+         * vanished never returns either.
+         *
+         * What made that survivable for web traffic is php-fpm's
+         * `request_terminate_timeout = 30` (build/fpm/configuration/fpm/
+         * www_01_production.conf), which kills the child. Note what does *not*
+         * help: `max_execution_time` explicitly does not count time spent in
+         * stream operations, and nginx's `fastcgi_read_timeout 900` only makes
+         * nginx stop waiting — the fpm child carries on holding its pool slot.
+         * And the development pool sets `request_terminate_timeout = 0`, so on
+         * metager3.de and the review environments nothing collected those
+         * requests at all.
+         *
+         * 35s therefore changes nothing for production web traffic, which fpm
+         * already bounds five seconds earlier. What it removes is "for ever" for
+         * everything that is not an fpm request: the broadcast queue worker, the
+         * scheduler between its connection purges, and any future daemon that
+         * reaches for the default connection. Finite is the difference between
+         * a wedge that ends and one that does not.
+         *
+         * It is not a substitute for what a long-lived consumer needs — see the
+         * 'fetcher' connection below, and the note there about the retry budget.
+         */
         'default' => [
-            'read_write_timeout' => -1,
+            'read_write_timeout' => env('REDIS_READ_TIMEOUT', 35),
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
@@ -198,7 +234,90 @@ return [
             'cluster' => false,
         ],
 
+        /*
+         * The fetch worker's own connection: same server, bounded timeouts.
+         *
+         * `requests:fetcher` is a single-replica daemon that loops on Redis for
+         * the life of the pod, and it is the whole of MetaGer's search — if it
+         * stops consuming, every result page renders empty. On 2026-09-10 a
+         * node's container runtime died, taking the Valkey master pod with it
+         * without a preStop hook and so without closing its sockets. The
+         * worker's blpop went into a socket that would never answer and never
+         * be reset, and with read_write_timeout -1 it blocked there for ever:
+         * no exception, so App\Support\RedisFailover never saw a failover to
+         * retry, and the loop never came back round. The process stayed alive,
+         * so `pgrep` reported it healthy. Search was down for fifteen minutes.
+         *
+         * Node drains are routine — several a week — so this has to be survived
+         * rather than detected. The worker can afford what the connection above
+         * cannot: its only blocking call is `blpop(FETCHQUEUE_KEY, 1)`, a
+         * one-second wait, so a read timeout a few times that is pure upside.
+         * A peer that has stopped answering now surfaces as
+         * Predis\TimeoutException — a CommunicationException, which
+         * RedisFailover already treats as a failover — and the retry drops the
+         * socket and reconnects through the master proxy, which by then has
+         * seen the promotion.
+         *
+         * Tunable by env without a deploy, in case a briefly slow Valkey ever
+         * makes this flap: every timeout costs a reconnect.
+         */
+        'fetcher' => [
+            'read_write_timeout' => env('REDIS_FETCHER_READ_TIMEOUT', 3.0),
+            // Bounded too, and much tighter. This is only ever paid on a
+            // reconnect, which is exactly when the far side may be gone: the
+            // Predis default of 5s would make recovering from a dead master
+            // slower than noticing it.
+            'timeout' => env('REDIS_FETCHER_CONNECT_TIMEOUT', 1.0),
+            'host' => env('REDIS_HOST', 'localhost'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => 0,
+            'cluster' => false,
+        ],
+
+        /*
+         * The queue workers' own connection, for the same reason as the
+         * fetcher's: a `queue:work` daemon resolves one Redis connection at
+         * startup and holds its socket for the life of the pod.
+         *
+         * Only the broadcast worker reaches it today — QUEUE_CONNECTION is
+         * unset in production, so the application default is `database`, and
+         * config/broadcasting.php names `redis` for broadcasts alone. That
+         * worker's whole job is delivering a balance the user is watching
+         * update, so 35s of silence per pop is not a bound worth having.
+         *
+         * Tighter than the shared connection is only safe because the queue
+         * driver makes no blocking read: config/queue.php pins `block_for` to
+         * null, so retrieveNextJob() polls with an eval and never blpops. That
+         * pairing is load-bearing — see Tests\Unit\QueueRedisConnectionTest,
+         * which fails if either half moves.
+         */
+        'queue' => [
+            'read_write_timeout' => env('REDIS_QUEUE_READ_TIMEOUT', 3.0),
+            // Paid only on a reconnect, which is exactly when the far side may
+            // be gone; Predis' 5s default would make recovering from a dead
+            // master slower than noticing it.
+            'timeout' => env('REDIS_QUEUE_CONNECT_TIMEOUT', 1.0),
+            'host' => env('REDIS_HOST', 'localhost'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => 0,
+            'cluster' => false,
+        ],
+
+        // Interchangeable with 'default' by env — REDIS_CACHE_CONNECTION picks
+        // which one the cache store uses — so it carries the same bound. That
+        // matters more than it looks: the payment path reaches Redis through
+        // `config("cache.stores.redis.connection")`, so AnonymousToken's 30s
+        // blocking read lands on whichever of the two is selected.
+        //
+        // Without it this connection set no read timeout at all and inherited
+        // php.ini's default_socket_timeout instead, which is 60s and nothing to
+        // do with what any caller here intended. Unused in every deployed
+        // environment today (REDIS_CACHE_CONNECTION is 'default'), which is the
+        // only reason that was never anyone's outage.
         'cache' => [
+            'read_write_timeout' => env('REDIS_READ_TIMEOUT', 35),
             'host' => env('REDIS_CACHE_HOST', 'localhost'),
             'port' => env('REDIS_CACHE_PORT', 6379),
             'password' => env('REDIS_CACHE_PASSWORD', null),

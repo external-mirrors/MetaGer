@@ -28,6 +28,11 @@ use Tests\TestCase;
  * The assertion is on the outgoing discharge call rather than on the response,
  * because a search that fails to charge still renders a perfectly good result
  * page. That is exactly why this can be live without anything looking wrong.
+ *
+ * The call is made by `keys:settle-discharges` now, not by the request — the
+ * search writes the charge to Redis and returns. So each test settles before it
+ * looks, and what is under test is unchanged: whether the search recognised the
+ * transport and owed anything at all.
  */
 class AnonymousTokenKeyDischargeTest extends TestCase
 {
@@ -38,6 +43,9 @@ class AnonymousTokenKeyDischargeTest extends TestCase
     protected function tearDown(): void
     {
         $this->forgetSearchUserClaims(self::KEY);
+        $this->forgetSearchUserClaims("cookie-key");
+        $this->forgetSearchUserClaims("anonymous-key");
+        $this->forgetQueuedDischarges();
 
         parent::tearDown();
     }
@@ -83,6 +91,8 @@ class AnonymousTokenKeyDischargeTest extends TestCase
             . "\ndischarges  : " . json_encode($this->recordedDischargeAmounts())
         );
 
+        $this->settleQueuedDischarges();
+
         Http::assertSent(
             fn($request) => str_contains($request->url(), '/discharge'),
         );
@@ -100,6 +110,8 @@ class AnonymousTokenKeyDischargeTest extends TestCase
             ->get("/meta/meta.ger3?eingabe=kaffee&focus=web&out=json");
 
         $this->assertSame(200, $response->getStatusCode());
+
+        $this->settleQueuedDischarges();
 
         $discharges = collect(Http::recorded())
             ->filter(fn($pair) => str_contains($pair[0]->url(), '/discharge'))
@@ -128,6 +140,7 @@ class AnonymousTokenKeyDischargeTest extends TestCase
         $this->primeKey();
         $this->withUnencryptedCookie('key', self::KEY)
             ->get("/meta/meta.ger3?eingabe=kaffee-cookie&focus=web&out=json");
+        $this->settleQueuedDischarges();
         $viaCookie = $this->recordedDischargeAmounts();
 
         $this->forgetSearchUserClaims(self::KEY);
@@ -144,6 +157,7 @@ class AnonymousTokenKeyDischargeTest extends TestCase
         $this->primeKey();
         $this->withHeader('Anonymous-Token-Key', self::KEY)
             ->get("/meta/meta.ger3?eingabe=kaffee-header&focus=web&out=json");
+        $this->settleQueuedDischarges();
         $viaHeader = $this->recordedDischargeAmounts();
 
         // Both-empty would satisfy assertSame while meaning "neither transport
@@ -201,6 +215,8 @@ class AnonymousTokenKeyDischargeTest extends TestCase
             ->withHeader('Anonymous-Token-Key', $anonymousKey)
             ->get("/meta/meta.ger3?eingabe=kaffee-collision&focus=web&out=json")
             ->assertOk();
+
+        $this->settleQueuedDischarges();
 
         $charged = collect(Http::recorded())
             ->map(fn($pair) => $pair[0]->url())

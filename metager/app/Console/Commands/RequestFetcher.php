@@ -4,11 +4,13 @@ namespace App\Console\Commands;
 
 use App;
 use App\Search\Fetch\MissionOptions;
+use App\Support\RedisFailover;
 use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
 use Carbon;
+use Predis\PredisException;
 
 class RequestFetcher extends Command
 {
@@ -84,7 +86,7 @@ class RequestFetcher extends Command
 
         try {
             while (true) {
-                Redis::set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT));
+                $this->stampHealthcheck();
                 $operationsRunning = true;
                 curl_multi_exec($this->multicurl, $operationsRunning);
                 $status = $this->readMultiCurl($this->multicurl);
@@ -107,6 +109,68 @@ class RequestFetcher extends Command
             }
         } finally {
             curl_multi_close($this->multicurl);
+        }
+    }
+
+    /**
+     * Hand a finished answer to whoever is waiting for it.
+     *
+     * The one write in this loop that a search is blocked on: an fpm process is
+     * sitting in `Redis::brpop` on exactly this hash
+     * (EngineOrchestrator::waitForMainResults). Retried across a failover,
+     * because the alternative is that the upstream request was made, paid for
+     * and answered — and then thrown away because a Valkey node changed role in
+     * the milliseconds afterwards.
+     *
+     * Giving up is per answer rather than per pass. Each call is a different
+     * engine's response, and one that cannot be written back should not cost
+     * the others queued behind it in the same multicurl handle — which is what
+     * letting this propagate did, along with the process itself.
+     *
+     * A lost answer is not silent to the user, but it is survivable: the search
+     * waiting on this hash times out and renders without this engine, exactly
+     * as if the engine had been slow.
+     *
+     * `protected` for RequestFetcherFailoverTest — the write it makes is not
+     * reachable otherwise without a live curl transfer, and the failover
+     * behaviour is the whole point of the method.
+     */
+    protected function deliverAnswer(string $resulthash, string $payload): void
+    {
+        try {
+            RedisFailover::retry(fn() => Redis::pipeline(function ($pipe) use ($resulthash, $payload) {
+                $pipe->lpush($resulthash, $payload);
+                $pipe->expire($resulthash, 60);
+            }));
+        } catch (PredisException $e) {
+            Log::warning("Could not deliver a fetched answer: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Say this worker is alive, or say nothing at all.
+     *
+     * A SET, so a demoted node answers it `-READONLY` — and this runs at the
+     * top of every loop iteration, which made it the single most likely place
+     * for a Sentinel failover to end this process. Losing the process is not a
+     * restart and a shrug: the multicurl handle goes with it, so every engine
+     * response in flight is discarded, and every search waiting on one of those
+     * hashes waits out EngineOrchestrator::WAIT_SECONDS and renders without it.
+     * A drain that was supposed to cost nothing costs six seconds and a thinner
+     * result page for everyone mid-search.
+     *
+     * A missed stamp is worth nothing by comparison — it is read by the
+     * liveness probe, which tolerates it being a little old — so this retries
+     * and then gives up rather than propagating.
+     */
+    protected function stampHealthcheck(): void
+    {
+        try {
+            RedisFailover::retry(
+                fn() => Redis::set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT))
+            );
+        } catch (PredisException $e) {
+            Log::warning("Could not stamp the fetcher healthcheck: " . $e->getMessage());
         }
     }
 
@@ -162,18 +226,30 @@ class RequestFetcher extends Command
      * and adds them to multicurl if there are.
      * Will be blocking call to redis if there are no running jobs in multicurl
      */
-    private function checkNewJobs($operationsRunning, $messagesLeft)
+    protected function checkNewJobs($operationsRunning, $messagesLeft)
     {
-        $newJobs = [];
-        if ($operationsRunning === 0 && $messagesLeft === -1) {
-            $newJob = Redis::blpop(\App\MetaGer::FETCHQUEUE_KEY, 1);
-            if (!empty($newJob)) {
-                $newJobs[] = $newJob[1];
+        // Both branches pop, so both are writes and both come back -READONLY
+        // from a node Sentinel has demoted. Retried, and on failure treated as
+        // "no new jobs this pass": the missions stay on the queue and the next
+        // iteration picks them up, which is exactly what an idle pass does
+        // anyway. Letting this propagate would end the process and take every
+        // in-flight transfer with it.
+        try {
+            $newJobs = [];
+            if ($operationsRunning === 0 && $messagesLeft === -1) {
+                $newJob = RedisFailover::retry(fn() => Redis::blpop(\App\MetaGer::FETCHQUEUE_KEY, 1));
+                if (!empty($newJob)) {
+                    $newJobs[] = $newJob[1];
+                }
+            } else {
+                $newJobs = RedisFailover::retry(fn() => Redis::lpop(\App\MetaGer::FETCHQUEUE_KEY, 50));
+                if ($newJobs === null)
+                    $newJobs = [];
             }
-        } else {
-            $newJobs = Redis::lpop(\App\MetaGer::FETCHQUEUE_KEY, 50);
-            if ($newJobs === null)
-                $newJobs = [];
+        } catch (PredisException $e) {
+            Log::warning("Could not read the fetch queue: " . $e->getMessage());
+
+            return 0;
         }
         $addedJobs = 0;
         foreach ($newJobs as $newJob) {
@@ -229,10 +305,10 @@ class RequestFetcher extends Command
                     $body = \curl_multi_getcontent($info["handle"]);
                 }
 
-                Redis::pipeline(function ($pipe) use ($resulthash, $info, $body) {
-                    $pipe->lpush($resulthash, json_encode(["info" => curl_getinfo($info["handle"]), "body" => $body]));
-                    $pipe->expire($resulthash, 60);
-                });
+                $this->deliverAnswer(
+                    $resulthash,
+                    json_encode(["info" => curl_getinfo($info["handle"]), "body" => $body])
+                );
 
                 if ($cacheDurationMinutes > 0) {
                     try {

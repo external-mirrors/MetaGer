@@ -16,6 +16,15 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::command("heartbeat")->everyMinute();
 Schedule::command("requests:gather")->everyFifteenMinutes();
 Schedule::command("logs:gather")->everyMinute();
+// The other half of a search that no longer waits for the keyserver: the
+// charge is written to Redis while the user is served and paid from here.
+// See App\Console\Commands\SettleKeyDischarges.
+//
+// In the background because this one talks to a network service and the rest
+// of this file shares a process with the scheduler's own liveness probe;
+// without overlapping because a keyserver that answers slowly must not leave
+// two of these racing over the same queue.
+Schedule::command("keys:settle-discharges")->everyMinute()->runInBackground()->withoutOverlapping();
 Schedule::command("logs:truncate")->daily()->onOneServer();
 Schedule::call(function () {
     DB::table('monthlyrequests')->truncate();

@@ -116,21 +116,43 @@ class Quicktips
     public function retrieveResults($hash, $wait)
     {
         $result = null;
-        if (Cache::has($this->hash)) {
-            return Cache::get($this->hash, false);
-        }
 
-        do {
-            $result = Redis::rpoplpush($this->hash, $this->hash);
-            Redis::expire($this->hash, 60);
-            if ($result === false || $result === null) {
-                if ($wait) {
-                    usleep(50 * 1000);
-                }
-            } else {
-                break;
+        // The same trade as startSearch(), at the other end of the same box: a
+        // quicktip is the panel above the results, not the results, so nobody's
+        // search should fail because it could not be read back. `rpoplpush` is
+        // a write and `expire` is a write, so both are what a demoted node
+        // answers -READONLY — and this is the one place in the request where
+        // that used to reach the user as a 503 for a search that had otherwise
+        // worked.
+        //
+        // Wrapped around the whole loop rather than each command: the loop is
+        // already a poll with its own half-second budget, so a failure just
+        // ends it early and the page renders without the box.
+        try {
+            if (Cache::has($this->hash)) {
+                return Cache::get($this->hash, false);
             }
-        } while ($wait && microtime(true) - $this->startTime < 0.5);
+
+            do {
+                $result = RedisFailover::retry(function () {
+                    $rotated = Redis::rpoplpush($this->hash, $this->hash);
+                    Redis::expire($this->hash, 60);
+
+                    return $rotated;
+                });
+                if ($result === false || $result === null) {
+                    if ($wait) {
+                        usleep(50 * 1000);
+                    }
+                } else {
+                    break;
+                }
+            } while ($wait && microtime(true) - $this->startTime < 0.5);
+        } catch (PredisException $e) {
+            Log::warning("Could not read a quicktip: " . $e->getMessage());
+
+            return false;
+        }
 
         if ($result === false || $result === null) {
             return false;

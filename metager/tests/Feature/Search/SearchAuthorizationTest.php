@@ -160,15 +160,21 @@ class SearchAuthorizationTest extends TestCase
     /**
      * A search discharges once, however many engines it paid for.
      *
-     * makePayment() POSTs to the keyserver synchronously, and the payment loop
-     * runs while the user is waiting for the result page — so paying engine by
-     * engine put a network round trip on the result path for every paid engine
-     * in the fokus. Foki differ in how many that is, which made the tax
-     * invisible on the fokus anyone happened to be looking at.
+     * makePayment() used to POST to the keyserver synchronously, and the
+     * payment loop runs while the user is waiting for the result page — so
+     * paying engine by engine put a network round trip on the result path for
+     * every paid engine in the fokus. Foki differ in how many that is, which
+     * made the tax invisible on the fokus anyone happened to be looking at.
      *
      * The keyserver discharges an amount rather than an engine, so one call for
      * the sum is the same money. This asserts the count, because the amount
      * being right is not the part that regresses.
+     *
+     * The POST itself has since moved off the request entirely — the charge is
+     * queued and `keys:settle-discharges` makes it — but one call per engine
+     * would still be one queue entry, one settlement and one keyserver round
+     * trip per engine, so the count is still the thing to hold. Settled here
+     * first, because that is now where the calls are made.
      */
     public function testAllTheEnginesOfASearchArePaidForInOneCall(): void
     {
@@ -179,6 +185,7 @@ class SearchAuthorizationTest extends TestCase
         ]);
 
         $this->get("/meta/meta.ger3?eingabe=kaffee&focus=web&out=json")->assertOk();
+        $this->settleQueuedDischarges();
 
         $engines = app(\App\Models\Configuration\Searchengines::class);
         $paidFor = array_filter(
@@ -205,8 +212,8 @@ class SearchAuthorizationTest extends TestCase
             1,
             $discharges,
             sprintf(
-                "%d engines were paid for in %d keyserver calls. Each one is a synchronous POST on the "
-                    . "result path, made while the user waits.",
+                "%d engines were paid for in %d keyserver calls. Each one is a queue entry and a "
+                    . "keyserver round trip of its own.",
                 count($paidFor),
                 count($discharges)
             )

@@ -331,6 +331,32 @@ else
         "KeyChanged would be pushed there and never delivered"
 fi
 
+# ---------------------------------------------------------------------------
+# Something settles the queued keyserver charges.
+# ---------------------------------------------------------------------------
+#
+# A paid search no longer discharges the key while the user waits: it writes the
+# charge to Redis and `keys:settle-discharges` makes it
+# (App\Console\Commands\SettleKeyDischarges). That command is a schedule entry,
+# so the thing that has to exist in the rendered manifests is the scheduler --
+# and without it nothing fails, nothing errors, and no key is ever charged for
+# anything again. The money stops quietly, which is the worst way for it to
+# stop.
+#
+# Asserted on the process rather than on the schedule, because the schedule
+# lives in routes/console.php and is not rendered here. `schedule:list` in the
+# test job is what covers the entry itself.
+
+echo
+echo "The scheduler runs:"
+
+if grep -qE -- '"artisan", "schedule:work-mg"' "$WORK/rendered.yaml"; then
+    pass "a container runs schedule:work-mg"
+else
+    fail "nothing runs the scheduler" \
+        "keys:settle-discharges would never run and no paid search would ever be charged"
+fi
+
 echo
 if [[ $failures -eq 0 ]]; then
     echo "All chart assertions passed."

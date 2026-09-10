@@ -2,8 +2,8 @@
 
 namespace App\Authentication;
 
+use App\Console\Commands\SettleKeyDischarges;
 use App\Events\KeyChanged;
-use App\PrometheusExporter;
 use App\Support\RedisFailover;
 use Arr;
 use Cache;
@@ -60,6 +60,23 @@ class KeyUser implements Authenticatable
      * comparable to a single top-up.
      */
     private const STALE_FALLBACK_SECONDS = 3600;
+
+    /**
+     * How long a claim stands while its discharge waits to be settled.
+     *
+     * A claim normally lives thirty seconds, which is how long a search takes
+     * to decide what it owes. {@see makePayment()} no longer pays in the
+     * foreground — it queues the charge for `keys:settle-discharges`, which
+     * runs once a minute and gives an unreachable keyserver five runs before
+     * giving up. So the reservation has to outlive the search by that much:
+     * while a charge is queued the tokens are gone, and a claim that expired
+     * first would put them back on the key for anyone to spend a second time.
+     *
+     * Ten minutes covers five attempts a minute apart with room to spare, and
+     * bounds the other direction too — a claim whose settler died is at worst
+     * ten minutes of a key looking poorer than it is.
+     */
+    public const SETTLEMENT_WINDOW_SECONDS = 600;
 
     public string $id;
 
@@ -210,7 +227,7 @@ class KeyUser implements Authenticatable
      */
     public function refresh(): void
     {
-        Cache::forget("keyserver:key:" . $this->key);
+        Cache::forget(self::keyDataCacheKey($this->key));
         $this->key_data = null;
         $this->state = null;
     }
@@ -464,6 +481,14 @@ class KeyUser implements Authenticatable
         return $current_charge >= 0;
     }
 
+    /**
+     * Charge the key for what a search used.
+     *
+     * The charge is written down, not made: see {@see queueDischarge()}. What
+     * this method still does in the foreground is decide whether the key can
+     * cover the amount — topping the claim up if the search turned out to cost
+     * more than was authorized for it — and that decision has not moved.
+     */
     public function makePayment(float $token_cost): bool
     {
         // Our own claim, and only ever ours: $this->id is unique to this
@@ -485,73 +510,125 @@ class KeyUser implements Authenticatable
         $token_cost = max($token_cost, 0); // Ensure we don't process negative costs
         if (abs($token_cost - 0) < PHP_FLOAT_EPSILON)
             return true;
+
+        return $this->queueDischarge($token_cost);
+    }
+
+    /**
+     * Write the charge down instead of paying it now.
+     *
+     * This used to be `POST /key/<key>/discharge`, made while the user waited.
+     * It was the last thing on either hot path that needed the keyserver to
+     * answer, and behind the keyserver sits the only Postgres those paths
+     * depended on at all — so a CNPG switchover, a keyserver rollout or a
+     * drained node reached the user here and nowhere else. It was also where
+     * the fee was lost whenever that happened, because a charge that could not
+     * be made had nowhere to go.
+     *
+     * Now it goes on a Redis list and `keys:settle-discharges` pays it, the
+     * same shape App\QueryLogger uses for search logs. What the foreground
+     * keeps is one `lpush`, on a connection the request has open already.
+     *
+     * The claim is what makes this safe, and it is why the claim is *not*
+     * released here any more: the tokens have left the key but nothing has
+     * recorded that yet, so the reservation has to stand until the settler
+     * confirms the charge. Its expiry is pushed out from the thirty seconds a
+     * search needs to {@see SETTLEMENT_WINDOW_SECONDS} in the same pipeline —
+     * one round trip, and no window in which the queue holds a charge the
+     * claim no longer covers.
+     *
+     * `false` only when Redis will not take it. That is not the old
+     * `false` — it no longer means "the keyserver refused", because nobody has
+     * asked it yet. Its one caller that reads the result,
+     * App\Http\Middleware\AuthenticationValidation, gated the search on
+     * `authorize() && makePayment()`, and authorize() is the half that decides
+     * whether the key can afford this; the other half now only reports whether
+     * the note was written down.
+     */
+    private function queueDischarge(float $token_cost): bool
+    {
+        $discharge = json_encode([
+            // Unique to this charge, and the reason a retry cannot cost the
+            // user twice. RedisFailover::retry re-issues the pipeline below
+            // when a Sentinel promotion loses the reply, and `lpush` is not
+            // idempotent: a lost reply for a write that did land queues the
+            // same charge twice. The settler refuses to pay an id it has
+            // already paid, which turns that into a duplicate entry it throws
+            // away instead of a second discharge -- the same reasoning as the
+            // note on hincrbyfloat in
+            // App\Models\Authorization\SuggestionDebtAuthorization, with the
+            // opposite conclusion, because here not retrying is the worse
+            // failure: a -READONLY during a drain would drop every charge.
+            "id" => (string) \Illuminate\Support\Str::uuid(),
+            "key" => $this->key,
+            "amount" => $token_cost,
+            "claim" => $this->id,
+            "attempts" => 0,
+            "queued_at" => now()->toIso8601String(),
+            // Carried, not dropped: the keyserver rate-limits per client IP,
+            // and every MetaGer request otherwise reaches it as the same
+            // Bearer token. The settler is a background process with no
+            // request of its own, so the address has to travel with the
+            // charge. See tests/Feature/Search/KeyUserClientIpForwardingTest.
+            "ip" => Request::ip(),
+        ]);
+
         try {
-            $key_response = Http::timeout(self::TIMEOUT_SECONDS)
-                ->connectTimeout(self::CONNECT_TIMEOUT_SECONDS)
-                ->withHeaders([
-                    "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
-                    "Content-Type" => "application/json",
-                    "X-Forwarded-For" => Request::ip(),
-                ])->post($this->keyserver . "/key/" . urlencode($this->key) . "/discharge", [
-                        "amount" => $token_cost,
-                    ]);
-        } catch (ConnectionException $e) {
-            // The charge did not happen, so this says so. `false` is safe on
-            // both callers: MetaGerSearch discharges once for the whole search
-            // *after* it has already been answered and ignores the result, and
-            // AuthenticationValidation only reaches this for a non-zero
-            // suggestion debt (makePayment(0) returns above without a request).
-            // So an unreachable keyserver costs the operator the fee for that
-            // search, not the user their page.
-            //
-            // Losing the fee is the part that wants fixing, and the fix is not
-            // "return true" — it is to stop making this call in the foreground
-            // at all, queue the discharge the way QueryLogger queues a search
-            // log and settle it from a worker. Until then this is at least
-            // honest about what happened.
-            Log::warning("keyserver discharge unreachable: " . $e->getMessage());
+            RedisFailover::retry(
+                fn() => $this->claimsConnection()->pipeline(function ($pipe) use ($discharge) {
+                    $pipe->lpush(SettleKeyDischarges::REDIS_KEY, $discharge);
+                    $pipe->hexpireat(
+                        $this->claimsKey(),
+                        now()->addSeconds(self::SETTLEMENT_WINDOW_SECONDS)->timestamp,
+                        [$this->id]
+                    );
+                }),
+                connection: config("cache.stores.redis.connection")
+            );
+        } catch (PredisException $e) {
+            // Nothing was charged and nothing was written down, so this says
+            // so. It takes a Valkey that is unreachable even to a retry, which
+            // is the same condition that has already failed the search itself.
+            Log::warning("Could not queue a keyserver discharge: " . $e->getMessage());
 
             return false;
         }
 
-        if ($key_response->successful()) {
-            $key_response = $key_response->json();
-            $current_charge = Arr::get($key_response, "charge");
-            if ($current_charge === null) {
-                return false;
-            }
-            /** @var array $uniMainzKeys */
-            $uniMainzKeys = config('metager.metager.keys.uni_mainz', []);
-            if (in_array($this->key, $uniMainzKeys)) {
-                PrometheusExporter::UpdateKeyStatus(key: $this->key, tokens: $current_charge, owner: "mainz");
-            }
-            Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
-            $this->rememberKeyData($key_response);
-            $this->key_data = $key_response; // Store the key data for future use
-            $new_claim_amount = Arr::get($this->claims ?? [], $this->id, 0) - $token_cost;
-            $this->claims[$this->id] = $new_claim_amount;
+        $this->spendLocally($token_cost);
 
-            // Releasing our own claim now that it has actually been paid. The
-            // charge already happened — the keyserver said so on the line
-            // above — so failing the payment over this would be wrong twice:
-            // the money is gone either way, and the caller would be told it is
-            // not. The field is ours alone and expires with the claim
-            // regardless, so the worst a lost release costs is that this
-            // request's own reservation stands against the key for the rest of
-            // its 30 seconds.
-            try {
-                RedisFailover::retry(
-                    fn() => $this->claimsConnection()->hincrbyfloat($this->claimsKey(), $this->id, -$token_cost),
-                    connection: config("cache.stores.redis.connection")
-                );
-            } catch (PredisException $e) {
-                Log::warning("Could not release a key claim: " . $e->getMessage());
-            }
+        return true;
+    }
 
-            return true;
+    /**
+     * Take the tokens off the balance this request will render.
+     *
+     * The settler writes the keyserver's own number back into the same cache
+     * entry, but that is up to a minute away, and in the meantime every page
+     * this user loads would show a balance that has not moved — on the account
+     * pill, in the sidebar and on the account tile at once. The old
+     * foreground discharge got this for free, because the keyserver answered
+     * with the new charge.
+     *
+     * Deliberately not written to the hour-long fallback entry
+     * ({@see rememberKeyData}): that one exists to answer when the keyserver
+     * cannot, and it should hold something the keyserver actually said. The ten
+     * seconds here are the same ten seconds getKeyData() uses, so an estimate
+     * that turns out wrong — a discharge the settler ends up dropping — is
+     * corrected by the next lookup rather than standing for half an hour.
+     *
+     * Estimating low, never high: `max(0, …)`, and only when there is a charge
+     * on the instance to estimate from.
+     */
+    private function spendLocally(float $token_cost): void
+    {
+        if (!is_array($this->key_data) || !isset($this->key_data["charge"])) {
+            return;
         }
 
-        return false;
+        $this->key_data["charge"] = max(0, (float) $this->key_data["charge"] - $token_cost);
+        $this->state = null;
+
+        Cache::put(self::keyDataCacheKey($this->key), $this->key_data, now()->addSeconds(10));
     }
 
     /**
@@ -559,7 +636,31 @@ class KeyUser implements Authenticatable
      */
     private function claimsKey(): string
     {
-        return "keyserver:claims:" . $this->key;
+        return self::claimsCacheKey($this->key);
+    }
+
+    /**
+     * The three cache keys a key's state lives under, named once.
+     *
+     * Static because App\Console\Commands\SettleKeyDischarges writes two of
+     * them and clears a claim on the third, from a process that has no KeyUser
+     * and no request. It settles the charge a search queued, so it is writing
+     * the same entries the next request will read; a second spelling of these
+     * strings is a bug that shows up as a balance that will not update.
+     */
+    public static function claimsCacheKey(string $key): string
+    {
+        return "keyserver:claims:" . $key;
+    }
+
+    public static function keyDataCacheKey(string $key): string
+    {
+        return "keyserver:key:" . $key;
+    }
+
+    public static function rememberedKeyDataCacheKey(string $key): string
+    {
+        return self::keyDataCacheKey($key) . ":last";
     }
 
     /**
@@ -579,7 +680,7 @@ class KeyUser implements Authenticatable
         if ($this->key_data !== null) {
             return $this->key_data;
         }
-        if (!$key_response = Cache::get("keyserver:key:" . $this->key)) {
+        if (!$key_response = Cache::get(self::keyDataCacheKey($this->key))) {
             // Fetch key data from the keyserver
             try {
                 $key_response = Http::timeout(self::TIMEOUT_SECONDS)
@@ -605,7 +706,7 @@ class KeyUser implements Authenticatable
                 if ($current_charge === null) {
                     return null;
                 }
-                Cache::put("keyserver:key:" . $this->key, $key_response, now()->addSeconds(10)); // Cache for 10 seconds
+                Cache::put(self::keyDataCacheKey($this->key), $key_response, now()->addSeconds(10)); // Cache for 10 seconds
                 $this->rememberKeyData($key_response);
                 KeyChanged::dispatch($this->key, 0, $current_charge);
                 $this->key_data = $key_response; // Store the key data for future use
@@ -636,7 +737,7 @@ class KeyUser implements Authenticatable
      */
     private function rememberedKeyDataKey(): string
     {
-        return "keyserver:key:" . $this->key . ":last";
+        return self::rememberedKeyDataCacheKey($this->key);
     }
 
     private function rememberKeyData(array $key_response): void

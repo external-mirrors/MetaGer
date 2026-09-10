@@ -7,6 +7,7 @@ use App\Authentication\KeyUser;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 
 /**
@@ -68,6 +69,9 @@ class KeyUserUnreachableKeyserverTest extends TestCase
 
         Cache::forget("keyserver:key:" . self::KEY);
         Cache::forget("keyserver:key:" . self::KEY . ":last");
+        // A real Redis list, shared by the whole suite and not reset between
+        // tests — makePayment() queues onto it now instead of discharging.
+        $this->dischargeQueue()->del(\App\Console\Commands\SettleKeyDischarges::REDIS_KEY);
 
         $this->keyserverSays(0.0);
 
@@ -75,6 +79,19 @@ class KeyUserUnreachableKeyserverTest extends TestCase
         Http::fake([
             "*/api/json/key/*" => fn($request) => ($this->keyserverBehaviour)($request),
         ]);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->dischargeQueue()->del(\App\Console\Commands\SettleKeyDischarges::REDIS_KEY);
+        $this->dischargeQueue()->del("keyserver:claims:" . self::KEY);
+
+        parent::tearDown();
+    }
+
+    private function dischargeQueue(): mixed
+    {
+        return Redis::connection(config("cache.stores.redis.connection"));
     }
 
     /** The keyserver cannot be reached at all. */
@@ -175,14 +192,23 @@ class KeyUserUnreachableKeyserverTest extends TestCase
     }
 
     /**
-     * An unreachable keyserver during a discharge means the charge did not
-     * happen, and this says so. `true` would be the tempting answer — it keeps
-     * the search free of consequences — but it would also silently give the
-     * search away, which is a decision for the operator and not for a catch
-     * block. Both callers tolerate `false`: MetaGerSearch discharges once after
-     * the page is already answered and ignores the result.
+     * An unreachable keyserver no longer reaches a discharge at all.
+     *
+     * This used to assert `false` — the honest answer while the charge was
+     * made in the foreground, where an unreachable keyserver meant the fee was
+     * simply lost. The charge is now written to Redis and settled by
+     * `keys:settle-discharges`, so the keyserver's reachability is not this
+     * method's business and not this request's problem: the note is taken, the
+     * search is answered, and the outage is somebody else's five minutes of
+     * retries.
+     *
+     * That is also what closes the hole the old comment on
+     * {@see \App\Authentication\KeyUser::SETTLEMENT_WINDOW_SECONDS} names —
+     * an hour of stale-fallback charge reads during which nothing was being
+     * charged, because the discharge was failing for the same reason the
+     * lookups were.
      */
-    public function testAnUnreachableKeyserverFailsThePaymentRatherThanThePage(): void
+    public function testAnUnreachableKeyserverDoesNotStopThePaymentBeingRecorded(): void
     {
         $this->warmTheFallback(1000.0);
         $this->keyserverUnreachable();
@@ -190,7 +216,15 @@ class KeyUserUnreachableKeyserverTest extends TestCase
         $user = new KeyUser(self::KEY);
         $user->authorize(1.0);
 
-        $this->assertFalse($user->makePayment(1.0));
+        $this->assertTrue(
+            $user->makePayment(1.0),
+            "a charge that only needs writing to Redis was refused because the keyserver was down"
+        );
+        $this->assertSame(
+            1,
+            (int) $this->dischargeQueue()->llen(\App\Console\Commands\SettleKeyDischarges::REDIS_KEY),
+            "the charge was neither made nor queued, so it is simply gone"
+        );
     }
 
     /**

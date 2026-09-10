@@ -171,6 +171,13 @@ trait FakesSearchEngines
             "charge" => $charge,
         ], now()->addMinutes(10));
 
+        // Start from an empty discharge queue. It is one list for the whole
+        // application and nothing in the suite resets Redis between tests, so a
+        // test that settles would otherwise settle every charge every earlier
+        // test left behind — which is how "one call per search" was reported as
+        // fifty-eight.
+        $this->forgetQueuedDischarges();
+
         $user = new KeyUser($key);
         $this->be($user, "key");
 
@@ -187,5 +194,33 @@ trait FakesSearchEngines
         $this->app->make("redis")
             ->connection(config("cache.stores.redis.connection"))
             ->del("keyserver:claims:" . $key);
+    }
+
+    /**
+     * Run the settler, so a test can assert on the discharge a search made.
+     *
+     * A search no longer discharges the key while it runs — it queues the
+     * charge and `keys:settle-discharges` makes it
+     * (App\Console\Commands\SettleKeyDischarges), which is the whole point:
+     * the keyserver, and the Postgres behind it, are off the result path. A
+     * test that asserts on the outgoing POST therefore has to settle first, or
+     * it is asserting that the deferral works by watching it fail to happen.
+     */
+    protected function settleQueuedDischarges(): void
+    {
+        $this->artisan("keys:settle-discharges")->assertSuccessful();
+    }
+
+    /**
+     * The discharge queue is one list for the whole application, not one per
+     * key, so anything a search leaves on it is waiting for the next test that
+     * looks — and every authenticated search leaves something on it now that
+     * KeyUser::makePayment() queues the charge instead of making it.
+     */
+    protected function forgetQueuedDischarges(): void
+    {
+        $this->app->make("redis")
+            ->connection(config("cache.stores.redis.connection"))
+            ->del(\App\Console\Commands\SettleKeyDischarges::REDIS_KEY);
     }
 }

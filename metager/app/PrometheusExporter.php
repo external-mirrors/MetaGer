@@ -175,6 +175,52 @@ class PrometheusExporter
         });
     }
 
+    /**
+     * What happened to a queued keyserver discharge.
+     *
+     * The charge for a search is no longer paid while the user waits — it goes
+     * on a Redis list and `keys:settle-discharges` pays it
+     * (App\Console\Commands\SettleKeyDischarges). That moves the failure out
+     * of the request, where it was visible as a 500, and into a background
+     * process, where without this it would be visible as nothing at all.
+     *
+     * The labels are the four outcomes, and only one of them is routine:
+     * `settled` is the keyserver confirming the charge; `refused` is the
+     * keyserver answering with a 4xx or 5xx; `unknown` is a request that timed
+     * out, which is deliberately not retried because it may already have been
+     * applied; `abandoned` is five failed attempts over five minutes. The last
+     * three are money the operator did not collect, and are worth an alert on
+     * their rate rather than a look at the logs.
+     */
+    public static function KeyDischargeSettled(string $result)
+    {
+        self::record(function () use ($result) {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter('metager', 'key_discharge', 'counts settled and lost keyserver discharges', ['result']);
+            $counter->inc([$result]);
+        });
+    }
+
+    /**
+     * How many charges are waiting to be settled.
+     *
+     * Written once per run of `keys:settle-discharges`, which is once a minute.
+     * Discharges go to the keyserver one at a time over one connection, so
+     * there is a search rate above which a single run cannot drain what a
+     * minute produces — and nothing fails when that happens. The queue simply
+     * grows, the claims holding those tokens keep being extended, and the money
+     * is settled later and later. A gauge that is not near zero is the only
+     * warning there is.
+     */
+    public static function KeyDischargeQueueDepth(int $depth)
+    {
+        self::record(function () use ($depth) {
+            $registry = CollectorRegistry::getDefault();
+            $gauge = $registry->getOrRegisterGauge('metager', 'key_discharge_queue', 'keyserver charges waiting to be settled', []);
+            $gauge->set($depth);
+        });
+    }
+
     public static function SearchAnswered()
     {
         self::record(function () {

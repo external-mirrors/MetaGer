@@ -6,8 +6,11 @@ use App;
 use App\Localization;
 use App\SearchSettings;
 use App\Support\Browser;
+use App\Support\RedisFailover;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
+use Predis\PredisException;
 use RateLimiter;
 use Request;
 
@@ -15,14 +18,68 @@ use Request;
  * We cannot make payments for suggestions executed through the Opensearchdescription of the browser
  * since the Firefox Browser does not provide website data for those requests and our extension cannot
  * intercept or modify requests to enable anonymous Tokens.
- * 
+ *
  * We will grant anonymous suggestion requests to a user which will be paid on later search requests on
  * a credit base.
+ *
+ * ## Every call here is on the search path, before the search
+ *
+ * AuthenticationValidation reads the debt before it lets a request through to
+ * MetaGerSearch, and writes the credit back immediately after. So these run on
+ * every authenticated search, ahead of anything the user asked for — and until
+ * this class was guarded, a Sentinel promotion landing on any of them was a 503
+ * for a search that was otherwise perfectly serviceable. Most of them are
+ * writes (`hincrbyfloat`, `hset`, `hexpireat`), which is exactly what a demoted
+ * node answers `-READONLY`.
+ *
+ * Hence {@see RUN}: every operation is retried across a failover and then, if
+ * it still cannot be done, given up on. That is the right trade here and it is
+ * not a close call. The stake is a tenth of a token of suggestion credit,
+ * bounded by MAX_CREDIT and expiring in two days by itself; the alternative is
+ * an error page. Nobody should lose a search because we could not remember that
+ * they had been offered a suggestion.
  */
 class SuggestionDebtAuthorization extends Authorization
 {
     private const CACHE_PREFIX = "suggestion:authorization:";
     private const MAX_CREDIT = 1.0;
+
+    /**
+     * The connection these live on — the cache one, not the default.
+     *
+     * Named in one place because it is also what {@see RUN} has to hand
+     * RedisFailover: the retry drops the pooled connection before trying again,
+     * and dropping the wrong one would leave the retry pinned to the same
+     * demoted node it just failed against.
+     */
+    private static function CONNECTION(): string
+    {
+        return config("cache.stores.redis.connection");
+    }
+
+    private static function REDIS(): mixed
+    {
+        return Redis::connection(self::CONNECTION());
+    }
+
+    /**
+     * Do it, retrying across a failover; if that fails too, carry on without.
+     *
+     * @template T
+     * @param callable():T $operation
+     * @param T $default what to answer with when it could not be done
+     * @return T
+     */
+    private static function RUN(callable $operation, mixed $default = null): mixed
+    {
+        try {
+            return RedisFailover::retry($operation, connection: self::CONNECTION());
+        } catch (PredisException $e) {
+            Log::warning("Suggestion debt bookkeeping skipped: " . $e->getMessage());
+
+            return $default;
+        }
+    }
 
     public function __construct()
     {
@@ -59,20 +116,29 @@ class SuggestionDebtAuthorization extends Authorization
         $expiration = now()->addDays(2);
 
         $cache_key = self::GET_CACHE_KEY();
-        $current_value = Redis::connection(config('cache.stores.redis.connection'))->hincrbyfloat($cache_key, "credit", $amount);
-        $current_value = floatval($current_value);
+
+        // One RUN per command rather than one around the block. `hincrbyfloat`
+        // is not idempotent, and retrying a block whose *last* command failed
+        // would apply the increment a second time. Per command, a retry can
+        // only ever repeat the one command whose reply was lost, which is the
+        // same bounded risk KeyUser::authorize() already accepts for the claim
+        // it writes.
+        $current_value = floatval(self::RUN(
+            fn() => self::REDIS()->hincrbyfloat($cache_key, "credit", $amount),
+            0
+        ));
         if ($current_value > self::MAX_CREDIT) {
-            Redis::connection(config('cache.stores.redis.connection'))->hset($cache_key, "credit", self::MAX_CREDIT);
+            self::RUN(fn() => self::REDIS()->hset($cache_key, "credit", self::MAX_CREDIT));
         } else if ($current_value < 0) {
-            Redis::connection(config('cache.stores.redis.connection'))->hset($cache_key, 0, "credit");
+            self::RUN(fn() => self::REDIS()->hset($cache_key, 0, "credit"));
         }
-        Redis::connection(config('cache.stores.redis.connection'))->hexpireat($cache_key, $expiration->getTimestamp(), ["credit"]);
+        self::RUN(fn() => self::REDIS()->hexpireat($cache_key, $expiration->getTimestamp(), ["credit"]));
     }
 
     public static function GET_CREDIT(): float
     {
         $cache_key = self::GET_CACHE_KEY();
-        $current_value = Redis::connection(config('cache.stores.redis.connection'))->hget($cache_key, "credit");
+        $current_value = self::RUN(fn() => self::REDIS()->hget($cache_key, "credit"));
         if ($current_value === null) {
             $current_value = 0;
         } else {
@@ -93,18 +159,20 @@ class SuggestionDebtAuthorization extends Authorization
         $expiration = now()->addDays(2);
 
         $cache_key = self::GET_CACHE_KEY();
-        $current_value = Redis::connection(config('cache.stores.redis.connection'))->hincrbyfloat($cache_key, "debt", $amount);
-        $current_value = floatval($current_value);
+        $current_value = floatval(self::RUN(
+            fn() => self::REDIS()->hincrbyfloat($cache_key, "debt", $amount),
+            0
+        ));
         if ($current_value < 0) {
-            Redis::connection(config('cache.stores.redis.connection'))->hset($cache_key, 0, "debt");
+            self::RUN(fn() => self::REDIS()->hset($cache_key, 0, "debt"));
         }
-        Redis::connection(config('cache.stores.redis.connection'))->hexpireat($cache_key, $expiration->getTimestamp(), ["debt"]);
+        self::RUN(fn() => self::REDIS()->hexpireat($cache_key, $expiration->getTimestamp(), ["debt"]));
     }
 
     public static function GET_DEBT(): float
     {
         $cache_key = self::GET_CACHE_KEY();
-        $current_value = Redis::connection(config('cache.stores.redis.connection'))->hget($cache_key, "debt");
+        $current_value = self::RUN(fn() => self::REDIS()->hget($cache_key, "debt"));
         if ($current_value === null) {
             $current_value = 0;
         } else {
@@ -128,7 +196,7 @@ class SuggestionDebtAuthorization extends Authorization
 
         $settings = app(SearchSettings::class);
 
-        $stored_settings = Redis::connection(config('cache.stores.redis.connection'))->hget($cache_key, "settings");
+        $stored_settings = self::RUN(fn() => self::REDIS()->hget($cache_key, "settings"));
         if ($stored_settings !== null) {
             $stored_settings = json_decode($stored_settings, true);
             if (in_array($settings->suggestion_provider, [null, "off"])) {
@@ -154,15 +222,15 @@ class SuggestionDebtAuthorization extends Authorization
             $stored_settings["locale"] = Localization::getLanguage() . "-" . Localization::getRegion();
             $stored_settings["delay"] = $settings->suggestion_delay;
             $stored_settings["addressbar"] = $settings->suggestion_addressbar;
-            Redis::connection(config('cache.stores.redis.connection'))->hset($cache_key, "settings", json_encode($stored_settings));
-            Redis::connection(config('cache.stores.redis.connection'))->hexpireat($cache_key, $expiration->getTimestamp(), ["settings"]);
+            self::RUN(fn() => self::REDIS()->hset($cache_key, "settings", json_encode($stored_settings)));
+            self::RUN(fn() => self::REDIS()->hexpireat($cache_key, $expiration->getTimestamp(), ["settings"]));
         }
     }
 
     public static function LOAD_SETTINGS()
     {
         $settings = app(SearchSettings::class);
-        $stored_settings = Redis::connection(config('cache.stores.redis.connection'))->hget(self::GET_CACHE_KEY(), "settings");
+        $stored_settings = self::RUN(fn() => self::REDIS()->hget(self::GET_CACHE_KEY(), "settings"));
         if ($stored_settings !== null) {
             $stored_settings = json_decode($stored_settings, true);
             $settings->suggestion_provider = $stored_settings["provider"];
@@ -183,7 +251,7 @@ class SuggestionDebtAuthorization extends Authorization
 
     public static function REMOVE_SETTINGS()
     {
-        Redis::connection(config('cache.stores.redis.connection'))->hdel(self::GET_CACHE_KEY(), ["settings"]);
+        self::RUN(fn() => self::REDIS()->hdel(self::GET_CACHE_KEY(), ["settings"]));
     }
 
     public static function GET_CACHE_KEY(): string

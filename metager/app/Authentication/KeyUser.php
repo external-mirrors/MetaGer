@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Predis\PredisException;
 use Request;
 
 class KeyUser implements Authenticatable
@@ -412,7 +413,24 @@ class KeyUser implements Authenticatable
         // runs, but re-reading would only narrow that window, not close it —
         // there is no lock here by design.
         if ($this->claims === null) {
-            $this->claims = $this->claimsConnection()->hgetall($this->claimsKey());
+            // Retried for the same reason the write below is: this runs from
+            // AuthenticationValidation on every authenticated search, before
+            // the search, so an unguarded failover here is a key holder's
+            // search answered with an error page during a planned drain.
+            //
+            // Degrades to "no other claims": the charge is then judged on the
+            // keyserver's number alone, which is the pre-claims behaviour and
+            // errs towards letting the search through. Erring the other way
+            // would refuse a search over bookkeeping we could not read.
+            try {
+                $this->claims = RedisFailover::retry(
+                    fn() => $this->claimsConnection()->hgetall($this->claimsKey()),
+                    connection: config("cache.stores.redis.connection")
+                );
+            } catch (PredisException $e) {
+                Log::warning("Could not read the key claims: " . $e->getMessage());
+                $this->claims = [];
+            }
         }
 
         $key_data = $this->getKeyData();
@@ -512,7 +530,23 @@ class KeyUser implements Authenticatable
             $this->key_data = $key_response; // Store the key data for future use
             $new_claim_amount = Arr::get($this->claims ?? [], $this->id, 0) - $token_cost;
             $this->claims[$this->id] = $new_claim_amount;
-            $this->claimsConnection()->hincrbyfloat($this->claimsKey(), $this->id, -$token_cost);
+
+            // Releasing our own claim now that it has actually been paid. The
+            // charge already happened — the keyserver said so on the line
+            // above — so failing the payment over this would be wrong twice:
+            // the money is gone either way, and the caller would be told it is
+            // not. The field is ours alone and expires with the claim
+            // regardless, so the worst a lost release costs is that this
+            // request's own reservation stands against the key for the rest of
+            // its 30 seconds.
+            try {
+                RedisFailover::retry(
+                    fn() => $this->claimsConnection()->hincrbyfloat($this->claimsKey(), $this->id, -$token_cost),
+                    connection: config("cache.stores.redis.connection")
+                );
+            } catch (PredisException $e) {
+                Log::warning("Could not release a key claim: " . $e->getMessage());
+            }
 
             return true;
         }

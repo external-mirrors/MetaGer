@@ -379,6 +379,37 @@ class DischargeSettlementTest extends TestCase
     }
 
     /**
+     * The balance must not go back *up* while the charge is queued.
+     *
+     * The estimate {@see \App\Authentication\KeyUser::makePayment()} writes is
+     * what keeps the number on the page moving when a user spends. If it
+     * expires before the settler has run, the next lookup asks the keyserver,
+     * which has not been told about the charge yet and truthfully answers the
+     * old balance — so the account pill counts down, waits, and then counts
+     * back up, before finally settling. The foreground discharge never had that
+     * window because the keyserver knew immediately.
+     *
+     * Thirty seconds is inside the settler's schedule (once a minute) and well
+     * past the ten seconds getKeyData() caches a keyserver answer for, which is
+     * exactly the gap.
+     */
+    public function testTheBalanceDoesNotGoBackUpWhileTheChargeIsQueued(): void
+    {
+        // What the keyserver still says, because nobody has discharged yet.
+        Http::fake(["*/api/json/key/*" => Http::response(["key" => self::KEY, "charge" => 100.0])]);
+
+        $this->keyUserWhoHasPaid(charge: 100.0, cost: 4.0);
+
+        $this->travel(30)->seconds();
+
+        $this->assertSame(
+            96.0,
+            (new KeyUser(self::KEY))->getCharge(),
+            "the spent balance reappeared while the charge was still in the queue"
+        );
+    }
+
+    /**
      * An empty queue is the normal state — this runs every minute and most
      * minutes have nothing in them — and must cost one Redis read, not a
      * keyserver request.

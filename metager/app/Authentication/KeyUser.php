@@ -611,10 +611,22 @@ class KeyUser implements Authenticatable
      *
      * Deliberately not written to the hour-long fallback entry
      * ({@see rememberKeyData}): that one exists to answer when the keyserver
-     * cannot, and it should hold something the keyserver actually said. The ten
-     * seconds here are the same ten seconds getKeyData() uses, so an estimate
-     * that turns out wrong — a discharge the settler ends up dropping — is
-     * corrected by the next lookup rather than standing for half an hour.
+     * cannot, and it should hold something the keyserver actually said.
+     *
+     * It has to outlive the ten seconds getKeyData() caches a keyserver answer
+     * for, though, or the balance goes back *up* before it settles: the entry
+     * expires, the next lookup asks the keyserver, and the keyserver has not
+     * been told about this charge yet and truthfully answers the old number.
+     * The account pill would count down, wait, count back up and only then
+     * settle. So the estimate stands for as long as the charge can be in the
+     * queue ({@see SETTLEMENT_WINDOW_SECONDS}), and the settler overwrites it
+     * with the keyserver's own figure as soon as it has one — which is a minute
+     * at most, and the reason this window is a ceiling rather than a duration.
+     *
+     * If the charge is dropped after all, this stands until it expires and the
+     * key looks poorer than it is for that long. That is the safe direction to
+     * be wrong in, and the old foreground discharge pinned its answer for
+     * thirty minutes.
      *
      * Estimating low, never high: `max(0, …)`, and only when there is a charge
      * on the instance to estimate from.
@@ -628,7 +640,11 @@ class KeyUser implements Authenticatable
         $this->key_data["charge"] = max(0, (float) $this->key_data["charge"] - $token_cost);
         $this->state = null;
 
-        Cache::put(self::keyDataCacheKey($this->key), $this->key_data, now()->addSeconds(10));
+        Cache::put(
+            self::keyDataCacheKey($this->key),
+            $this->key_data,
+            now()->addSeconds(self::SETTLEMENT_WINDOW_SECONDS)
+        );
     }
 
     /**

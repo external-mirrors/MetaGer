@@ -397,6 +397,38 @@ else
         "keys:settle-discharges would never run and no paid search would ever be charged"
 fi
 
+# The fetch worker's liveness is about progress, not existence.
+#
+# `pgrep -f requests:fetcher` was the probe on all three of the worker's checks,
+# and it answered "healthy" for the whole of the 2026-09-10 outage: the process
+# was alive and holding a half-open Redis socket, fetcher.queue grew to ~1200
+# missions, and every search rendered empty for fifteen minutes. A single
+# replica, so that one process was all of search.
+#
+# Asserted here rather than left to the golden diff because the two halves live
+# in different trees — the command is in the Laravel app, the probe is in the
+# chart — and a rename on either side would otherwise be a probe that fails
+# every fetcher pod on the next deploy, or worse, a pgrep that quietly comes
+# back.
+echo
+echo "The fetch worker is probed for progress:"
+
+fetcher_probes="$(capture grep -c '"artisan", "fetcher:healthcheck"' "$WORK/rendered.yaml")"
+
+if [[ $fetcher_probes -eq 3 ]]; then
+    pass "all 3 fetcher probes read the heartbeat ($fetcher_probes)"
+else
+    fail "expected 3 fetcher:healthcheck probes, found $fetcher_probes" \
+        "a fetcher that wedges with its process alive would go unnoticed again"
+fi
+
+if grep -qE -- '- requests:fetcher' "$WORK/rendered.yaml"; then
+    fail "a probe still pgreps for requests:fetcher" \
+        "pgrep proves the process exists, which is exactly what it did while search was down"
+else
+    pass "no probe pgreps the fetcher process"
+fi
+
 echo
 if [[ $failures -eq 0 ]]; then
     echo "All chart assertions passed."

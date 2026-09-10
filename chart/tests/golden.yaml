@@ -1342,24 +1342,52 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          # Not pgrep. `pgrep -f requests:fetcher` only ever proved a process
+          # existed, and this worker's characteristic failure is a process that
+          # exists and has stopped working: it can hold a half-open socket to a
+          # Valkey node Sentinel has demoted and hang inside a blocking read,
+          # which read_write_timeout -1 lets block for ever (it has to be -1 —
+          # callers on that connection blpop for up to 30s). No exception means
+          # App\Support\RedisFailover never sees a failover to retry, and the
+          # loop never comes back round.
+          #
+          # That was the outage of 2026-09-10: pgrep passed throughout,
+          # fetcher.queue grew to ~1200 missions, and every search rendered
+          # empty for about fifteen minutes until the Deployment was restarted
+          # by hand. This is a single replica, so the one wedged process was all
+          # of search.
+          #
+          # fetcher:healthcheck reads the heartbeat the loop stamps at the top of
+          # every iteration, so it fails whichever call inside the loop is the
+          # one hanging. See App\Support\FetcherHeartbeat for the tolerance.
+          #
+          # 60s of tolerance plus three misses 15s apart: a wedge costs at most
+          # ~105s, against the ~2s a Sentinel promotion takes — which cannot
+          # produce three consecutive failures, and must not, because a restart
+          # discards every engine response in flight.
           livenessProbe:
             exec:
-              command:
-              - pgrep
-              - -f
-              - requests:fetcher
+              command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
+            periodSeconds: 15
+            failureThreshold: 3
+          # Nothing routes traffic here — no Service selects these pods — so
+          # readiness is not about load balancing. It is kept because
+          # `helm upgrade --wait` gates on it: a fetcher that comes up unable to
+          # reach Redis should fail the deploy rather than sit there silently
+          # not fetching.
           readinessProbe:
             exec:
-              command:
-              - pgrep
-              - -f
-              - requests:fetcher
+              command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
+            periodSeconds: 15
+            failureThreshold: 3
+          # The first stamp lands on the first loop iteration, which is
+          # immediate — but handle() retries Redis up to ten times before
+          # reaching the loop, and the Laravel boot itself takes a moment.
           startupProbe:
             exec:
-              command:
-              - pgrep
-              - -f
-              - requests:fetcher
+              command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
+            periodSeconds: 5
+            failureThreshold: 24
           resources:
             requests:
               cpu: 250m

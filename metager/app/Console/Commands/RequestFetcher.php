@@ -162,6 +162,15 @@ class RequestFetcher extends Command
      * A missed stamp is worth nothing by comparison — it is read by the
      * liveness probe, which tolerates it being a little old — so this retries
      * and then gives up rather than propagating.
+     *
+     * That probe is `artisan fetcher:healthcheck`, via
+     * App\Support\FetcherHeartbeat. It was not, for a long time: the stamp was
+     * written here and read by nothing, while the chart probed
+     * `pgrep -f requests:fetcher`. A wedge that leaves this process alive and
+     * idle therefore went unnoticed for fifteen minutes on 2026-09-10. Because
+     * the stamp is written at the top of every iteration, it goes stale for any
+     * reason the loop stops — including a blocking read that never returns,
+     * which raises nothing for RedisFailover to catch.
      */
     protected function stampHealthcheck(): void
     {

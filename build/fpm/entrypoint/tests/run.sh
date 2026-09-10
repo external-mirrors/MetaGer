@@ -4,13 +4,15 @@
 #
 #   ./tests/run.sh
 #
-# queue_worker.sh is the one covered here, and it is worth covering because
-# everything it does fails silently when it breaks. If it stops restarting the
+# Both PID-1 scripts are covered here, and they are worth covering because
+# everything they do fails silently when it breaks. If it stops restarting the
 # worker, the queue simply stops draining inside a container Kubernetes reports
 # as healthy. If it stops forwarding SIGTERM, every rollout kills a job
 # part-way — and the jobs on the default queue send mail and talk to PayPal. If
 # it restarts a worker that cannot start at all, a crashloop becomes a hot loop
-# in a container that never restarts. None of those announce themselves.
+# in a container that never restarts. If php_daemon.sh stops translating the
+# stop signal, a daemon container becomes unstoppable and every rollout waits
+# out the full grace period. None of those announce themselves.
 #
 # `php` is stubbed (see stubs/php), so nothing here needs a PHP toolchain, a
 # database or a queue. Runtimes are seconds rather than the chart's five
@@ -20,6 +22,7 @@ set -uo pipefail
 cd "$(dirname "$0")"
 
 SUPERVISOR="$(cd .. && pwd)/queue_worker.sh"
+DAEMON="$(cd .. && pwd)/php_daemon.sh"
 STUBS="$PWD/stubs"
 
 failures=0
@@ -171,6 +174,156 @@ elif [[ "$status" -ne 0 ]]; then
 else
     pass "forwarded SIGTERM and waited ${waited}s for the drain"
 fi
+
+# ---------------------------------------------------------------------------
+# php_daemon.sh
+# ---------------------------------------------------------------------------
+
+# Whether this shell was entered with SIGQUIT already ignored. That is
+# inherited by everything it starts and cannot be undone from a shell — signals
+# ignored on entry cannot be trapped or reset — so the SIGQUIT test below would
+# report a perfectly correct wrapper as broken. busybox ash does exactly this
+# when it is PID 1, which is how a CI job's container may well be started
+# (measured: SigIgn 0x4 for every descendant under `docker run alpine sh -c`,
+# and 0 when the script is exec'd directly).
+sigquit_ignored() {
+    local mask
+    mask="$(awk '/^SigIgn:/ {print $2}' "/proc/$$/status" 2>/dev/null)"
+    [[ -n "$mask" ]] && ((0x$mask & 0x4))
+}
+
+# Start the wrapper with SIGQUIT restored to its default disposition, which is
+# what it has as PID 1 in a container. Only reached when the harness needs it,
+# so the normal path depends on nothing but a shell.
+run_daemon() {
+    if ! sigquit_ignored; then
+        PATH="$STUBS:$PATH" "$DAEMON" "$@"
+        return $?
+    fi
+
+    if ! command -v python3 >/dev/null 2>&1; then
+        # Louder than a skip on purpose: silently not testing this is how the
+        # reverb wedge would come back.
+        fail "cannot deliver SIGQUIT: this shell was entered with it ignored" \
+            "and no python3 is available to restore the default disposition" \
+            "run the tests from a shell that is not busybox ash as PID 1"
+        return 111
+    fi
+
+    PATH="$STUBS:$PATH" python3 -c 'import os, signal, sys
+signal.signal(signal.SIGQUIT, signal.SIG_DFL)
+os.execvp(sys.argv[1], sys.argv[1:])' "$DAEMON" "$@"
+}
+#
+# The bug it exists for: the CRI stops a container with the *image's*
+# STOPSIGNAL, which here is SIGQUIT (inherited from php-fpm), and a PID 1 with
+# no handler for a signal has no default action applied to it. `artisan
+# reverb:start` subscribes to SIGINT/SIGTERM/SIGTSTP and so did nothing at all
+# with the SIGQUIT it was sent — 301s in Terminating against a 300s grace
+# period, in production on 2026-09-10.
+
+echo
+echo "SIGQUIT stops a php daemon:"
+
+# The regression test proper. Sent the signal the container runtime really
+# sends, the wrapper has to turn it into the one the command handles.
+export STUB_ARGV_FILE=/dev/null STUB_EVENT_FILE="$WORK/quit.events" \
+    STUB_RUN_SECONDS=30 STUB_DRAIN_SECONDS=2
+unset STUB_EXIT_STATUS
+
+# Run in the foreground and signalled from the stub (STUB_SIGNAL_PARENT), not
+# backgrounded and signalled from here. A shell sets SIGINT and SIGQUIT to
+# SIG_IGN for asynchronous commands, and a signal ignored on entry cannot be
+# trapped — so a `&` here would give the wrapper a disposition it never has as
+# PID 1 and fail against correct code. `set -m` fixes that only where job
+# control can really be established: under alpine with no controlling terminal
+# the child still comes up with SigIgn 0x4, while `$-` claims `m`. The stub's
+# header has the detail.
+export STUB_SIGNAL_PARENT=QUIT
+
+start=$SECONDS
+run_daemon artisan reverb:start --port=8081 >"$WORK/quit.out" 2>&1
+status=$?
+waited=$((SECONDS - start))
+unset STUB_SIGNAL_PARENT
+
+if [[ "$status" -eq 111 ]]; then
+    : # run_daemon already reported why it could not deliver the signal
+elif ! grep -q "term-received" "$WORK/quit.events" 2>/dev/null; then
+    fail "SIGQUIT never reached the command as SIGTERM" \
+        "this is the reverb wedge: the daemon would run until SIGKILL"
+elif ! grep -q "drained" "$WORK/quit.events" 2>/dev/null; then
+    fail "the wrapper exited before the command finished shutting down" \
+        "PID 1 exiting takes the child with it, mid-shutdown"
+elif [[ "$waited" -lt 2 ]]; then
+    fail "wrapper returned after ${waited}s, faster than the stub's 2s drain" \
+        "it cannot have waited for the child"
+elif [[ "$status" -ne 0 ]]; then
+    fail "wrapper exited $status on a clean stop" \
+        "expected 0; a rollout would log every container as having failed"
+else
+    pass "translated SIGQUIT to SIGTERM and waited ${waited}s"
+fi
+
+echo
+echo "SIGTERM stops a php daemon too:"
+
+# What a `lifecycle.stopSignal`, a plain `kill`, or the compose file's
+# stop_signal override sends. Trapped for the same reason and must behave the
+# same way, so that fixing the signal at the platform level later is a no-op
+# here rather than a second code path.
+export STUB_EVENT_FILE="$WORK/term-daemon.events" STUB_SIGNAL_PARENT=TERM
+
+PATH="$STUBS:$PATH" "$DAEMON" artisan reverb:start >"$WORK/term-daemon.out" 2>&1
+status=$?
+unset STUB_SIGNAL_PARENT
+
+if ! grep -q "drained" "$WORK/term-daemon.events" 2>/dev/null; then
+    fail "SIGTERM did not reach the command, or the drain was not awaited"
+elif [[ "$status" -ne 0 ]]; then
+    fail "wrapper exited $status on a clean stop" "expected 0"
+else
+    pass "forwarded SIGTERM and awaited the drain"
+fi
+
+echo
+echo "Arguments reach php verbatim:"
+
+# The wrapper is generic — it prepends nothing, unlike queue-worker. A dropped
+# or reordered argument would start the wrong command, or the right one on the
+# wrong port, and the probe would still pass.
+export STUB_ARGV_FILE="$WORK/daemon.argv" STUB_EVENT_FILE=/dev/null STUB_RUN_SECONDS=0
+unset STUB_DRAIN_SECONDS
+
+PATH="$STUBS:$PATH" "$DAEMON" artisan reverb:start --port=8081 >/dev/null 2>&1
+
+expected="artisan reverb:start --port=8081"
+actual="$(head -1 "$WORK/daemon.argv" 2>/dev/null)"
+if [[ "$actual" == "$expected" ]]; then
+    pass "argv passed through unchanged"
+else
+    fail "argv was rewritten" "expected: $expected" "actual:   $actual"
+fi
+
+echo
+echo "A daemon that fails on its own is not masked:"
+
+# The wrapper must not become a supervisor. A daemon that cannot start has to
+# take the container down with it so Kubernetes reports the crashloop; swallowing
+# the status would leave a container reported "Completed" and a component simply
+# absent.
+export STUB_ARGV_FILE=/dev/null STUB_RUN_SECONDS=0 STUB_EXIT_STATUS=3
+
+PATH="$STUBS:$PATH" "$DAEMON" artisan reverb:start >/dev/null 2>&1
+status=$?
+
+if [[ "$status" -eq 3 ]]; then
+    pass "propagated the command's exit status (3)"
+else
+    fail "wrapper exited $status for a command that exited 3" \
+        "a startup failure has to reach Kubernetes as a failure"
+fi
+unset STUB_EXIT_STATUS
 
 echo
 if [[ "$failures" -gt 0 ]]; then

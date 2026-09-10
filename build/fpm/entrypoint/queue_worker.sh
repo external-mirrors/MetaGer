@@ -62,9 +62,13 @@ _forward() {
     fi
 }
 
-# Kubernetes always sends SIGTERM. This image's STOPSIGNAL is SIGQUIT, inherited
-# from the php-fpm base image, which is what `docker stop` sends. Both are
-# trapped for the same reason entrypoint_production.sh traps both: an untrapped
+# SIGQUIT is what this container is actually stopped with: the CRI sends the
+# *image's* STOPSIGNAL, and this image inherits SIGQUIT from php-fpm. Kubernetes
+# does not substitute SIGTERM of its own accord — `lifecycle.stopSignal` would,
+# but the ContainerStopSignals gate is off on this cluster and the field is
+# silently stripped. SIGTERM is trapped as well, since that is what a plain
+# `kill` and the compose file's stop_signal override send. Both are trapped for
+# the same reason entrypoint_production.sh traps both: an untrapped
 # signal on this bash PID 1 kills the shell immediately, and the kernel SIGKILLs
 # the child the instant PID 1 exits — skipping the graceful drain entirely.
 trap _forward SIGTERM SIGQUIT

@@ -87,6 +87,13 @@ ADD build/fpm/entrypoint/validate_laravel.sh /usr/local/bin/validate_laravel
 # worker can recycle on --max-time without the container exiting and being
 # paced by CrashLoopBackOff. See the script's own header.
 ADD build/fpm/entrypoint/queue_worker.sh /usr/local/bin/queue-worker
+# Runs a long-lived `php` command as a container's process without it becoming
+# unstoppable. The CRI stops a container with the *image's* STOPSIGNAL, which
+# here is php-fpm's SIGQUIT, and a PID 1 has no default action for a signal it
+# does not handle — so `artisan reverb:start`, which subscribes to
+# SIGINT/SIGTERM/SIGTSTP, ignored it outright and had to be SIGKILLed at the end
+# of the grace period. See the script's own header.
+ADD build/fpm/entrypoint/php_daemon.sh /usr/local/bin/php-daemon
 ADD build/fpm/entrypoint/entrypoint_development.sh /usr/local/bin/entrypoint
 
 USER metager:metager

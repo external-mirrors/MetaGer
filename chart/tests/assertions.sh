@@ -346,6 +346,42 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# No long-lived command is the container's own process.
+# ---------------------------------------------------------------------------
+#
+# A container in this image is stopped with the image's STOPSIGNAL — SIGQUIT,
+# inherited from php-fpm — and not with SIGTERM. A PID 1 has no default action
+# applied for a signal it installs no handler for, so a daemon that does not
+# happen to subscribe to SIGQUIT cannot be stopped at all: it runs until the
+# kubelet SIGKILLs it at the end of terminationGracePeriodSeconds. That was
+# reverb, at 301s per pod on every rollout (2026-09-10).
+#
+# So `php` must not be a daemon container's command. queue-worker and php-daemon
+# both run the real command as a child and forward SIGTERM to it; the probes are
+# a different matter, since a one-shot exec is not signalled at all.
+
+echo
+echo "No daemon container runs php as its own process:"
+
+daemon_commands="$(capture grep -oE '^ *command: \["/usr/local/bin/[a-z-]+"\]' "$WORK/rendered.yaml" | sort -u)"
+
+if grep -qE '^ *command: \["/usr/local/bin/php"\]$' <<<"$daemon_commands"; then
+    fail "a container runs /usr/local/bin/php directly" \
+        "an unhandled SIGQUIT on PID 1 does nothing; the pod would wait out its grace period"
+else
+    pass "every daemon command is a wrapper, not php itself"
+fi
+
+# Named explicitly rather than inferred from the absence above: "no bare php"
+# also passes if the reverb container were dropped altogether.
+if grep -qE -- '"/usr/local/bin/php-daemon"' "$WORK/rendered.yaml"; then
+    pass "reverb runs under php-daemon"
+else
+    fail "nothing runs under php-daemon" \
+        "reverb's stop signal would go untranslated again"
+fi
+
+# ---------------------------------------------------------------------------
 # Something drains the broadcast queue.
 # ---------------------------------------------------------------------------
 #

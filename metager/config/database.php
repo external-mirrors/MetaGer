@@ -103,6 +103,58 @@ return [
             'options' => [
                 \PDO::ATTR_TIMEOUT => env('DB_CONNECT_TIMEOUT', 3),
             ],
+            /*
+             * Reads go to a replica, writes to the primary.
+             *
+             * CloudNativePG publishes three Services for a cluster: `-rw`
+             * points at whichever pod is currently primary, `-r` at every
+             * instance that is Ready, and `-ro` at the replicas only. A
+             * planned switchover — what a node drain triggers — takes writes
+             * away for five to fifteen seconds while one instance is demoted
+             * and another promoted. Reads never have to stop for that: the
+             * replicas serve the whole time. Splitting the connection is what
+             * lets the app notice.
+             *
+             * DB_HOST stays the write host and DB_READ_HOST names the read
+             * one. Point it at `-r`, not `-ro`: CNPG drops an instance from
+             * both Services the moment it stops being Ready, so during a
+             * switchover `-r` is *already* just the replicas — while `-ro`
+             * has no endpoints at all on a cluster momentarily down to one
+             * instance, which would turn a write outage into a total one.
+             * `-ro` is the right answer only if the primary must never serve
+             * a read at all, and that is a load decision, not an availability
+             * one.
+             *
+             * Left unset, DB_READ_HOST leaves this connection exactly as it
+             * was: one host, one PDO. That is what docker-compose, the review
+             * environments and the test suite get, and it is also the way to
+             * turn the split off again without a deploy.
+             *
+             * `sticky` keeps a request that has written on the primary for
+             * the rest of that request, so nothing renders from a replica
+             * that has not caught up with what the same request just wrote.
+             * Lag is still visible *between* requests — POST, redirect, GET —
+             * which streaming replication on a healthy cluster answers in
+             * single-digit milliseconds and a browser redirect does not, but
+             * it is not zero.
+             *
+             * Note that sticky is per Connection object and nothing in the
+             * framework ever clears it, so a long-running process pins itself
+             * to the primary on its first write and never reads a replica
+             * again. App\Console\Commands\ScheduleWorker clears it once a
+             * minute for exactly that reason.
+             */
+            ...(env('DB_READ_HOST') ? [
+                'read' => [
+                    'host' => env('DB_READ_HOST'),
+                    'port' => env('DB_READ_PORT', env('DB_PORT', '5432')),
+                ],
+                'write' => [
+                    'host' => env('DB_HOST', 'localhost'),
+                    'port' => env('DB_PORT', '5432'),
+                ],
+                'sticky' => env('DB_STICKY', true),
+            ] : []),
         ],
     ],
 

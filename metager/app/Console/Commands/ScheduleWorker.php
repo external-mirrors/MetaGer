@@ -65,6 +65,7 @@ class ScheduleWorker extends Command
             // front of it will hang up in less than that. See
             // releaseIdleConnections().
             $this->releaseIdleConnections();
+            $this->releaseStickyReads();
             sleep(seconds: 60 - now()->second + 1);
             // sleep() being interrupted by a signal does not reliably run the
             // registered handler on its own — confirmed empirically: with
@@ -146,6 +147,36 @@ class ScheduleWorker extends Command
         // signal-handling this method sits next to.
         foreach (array_keys($redis->connections() ?? []) as $name) {
             $redis->purge($name);
+        }
+    }
+
+    /**
+     * Let the next run read from a replica again.
+     *
+     * `sticky` (config/database.php) makes a connection that has written keep
+     * reading from the primary, so a caller never reads back a replica that
+     * has not caught up with its own write. It is meant to last a request, and
+     * in FPM it does — the process ends and the flag goes with it.
+     *
+     * Nothing in the framework ever clears the flag; there is a
+     * `forgetRecordModificationState()` on Connection and no caller for it.
+     * This process is a loop that lives for as long as the pod does, so the
+     * first scheduled command that writes anything — `logs:gather` inserts a
+     * batch of search log lines every minute — pins every read this process
+     * makes for the rest of its life to the primary. That is the one instance
+     * a switchover takes away, and the heaviest reads MetaGer does (the log
+     * exports and the invoice runs) are here.
+     *
+     * Cleared between runs rather than mid-run: within a single
+     * `schedule:run`, sticky is doing exactly what it is for.
+     *
+     * Public for the same reason as releaseIdleConnections(), and harmless to
+     * call at any other time — the next write sets the flag again.
+     */
+    public function releaseStickyReads(): void
+    {
+        foreach (app("db")->getConnections() as $connection) {
+            $connection->forgetRecordModificationState();
         }
     }
 

@@ -17,6 +17,17 @@ class AnonymousToken extends Controller
     const ANONYMOUSE_TOKEN_CACHE_PAYMENT = "payment";
 
     /**
+     * How long GET_PAYMENT waits for the payment to be published.
+     *
+     * The longest blocking Redis read anything makes on the `default`
+     * connection, which is why that connection's read_write_timeout has to
+     * clear it — see config/database.php and RedisReadTimeoutsTest. Raising
+     * this above that timeout would turn a slow payment into a
+     * Predis\TimeoutException.
+     */
+    const PAYMENT_WAIT_SECONDS = 30;
+
+    /**
      * A client using anonymous token can use this route to retrieve the cost of a specific action
      * @param \Illuminate\Http\Request $request
      */
@@ -112,7 +123,7 @@ class AnonymousToken extends Controller
      */
     public static function GET_PAYMENT(string $payment_id): array|null
     {
-        $payment = self::GET_REDIS_CLIENT()->blpop(self::ANONYMOUS_TOKEN_CACHE_PREFIX . ":" . self::ANONYMOUSE_TOKEN_CACHE_PAYMENT . ":" . $payment_id, 30);
+        $payment = self::GET_REDIS_CLIENT()->blpop(self::ANONYMOUS_TOKEN_CACHE_PREFIX . ":" . self::ANONYMOUSE_TOKEN_CACHE_PAYMENT . ":" . $payment_id, self::PAYMENT_WAIT_SECONDS);
         if ($payment === null) {
             return null;
         } else {

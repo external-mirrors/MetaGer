@@ -189,18 +189,44 @@ return [
 
         'client' => env('REDIS_CLIENT', 'predis'),
 
-        // read_write_timeout -1 means "block in the socket read for ever".
-        // It has to stay that way here: callers on this connection make
-        // genuinely long blocking calls — AnonymousToken blpops for 30s,
-        // AnonymousTokenPayment for a caller-supplied duration, and
-        // EngineOrchestrator brpops for WAIT_SECONDS on the result page — and a
-        // bounded timeout would abort them mid-wait.
-        //
-        // The cost is that a peer which stops answering is indistinguishable
-        // from one that has nothing to say yet. See the 'fetcher' connection
-        // below for where that mattered.
+        /*
+         * Bounded, but only just — this has to clear the longest blocking read
+         * anyone makes on it.
+         *
+         * That is AnonymousToken::PAYMENT_WAIT_SECONDS (30s); after it come the
+         * 10s brpops in Suggestions, KeyAuthorization, PayPal and CiviCrm, and
+         * EngineOrchestrator's WAIT_SECONDS on the result page. A timeout under
+         * any of those would abort a caller that was waiting exactly as
+         * intended, which is why this cannot simply be tightened to match the
+         * 'fetcher' connection below.
+         *
+         * It used to be -1: block in the socket read for ever. `read_write_timeout`
+         * governs waiting for a *reply*, so that applied to every command, not
+         * just the blocking ones — a plain GET on a socket whose peer has
+         * vanished never returns either.
+         *
+         * What made that survivable for web traffic is php-fpm's
+         * `request_terminate_timeout = 30` (build/fpm/configuration/fpm/
+         * www_01_production.conf), which kills the child. Note what does *not*
+         * help: `max_execution_time` explicitly does not count time spent in
+         * stream operations, and nginx's `fastcgi_read_timeout 900` only makes
+         * nginx stop waiting — the fpm child carries on holding its pool slot.
+         * And the development pool sets `request_terminate_timeout = 0`, so on
+         * metager3.de and the review environments nothing collected those
+         * requests at all.
+         *
+         * 35s therefore changes nothing for production web traffic, which fpm
+         * already bounds five seconds earlier. What it removes is "for ever" for
+         * everything that is not an fpm request: the broadcast queue worker, the
+         * scheduler between its connection purges, and any future daemon that
+         * reaches for the default connection. Finite is the difference between
+         * a wedge that ends and one that does not.
+         *
+         * It is not a substitute for what a long-lived consumer needs — see the
+         * 'fetcher' connection below, and the note there about the retry budget.
+         */
         'default' => [
-            'read_write_timeout' => -1,
+            'read_write_timeout' => env('REDIS_READ_TIMEOUT', 35),
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
@@ -249,7 +275,19 @@ return [
             'cluster' => false,
         ],
 
+        // Interchangeable with 'default' by env — REDIS_CACHE_CONNECTION picks
+        // which one the cache store uses — so it carries the same bound. That
+        // matters more than it looks: the payment path reaches Redis through
+        // `config("cache.stores.redis.connection")`, so AnonymousToken's 30s
+        // blocking read lands on whichever of the two is selected.
+        //
+        // Without it this connection set no read timeout at all and inherited
+        // php.ini's default_socket_timeout instead, which is 60s and nothing to
+        // do with what any caller here intended. Unused in every deployed
+        // environment today (REDIS_CACHE_CONNECTION is 'default'), which is the
+        // only reason that was never anyone's outage.
         'cache' => [
+            'read_write_timeout' => env('REDIS_READ_TIMEOUT', 35),
             'host' => env('REDIS_CACHE_HOST', 'localhost'),
             'port' => env('REDIS_CACHE_PORT', 6379),
             'password' => env('REDIS_CACHE_PASSWORD', null),

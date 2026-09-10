@@ -53,20 +53,17 @@ class FetcherRedisConnectionTest extends TestCase
     }
 
     /**
-     * Characterization, not aspiration: this one has to stay -1.
-     *
-     * Callers on the default connection make genuinely long blocking calls —
-     * AnonymousToken blpops for 30s, AnonymousTokenPayment for a
-     * caller-supplied duration, EngineOrchestrator brpops for WAIT_SECONDS — so
-     * bounding it here would abort them mid-wait. That is the whole reason the
-     * worker needed a connection of its own rather than a change to this one.
+     * Why the worker needed a connection of its own rather than a change to the
+     * shared one: the default connection has to stay slack enough for a 30s
+     * blocking read (AnonymousToken::PAYMENT_WAIT_SECONDS), and a worker that
+     * tolerates 30s of silence is a worker that is down for 30s.
      */
-    public function testTheDefaultConnectionStaysUnbounded(): void
+    public function testTheFetcherIsFarTighterThanTheSharedConnection(): void
     {
-        $this->assertSame(
-            -1,
+        $this->assertLessThan(
             config("database.redis.default.read_write_timeout"),
-            "bounding the default connection would cut off the 30s blpop callers"
+            $this->fetcherConnection()["read_write_timeout"],
+            "the point of a separate connection is a tighter timeout than the shared one allows"
         );
     }
 

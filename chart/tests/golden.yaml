@@ -731,6 +731,109 @@ spec:
               cpu: 100m
               memory: 256Mi
             limits:
+        
+        - name: queue-broadcasts
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          command: ["/usr/local/bin/php"]
+          # --max-time for the same reason as the worker above, minus the PDO
+          # part: this one holds a Predis connection through a Valkey failover
+          # instead. Recycling bounds anything that wedge could produce, and a
+          # broadcast worker has nothing in flight worth protecting.
+          args: ["artisan", "queue:work", "redis", "--tries=1", "--sleep=1", "--max-time=300", "--queue=broadcasts"]
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: APP_ENV
+            value: production
+          
+          - name: REDIS_HOST
+            value: golden-valkey-master.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-valkey
+                key: password
+          
+          - name: REDIS_SENTINEL_HOSTS
+            value: golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_SERVICE
+            value: mymaster
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: "stderr"
+          - name: MATOMO_ENABLED
+            value: "true"
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          # Same set as the worker beside it, deliberately. A broadcast job has
+          # no use for sumas.json or the blacklists, but nothing stops a future
+          # queued job landing here, and a container that differs from its
+          # neighbour only in what it will crash on is not worth the saving.
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumas.json
+            subPath: SUMAS_JSON
+          - name: secrets
+            mountPath: /metager/metager_app/config/suggestions.json
+            subPath: SUGGESTIONS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDomains.txt
+            subPath: BLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistUrl.txt
+            subPath: BLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+            subPath: BLACKLIST_DESCRIPTION_URL
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/metager
+            readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/metager/fast_dir
+          # Containers in a pod do not share a PID namespace unless asked to, so
+          # each of these two pgreps sees only its own worker.
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          readinessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
       nodeSelector:
         kubernetes.io/os: linux
       affinity:

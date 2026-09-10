@@ -24,6 +24,13 @@
     # MalformedUriException, and every account and charge page render 500s. Discard
     # broadcasts here; the deployed pod the browsertest job points at keeps its real one.
     BROADCAST_CONNECTION: "null"
+    # Same reason again, for the connection the broadcast *job* is pushed to.
+    # KeyChanged names its own queue connection so the search paths never push a
+    # broadcast into Postgres (config/broadcasting.php); production points that
+    # at `redis`, and here it has to follow QUEUE_CONNECTION back to `sync` — no
+    # worker in this job drains a Redis queue, so anything pushed there would
+    # accumulate and never run.
+    BROADCAST_QUEUE_CONNECTION: sync
     # Not every Redis call goes through the cache. SchedulerHeartbeat reads the stamp with
     # Redis::get, and the search path will block on Redis::brpop, so an array cache store
     # does not make the suite Redis-free — it only hides which parts still need one. Point

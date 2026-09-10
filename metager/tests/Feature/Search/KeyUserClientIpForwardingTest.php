@@ -20,6 +20,13 @@ use Tests\TestCase;
  * `getKeyData()` (charge lookup) and `makePayment()` (discharge) are the two call sites; both are
  * exercised here via a real search request rather than by invoking KeyUser directly, so the
  * assertion covers the actual `Request::ip()` the framework resolves for that request.
+ *
+ * The discharge no longer happens during the request — it is queued and
+ * `keys:settle-discharges` makes it (App\Console\Commands\SettleKeyDischarges).
+ * That is exactly why the header still needs a test: the settler is a background
+ * process with no request and no `Request::ip()` of its own, so the address has
+ * to be carried in the queued payload or it silently stops being sent, and the
+ * keyserver goes back to seeing all of MetaGer as one caller.
  */
 class KeyUserClientIpForwardingTest extends TestCase
 {
@@ -31,6 +38,7 @@ class KeyUserClientIpForwardingTest extends TestCase
     protected function tearDown(): void
     {
         $this->forgetSearchUserClaims(self::KEY);
+        $this->forgetQueuedDischarges();
 
         parent::tearDown();
     }
@@ -53,6 +61,10 @@ class KeyUserClientIpForwardingTest extends TestCase
             [],
             ['REMOTE_ADDR' => self::CLIENT_IP],
         )->assertOk();
+
+        // The request only wrote the charge down. Settling is what talks to the
+        // keyserver, and it is the call whose headers are under test.
+        $this->artisan('keys:settle-discharges')->assertSuccessful();
 
         Http::assertSent(
             fn($request) =>

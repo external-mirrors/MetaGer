@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Prometheus\CollectorRegistry;
 
 class MetaGerSearch extends Controller
 {
@@ -129,11 +128,8 @@ class MetaGerSearch extends Controller
         }
         $query_timer->observeEnd("Search_CacheFiller");
 
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
-        $counter->incBy(sizeof($metager->getResults()));
-        $counter = $registry->getOrRegisterCounter('metager', 'query_counter', 'counts total number of search queries', []);
-        $counter->inc();
+        PrometheusExporter::ResultsReturned(sizeof($metager->getResults()));
+        PrometheusExporter::SearchAnswered();
 
         $query_timer->observeTotal();
         if ($quicktips !== null) {
@@ -376,9 +372,7 @@ class MetaGerSearch extends Controller
         $result["engines"] = $enginesLoaded;
 
         if ($newResults > 0) {
-            $registry = CollectorRegistry::getDefault();
-            $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
-            $counter->incBy($newResults);
+            PrometheusExporter::ResultsReturned($newResults);
         }
         // Update new Engines
         $authorization = app(Authorization::class);

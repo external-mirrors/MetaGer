@@ -67,4 +67,39 @@ class ScheduleWorkerTest extends TestCase
             "The scheduler cannot reconnect after releasing its connections."
         );
     }
+
+    /**
+     * The other thing this process has to let go of once a minute: `sticky`.
+     *
+     * config/database.php splits the Postgres connection so selects go to a
+     * CNPG replica and only writes go to the primary — the instance a
+     * switchover takes away for five to fifteen seconds. `sticky` then keeps a
+     * caller that has written on the primary for the rest of its life, so it
+     * never reads back a replica that has not caught up.
+     *
+     * "The rest of its life" is a request in FPM and the whole of the pod's
+     * uptime here, because this command is one loop that calls schedule:run
+     * in-process, and nothing in the framework ever clears the flag —
+     * Connection::forgetRecordModificationState() exists with no caller in it.
+     * So the first scheduled command that writes anything (logs:gather inserts
+     * a batch of query-log lines every minute) would pin every read the
+     * scheduler makes from then on to the primary, including the heaviest ones
+     * MetaGer does: the log exports and the invoice runs.
+     */
+    public function testTheWorkerStopsReadingFromThePrimaryBetweenRuns(): void
+    {
+        \DB::connection()->recordsHaveBeenModified();
+
+        $this->assertTrue(
+            \DB::connection()->hasModifiedRecords(),
+            "Nothing was sticky, so this test cannot tell a fix from a no-op."
+        );
+
+        $this->app->make(ScheduleWorker::class)->releaseStickyReads();
+
+        $this->assertFalse(
+            \DB::connection()->hasModifiedRecords(),
+            "The scheduler went into the next minute still pinned to the primary — the one instance a CNPG switchover takes away."
+        );
+    }
 }

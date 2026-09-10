@@ -287,15 +287,74 @@ fi
 # zero jobs and that counter never advances.
 
 echo
-echo "The queue worker recycles on a timer:"
+echo "The queue workers recycle on a timer:"
 
 queue_args="$(capture grep -oE '"artisan", "queue:work"[^]]*' "$WORK/rendered.yaml" | sort -u)"
 
-if grep -qE -- '--max-time=[0-9]+' <<<"$queue_args"; then
-    pass "queue:work carries --max-time ($(grep -oE -- '--max-time=[0-9]+' <<<"$queue_args"))"
+# Every worker, not any worker. There are two now — the default one and the
+# broadcast one below — and a `grep -q` over the whole set passes as soon as one
+# of them carries the flag, which is exactly the reading that would let the next
+# worker be added without it.
+worker_count="$(grep -c . <<<"$queue_args")"
+timed_count="$(capture grep -cE -- '--max-time=[0-9]+' <<<"$queue_args")"
+
+if [[ "$worker_count" -gt 0 && "$timed_count" -eq "$worker_count" ]]; then
+    pass "all $worker_count queue:work invocations carry --max-time"
 else
-    fail "queue:work has no --max-time" \
+    fail "$((worker_count - timed_count)) of $worker_count queue:work invocations have no --max-time" \
         "an alive-but-wedged worker after a DB failover would never restart"
+fi
+
+# ---------------------------------------------------------------------------
+# Something drains the broadcast queue.
+# ---------------------------------------------------------------------------
+#
+# App\Events\KeyChanged names its own queue connection and queue so that
+# dispatching it from the start page or the result page never opens a Postgres
+# connection (config/broadcasting.php; QUEUE_CONNECTION is unset in production,
+# so the application default is `database`). That only works if a worker serves
+# the pair it names — a worker serves exactly one connection, and the default
+# one above cannot also serve this. Get this wrong and nothing fails: the
+# broadcasts are pushed, the pages stay fast, and the balance in the browser
+# simply stops updating, with a Redis list growing quietly behind it.
+#
+# The names are the defaults in config/broadcasting.php. If they change there,
+# they change here.
+
+echo
+echo "The broadcast queue has a worker:"
+
+if grep -qE -- '"queue:work", "redis".*--queue=broadcasts' <<<"$queue_args"; then
+    pass "queue:work serves redis/broadcasts"
+else
+    fail "no queue:work serves the redis connection's 'broadcasts' queue" \
+        "KeyChanged would be pushed there and never delivered"
+fi
+
+# ---------------------------------------------------------------------------
+# Something settles the queued keyserver charges.
+# ---------------------------------------------------------------------------
+#
+# A paid search no longer discharges the key while the user waits: it writes the
+# charge to Redis and `keys:settle-discharges` makes it
+# (App\Console\Commands\SettleKeyDischarges). That command is a schedule entry,
+# so the thing that has to exist in the rendered manifests is the scheduler --
+# and without it nothing fails, nothing errors, and no key is ever charged for
+# anything again. The money stops quietly, which is the worst way for it to
+# stop.
+#
+# Asserted on the process rather than on the schedule, because the schedule
+# lives in routes/console.php and is not rendered here. `schedule:list` in the
+# test job is what covers the entry itself.
+
+echo
+echo "The scheduler runs:"
+
+if grep -qE -- '"artisan", "schedule:work-mg"' "$WORK/rendered.yaml"; then
+    pass "a container runs schedule:work-mg"
+else
+    fail "nothing runs the scheduler" \
+        "keys:settle-discharges would never run and no paid search would ever be charged"
 fi
 
 echo

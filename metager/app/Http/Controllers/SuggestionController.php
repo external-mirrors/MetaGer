@@ -10,14 +10,17 @@ use App\Models\Authorization\TokenAuthorization;
 use App\PrometheusExporter;
 use App\SearchSettings;
 use App\Suggestions;
+use App\Support\RedisFailover;
 use Auth;
 use Cache;
 use Carbon;
 use Crypt;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Predis\Pipeline\Pipeline;
+use Predis\PredisException;
 
 class SuggestionController extends Controller
 {
@@ -203,9 +206,32 @@ class SuggestionController extends Controller
     }
 
 
+    /**
+     * These two are also on the *search* path, which is why they are guarded.
+     *
+     * AuthenticationValidation::getSuggestionDebt() calls both before it lets a
+     * request through to MetaGerSearch: it reads the group list, then aborts
+     * every pending suggestion in it, because a search is about to spend the
+     * token those suggestions were queued against. So a Sentinel promotion
+     * landing here answered a perfectly serviceable search with a 503 — and the
+     * abort is a write (`rpush`), which is exactly what a demoted node refuses.
+     *
+     * Both degrade rather than propagate. An unread group list is an empty one:
+     * nothing gets aborted, and those suggestion requests expire on their own
+     * few hundred milliseconds later. An abort that cannot be written means one
+     * suggestion request waits out its own delay instead of being told to stop.
+     * Neither is worth an error page.
+     */
     public static function GET_SUGGESTION_GROUP_LIST($suggest_group): array
     {
-        $list = Redis::lrange($suggest_group, 0, -1);
+        try {
+            $list = RedisFailover::retry(fn() => Redis::lrange($suggest_group, 0, -1));
+        } catch (PredisException $e) {
+            Log::warning("Could not read the suggestion group: " . $e->getMessage());
+
+            return [];
+        }
+
         if ($list === null) {
             $list = [];
         }
@@ -219,8 +245,15 @@ class SuggestionController extends Controller
             $expiration->addMilliseconds(app(SearchSettings::class)->suggestion_delay);
         }
         $key = "suggest:delay:request:$uuid";
-        Redis::rpush($key, $status_code);
-        Redis::pexpireat($key, $expiration->getTimestampMs());
+
+        try {
+            RedisFailover::retry(fn() => Redis::pipeline(function ($pipe) use ($key, $status_code, $expiration) {
+                $pipe->rpush($key, $status_code);
+                $pipe->pexpireat($key, $expiration->getTimestampMs());
+            }));
+        } catch (PredisException $e) {
+            Log::warning("Could not abort a suggestion request: " . $e->getMessage());
+        }
     }
 
     private function addSuggestGroupRequest($suggest_group, $uuid, ?\Carbon\Carbon $expiration = null): array

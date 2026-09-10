@@ -42,6 +42,13 @@
         <env name="CACHE_STORE" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
+        <!-- App\Events\KeyChanged pushes its broadcast onto its own queue connection
+             so the start and result pages never reach Postgres for it (see
+             config/broadcasting.php). In production that connection is `redis`;
+             here it has to follow QUEUE_CONNECTION back to `sync`, or the suite
+             would push real jobs onto a real Redis list that no worker in the test
+             environment drains. Forced, because .env.example names `redis`. -->
+        <env name="BROADCAST_QUEUE_CONNECTION" value="sync" force="true"/>
         <!-- Force-disabled rather than just unset: a developer's local .env can carry a
              real DSN, needed to smoke-test the integration against GlitchTip directly.
              Without this override that DSN leaks into the test run, and every

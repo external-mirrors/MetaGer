@@ -167,28 +167,40 @@ class KeyUserClaimsTest extends TestCase
     }
 
     /**
-     * Paying releases the claim: the tokens have left the key for real now, so
-     * holding them aside as well would charge the key twice over.
+     * Paying holds the claim, and asks nobody.
+     *
+     * This is the half of the old behaviour that moved. The discharge is no
+     * longer made while the user waits — it is written to a Redis list and
+     * `keys:settle-discharges` makes it — so at this point the tokens have left
+     * the key and *nothing* has recorded that yet. The claim is the only thing
+     * standing between that gap and the same tokens being spent twice, so it
+     * has to survive the payment and be released by whoever settles it.
+     *
+     * The release is pinned where it now happens, in
+     * {@see \Tests\Feature\Search\DischargeSettlementTest}.
      */
-    public function testPayingReleasesTheClaim(): void
+    public function testPayingHoldsTheClaimUntilItIsSettled(): void
     {
         $this->fakeDischarge(remainingCharge: 7.0);
 
         $user = $this->keyUser(charge: 10.0);
         $user->authorize(3.0);
 
-        $this->assertTrue($user->makePayment(3.0), "The discharge did not go through.");
+        $this->assertTrue($user->makePayment(3.0), "The discharge was not queued.");
         $this->assertEqualsWithDelta(
-            0.0,
+            3.0,
             $this->claimedInRedis(),
             0.001,
-            "The claim outlived the payment it stood in for, so the key is short by that much until it expires."
+            "The claim was released while the charge was still sitting in the queue, so those tokens are spendable twice."
         );
+        Http::assertNothingSent();
     }
 
     /**
      * Paying more than was claimed claims the difference first, so the payment
-     * is still covered by a claim while it is in flight.
+     * is still covered by a claim while it is in flight — and now it is in
+     * flight for as long as the queue holds it, which makes the top-up matter
+     * more, not less.
      */
     public function testPayingMoreThanWasClaimedToppsTheClaimUpFirst(): void
     {
@@ -199,11 +211,11 @@ class KeyUserClaimsTest extends TestCase
 
         $this->assertTrue($user->makePayment(4.0));
         $this->assertEqualsWithDelta(
-            0.0,
+            4.0,
             $this->claimedInRedis(),
             0.001,
-            "Claimed 1, topped up to 4, paid 4 — so nothing should be left claimed. Without the top-up this lands at -3, "
-                . "meaning the key was holding a claim smaller than the payment it was covering."
+            "Claimed 1, topped up to 4, queued 4 — so 4 should be held. Anything less means the key is holding a claim "
+                . "smaller than the charge it is covering, and the difference is spendable twice."
         );
     }
 

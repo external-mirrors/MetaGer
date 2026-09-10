@@ -150,4 +150,37 @@ class PrometheusExporter
             $counter->inc();
         });
     }
+
+    /**
+     * How many results a search answered with, and that a search happened.
+     *
+     * These two lived in MetaGerSearch as bare `CollectorRegistry::getDefault()`
+     * calls — the only metrics in the application that did not come through
+     * here, and therefore the only ones that could still fail a request. Both
+     * sit at the very end of the search, after the engines have answered and
+     * the page has been assembled, so a Valkey blip there threw away a search
+     * that had already succeeded in every way that matters to the user. That is
+     * the exact shape of the 2026-09-08 finding this class was written for; it
+     * had simply never been applied to the result page's own two counters.
+     *
+     * Split in two because the load-more path reports more results without
+     * being another search.
+     */
+    public static function ResultsReturned(int $count)
+    {
+        self::record(function () use ($count) {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
+            $counter->incBy($count);
+        });
+    }
+
+    public static function SearchAnswered()
+    {
+        self::record(function () {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter('metager', 'query_counter', 'counts total number of search queries', []);
+            $counter->inc();
+        });
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Support\RedisFailover;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
+use Predis\PredisException;
 use DB;
 
 class QueryLogger
@@ -69,9 +71,20 @@ class QueryLogger
             "query_string" => $this->query_string
         ];
 
-        /** @var \Redis $redis */
-        $redis = Redis::connection();
-        $redis->rpush(self::REDIS_KEY, \json_encode($log_entry));
+        // The last Redis write of a search, and the least consequential: this
+        // runs from MetaGer::createView(), after the engines have answered and
+        // the page has been built. An unguarded -READONLY here threw away a
+        // search that had already succeeded — the whole page, in exchange for
+        // one line of a log that `logs:gather` drains into Postgres in batches
+        // later anyway.
+        //
+        // Retried across a promotion, then dropped. A gap in the query log
+        // costs a statistic; the alternative costs the page it was logging.
+        try {
+            RedisFailover::retry(fn() => Redis::connection()->rpush(self::REDIS_KEY, \json_encode($log_entry)));
+        } catch (PredisException $e) {
+            Log::warning("Dropped a query log line: " . $e->getMessage());
+        }
     }
 
     /**

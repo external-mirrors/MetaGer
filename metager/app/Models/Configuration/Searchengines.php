@@ -244,10 +244,31 @@ class Searchengines
 
     public function checkPagination()
     {
-        if (!\Request::has("next") || !\Cache::has(\Request::input("next"))) {
+        if (!\Request::has("next")) {
             return;
         }
-        $next = unserialize(\Cache::get(\Request::input("next")));
+
+        // Page two of a search. A cache that cannot be read here degrades to a
+        // fresh search for the same query rather than a 503 — the engines are
+        // re-queried and the user gets results, which is a far better answer to
+        // "next page" during a two-second failover than an error page.
+        try {
+            $next = \App\Support\RedisFailover::retry(fn() => \Cache::get(\Request::input("next")));
+        } catch (\Predis\PredisException $e) {
+            \Log::warning("Could not read the pagination state: " . $e->getMessage());
+
+            return;
+        }
+
+        // One `get` where this used to be a `has` followed by a `get` — two
+        // round trips, the first only asking whether the second would find
+        // anything. `null` is the miss, and an entry that will not unserialize
+        // is treated as one: the alternative is a fatal on `$next["engines"]`
+        // below, which is what an entry truncated by an eviction would produce.
+        if ($next === null || !is_array($next = unserialize($next))) {
+            return;
+        }
+
         // Pagination call detected. Disable all Searchengines and replace the searchengines with the cached ones
         foreach ($this->sumas as $suma) {
             $suma->configuration->disabled = true;

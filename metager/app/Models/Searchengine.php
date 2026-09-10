@@ -7,11 +7,14 @@ use App\MetaGer;
 use App\Models\Authorization\Authorization;
 use App\PrometheusExporter;
 use App\SearchSettings;
+use App\Support\RedisFailover;
 use App\Support\UpstreamUserAgent;
 use Auth;
 use Cache;
 use Carbon;
 use LaravelLocalization;
+use Log;
+use Predis\PredisException;
 
 abstract class Searchengine
 {
@@ -170,8 +173,19 @@ abstract class Searchengine
 
         // Increase ratelimit counter
         if ($this->configuration->monthlyRequests !== null) {
-            // Increment counter for monthly searchengine usage
-            Cache::increment($this->ratelimitKey);
+            // Increment counter for monthly searchengine usage.
+            //
+            // An INCR, so a demoted node answers it -READONLY, and this runs
+            // once per paid engine on every uncached search — which made it one
+            // of the most-executed unguarded writes on the result path. Retried
+            // and then dropped: a monthly quota counter that misses a tick
+            // during a failover is off by a handful out of hundreds of
+            // thousands, and self-corrects at the start of the next month.
+            try {
+                RedisFailover::retry(fn() => Cache::increment($this->ratelimitKey));
+            } catch (PredisException $e) {
+                Log::warning("Could not count an engine request: " . $e->getMessage());
+            }
         }
 
         return $mission;
@@ -302,10 +316,32 @@ abstract class Searchengine
 
             $seconds_this_month_until_now = (new Carbon("first day of this month"))->hour(0)->minute(0)->second(0)->microsecond(0)->diffInSeconds(now(), true);
             $allowed_requests_until_now = round(($seconds_this_month_until_now / $seconds_this_month) * $request_limit_this_month);
-            $requests_this_month = intval(Cache::get($this->ratelimitKey, $allowed_requests_until_now));
 
-            // Initialize if not set yet
-            Cache::add($this->ratelimitKey, $requests_this_month, (new Carbon("first day of next month"))->hour(0)->minute(0)->second(0)->microsecond(0));
+            // A quota we cannot read is not a quota we may enforce. Retried
+            // first; if it still cannot be answered, this reports "not limited"
+            // and the engine is queried. That is the right way round: guessing
+            // "limited" would disable engines across the whole fleet for the
+            // seconds a promotion takes, turning a Valkey failover into visibly
+            // emptier result pages — the exact failure this work exists to
+            // remove. Over-running a monthly quota by a few seconds' worth of
+            // traffic is the cheaper mistake.
+            try {
+                $requests_this_month = intval(RedisFailover::retry(
+                    fn() => Cache::get($this->ratelimitKey, $allowed_requests_until_now)
+                ));
+
+                // Initialize if not set yet
+                RedisFailover::retry(fn() => Cache::add(
+                    $this->ratelimitKey,
+                    $requests_this_month,
+                    (new Carbon("first day of next month"))->hour(0)->minute(0)->second(0)->microsecond(0)
+                ));
+            } catch (PredisException $e) {
+                Log::warning("Could not read an engine ratelimit: " . $e->getMessage());
+
+                return false;
+            }
+
             if ($allowed_requests_until_now <= $requests_this_month) {
                 return true;
             } else {

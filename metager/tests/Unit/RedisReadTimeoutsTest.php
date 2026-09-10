@@ -73,6 +73,7 @@ class RedisReadTimeoutsTest extends TestCase
         // connection would otherwise pass without asserting anything.
         $this->assertContains("default", $checked);
         $this->assertContains("fetcher", $checked);
+        $this->assertContains("queue", $checked);
     }
 
     /**

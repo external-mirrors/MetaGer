@@ -275,6 +275,36 @@ return [
             'cluster' => false,
         ],
 
+        /*
+         * The queue workers' own connection, for the same reason as the
+         * fetcher's: a `queue:work` daemon resolves one Redis connection at
+         * startup and holds its socket for the life of the pod.
+         *
+         * Only the broadcast worker reaches it today — QUEUE_CONNECTION is
+         * unset in production, so the application default is `database`, and
+         * config/broadcasting.php names `redis` for broadcasts alone. That
+         * worker's whole job is delivering a balance the user is watching
+         * update, so 35s of silence per pop is not a bound worth having.
+         *
+         * Tighter than the shared connection is only safe because the queue
+         * driver makes no blocking read: config/queue.php pins `block_for` to
+         * null, so retrieveNextJob() polls with an eval and never blpops. That
+         * pairing is load-bearing — see Tests\Unit\QueueRedisConnectionTest,
+         * which fails if either half moves.
+         */
+        'queue' => [
+            'read_write_timeout' => env('REDIS_QUEUE_READ_TIMEOUT', 3.0),
+            // Paid only on a reconnect, which is exactly when the far side may
+            // be gone; Predis' 5s default would make recovering from a dead
+            // master slower than noticing it.
+            'timeout' => env('REDIS_QUEUE_CONNECT_TIMEOUT', 1.0),
+            'host' => env('REDIS_HOST', 'localhost'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => 0,
+            'cluster' => false,
+        ],
+
         // Interchangeable with 'default' by env — REDIS_CACHE_CONNECTION picks
         // which one the cache store uses — so it carries the same bound. That
         // matters more than it looks: the payment path reaches Redis through

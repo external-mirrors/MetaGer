@@ -143,9 +143,16 @@ spec:
           image: "{{ template "fpm_image" . }}"
           # --max-time, and the supervisor that absorbs it, for the same reasons
           # as the worker above — minus the PDO part: this one holds a Predis
-          # connection through a Valkey failover instead. Recycling bounds
-          # anything that wedge could produce, and a broadcast worker has
-          # nothing in flight worth protecting.
+          # connection through a Valkey failover instead.
+          #
+          # That wedge is fixed in the application now, not bounded here. The
+          # `redis` queue connection has its own bounded Redis connection and is
+          # built by App\Queue\FailoverRedisConnector, so a failover costs this
+          # worker a reconnect inside one pop rather than up to five minutes of
+          # undelivered balance updates (config/queue.php, config/database.php).
+          # The recycle stays as the backstop for whatever that does not
+          # anticipate — a broadcast worker has nothing in flight worth
+          # protecting, so restarting it is close to free.
           command: ["/usr/local/bin/queue-worker"]
           args: ["redis", "--tries=1", "--sleep=1", "--max-time=300", "--queue=broadcasts"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
@@ -161,6 +168,13 @@ spec:
           {{- include "chart.mounts.storage" . | nindent 10 }}
           # Containers in a pod do not share a PID namespace unless asked to, so
           # each of these two pgreps sees only its own worker.
+          #
+          # Still pgrep and not a progress probe, for the reason given next door:
+          # a wedged worker's loop keeps running. What makes that acceptable here
+          # rather than merely bounded is that this worker's only Redis call is a
+          # pop that reconnects itself — see App\Queue\FailoverRedisQueue, and
+          # Tests\Unit\QueueRedisConnectionTest for why pop() being the whole
+          # loop is a pinned invariant and not an accident.
           livenessProbe:
             exec:
               command:

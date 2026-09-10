@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+# Stands in for `php` so queue_worker.sh can be tested without a PHP toolchain,
+# a database or a queue. The supervisor calls `php` unqualified, so putting this
+# first on PATH is enough.
+#
+# Behaviour is driven by the environment:
+#
+#   STUB_ARGV_FILE      one line appended per invocation, holding the full argv
+#   STUB_RUN_SECONDS    how long to stay up before exiting on its own, standing
+#                       in for a --max-time recycle
+#   STUB_EXIT_STATUS    what to exit with when that time is up
+#   STUB_DRAIN_SECONDS  how long to keep running after SIGTERM, standing in for
+#                       queue:work finishing the job in hand
+#   STUB_EVENT_FILE     one line appended per lifecycle event, so a test can
+#                       assert on the order signals and exits happened in
+set -uo pipefail
+
+event() { [[ -n "${STUB_EVENT_FILE:-}" ]] && printf '%s\n' "$1" >>"$STUB_EVENT_FILE"; return 0; }
+
+printf '%s\n' "$*" >>"${STUB_ARGV_FILE:-/dev/null}"
+event "started"
+
+_term() {
+    event "term-received"
+    sleep "${STUB_DRAIN_SECONDS:-0}"
+    event "drained"
+    exit 0
+}
+
+trap _term SIGTERM
+
+# Backgrounded so the trap runs promptly: a foreground `sleep` in bash is only
+# interrupted once it returns, which would hide a supervisor that signals late.
+sleep "${STUB_RUN_SECONDS:-1}" &
+wait $!
+
+event "self-exit"
+exit "${STUB_EXIT_STATUS:-0}"

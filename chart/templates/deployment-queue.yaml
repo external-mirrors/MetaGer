@@ -49,9 +49,11 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
-          command: ["/usr/local/bin/php"]
-          # --max-time recycles the process every 5 minutes. The point is not
-          # memory: it is that this is a long-lived daemon holding one PDO
+          # Not php directly: queue-worker is a supervisor that runs
+          # `artisan queue:work` in a loop (build/fpm/entrypoint/queue_worker.sh).
+          #
+          # --max-time recycles the *worker process* every 5 minutes. The point
+          # is not memory: it is that this is a long-lived daemon holding one PDO
           # connection, and nothing inside a held connection can notice a
           # Postgres primary changing under it. After a CNPG failover the worker
           # keeps the socket to the old primary; the database queue driver opens
@@ -59,11 +61,17 @@ spec:
           # desyncs from PDO's state every subsequent pop() throws "There is
           # already an active transaction" forever — reported to GlitchTip once
           # a second, with pgrep still passing so k8s never restarts it (issue
-          # 1387, the cluster outage of 2026-09-09). max-time is a clean
-          # self-exit after the current job, so it bounds that wedge to ~5min
-          # and picks up the new primary on the next start. A real
-          # progress-based probe is the proper fix and is still owed.
-          args: ["artisan", "queue:work", "--backoff=60", "--tries=5", "--sleep=1", "--max-time=300", "--queue=donations,default,general"]
+          # 1387, the cluster outage of 2026-09-09).
+          #
+          # The supervisor is what keeps that recycle from being a container
+          # restart. Run as the container's own process, the self-exit was paced
+          # by CrashLoopBackOff like any other exit — 301s of work, then 81-95s
+          # of backoff, measured in production on 2026-09-10. That is no worker
+          # at all for ~22% of the time and ten restarts an hour per container,
+          # reported as "Back-off restarting failed container" for a worker that
+          # exited 0. Recycling inside the container costs neither.
+          command: ["/usr/local/bin/queue-worker"]
+          args: ["--backoff=60", "--tries=5", "--sleep=1", "--max-time=300", "--queue=donations,default,general"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
           {{- include "chart.env" (dict "root" .) | nindent 10 }}
@@ -71,10 +79,18 @@ spec:
           {{- include "chart.mounts.env" . | nindent 10 }}
           {{- include "chart.mounts.config" . | nindent 10 }}
           {{- include "chart.mounts.storage" . | nindent 10 }}
-          # Unchanged from the sidecar. pgrep only proves the process exists, not
-          # that it is draining anything — a queue worker has no equivalent of
-          # the scheduler's heartbeat to check against. Until it grows one, the
-          # --max-time above is what bounds an alive-but-wedged worker.
+          # pgrep only proves a worker process exists, not that it is draining
+          # anything — a queue worker has no equivalent of the scheduler's
+          # heartbeat to check against, and the wedge above does not stop the
+          # worker's loop (pop() throws, gets reported, sleeps a second and
+          # continues), so a probe hung off Looping would keep passing too.
+          # Until one exists that keys off consecutive pop failures, the
+          # --max-time recycle is what bounds an alive-but-wedged worker.
+          #
+          # Matches the worker process, not the supervisor: "queue-worker" does
+          # not contain "queue:work", so this asks about the thing that does the
+          # work. The sub-second gap between one worker exiting and the next
+          # starting is covered by failureThreshold 3 at a 10s period.
           livenessProbe:
             exec:
               command:
@@ -125,12 +141,13 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
-          command: ["/usr/local/bin/php"]
-          # --max-time for the same reason as the worker above, minus the PDO
-          # part: this one holds a Predis connection through a Valkey failover
-          # instead. Recycling bounds anything that wedge could produce, and a
-          # broadcast worker has nothing in flight worth protecting.
-          args: ["artisan", "queue:work", "redis", "--tries=1", "--sleep=1", "--max-time=300", "--queue=broadcasts"]
+          # --max-time, and the supervisor that absorbs it, for the same reasons
+          # as the worker above — minus the PDO part: this one holds a Predis
+          # connection through a Valkey failover instead. Recycling bounds
+          # anything that wedge could produce, and a broadcast worker has
+          # nothing in flight worth protecting.
+          command: ["/usr/local/bin/queue-worker"]
+          args: ["redis", "--tries=1", "--sleep=1", "--max-time=300", "--queue=broadcasts"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
           {{- include "chart.env" (dict "root" .) | nindent 10 }}

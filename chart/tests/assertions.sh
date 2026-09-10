@@ -272,7 +272,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# The queue worker recycles itself on a timer.
+# The queue worker recycles itself on a timer, under a supervisor.
 # ---------------------------------------------------------------------------
 #
 # queue:work is a long-lived daemon on the database queue driver, holding one
@@ -285,11 +285,26 @@ fi
 # worker checks every loop iteration whether or not a job was popped, so a
 # wedged worker still hits it. --max-jobs would not — a wedged worker processes
 # zero jobs and that counter never advances.
+#
+# The two assertions below are a pair, and the second is the one this file
+# exists for. --max-time as the *container's* command was the first attempt, and
+# it produced a second incident of its own: a Deployment container has
+# restartPolicy Always, and the kubelet paces every restart through
+# CrashLoopBackOff regardless of exit code. Measured in production on
+# 2026-09-10, 301s of work then 81-95s of backoff — no worker at all for ~22% of
+# the time, ten restarts an hour per container, and a continuous
+# "Back-off restarting failed container" for a worker that exited 0. So the
+# recycle has to happen inside the container, under
+# build/fpm/entrypoint/queue_worker.sh. Either half alone is a known outage:
+# --max-time without the supervisor is the churn, the supervisor without
+# --max-time is the wedge.
 
 echo
 echo "The queue workers recycle on a timer:"
 
-queue_args="$(capture grep -oE '"artisan", "queue:work"[^]]*' "$WORK/rendered.yaml" | sort -u)"
+# Anchored on --queue= rather than on the command, because the command is now
+# the supervisor and the flags are what identify a worker.
+queue_args="$(capture grep -oE '^ *args: \["[^]]*--queue=[^]]*\]' "$WORK/rendered.yaml" | sort -u)"
 
 # Every worker, not any worker. There are two now — the default one and the
 # broadcast one below — and a `grep -q` over the whole set passes as soon as one
@@ -299,10 +314,35 @@ worker_count="$(grep -c . <<<"$queue_args")"
 timed_count="$(capture grep -cE -- '--max-time=[0-9]+' <<<"$queue_args")"
 
 if [[ "$worker_count" -gt 0 && "$timed_count" -eq "$worker_count" ]]; then
-    pass "all $worker_count queue:work invocations carry --max-time"
+    pass "all $worker_count queue workers carry --max-time"
 else
-    fail "$((worker_count - timed_count)) of $worker_count queue:work invocations have no --max-time" \
+    fail "$((worker_count - timed_count)) of $worker_count queue workers have no --max-time" \
         "an alive-but-wedged worker after a DB failover would never restart"
+fi
+
+echo
+echo "The recycle is absorbed inside the container:"
+
+# The supervisor has to be the container's command for the --max-time exit to
+# cost nothing. Counted against worker_count for the same "every, not any"
+# reason as above.
+supervised="$(capture grep -c '"/usr/local/bin/queue-worker"' "$WORK/rendered.yaml")"
+
+if [[ "$worker_count" -gt 0 && "$supervised" -eq "$worker_count" ]]; then
+    pass "all $worker_count queue workers run under queue-worker"
+else
+    fail "$supervised of $worker_count queue workers run under the supervisor" \
+        "a --max-time exit as the container's own process is paced by CrashLoopBackOff"
+fi
+
+# The specific regression: putting php back as the command. That reads as a
+# simplification — one less moving part, the flags are all still there — and it
+# reinstates the 22% duty cycle without changing a single flag.
+if grep -qE -- '"artisan", "queue:work"' "$WORK/rendered.yaml"; then
+    fail "a queue worker invokes artisan queue:work directly" \
+        "the --max-time self-exit is then a container exit, paced by CrashLoopBackOff"
+else
+    pass "no worker invokes php/artisan directly"
 fi
 
 # ---------------------------------------------------------------------------
@@ -324,8 +364,8 @@ fi
 echo
 echo "The broadcast queue has a worker:"
 
-if grep -qE -- '"queue:work", "redis".*--queue=broadcasts' <<<"$queue_args"; then
-    pass "queue:work serves redis/broadcasts"
+if grep -qE -- '\["redis",.*--queue=broadcasts' <<<"$queue_args"; then
+    pass "a queue worker serves redis/broadcasts"
 else
     fail "no queue:work serves the redis connection's 'broadcasts' queue" \
         "KeyChanged would be pushed there and never delivered"

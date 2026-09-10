@@ -83,6 +83,10 @@ ADD build/fpm/configuration/php/development.ini $PHP_INI_DIR/conf.d/development.
 ADD build/fpm/configuration/fpm/www_01_development.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
 
 ADD build/fpm/entrypoint/validate_laravel.sh /usr/local/bin/validate_laravel
+# Supervises `artisan queue:work` for the queue Deployment's containers, so the
+# worker can recycle on --max-time without the container exiting and being
+# paced by CrashLoopBackOff. See the script's own header.
+ADD build/fpm/entrypoint/queue_worker.sh /usr/local/bin/queue-worker
 ADD build/fpm/entrypoint/entrypoint_development.sh /usr/local/bin/entrypoint
 
 USER metager:metager

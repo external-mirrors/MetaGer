@@ -16,22 +16,30 @@ use Throwable;
  * the docblock on it says "it is read by the liveness probe", and the probe was
  * `pgrep -f requests:fetcher`, which only ever proved a process existed.
  *
- * That gap was the outage of 2026-09-10. Sentinel promoted a new Valkey master
- * after a node's container runtime restarted; the fetcher stayed alive holding
- * a half-open socket and stopped consuming. `read_write_timeout` is -1 on the
- * default connection (config/database.php) — it has to be, because callers on
- * that connection block for up to 30s on a `blpop` — so a read from a peer that
- * will never answer blocks in PHP for ever rather than raising a
- * CommunicationException. No exception means App\Support\RedisFailover never
- * sees a failover to retry, the loop never comes back round to the top, and the
- * stamp stops advancing. `pgrep` passed the whole time. `fetcher.queue` grew to
- * ~1200 missions and every search rendered empty for about fifteen minutes.
+ * That gap was the outage of 2026-09-10, when draining the mailu pod hit a
+ * CephFS kernel panic and rebooted the node instantly: the Valkey master went
+ * without a preStop hook, so nothing closed its sockets, and the worker's read
+ * went into a socket that would never answer. `pgrep` passed the whole time.
+ * `fetcher.queue` grew to ~1200 missions and every search rendered empty for
+ * about fifteen minutes.
+ *
+ * **This is the backstop, not the fix.** The worker now repairs itself: its
+ * connection has a bounded read timeout (RequestFetcher::REDIS_CONNECTION), so
+ * a peer that stops answering raises Predis\TimeoutException, RedisFailover
+ * drops the socket and reconnects through the master proxy, and the loop
+ * carries on — measured at 3.6s from black-holing the master's socket to the
+ * heartbeat advancing again, with no restart. A node drain happens several
+ * times a week; being restarted by a probe every time is not an answer.
+ *
+ * What is left for this class is the wedge nobody has anticipated — a hang
+ * somewhere the bounded timeout does not reach. So it stays, and its tolerance
+ * is set for that role rather than for fast detection: if this probe is what
+ * recovers the worker, the mechanism above has already failed.
  *
  * Keyed off the stamp rather than off queue depth, because a deep queue is
  * ambiguous — a traffic spike looks the same as a wedge — while a stamp that
  * has stopped advancing means the loop itself has stopped, whichever call
- * inside it is hanging. It is the one signal that catches a wedge this class
- * has not been taught to recognise.
+ * inside it is hanging.
  *
  * Read by an exec probe only (`artisan fetcher:healthcheck`). Unlike the
  * scheduler there is no HTTP twin to keep in step: the worker Deployment runs
@@ -53,14 +61,24 @@ class FetcherHeartbeat
      * the multicurl handle goes with the process, so every engine response in
      * flight is discarded and every search waiting on one renders without it.
      *
-     * Sixty seconds clears that with roughly double the margin, and still turns
-     * a wedge that ran for fifteen minutes into one caught inside two.
+     * Sixty seconds clears that with roughly double the margin. It is not the
+     * number that decides how fast a failover is survived — that is ~3.6s, and
+     * it happens without a restart — only how long an *unanticipated* hang can
+     * last. Tightening it trades a rarely-used backstop against restarting a
+     * healthy worker mid-failover, which is the expensive mistake: the
+     * multicurl handle goes with the process.
      */
     public const MAX_AGE_IN_SECONDS = 60;
 
     public static function lastLoopAt(): ?Carbon
     {
-        $stamp = Redis::get(RequestFetcher::HEALTHCHECK_KEY);
+        // The worker's own connection, not `default`: this is a liveness probe,
+        // and a probe that can block for ever in a socket read is no better
+        // than the pgrep it replaced. RequestFetcher::REDIS_CONNECTION bounds
+        // the read, so an unreachable Valkey becomes an exception the caller
+        // reports rather than a probe the kubelet has to time out.
+        $stamp = Redis::connection(RequestFetcher::REDIS_CONNECTION)
+            ->get(RequestFetcher::HEALTHCHECK_KEY);
 
         if (empty($stamp)) {
             return null;

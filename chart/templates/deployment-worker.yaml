@@ -45,33 +45,42 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          # Not pgrep. `pgrep -f requests:fetcher` only ever proved a process
-          # existed, and this worker's characteristic failure is a process that
-          # exists and has stopped working: it can hold a half-open socket to a
-          # Valkey node Sentinel has demoted and hang inside a blocking read,
-          # which read_write_timeout -1 lets block for ever (it has to be -1 —
-          # callers on that connection blpop for up to 30s). No exception means
-          # App\Support\RedisFailover never sees a failover to retry, and the
-          # loop never comes back round.
+          # The backstop, not the failover mechanism.
           #
-          # That was the outage of 2026-09-10: pgrep passed throughout,
-          # fetcher.queue grew to ~1200 missions, and every search rendered
-          # empty for about fifteen minutes until the Deployment was restarted
-          # by hand. This is a single replica, so the one wedged process was all
-          # of search.
+          # A node drain happens several times a week, so the worker survives a
+          # Valkey promotion on its own: RequestFetcher::REDIS_CONNECTION bounds
+          # the read timeout, so a master that vanishes without closing its
+          # sockets raises Predis\TimeoutException instead of blocking for ever,
+          # and App\Support\RedisFailover drops the socket and reconnects
+          # through the master proxy. Measured at 3.6s from black-holing the
+          # master's socket to the fetch loop running again, no restart
+          # involved. Being restarted by a probe on every drain is not an
+          # answer.
+          #
+          # What these probes are for is the hang that mechanism does not reach.
+          # They are still not pgrep: `pgrep -f requests:fetcher` proves a
+          # process exists, and this worker's characteristic failure is a
+          # process that exists and has stopped working. It passed throughout
+          # the outage of 2026-09-10 — mailu's drain hit a CephFS kernel panic,
+          # the node rebooted instantly, and the worker sat in a dead socket
+          # while fetcher.queue grew to ~1200 missions and every search rendered
+          # empty for fifteen minutes. Single replica, so that one process was
+          # all of search.
           #
           # fetcher:healthcheck reads the heartbeat the loop stamps at the top of
           # every iteration, so it fails whichever call inside the loop is the
-          # one hanging. See App\Support\FetcherHeartbeat for the tolerance.
+          # one hanging. See App\Support\FetcherHeartbeat for the tolerance and
+          # why it is deliberately loose.
           #
-          # 60s of tolerance plus three misses 15s apart: a wedge costs at most
-          # ~105s, against the ~2s a Sentinel promotion takes — which cannot
-          # produce three consecutive failures, and must not, because a restart
-          # discards every engine response in flight.
+          # timeoutSeconds is set explicitly because the default is 1s: the
+          # command takes ~130ms, but its own Redis read can take up to the
+          # bounded timeout, and that should be reported as the failure it is
+          # rather than as a probe that ran out of time.
           livenessProbe:
             exec:
               command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
             periodSeconds: 15
+            timeoutSeconds: 5
             failureThreshold: 3
           # Nothing routes traffic here — no Service selects these pods — so
           # readiness is not about load balancing. It is kept because
@@ -82,6 +91,7 @@ spec:
             exec:
               command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
             periodSeconds: 15
+            timeoutSeconds: 5
             failureThreshold: 3
           # The first stamp lands on the first loop iteration, which is
           # immediate — but handle() retries Redis up to ten times before
@@ -90,6 +100,7 @@ spec:
             exec:
               command: ["/usr/local/bin/php", "artisan", "fetcher:healthcheck"]
             periodSeconds: 5
+            timeoutSeconds: 5
             failureThreshold: 24
           resources:
             requests:

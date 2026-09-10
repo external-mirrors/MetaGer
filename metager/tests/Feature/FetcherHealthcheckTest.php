@@ -30,7 +30,7 @@ class FetcherHealthcheckTest extends TestCase
 {
     protected function tearDown(): void
     {
-        Redis::del(RequestFetcher::HEALTHCHECK_KEY);
+        Redis::connection(RequestFetcher::REDIS_CONNECTION)->del(RequestFetcher::HEALTHCHECK_KEY);
 
         parent::tearDown();
     }
@@ -38,12 +38,12 @@ class FetcherHealthcheckTest extends TestCase
     private function heartbeatAt(?Carbon $moment): void
     {
         if ($moment === null) {
-            Redis::del(RequestFetcher::HEALTHCHECK_KEY);
+            Redis::connection(RequestFetcher::REDIS_CONNECTION)->del(RequestFetcher::HEALTHCHECK_KEY);
 
             return;
         }
 
-        Redis::set(
+        Redis::connection(RequestFetcher::REDIS_CONNECTION)->set(
             RequestFetcher::HEALTHCHECK_KEY,
             $moment->format(RequestFetcher::HEALTHCHECK_FORMAT)
         );
@@ -90,7 +90,8 @@ class FetcherHealthcheckTest extends TestCase
      */
     public function testAMalformedHeartbeatIsUnhealthyRatherThanFatal(): void
     {
-        Redis::set(RequestFetcher::HEALTHCHECK_KEY, "not-a-timestamp");
+        Redis::connection(RequestFetcher::REDIS_CONNECTION)
+            ->set(RequestFetcher::HEALTHCHECK_KEY, "not-a-timestamp");
 
         $this->assertNull(FetcherHeartbeat::lastLoopAt());
         $this->artisan("fetcher:healthcheck")->assertFailed();
@@ -113,9 +114,26 @@ class FetcherHealthcheckTest extends TestCase
         Redis::swap(new class (Redis::getFacadeRoot()) {
             public function __construct(private object $inner) {}
 
-            public function get(string $key): never
+            public function connection(?string $name = null): mixed
             {
-                throw new ClientException("No sentinel server available for autodiscovery");
+                // Only `get` is broken. Everything else delegates, so the rest
+                // of the test — tearDown's own del() included — still reaches a
+                // real Redis, the same way Tests\Support\FailingOverRedis
+                // wraps rather than replaces.
+                return new class ($this->inner->connection($name)) {
+                    public function __construct(private object $inner) {}
+
+                    public function get(string $key): never
+                    {
+                        throw new ClientException("No sentinel server available for autodiscovery");
+                    }
+
+                    /** @param array<int, mixed> $arguments */
+                    public function __call(string $method, array $arguments): mixed
+                    {
+                        return $this->inner->{$method}(...$arguments);
+                    }
+                };
             }
 
             /** @param array<int, mixed> $arguments */
@@ -152,7 +170,8 @@ class FetcherHealthcheckTest extends TestCase
         $fetcher->stamp();
 
         $this->assertNotNull(
-            Redis::get(RequestFetcher::HEALTHCHECK_KEY),
+            Redis::connection(RequestFetcher::REDIS_CONNECTION)
+                ->get(RequestFetcher::HEALTHCHECK_KEY),
             "the worker did not stamp anything, so this proves nothing"
         );
         $this->assertTrue(

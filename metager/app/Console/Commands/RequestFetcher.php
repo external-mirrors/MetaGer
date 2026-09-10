@@ -18,6 +18,35 @@ class RequestFetcher extends Command
     const HEALTHCHECK_FORMAT = "Y-m-d H:i:s";
 
     /**
+     * Every Redis call this command makes goes over its own connection, and
+     * every cached body over the store bound to it.
+     *
+     * Not the `default` connection, whose read_write_timeout is -1 because
+     * other callers on it block for up to 30s. This loop's longest blocking
+     * call is a one-second blpop, so it can afford a bounded read timeout — and
+     * needs one: without it a Valkey master that disappears without closing its
+     * sockets is a read that never returns, which is not an error any retry can
+     * see. See the 'fetcher' entries in config/database.php and config/cache.php.
+     */
+    const REDIS_CONNECTION = "fetcher";
+    const CACHE_STORE = "fetcher";
+
+    /**
+     * How long this worker keeps retrying a Redis call across a failover.
+     *
+     * Four times RedisFailover::BUDGET_SECONDS, because the default is sized
+     * for a request that has promised the user an answer within
+     * EngineOrchestrator::WAIT_SECONDS and this worker has promised nobody
+     * anything. It has to be larger than the read timeout above or the budget
+     * would be spent by the first timeout, leaving no attempt on the fresh
+     * connection that the reconnect just prepared — which is the attempt that
+     * actually recovers.
+     *
+     * deliverAnswer deliberately does not use it; see the note there.
+     */
+    const RETRY_BUDGET_SECONDS = 12.0;
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -73,7 +102,7 @@ class RequestFetcher extends Command
         // Redis might not be available now
         for ($count = 0; $count < 10; $count++) {
             try {
-                Redis::set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT));
+                $this->redis()->set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT));
                 break;
             } catch (\Exception $e) {
                 if ($count >= 60) {
@@ -138,10 +167,23 @@ class RequestFetcher extends Command
     protected function deliverAnswer(string $resulthash, string $payload): void
     {
         try {
-            RedisFailover::retry(fn() => Redis::pipeline(function ($pipe) use ($resulthash, $payload) {
-                $pipe->lpush($resulthash, $payload);
-                $pipe->expire($resulthash, 60);
-            }));
+            // The short default budget, not RETRY_BUDGET_SECONDS. Everything
+            // else in this loop is retried patiently because nobody is waiting;
+            // this one has someone waiting, and they stop waiting after
+            // EngineOrchestrator::WAIT_SECONDS. Worse, the loop is
+            // single-threaded, so time spent here is time every *other* answer
+            // and the queue poll itself spend blocked. Failing fast and losing
+            // one engine's answer is the cheaper mistake — and the reconnect
+            // still happens, so the next call in this iteration gets a fresh
+            // socket.
+            RedisFailover::retry(
+                fn() => $this->redis()->pipeline(function ($pipe) use ($resulthash, $payload) {
+                    $pipe->lpush($resulthash, $payload);
+                    $pipe->expire($resulthash, 60);
+                }),
+                RedisFailover::BUDGET_SECONDS,
+                self::REDIS_CONNECTION
+            );
         } catch (PredisException $e) {
             Log::warning("Could not deliver a fetched answer: " . $e->getMessage());
         }
@@ -176,7 +218,9 @@ class RequestFetcher extends Command
     {
         try {
             RedisFailover::retry(
-                fn() => Redis::set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT))
+                fn() => $this->redis()->set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT)),
+                self::RETRY_BUDGET_SECONDS,
+                self::REDIS_CONNECTION
             );
         } catch (PredisException $e) {
             Log::warning("Could not stamp the fetcher healthcheck: " . $e->getMessage());
@@ -246,12 +290,20 @@ class RequestFetcher extends Command
         try {
             $newJobs = [];
             if ($operationsRunning === 0 && $messagesLeft === -1) {
-                $newJob = RedisFailover::retry(fn() => Redis::blpop(\App\MetaGer::FETCHQUEUE_KEY, 1));
+                $newJob = RedisFailover::retry(
+                    fn() => $this->redis()->blpop(\App\MetaGer::FETCHQUEUE_KEY, 1),
+                    self::RETRY_BUDGET_SECONDS,
+                    self::REDIS_CONNECTION
+                );
                 if (!empty($newJob)) {
                     $newJobs[] = $newJob[1];
                 }
             } else {
-                $newJobs = RedisFailover::retry(fn() => Redis::lpop(\App\MetaGer::FETCHQUEUE_KEY, 50));
+                $newJobs = RedisFailover::retry(
+                    fn() => $this->redis()->lpop(\App\MetaGer::FETCHQUEUE_KEY, 50),
+                    self::RETRY_BUDGET_SECONDS,
+                    self::REDIS_CONNECTION
+                );
                 if ($newJobs === null)
                     $newJobs = [];
             }
@@ -321,7 +373,7 @@ class RequestFetcher extends Command
 
                 if ($cacheDurationMinutes > 0) {
                     try {
-                        Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
+                        Cache::store(self::CACHE_STORE)->put($resulthash, $body, $cacheDurationMinutes * 60);
                     } catch (\Exception $e) {
                         Log::error($e->getMessage());
                     }
@@ -339,6 +391,18 @@ class RequestFetcher extends Command
         curl_setopt_array($ch, MissionOptions::for($job));
 
         return $ch;
+    }
+
+    /**
+     * This worker's Redis connection.
+     *
+     * `protected` so RequestFetcherFailoverTest can drive the loop's Redis
+     * calls against a connection it controls, the same way the other seams
+     * here are reachable.
+     */
+    protected function redis()
+    {
+        return Redis::connection(self::REDIS_CONNECTION);
     }
 
     public function sig_handler($sig)

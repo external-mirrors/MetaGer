@@ -189,8 +189,59 @@ return [
 
         'client' => env('REDIS_CLIENT', 'predis'),
 
+        // read_write_timeout -1 means "block in the socket read for ever".
+        // It has to stay that way here: callers on this connection make
+        // genuinely long blocking calls — AnonymousToken blpops for 30s,
+        // AnonymousTokenPayment for a caller-supplied duration, and
+        // EngineOrchestrator brpops for WAIT_SECONDS on the result page — and a
+        // bounded timeout would abort them mid-wait.
+        //
+        // The cost is that a peer which stops answering is indistinguishable
+        // from one that has nothing to say yet. See the 'fetcher' connection
+        // below for where that mattered.
         'default' => [
             'read_write_timeout' => -1,
+            'host' => env('REDIS_HOST', 'localhost'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => 0,
+            'cluster' => false,
+        ],
+
+        /*
+         * The fetch worker's own connection: same server, bounded timeouts.
+         *
+         * `requests:fetcher` is a single-replica daemon that loops on Redis for
+         * the life of the pod, and it is the whole of MetaGer's search — if it
+         * stops consuming, every result page renders empty. On 2026-09-10 a
+         * node's container runtime died, taking the Valkey master pod with it
+         * without a preStop hook and so without closing its sockets. The
+         * worker's blpop went into a socket that would never answer and never
+         * be reset, and with read_write_timeout -1 it blocked there for ever:
+         * no exception, so App\Support\RedisFailover never saw a failover to
+         * retry, and the loop never came back round. The process stayed alive,
+         * so `pgrep` reported it healthy. Search was down for fifteen minutes.
+         *
+         * Node drains are routine — several a week — so this has to be survived
+         * rather than detected. The worker can afford what the connection above
+         * cannot: its only blocking call is `blpop(FETCHQUEUE_KEY, 1)`, a
+         * one-second wait, so a read timeout a few times that is pure upside.
+         * A peer that has stopped answering now surfaces as
+         * Predis\TimeoutException — a CommunicationException, which
+         * RedisFailover already treats as a failover — and the retry drops the
+         * socket and reconnects through the master proxy, which by then has
+         * seen the promotion.
+         *
+         * Tunable by env without a deploy, in case a briefly slow Valkey ever
+         * makes this flap: every timeout costs a reconnect.
+         */
+        'fetcher' => [
+            'read_write_timeout' => env('REDIS_FETCHER_READ_TIMEOUT', 3.0),
+            // Bounded too, and much tighter. This is only ever paid on a
+            // reconnect, which is exactly when the far side may be gone: the
+            // Predis default of 5s would make recovering from a dead master
+            // slower than noticing it.
+            'timeout' => env('REDIS_FETCHER_CONNECT_TIMEOUT', 1.0),
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),

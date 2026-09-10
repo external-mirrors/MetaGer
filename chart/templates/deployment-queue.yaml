@@ -97,6 +97,75 @@ spec:
             requests:
               {{- toYaml .Values.resources.requests.queue | nindent 14 }}
             limits:
+        {{/*
+        The broadcast queue, which the container above cannot serve.
+
+        A worker serves exactly one queue connection, and that one serves the
+        application default — `database`, i.e. Postgres, because
+        QUEUE_CONNECTION is unset in the production .env. App\Events\KeyChanged
+        deliberately does not go there: it is dispatched from the start page and
+        the result page, neither of which needs a database for anything else,
+        and pushing it onto the default connection put a synchronous Postgres
+        INSERT on both (see config/broadcasting.php and
+        tests/Feature/KeyChangedNeedsNoDatabaseTest). So it names its own
+        connection and queue, and this is the worker that drains them. Without
+        it the broadcasts are pushed and never run.
+
+        The connection and queue names are the defaults in
+        config/broadcasting.php (BROADCAST_QUEUE_CONNECTION,
+        BROADCAST_QUEUE). They are a matched pair with that file and
+        tests/assertions.sh checks they stay one.
+
+        --tries=1 rather than the 5 next door: a balance update is worth
+        delivering now or not at all, and retrying it with a 60s backoff would
+        push a stale number at a browser up to five minutes late. Losing one
+        costs a refresh, which is the trade this whole event is built on.
+        */}}
+        - name: queue-broadcasts
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          # --max-time for the same reason as the worker above, minus the PDO
+          # part: this one holds a Predis connection through a Valkey failover
+          # instead. Recycling bounds anything that wedge could produce, and a
+          # broadcast worker has nothing in flight worth protecting.
+          args: ["artisan", "queue:work", "redis", "--tries=1", "--sleep=1", "--max-time=300", "--queue=broadcasts"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          {{- include "chart.env" (dict "root" .) | nindent 10 }}
+          volumeMounts:
+          {{- include "chart.mounts.env" . | nindent 10 }}
+          # Same set as the worker beside it, deliberately. A broadcast job has
+          # no use for sumas.json or the blacklists, but nothing stops a future
+          # queued job landing here, and a container that differs from its
+          # neighbour only in what it will crash on is not worth the saving.
+          {{- include "chart.mounts.config" . | nindent 10 }}
+          {{- include "chart.mounts.storage" . | nindent 10 }}
+          # Containers in a pod do not share a PID namespace unless asked to, so
+          # each of these two pgreps sees only its own worker.
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          readinessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          resources:
+            requests:
+              {{- toYaml .Values.resources.requests.queue | nindent 14 }}
+            limits:
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -89,7 +89,12 @@ services:
     pull_policy: never
     restart: unless-stopped
     entrypoint: /usr/local/bin/php
-    command: artisan queue:work --backoff=60 --tries=5 --sleep=1 --queue=donations,default,general
+    # `broadcasts` is App\Events\KeyChanged's own queue (config/broadcasting.php).
+    # One worker covers it here because the compose stack runs QUEUE_CONNECTION=redis
+    # for everything, so the broadcast connection and the default are the same one.
+    # The chart cannot do that — there the default is `database` — and runs a second
+    # worker for this queue instead; see chart/templates/deployment-queue.yaml.
+    command: artisan queue:work --backoff=60 --tries=5 --sleep=1 --queue=donations,default,general,broadcasts
     networks:
       - metager
     extra_hosts:

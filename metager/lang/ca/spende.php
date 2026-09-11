@@ -38,6 +38,10 @@ return [
     ],
     'payment-method' => [
         'heading' => 'Com voleu fer el pagament?',
+        'name' => [
+            'label' => 'El vostre nom',
+            'placeholder' => 'Joan Puig',
+        ],
         'methods' => [
             'banktransfer' => 'Transferència bancària',
             'directdebit' => 'Domiciliació SEPA',
@@ -72,6 +76,9 @@ return [
     'execute-payment' => [
         'heading' => 'Completa el pagament',
         'item-name' => 'Donatiu a SUMA-EV',
+        'error' => [
+            'unavailable' => 'El pagament no s\'ha pogut preparar en aquest moment. Torneu-ho a provar d\'aquí a uns minuts.',
+        ],
         'errors' => [
             'authorization_denied' => 'No s\'ha pogut autoritzar el pagament',
             'capture_failed' => 'No s\'ha pogut cobrar el pagament'

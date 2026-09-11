@@ -388,6 +388,62 @@ class AccountPageTest extends TestCase
     }
 
     /**
+     * Eine Mitgliedschaft hält den Schlüssel selbst am Leben
+     * (Key.js#discharge_key im Keymanager verlängert die Ablauffrist), aber
+     * sie schont keine Ladung — jede Suche zieht weiterhin von den eigenen
+     * Aufträgen ab. Ist die aufgebraucht, stimmt der Satz "suchen ohne
+     * weitere Kosten" gerade nicht mehr, und genau dann muss ein Mitglied
+     * aufladen dürfen wie jeder andere Schlüssel auch.
+     */
+    public function testAMemberWhoRanOutOfChargeMayTopUp(): void
+    {
+        $this->keyserverKnows(charge: 0, orders: [], membershipEnd: "2030-12-31T23:59:59.000Z");
+
+        $response = $this->signedIn()
+            ->get("/de-DE/konto")
+            ->assertOk();
+
+        $response->assertDontSeeText(__("account.page.charge.blocked.member"));
+        $response->assertSeeText(__("account.page.actions.topup"));
+        $response->assertSee("/de-DE/konto/aufladen/1000", false);
+    }
+
+    /**
+     * Der Anlassfall: kein Guthaben von exakt null, sondern ein Rest, der für
+     * keine ganze Suche mehr reicht. Dieselbe Schwelle wie überall sonst auf
+     * dieser Seite (KeyState::EMPTY, <=3) entscheidet auch hier — ein
+     * Mitglied mit ein paar Restpunkten ist praktisch genauso ohne Guthaben
+     * wie eines mit null.
+     */
+    public function testAMemberWithJustAFewLeftoverTokensMayTopUp(): void
+    {
+        $this->keyserverKnows(charge: 2, orders: [["amount" => 2, "expiration" => "2027-03-14 00:00:00"]], membershipEnd: "2030-12-31T23:59:59.000Z");
+
+        $response = $this->signedIn()
+            ->get("/de-DE/konto")
+            ->assertOk();
+
+        $response->assertDontSeeText(__("account.page.charge.blocked.member"));
+        $response->assertSeeText(__("account.page.actions.topup"));
+    }
+
+    /**
+     * Die andere Seite derselben Schwelle: KeyState::LOW (>3) ist noch genug
+     * für weitere Suchen, und dort bleibt der alte Satz richtig — ein
+     * Mitglied mit spürbarem Restguthaben soll kein Paket angeboten
+     * bekommen, das es nicht braucht.
+     */
+    public function testAMemberWithLowButNonEmptyChargeIsStillNotOfferedAPackage(): void
+    {
+        $this->keyserverKnows(charge: 4, orders: [["amount" => 4, "expiration" => "2027-03-14 00:00:00"]], membershipEnd: "2030-12-31T23:59:59.000Z");
+
+        $this->signedIn()
+            ->get("/de-DE/konto")
+            ->assertOk()
+            ->assertSeeText(__("account.page.charge.blocked.member"));
+    }
+
+    /**
      * Antwortet der Keyserver nicht, wird keine Zahl erfunden.
      *
      * Die Seite bleibt trotzdem stehen: der Weg zum Schlüssel ist genau dann

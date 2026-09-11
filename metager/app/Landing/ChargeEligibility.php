@@ -2,6 +2,7 @@
 
 namespace App\Landing;
 
+use App\Authentication\KeyState;
 use App\Authentication\KeyUser;
 use Illuminate\Http\Request;
 
@@ -45,9 +46,19 @@ final class ChargeEligibility
             return "proxy";
         }
 
-        // Mitglieder suchen ohne weitere Kosten; ein Token-Paket wäre für sie
-        // ein Angebot, für etwas zu zahlen, das sie schon bezahlt haben.
-        if ($user->isMember()) {
+        // Mitglieder suchen ohne weitere Kosten, solange ihre Mitglieds-
+        // Ladung reicht; ein Token-Paket wäre bis dahin ein Angebot, für
+        // etwas zu zahlen, das sie schon bezahlt haben. Ist sie (fast)
+        // aufgebraucht, gilt das nicht mehr — ein paar Restpunkte, für keine
+        // ganze Suche mehr gut, sind dasselbe Problem wie null.
+        //
+        // Dieselbe Schwelle wie überall sonst auf /konto: KeyState::EMPTY
+        // (<=3, {@see \App\Authentication\KeyUser::getKeyState()}) ist schon
+        // die Angabe "praktisch leer", die den Kontostand rot färbt und die
+        // "leer"-Notiz zeigt. NO_KEY (Keyserver antwortet nicht) blockt hier
+        // ebenfalls nicht — dieselbe Regel wie sonst im Vorgang: eine
+        // unbekannte Ladung gilt als leer, nicht als voll.
+        if ($user->isMember() && in_array($user->getKeyState(), [KeyState::FULL, KeyState::LOW], true)) {
             return "member";
         }
 

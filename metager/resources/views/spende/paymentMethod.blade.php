@@ -7,7 +7,6 @@
 @section('content')
 <h1 class="page-title">@lang('spende.headline.1')</h1>
 <div id="donation">
-    <script id="paypal-script" src="{{ $paypal_sdk }}" nonce="{{ $nonce }}" data-csp-nonce="{{ $nonce }}"></script>
     <div class="section">
         @lang('spende.headline.2', ['aboutlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/about')])
     </div>
@@ -18,7 +17,16 @@
     </ul>
     <div id="content-container" class="paymentMethod">
         <h3>@lang("spende.payment-method.heading")</h3>
-        <input type="hidden" name="baseurl" value="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/paypal') }}">
+        @if($donation['interval'] !== 'once')
+        {{-- Collected once here, reused on whichever method the donor picks below,
+             instead of asking again on the directdebit/paypal steps. Not asked for
+             a one-time banktransfer or one-time PayPal donation — those stay
+             anonymous. --}}
+        <div class="input-group name">
+            <label for="donor-name">@lang('spende.payment-method.name.label')</label>
+            <input type="text" id="donor-name" required placeholder="@lang('spende.payment-method.name.placeholder')">
+        </div>
+        @endif
         <ul id="payment-methods">
             <li>
                 <a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/banktransfer') }}">
@@ -26,8 +34,16 @@
                 </a>
             </li>
             <li>
-                <a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/directdebit') }}">
+                <a data-carries-name href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/directdebit') }}">
                     <div class="image"><img src="/img/funding_source/sepa.svg" alt="SEPA"></div>
+                </a>
+            </li>
+            <li class="paypal">
+                {{-- The single PayPal tile — wallet and every alternative payment
+                     method (giropay, sofort, ideal, ...) are now offered on
+                     suma-payments' own hosted checkout page, not chosen here. --}}
+                <a data-carries-name href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/paypal/paypal') }}">
+                    <div class="image"><img src="/img/funding_source/paypal.svg" alt="PayPal"></div>
                 </a>
             </li>
             @if($donation["amount"] >= 5)

@@ -38,6 +38,10 @@ return [
     ],
     'payment-method' => [
         'heading' => 'Wie möchten Sie die Zahlung durchführen?',
+        'name' => [
+            'label' => 'Ihr Name',
+            'placeholder' => 'Max Mustermann',
+        ],
         'methods' => [
             'banktransfer' => 'Überweisung',
             'directdebit' => 'Lastschrift',
@@ -72,6 +76,9 @@ return [
     'execute-payment' => [
         'heading' => 'Zahlung abschließen',
         'item-name' => 'Spende an den SUMA-EV',
+        'error' => [
+            'unavailable' => 'Die Zahlung konnte gerade nicht vorbereitet werden. Bitte versuchen Sie es in ein paar Minuten erneut.',
+        ],
         'card' => [
             'number' => 'Kartennummer',
             'expiration' => 'Gültig bis',

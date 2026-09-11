@@ -3,18 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Vite;
-use App\Jobs\CreateDirectDebit;
+use App\Donations\DonationCheckoutIssuer;
 use App\Jobs\DonationNotification;
 use App\Localization;
 use App\PrometheusExporter;
-use App\Rules\IBANValidator;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use LaravelLocalization;
 use Illuminate\Support\Facades\Validator;
-use PHP_IBAN\IBAN;
 use Illuminate\Support\Facades\RateLimiter;
 use SepaQr\SepaQrData;
 use URL;
@@ -107,30 +105,17 @@ class DonationController extends Controller
             ];
         }
 
-        $script_params = [
-            "client-id" => config("metager.metager.paypal.client_id"),
-            "components" => "buttons,funding-eligibility,marks"
-        ];
-
-        if ($interval !== "once") {
-            $script_params["vault"] = "true";
-            $script_params["intent"] = "subscription";
-        }
-
-        $paypal_sdk = "https://www.paypal.com/sdk/js";
-
-        $paypal_sdk .= "?" . http_build_query($script_params);
-        $nonce = time();
-        $csp = "default-src 'self'; script-src 'self' 'nonce-$nonce'; script-src-elem 'self' 'nonce-$nonce'; script-src-attr 'self'; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'self'; img-src 'self' www.paypalobjects.com data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; form-action 'self' www.paypal.com";
-
-        return response(view('spende.paymentMethod')
+        // No PayPal SDK on this page anymore — funding-source picking (wallet
+        // vs. giropay/sofort/ideal/etc.) now happens entirely on suma-payments'
+        // hosted checkout page; this page only offers three static tiles
+        // (banktransfer, directdebit, paypal) plus `card`, which stays on its
+        // own untouched direct-SDK path.
+        return view('spende.paymentMethod')
             ->with('donation', $donation)
-            ->with('nonce', $nonce)
-            ->with('paypal_sdk', $paypal_sdk)
             ->with('title', trans('titles.spende'))
             ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
             ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
-            ->with('js', [Vite::asset('resources/js/donation/base.js')]), 200, ["Content-Security-Policy" => $csp]);
+            ->with('js', [Vite::asset('resources/js/donation/base.js')]);
     }
 
     function banktransfer(Request $request, $amount, $interval)
@@ -208,10 +193,9 @@ class DonationController extends Controller
 
     function directdebitExecute(Request $request, $amount, $interval)
     {
-        $validator = Validator::make(["amount" => $amount, "interval" => $interval, "iban" => $request->input("iban", ""), "name" => $request->input("name")], [
+        $validator = Validator::make(["amount" => $amount, "interval" => $interval, "name" => $request->input("name")], [
             'amount' => 'required|numeric|min:1',
             'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"]),
-            'iban' => ["required", new IBANValidator()],
             "name" => 'required'
         ]);
         $donation = [
@@ -236,15 +220,28 @@ class DonationController extends Controller
             }
         } else {
             $donation["fullname"] = $request->input("name");
-            $donation["iban"] = $request->input("iban");
         }
 
-        CreateDirectDebit::dispatch($donation["fullname"], new IBAN($donation["iban"]), $donation["amount"], $donation["interval"] === "annual" ? "yearly" : $donation["interval"])->onQueue("donations");
+        // IBAN is no longer collected here — suma-payments' own hosted
+        // checkout page collects it once suma-crm establishes the mandate.
+        $checkoutUrl = app(DonationCheckoutIssuer::class)->create([
+            "amount" => $donation["amount"],
+            "method" => "directdebit",
+            "recurring" => $interval !== "once",
+            "frequency" => $interval !== "once" ? $interval : null,
+            "name" => $donation["fullname"],
+            "locale" => Localization::getLanguage(),
+            "return_url" => URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $donation["interval"], "funding_source" => "directdebit", "timestamp" => time()]),
+        ]);
+
+        if ($checkoutUrl === null) {
+            return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount . '/' . $interval . '/directdebit'))
+                ->withErrors(['crm' => __('spende.execute-payment.error.unavailable')]);
+        }
+
         DonationNotification::dispatch($donation["amount"], $donation["interval"], "Lastschrift")->onQueue("general");
 
-        // Generate URL to thankyou page
-        $url = URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $donation["interval"], "funding_source" => "directdebit", "timestamp" => time()]);
-        return redirect($url);
+        return redirect($checkoutUrl);
     }
 
     function banktransferQr(Request $request, $amount, $interval)
@@ -309,6 +306,34 @@ class DonationController extends Controller
             if ($funding_source === "card" && $interval === "once") {
                 $donation["client_token"] = $this->generatePayPalClientToken();
             }
+        }
+
+        // The wallet button ("PayPal" tile on the payment-method page) no
+        // longer runs MetaGer's own order-create/capture round-trip — it
+        // hands straight off to suma-crm, whose checkout session already
+        // offers the full breadth of PayPal-mediated payment methods
+        // (wallet + every APM) on suma-payments' own hosted page. `card` and
+        // any other funding source fall through to the existing flow below,
+        // unchanged.
+        if ($funding_source === "paypal") {
+            $checkoutUrl = app(DonationCheckoutIssuer::class)->create([
+                "amount" => $donation["amount"],
+                "method" => "paypal",
+                "recurring" => $interval !== "once",
+                "frequency" => $interval !== "once" ? $interval : null,
+                "name" => $interval !== "once" ? $request->query("name") : null,
+                "locale" => Localization::getLanguage(),
+                "return_url" => URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $interval, "funding_source" => "paypal", "timestamp" => time()]),
+            ]);
+
+            if ($checkoutUrl === null) {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount . '/' . $interval))
+                    ->withErrors(['crm' => __('spende.execute-payment.error.unavailable')]);
+            }
+
+            DonationNotification::dispatch($donation["amount"], $donation["interval"], "PayPal")->onQueue("general");
+
+            return redirect($checkoutUrl);
         }
 
         $script_params = [

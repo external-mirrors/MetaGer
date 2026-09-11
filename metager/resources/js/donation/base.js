@@ -17,48 +17,38 @@ if (customAmountSwitch) {
   });
 }
 
-if (
-  document.querySelector("#content-container.paymentMethod") &&
-  !navigator.webdriver
-) {
-  let base_url = document.querySelector("input[name=baseurl]").value;
-  paypal.getFundingSources().forEach(function (fundingSource) {
-    let mark = paypal.Marks({ fundingSource: fundingSource });
-    if (
-      mark.isEligible() &&
-      fundingSource !== "card" &&
-      fundingSource !== "sepa"
-    ) {
-      let paymentMethodContainer = document.createElement("li");
-      paymentMethodContainer.classList.add("paypal");
-      let atag = document.createElement("a");
-      atag.href = `${base_url}/${fundingSource}`;
-      paymentMethodContainer.appendChild(atag);
-      let imagecontainer = document.createElement("div");
-      imagecontainer.classList.add("image");
-      atag.appendChild(imagecontainer);
-      let imagetag = document.createElement("img");
-      imagetag.setAttribute("src", `/img/funding_source/${fundingSource}.svg`);
-      imagecontainer.appendChild(imagetag);
-      let invertLightImages = [
-        "p24",
-        "applepay",
-        "bancontact",
-        "boleto",
-        "eps",
-        "mercadopago",
-        "multibanco",
-        "oxxo",
-        "paidy",
-        "satispay",
-      ];
-      if (invertLightImages.includes(fundingSource)) {
-        imagetag.classList.add("invert-light");
+// Funding-source picking (wallet vs. giropay/sofort/ideal/etc.) no longer
+// happens on this page at all — suma-payments' own hosted PayPal checkout
+// page offers that breadth now. This page only carries the donor's name
+// (collected once, upfront, for a recurring donation) onto whichever of the
+// directdebit/paypal tiles they click — banktransfer and card are untouched.
+let donorNameInput = document.querySelector(
+  "#content-container.paymentMethod #donor-name"
+);
+if (donorNameInput) {
+  let nameCarryingLinks = document.querySelectorAll(
+    "#payment-methods a[data-carries-name]"
+  );
+  let updateLinks = () => {
+    let name = donorNameInput.value.trim();
+    nameCarryingLinks.forEach((a) => {
+      let url = new URL(a.href, window.location.origin);
+      if (name !== "") {
+        url.searchParams.set("name", name);
+      } else {
+        url.searchParams.delete("name");
       }
-      document
-        .querySelector("#payment-methods")
-        .appendChild(paymentMethodContainer);
-    }
+      a.href = url.toString();
+    });
+  };
+  donorNameInput.addEventListener("input", updateLinks);
+  nameCarryingLinks.forEach((a) => {
+    a.addEventListener("click", (e) => {
+      if (donorNameInput.value.trim() === "") {
+        e.preventDefault();
+        donorNameInput.reportValidity();
+      }
+    });
   });
 }
 

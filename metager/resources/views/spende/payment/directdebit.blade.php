@@ -18,7 +18,17 @@
     <div id="content-container" class="directdebit">
         <h3>@lang('spende.execute-payment.heading')</h3>
         <div>@lang('spende.execute-payment.directdebit.description')</div>
+        @if(!empty($errors) && $errors->has("crm"))
+        <div class="error">{{ $errors->first("crm") }}</div>
+        @endif
         <form method="POST">
+            {{-- A standing SEPA mandate needs an account-holder name regardless of
+                 interval. For a recurring donation it's pre-filled from the name
+                 already collected upfront on the payment-method page (carried
+                 forward as a query param) — shown, not hidden, so a donor whose
+                 browser didn't carry it forward (e.g. JS disabled) can still see
+                 and fill the field rather than being stuck on a required hidden
+                 input with no way to satisfy it. --}}
             <div class="input-group name">
                 <label for="name">@lang('spende.execute-payment.directdebit.name.label')</label>
                 @if(!empty($errors) && $errors->has("name"))
@@ -30,18 +40,6 @@
                     @if(Request::filled('name'))
                     value="{{ Request::input('name') }}"
                     @endif>
-            </div>
-            <div class="input-group iban">
-                <label for="iban">@lang('spende.execute-payment.directdebit.iban.label')</label>
-                @if(!empty($errors) && $errors->has("iban"))
-                @foreach($errors->get("iban") as $ibanError)
-                <div class="error">{{ $ibanError }}</div>
-                @endforeach
-                @endif
-                <input type="text" name="iban" id="iban" required placeholder="@lang('spende.execute-payment.directdebit.iban.placeholder')"
-                @if(Request::filled('iban'))
-                value="{{ Request::input('iban') }}"
-                @endif>
             </div>
             <button class="btn btn-default" type="submit">@lang('spende.execute-payment.directdebit.submit')</button>
         </form>

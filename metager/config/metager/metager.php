@@ -97,6 +97,10 @@ return [
         "apikey" => env("CIVICRM_API_KEY", ""),
         "sitekey" => env("CIVICRM_SITE_KEY", ""),
     ],
+    "crm" => [
+        "url" => env("CRM_BASE_URL"),
+        "token" => env("CRM_TOKEN"),
+    ],
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),
         "key" => env("WEBDRIVER_KEY", ""),

@@ -38,6 +38,10 @@ return [
     ],
     'payment-method' => [
         'heading' => 'How would you like to make the payment?',
+        'name' => [
+            'label' => 'Your name',
+            'placeholder' => 'John Smith',
+        ],
         'methods' => [
             'banktransfer' => 'Bank transfer',
             'directdebit' => 'Sepa direct debit',
@@ -75,6 +79,9 @@ return [
         'errors' => [
             'authorization_denied' => 'The payment couldn\'t be authorized',
             'capture_failed' => 'The payment couldn\'t be captured'
+        ],
+        'error' => [
+            'unavailable' => 'The payment could not be prepared right now. Please try again in a few minutes.',
         ],
         'card' => [
             'loading' => 'Loading Creditcard Form',

@@ -29,9 +29,9 @@ class ChargePageTest extends TestCase
     }
 
     /** @param list<array{amount: float|int, expiration: string}> $orders */
-    private function keyserverKnows(?array $orders = null): void
+    private function keyserverKnows(?array $orders = null, float $charge = 248, ?string $membershipEnd = null): void
     {
-        $orders ??= [["amount" => 248, "expiration" => "2027-03-14 00:00:00"]];
+        $orders ??= [["amount" => $charge, "expiration" => "2027-03-14 00:00:00"]];
 
         Http::preventStrayRequests();
         Http::fake([
@@ -42,10 +42,10 @@ class ChargePageTest extends TestCase
             ]),
             "*/api/json/key/*" => Http::response([
                 "key" => self::A_KEY,
-                "charge" => 248,
+                "charge" => $charge,
                 "expiration" => "2027-03-14 00:00:00",
                 "charge_orders" => $orders,
-                "key_config" => ["membershipEndDate" => null],
+                "key_config" => ["membershipEndDate" => $membershipEnd],
             ]),
         ]);
     }
@@ -158,6 +158,35 @@ class ChargePageTest extends TestCase
             ->withHeaders(["is-proxy" => "true"])
             ->get("/de-DE/konto/aufladen/1000")
             ->assertRedirect(route("account") . "#charge");
+    }
+
+    /**
+     * Ein Mitglied mit spürbarem Restguthaben (App\Landing\ChargeEligibility,
+     * KeyState::LOW) bleibt geblockt — auch über einen Lesezeichen- oder
+     * Zweit-Tab-Zugriff, der /konto's Kachel umgeht.
+     */
+    public function testAMemberWithChargeLeftIsBouncedBack(): void
+    {
+        $this->keyserverKnows(charge: 248, membershipEnd: "2030-12-31T23:59:59.000Z");
+
+        $this->signedIn()
+            ->get("/de-DE/konto/aufladen/1000")
+            ->assertRedirect(route("account") . "#charge");
+    }
+
+    /**
+     * Der Anlassfall dieser Ausnahme: ein Mitglied, dessen Ladung auf
+     * KeyState::EMPTY (<=3) gesunken ist, darf dieselbe Seite erreichen wie
+     * jeder andere Schlüssel auch.
+     */
+    public function testAMemberWhoRanOutOfChargeReachesThePage(): void
+    {
+        $this->keyserverKnows(charge: 2, membershipEnd: "2030-12-31T23:59:59.000Z");
+
+        $this->signedIn()
+            ->get("/de-DE/konto/aufladen/1000")
+            ->assertOk()
+            ->assertSee(route("account.checkout.cash", ["amount" => 1000]), false);
     }
 
     /**

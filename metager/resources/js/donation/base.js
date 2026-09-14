@@ -1,6 +1,3 @@
-import processPaypalCard from "./paypal-card";
-import { processPaypalSubscription } from "./paypal-subscription";
-import { paypalOptions, funding_source } from "./paypal-options";
 let customAmountSwitch = document.querySelector(
   "#content-container.amount #custom-amount-switch"
 );
@@ -17,11 +14,12 @@ if (customAmountSwitch) {
   });
 }
 
-// Funding-source picking (wallet vs. giropay/sofort/ideal/etc.) no longer
-// happens on this page at all — suma-payments' own hosted PayPal checkout
-// page offers that breadth now. This page only carries the donor's name
-// (collected once, upfront, for a recurring donation) onto whichever of the
-// directdebit/paypal tiles they click — banktransfer and card are untouched.
+// Funding-source picking (wallet vs. giropay/sofort/ideal/etc., or which card
+// brand) no longer happens on this page at all — suma-payments' own hosted
+// checkout page offers that breadth now for every method except banktransfer,
+// which needs no name at all. This page only carries the donor's name
+// (collected once, upfront, for a recurring donation) onto whichever tile
+// they click.
 let donorNameInput = document.querySelector(
   "#content-container.paymentMethod #donor-name"
 );
@@ -50,47 +48,4 @@ if (donorNameInput) {
       }
     });
   });
-}
-
-if (
-  document.querySelector("#content-container.paypal") &&
-  !navigator.webdriver
-) {
-  let interval = document.querySelector(
-    "#content-container.paypal input[name=interval]"
-  ).value;
-  if (interval == "once") {
-    if (funding_source == "card") {
-      processPaypalCard();
-    } else {
-      if (funding_source != "paypal") {
-        let paymentFieldsContainer = document.createElement("div");
-        paymentFieldsContainer.id = "payment-fields";
-        document
-          .querySelector("#content-container.paypal")
-          .appendChild(paymentFieldsContainer);
-
-        paypal
-          .PaymentFields({
-            fundingSource: funding_source,
-            styles: {
-              base: {
-                color: "white",
-              },
-            },
-            fields: {},
-          })
-          .render("#payment-fields");
-      }
-      let paymentButtonContainer = document.createElement("div");
-      paymentButtonContainer.id = "payment-button";
-
-      document
-        .querySelector("#content-container.paypal")
-        .appendChild(paymentButtonContainer);
-      paypal.Buttons(paypalOptions()).render("#payment-button");
-    }
-  } else {
-    processPaypalSubscription();
-  }
 }

@@ -228,9 +228,8 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         Route::post('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebitExecute']);
         Route::get('/{amount}/{interval}/banktransfer/qr', [DonationController::class, 'banktransferQr']);
         Route::get('/{amount}/{interval}/paypal/{funding_source}', [DonationController::class, 'paypalPayment'])->name("paypalPayment");
-        Route::get('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCreateOrder']);
-        Route::post('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCaptureOrder']);
-        Route::post('/{amount}/{interval}/paypal/{funding_source}/subscription', [DonationController::class, 'paypalCreateSubscription'])->name("paypal-subscription");
+        Route::get('/{amount}/{interval}/wero_link', [DonationController::class, 'weroLink']);
+        Route::post('/{amount}/{interval}/wero_link', [DonationController::class, 'weroLinkExecute']);
     });
 
     Route::get('beitritt', function () {

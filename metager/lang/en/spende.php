@@ -71,6 +71,7 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Credit/Debit Card',
+            'wero_link' => 'Wero',
         ],
     ],
     'execute-payment' => [
@@ -246,6 +247,18 @@ return [
                 'error' => 'The IBAN entered is invalid.',
             ],
             'submit' => 'Make payment',
+        ],
+        'wero_link' => [
+            'description' => 'You will receive a Wero payment link by email each period, which you use to confirm the donation from your bank\'s Wero app. This is a recurring mandate — a one-time Wero donation is not offered.',
+            'name' => [
+                'label' => 'Your name',
+                'placeholder' => 'John Smith',
+            ],
+            'email' => [
+                'label' => 'Your email address',
+                'placeholder' => 'john.smith@example.com',
+            ],
+            'submit' => 'Set up donation',
         ],
         'processing' => 'Payment is processed',
     ],

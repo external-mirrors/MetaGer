@@ -71,6 +71,7 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Kredit-/Debitkarte',
+            'wero_link' => 'Wero',
         ],
     ],
     'execute-payment' => [
@@ -242,6 +243,18 @@ return [
                 'error' => 'Die eingegebene IBAN ist ungültig.',
             ],
             'submit' => 'Zahlung durchführen',
+        ],
+        'wero_link' => [
+            'description' => 'Sie erhalten jede Periode per E-Mail einen Wero-Zahlungslink, mit dem Sie die Spende in der Wero-App Ihrer Bank bestätigen. Dies ist ein wiederkehrendes Mandat — eine einmalige Wero-Spende wird nicht angeboten.',
+            'name' => [
+                'label' => 'Ihr Name',
+                'placeholder' => 'Max Mustermann',
+            ],
+            'email' => [
+                'label' => 'Ihre E-Mail-Adresse',
+                'placeholder' => 'max.mustermann@example.com',
+            ],
+            'submit' => 'Spende einrichten',
         ],
         'processing' => 'Zahlung wird verarbeitet',
         'errors' => [

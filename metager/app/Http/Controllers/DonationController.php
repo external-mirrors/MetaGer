@@ -6,14 +6,12 @@ use Illuminate\Support\Facades\Vite;
 use App\Donations\DonationCheckoutIssuer;
 use App\Jobs\DonationNotification;
 use App\Localization;
-use App\PrometheusExporter;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use LaravelLocalization;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\RateLimiter;
 use SepaQr\SepaQrData;
 use URL;
 
@@ -281,6 +279,19 @@ class DonationController extends Controller
         return response($qr->getString(), 200, ["Content-Type" => $qr->getMimeType(), "Content-Disposition" => "attachment; filename=suma_donation.png"]);
     }
 
+    /**
+     * Both the PayPal wallet tile and the card tile hand straight off to
+     * suma-crm now (cutover-plan.md C2/C6) — suma-crm's checkout session
+     * already offers PayPal's full APM breadth (wallet + giropay/sofort/...)
+     * on suma-payments' own hosted page, and VR Payment's Hosted Payment
+     * Page does the same job card used to do via PayPal's card-fields SDK
+     * (client-token generation, order create/capture, 3DS liability-shift
+     * parsing) — all of that is gone; suma-payments' own checkout tile is
+     * the one place a raw PAN is ever handled now (cutover-plan.md §4.10).
+     * A recurring donation of either method needs the donor's name the same
+     * way directdebit does — StoreDonationRequest requires one whenever
+     * `recurring` is true, regardless of method.
+     */
     function paypalPayment(Request $request, $amount, $interval, $funding_source)
     {
         $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
@@ -288,425 +299,128 @@ class DonationController extends Controller
             'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
         ]);
 
-        $ratelimit_key = 'create-order-cc';
-
-        if ($validator->fails() || RateLimiter::tooManyAttempts($ratelimit_key, 5) || RateLimiter::tooManyAttempts($ratelimit_key . "-user-" . $request->ip(), 2)) {
+        if ($validator->fails()) {
             $failedParams = $validator->failed();
             if (array_key_exists("amount", $failedParams)) {
                 return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));
             } else {
                 return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount));
             }
-        } else {
-            $donation = [
-                "amount" => round(floatval($amount), 2),
-                "interval" => $interval,
-                "funding_source" => $funding_source
-            ];
-            if ($funding_source === "card" && $interval === "once") {
-                $donation["client_token"] = $this->generatePayPalClientToken();
-            }
         }
 
-        // The wallet button ("PayPal" tile on the payment-method page) no
-        // longer runs MetaGer's own order-create/capture round-trip — it
-        // hands straight off to suma-crm, whose checkout session already
-        // offers the full breadth of PayPal-mediated payment methods
-        // (wallet + every APM) on suma-payments' own hosted page. `card` and
-        // any other funding source fall through to the existing flow below,
-        // unchanged.
-        if ($funding_source === "paypal") {
-            $checkoutUrl = app(DonationCheckoutIssuer::class)->create([
-                "amount" => $donation["amount"],
-                "method" => "paypal",
-                "recurring" => $interval !== "once",
-                "frequency" => $interval !== "once" ? $interval : null,
-                "name" => $interval !== "once" ? $request->query("name") : null,
-                "locale" => Localization::getLanguage(),
-                "return_url" => URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $interval, "funding_source" => "paypal", "timestamp" => time()]),
-            ]);
-
-            if ($checkoutUrl === null) {
-                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount . '/' . $interval))
-                    ->withErrors(['crm' => __('spende.execute-payment.error.unavailable')]);
-            }
-
-            DonationNotification::dispatch($donation["amount"], $donation["interval"], "PayPal")->onQueue("general");
-
-            return redirect($checkoutUrl);
-        }
-
-        $script_params = [
-            "client-id" => config("metager.metager.paypal.client_id"),
-            "currency" => "EUR",
-            //"components" => "buttons,funding-eligibility,card-fields,payment-fields,marks"
+        $donation = [
+            "amount" => round(floatval($amount), 2),
+            "interval" => $interval,
+            "funding_source" => $funding_source
         ];
-        $components = ["buttons"];
-        if ($interval === "once") {
-            if ($funding_source === "card") {
-                $components = array_merge($components, ["card-fields"]);
-            } else if ($funding_source != "paypal") {
-                $components = array_merge($components, ["funding-eligibility", "payment-fields"]);
-            }
-        }
-        $script_params["components"] = implode(",", $components);
 
+        $checkoutUrl = app(DonationCheckoutIssuer::class)->create([
+            "amount" => $donation["amount"],
+            "method" => $funding_source,
+            "recurring" => $interval !== "once",
+            "frequency" => $interval !== "once" ? $interval : null,
+            "name" => $interval !== "once" ? $request->query("name") : null,
+            "locale" => Localization::getLanguage(),
+            "return_url" => URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]),
+        ]);
 
-
-        if ($interval !== "once") {
-            $script_params["vault"] = "true";
-            $script_params["intent"] = "subscription";
-            if (Localization::getLanguage() === "de") {
-                $lang = "de";
-            } else {
-                $lang = "en";
-            }
-            $donation["plan_id"] = config("metager.metager.paypal.subscription_plans.$lang.$interval");
+        if ($checkoutUrl === null) {
+            return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount . '/' . $interval))
+                ->withErrors(['crm' => __('spende.execute-payment.error.unavailable')]);
         }
 
-        $paypal_sdk = "https://www.paypal.com/sdk/js";
+        DonationNotification::dispatch($donation["amount"], $donation["interval"], $funding_source === "card" ? "Kreditkarte" : "PayPal")->onQueue("general");
 
-        $paypal_sdk .= "?" . http_build_query($script_params);
-        $nonce = time();
-        $csp = "default-src * 'unsafe-inline'";
-
-        return response(view('spende.payment.paypal')
-            ->with('donation', $donation)
-            ->with('nonce', $nonce)
-            ->with('paypal_sdk', $paypal_sdk)
-            ->with('title', trans('titles.spende'))
-            ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
-            ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
-            ->with('js', [Vite::asset('resources/js/donation/base.js')]), 200, ["Content-Security-Policy" => $csp]);
+        return redirect($checkoutUrl);
     }
 
-    function paypalCreateSubscription(Request $request, $amount, $interval, $funding_source)
+    /**
+     * `wero_link` (cutover-plan.md §4.11/C6) is recurring-only — there is no
+     * one-shot Wero donation through this endpoint (suma-crm's
+     * StoreDonationRequest rejects one) — so, unlike directdebit, this has no
+     * "once" case to support and the interval segment here is never
+     * "once". Collects an email alongside the name: the donor never
+     * interacts with a hosted payment page at all for this method, they get
+     * a permanent landing-page link mailed to them each period instead.
+     */
+    function weroLink(Request $request, $amount, $interval)
     {
         $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
             'amount' => 'required|numeric|min:1',
             'interval' => Rule::in(["monthly", "quarterly", "six-monthly", "annual"])
         ]);
         if ($validator->fails()) {
-            abort(400);
-        }
-
-        $subscription_plan_locale = Localization::getLanguage() === "de" ? "de" : "en";
-
-        $subscription_data = [
-            "plan_id" => config("metager.metager.paypal.subscription_plans.$subscription_plan_locale.$interval"),
-            "application_context" => [
-                "shipping_preference" => "NO_SHIPPING",
-            ],
-            "plan" => [
-                "billing_cycles" => [
-                    [
-                        "sequence" => 1,
-                        "total_cycles" => 0,
-                        "pricing_scheme" => [
-                            "fixed_price" => [
-                                "currency_code" => "EUR",
-                                "value" => $amount,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $base_url = config("metager.metager.paypal.base_url");
-        $access_token = $this->generatePayPalAccessToken();
-
-        $url = $base_url . "/v1/billing/subscriptions";
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer $access_token",
-                "Content-Type: application/json"
-            ],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POSTFIELDS => json_encode($subscription_data)
-        ]);
-        $response = curl_exec($ch);
-        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($responseCode === 201) {
-            $response = json_decode($response);
-            $response_body = [
-                "id" => $response->id,
-                "redirect_url" => URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()])
-            ];
-            return response()->json($response_body);
-        } else {
-            return response($response, 400, ["Content-Type" => "application/json"]);
-        }
-    }
-
-    function paypalCreateOrder(Request $request, $amount, $interval, $funding_source)
-    {
-        $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
-            'amount' => ['required', 'numeric', 'min:1', Rule::when($funding_source === "card", 'min:5')],
-            'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
-        ]);
-        if ($validator->fails()) {
-            abort(400);
-        }
-
-        if ($funding_source === "card") {
-            $ratelimit_key = 'create-order-cc';
-
-            RateLimiter::hit($ratelimit_key, 3600);
-            RateLimiter::hit($ratelimit_key . "-user-" . $request->ip(), 86400);
-
-            if (RateLimiter::tooManyAttempts($ratelimit_key, 5) || RateLimiter::tooManyAttempts($ratelimit_key . "-user-" . $request->ip(), 2)) {
-                abort(400);
+            $failedParams = $validator->failed();
+            if (array_key_exists("amount", $failedParams)) {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));
+            } else {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount));
             }
         }
 
-        $amount = round(floatval($amount), 2);
-
-        $order_data = [
-            "purchase_units" => [
-                [
-                    "amount" => [
-                        "currency_code" => "EUR",
-                        "value" => $amount,
-                        "breakdown" => [
-                            "item_total" => [
-                                "currency_code" => "EUR",
-                                "value" => $amount
-                            ]
-                        ],
-                    ],
-                    "items" => [
-                        [
-                            "name" => __('spende.execute-payment.item-name'),
-                            "quantity" => "1",
-                            "category" => "DONATION",
-                            "unit_amount" => [
-                                "currency_code" => "EUR",
-                                "value" => $amount
-                            ]
-                        ]
-                    ],
-                ],
-            ],
-            "intent" => "CAPTURE",
-            "application_context" => [
-                "shipping_preference" => 'NO_SHIPPING'
-            ]
+        $donation = [
+            "amount" => round(floatval($amount), 2),
+            "interval" => $interval,
+            "funding_source" => "wero_link"
         ];
 
-        if ($funding_source === "card") {
-            PrometheusExporter::CreditcardDonation("started");
-            $order_data["payment_source"] = [
-                "card" => [
-                    "attributes" => [
-                        "verification" => [
-                            "method" => "SCA_ALWAYS"
-                        ]
-                    ],
-                    "experience_context" => [
-                        "shipping_preference" => "NO_SHIPPING",
-                    ]
-                ]
-            ];
-        }
-
-        $base_url = config("metager.metager.paypal.base_url");
-        $access_token = $this->generatePayPalAccessToken();
-
-        $url = $base_url . "/v2/checkout/orders";
-        $opts = [
-            "http" => [
-                "method" => "POST",
-                "header" => [
-                    "Authorization: Bearer " . $access_token,
-                    "Content-Type: application/json"
-                ],
-                "content" => json_encode($order_data),
-                "ignore_errors" => true
-            ],
-        ];
-        $opts = stream_context_create($opts);
-        $response = file_get_contents($url, false, $opts);
-        preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
-        $responsecode = intval($matches[0]);
-
-        return response()->json(json_decode($response), $responsecode);
+        return response(view('spende.payment.wero_link')
+            ->with('donation', $donation)
+            ->with('title', trans('titles.spende'))
+            ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+            ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+            ->with('js', [Vite::asset('resources/js/donation/base.js')]));
     }
 
-    public function paypalCaptureOrder(Request $request, $amount, $interval, $funding_source)
+    function weroLinkExecute(Request $request, $amount, $interval)
     {
-        $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
+        $validator = Validator::make(["amount" => $amount, "interval" => $interval, "name" => $request->input("name"), "email" => $request->input("email")], [
             'amount' => 'required|numeric|min:1',
-            'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
+            'interval' => Rule::in(["monthly", "quarterly", "six-monthly", "annual"]),
+            "name" => 'required',
+            "email" => 'required|email',
         ]);
-        if ($validator->fails()) {
-            abort(400);
-        }
-
-        $amount = round(floatval($amount), 2);
-        $orderId = $request->input("orderID", "");
-        if (empty($orderId)) {
-            abort(400);
-        }
-        $base_url = config("metager.metager.paypal.base_url");
-        $access_token = $this->generatePayPalAccessToken();
-
-        if ($funding_source === "card") {
-            $order_details = $this->getOrderDetails($access_token, $orderId);
-            if (property_exists($order_details->payment_source->card, "authentication_result") && !$this->cardAuthenticated($order_details->payment_source->card->authentication_result)) {
-                return response()->json(["error" => "card not authenticated"], 400);
-            }
-            $ratelimit_key = 'create-order-cc';
-
-            RateLimiter::decrement($ratelimit_key, 60);
-            RateLimiter::decrement($ratelimit_key . "-user-" . $request->ip(), 86400);
-        }
-        $url = $base_url . "/v2/checkout/orders/$orderId/capture";
-        $opts = [
-            "http" => [
-                "method" => "POST",
-                "header" => [
-                    "Authorization: Bearer " . $access_token,
-                    "Content-Type: application/json"
-                ],
-                "ignore_errors" => true
-            ],
+        $donation = [
+            "amount" => round(floatval($amount), 2),
+            "interval" => $interval,
+            "funding_source" => "wero_link"
         ];
-        $opts = stream_context_create($opts);
-        $response = file_get_contents($url, false, $opts);
-        preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
-        $responsecode = intval($matches[0]);
-
-        $response = json_decode($response);
-
-        // Validate that the payment is completed
-        // $response->status === "COMPLETED"
-        // $response->purchase_units->payments-captures contains final_capture = true AND status is completed
-        $payment_successfull = false;
-        if ($responsecode === 201 && $response->status === "COMPLETED") {
-            foreach ($response->purchase_units as $purchase_units) {
-                $final_capture = false;
-                foreach ($purchase_units->payments->captures as $capture) {
-                    if ($capture->status !== "COMPLETED") {
-                        break;
-                    }
-                    if ($capture->final_capture === true) {
-                        $final_capture = true;
-                    }
-                }
-                $payment_successfull = $final_capture;
-                if (!$payment_successfull) {
-                    break;
-                }
-            }
-
-        }
-
-        if (!$payment_successfull) {
-            PrometheusExporter::CreditcardDonation("rejected");
-            $response->redirect_to = route("paypalPayment", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source]);
-        } else {
-            PrometheusExporter::CreditcardDonation("successfull");
-            DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
-            $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);
-        }
-
-        return response()->json($response, $responsecode);
-    }
-
-    /**
-     * Parses PayPals authentication result for card payments and acts according to
-     * https://developer.paypal.com/docs/checkout/advanced/customize/3d-secure/response-parameters/#link-recommendedaction
-     */
-    private function cardAuthenticated($authentication_result)
-    {
-        $liability_shift = $authentication_result->liability_shift;
-        $authentication_status = null;
-        if (property_exists($authentication_result->three_d_secure, "authentication_status")) {
-            $authentication_status = $authentication_result->three_d_secure->authentication_status;
-        }
-        $enrollment_status = $authentication_result->three_d_secure->enrollment_status;
-        if ($enrollment_status === "Y") {
-            switch ($authentication_status) {
-                case "Y":
-                    if (in_array($liability_shift, ["POSSIBLE", "YES"])) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case "N":
-                    if ($liability_shift === "NO") {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                case "R":
-                    if ($liability_shift === "NO") {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                case "A":
-                    if ($liability_shift === "POSSIBLE") {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                case "U":
-                    if (in_array($liability_shift, ["UNKNOWN", "NO"])) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                case "C":
-                    if ($liability_shift === "UNKNOWN") {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                default:
-                    return false;
-            }
-        } else if ($enrollment_status === "N") {
-            if ($liability_shift === "NO") {
-                return true;
+        if ($validator->fails()) {
+            $failedParams = $validator->failed();
+            if (array_key_exists("amount", $failedParams)) {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));
+            } elseif (array_key_exists("interval", $failedParams)) {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount));
             } else {
-                return false;
+                return response(view('spende.payment.wero_link')
+                    ->withErrors($validator)
+                    ->with('donation', $donation)
+                    ->with('title', trans('titles.spende'))
+                    ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+                    ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+                    ->with('js', [Vite::asset('resources/js/donation/base.js')]));
             }
-        } else if ($enrollment_status === "U") {
-            switch ($liability_shift) {
-                case "NO":
-                    return true;
-                case "UNKNOWN":
-                    return false;
-                default:
-                    return false;
-            }
-        } else if ($enrollment_status === "B") {
-            if ($liability_shift === "NO") {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
         }
-    }
-    private function getOrderDetails($access_token, $orderId)
-    {
-        $paypal_url = config("metager.metager.paypal.base_url") . "/v2/checkout/orders/$orderId";
-        $ch = curl_init($paypal_url);
 
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => ["Authorization: Bearer $access_token"],
+        $checkoutUrl = app(DonationCheckoutIssuer::class)->create([
+            "amount" => $donation["amount"],
+            "method" => "wero_link",
+            "recurring" => true,
+            "frequency" => $interval,
+            "name" => $request->input("name"),
+            "email" => $request->input("email"),
+            "locale" => Localization::getLanguage(),
+            "return_url" => URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $interval, "funding_source" => "wero_link", "timestamp" => time()]),
         ]);
-        $response = curl_exec($ch);
 
-        curl_close($ch);
-        return json_decode($response);
+        if ($checkoutUrl === null) {
+            return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount . '/' . $interval . '/wero_link'))
+                ->withErrors(['crm' => __('spende.execute-payment.error.unavailable')]);
+        }
+
+        DonationNotification::dispatch($donation["amount"], $donation["interval"], "Wero")->onQueue("general");
+
+        return redirect($checkoutUrl);
     }
 
     public function donationFinished(Request $request, $amount, $interval, $funding_source)
@@ -731,50 +445,5 @@ class DonationController extends Controller
             ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
             ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
             ->with('js', [Vite::asset('resources/js/donation/base.js')]), 200);
-    }
-
-    private function generatePayPalAccessToken()
-    {
-        $base_url = config("metager.metager.paypal.base_url");
-        $client_id = config("metager.metager.paypal.client_id");
-        $app_secret = config("metager.metager.paypal.secret");
-
-        $opts = [
-            "http" => [
-                "method" => "POST",
-                "header" => [
-                    "Authorization: Basic " . base64_encode($client_id . ":" . $app_secret),
-                    "Content-Type: application/x-www-form-urlencoded"
-                ],
-                "content" => "grant_type=client_credentials"
-            ],
-        ];
-        $opts = stream_context_create($opts);
-        $response = file_get_contents($base_url . "/v1/oauth2/token", false, $opts);
-        $response = json_decode($response);
-        return $response->access_token;
-    }
-
-    /**
-     * Generates a client token required for advanced creditcard payments
-     */
-    private function generatePayPalClientToken()
-    {
-        $base_url = config("metager.metager.paypal.base_url");
-        $accessToken = $this->generatePayPalAccessToken();
-
-        $opts = [
-            "http" => [
-                "method" => "POST",
-                "header" => [
-                    "Authorization: Bearer $accessToken",
-                    "Content-Type: application/json"
-                ]
-            ],
-        ];
-        $opts = stream_context_create($opts);
-        $response = file_get_contents($base_url . "/v1/identity/generate-token", false, $opts);
-        $response = json_decode($response);
-        return $response->client_token;
     }
 }

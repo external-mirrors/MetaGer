@@ -71,6 +71,7 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Targeta de crèdit/dèbit',
+            'wero_link' => 'Wero',
         ],
     ],
     'execute-payment' => [
@@ -246,6 +247,18 @@ return [
                 'error' => 'L\'IBAN introduït no és vàlid.',
             ],
             'submit' => 'Fes el pagament',
+        ],
+        'wero_link' => [
+            'description' => 'Cada període rebreu per correu electrònic un enllaç de pagament Wero, amb el qual confirmareu el donatiu des de l\'aplicació Wero del vostre banc. Es tracta d\'un mandat periòdic — no s\'ofereix un donatiu Wero puntual.',
+            'name' => [
+                'label' => 'El vostre nom',
+                'placeholder' => 'Joan Puig',
+            ],
+            'email' => [
+                'label' => 'La vostra adreça electrònica',
+                'placeholder' => 'joan.puig@example.com',
+            ],
+            'submit' => 'Configura el donatiu',
         ],
         'processing' => 'S\'està processant el pagament',
     ],

@@ -48,9 +48,20 @@
             </li>
             @if($donation["amount"] >= 5)
             <li class="paypal">
-                <a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/paypal/card') }}">
+                <a data-carries-name href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/paypal/card') }}">
                     <div class="image"><img class="invert-dark" src="/img/funding_source/card.svg" alt="Credit-/Debitcard"></div>
                     <div class="text">@lang('spende.payment-method.methods.card')</div>
+                </a>
+            </li>
+            @endif
+            @if($donation['interval'] !== 'once')
+            {{-- wero_link (cutover-plan.md §4.11/C6) is a recurring mandate
+                 only — there is no one-shot Wero payment through this
+                 endpoint, so the tile itself is hidden for a one-time
+                 donation rather than offered and then rejected by suma-crm. --}}
+            <li>
+                <a data-carries-name href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/wero_link') }}">
+                    <div class="image"><img class="invert-dark" src="/img/payment/vrpayment/wero_black.svg" alt="Wero"></div>
                 </a>
             </li>
             @endif

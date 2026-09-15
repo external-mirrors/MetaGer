@@ -43,10 +43,10 @@ spec:
           requestRedirect:
             hostname: {{ .toHost }}
             statusCode: 301
-            {{- if .toPathPrefix }}
+{{- if .toPathPrefix }}
             path:
               type: ReplacePrefixMatch
               replacePrefixMatch: {{ .toPathPrefix }}
-            {{- end }}
 {{- end }}
+{{ end -}}
 {{- end }}

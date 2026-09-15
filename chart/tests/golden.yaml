@@ -2411,7 +2411,10 @@ spec:
         - type: RequestRedirect
           requestRedirect:
             hostname: metager.de
-            statusCode: 301---
+            statusCode: 301
+
+---
+# Source: chart/templates/httproute-redirect.yaml
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -2443,6 +2446,7 @@ spec:
             path:
               type: ReplacePrefixMatch
               replacePrefixMatch: /es-ES/
+
 
 ---
 # Source: chart/templates/httproute.yaml

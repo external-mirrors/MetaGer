@@ -8,6 +8,13 @@ ingress:
     - hosts:
         - metager3.de
       secretName: development-auto-deploy-tls
+
+# Gateway API parity, verified via review apps first (MR !2491) -- see
+# chart/values.yaml. hosts[0] is set at deploy time (update_deployment.sh
+# --set gatewayAPI.hosts[0]), same as ingress.hosts[0].host above.
+gatewayAPI:
+  enabled: true
+  hosts: []
 resources:
   requests:
     fpm:

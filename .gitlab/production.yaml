@@ -63,6 +63,47 @@ ingress:
         - metager.co.uk
         - www.metager.co.uk
       secretName: production-tls
+
+# Gateway API parity, off until verified via review apps and development
+# first -- see chart/values.yaml. Only metager.de and metager.org serve
+# real content; every other host here 301s to one of those two (see
+# redirects below), replicating the ingress.annotations
+# configuration-snippet's `if ($host = ...)` block above. hosts[0] is set
+# at deploy time (update_deployment.sh --set gatewayAPI.hosts[0]) but is
+# already metager.de here, so that's a no-op for production.
+gatewayAPI:
+  enabled: false
+  hosts:
+    - metager.de
+    - metager.org
+  redirects:
+    - host: www.metager.de
+      toHost: metager.de
+    - host: metager2.de
+      toHost: metager.de
+    - host: www.metager2.de
+      toHost: metager.de
+    - host: www.metager.org
+      toHost: metager.org
+    - host: metager.es
+      toHost: metager.org
+      toPathPrefix: /es-ES/
+    - host: www.metager.es
+      toHost: metager.org
+      toPathPrefix: /es-ES/
+    - host: metager.nl
+      toHost: metager.org
+      toPathPrefix: /nl-NL/
+    - host: www.metager.nl
+      toHost: metager.org
+      toPathPrefix: /nl-NL/
+    - host: metager.co.uk
+      toHost: metager.org
+      toPathPrefix: /en-GB/
+    - host: www.metager.co.uk
+      toHost: metager.org
+      toPathPrefix: /en-GB/
+
 autoscaling:
   minReplicas: 2
 

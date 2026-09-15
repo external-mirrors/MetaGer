@@ -1,0 +1,105 @@
+{{- if .Values.gatewayAPI.enabled -}}
+{{/*
+Gateway API HTTPRoute for MetaGer's real content hosts (production's
+metager.de/metager.org, development's metager3.de, and each review app's
+own <branch-slug>.review.metager.de). Alias/redirect-only hosts are handled
+by httproute-redirect.yaml instead.
+
+Rendered per `.Values.gatewayAPI.hosts` entry, the Gateway API sibling of
+`ingress.yaml` + `ingress-reverb.yaml`. Those two are split in Ingress
+because nginx's `rewrite-target` annotation applies to every path on the
+Ingress it is set on, and only /ws needs rewriting — see ingress-reverb.yaml.
+Gateway API filters are per-rule, not per-object, so both live in one
+HTTPRoute here: no split needed.
+
+The listener a route attaches to (`sectionName`) is normally derived from
+the hostname (dots -> dashes, matching the shared Gateway's naming
+convention in updates/gateway-api/manifests/gateway.yaml). Review apps are
+the exception: they all share one wildcard listener
+(`*.review.metager.de`), so gatewayAPI.sectionName is set explicitly in
+.gitlab/review.yaml to override the per-host default.
+*/}}
+{{- $fullName := include "chart.fullname" . -}}
+{{- $root := . -}}
+{{- range .Values.gatewayAPI.hosts }}
+{{- $host := . -}}
+{{- $sectionName := $host | replace "." "-" -}}
+{{- if $root.Values.gatewayAPI.sectionName }}
+{{- $sectionName = $root.Values.gatewayAPI.sectionName }}
+{{- end }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-{{ $sectionName }}
+  labels:
+    {{- include "chart.labels" $root | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ $root.Values.gatewayAPI.gatewayName }}
+      namespace: {{ $root.Values.gatewayAPI.gatewayNamespace }}
+      sectionName: {{ $sectionName }}
+  hostnames:
+    - {{ $host | quote }}
+  rules:
+    # Old ingress-reverb.yaml: nginx `rewrite-target: /$2` on path
+    # `/ws(/|$)(.*)`. The client is fixed (browser extension hardcodes
+    # wsPath "/ws"), so the server side has to keep matching it.
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /ws
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: {{ $fullName }}-reverb
+          port: 8081
+    # Old ingress.yaml configuration-snippet: `$arg_out = "results-with-style"`
+    # sets a response header via more_set_headers. Gateway API precedence
+    # gives this rule (path + query param) priority over the plain "/" rule
+    # below when both would otherwise match, no explicit ordering needed.
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+          queryParams:
+            - type: Exact
+              name: out
+              value: results-with-style
+      filters:
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            set:
+              - name: X-Frame-Options
+                value: "allow-from https://scripts.zdv.uni-mainz.de/"
+      backendRefs:
+        - name: {{ $fullName }}
+          port: {{ $root.Values.service.port }}
+    # Old ingress.yaml: broadcast events, unrewritten, straight to Reverb.
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /apps
+      backendRefs:
+        - name: {{ $fullName }}-reverb
+          port: 8081
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /wsb
+      backendRefs:
+        - name: wsb
+          port: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ $fullName }}
+          port: {{ $root.Values.service.port }}
+{{- end }}
+{{- end }}

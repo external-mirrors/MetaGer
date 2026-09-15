@@ -118,6 +118,37 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# Gateway API sibling of `ingress` above, rendered by templates/httproute.yaml
+# and templates/httproute-redirect.yaml — migrating off ingress-nginx (EOL
+# 2026-03-31), see the updates repo's gateway-api-migration memory. Off by
+# default: enabled per-environment in .gitlab/{production,development,review}.yaml
+# once each is verified, alongside the still-live `ingress` block above (not a
+# replacement for it yet — HAProxy's SNI routing is the actual cutover switch).
+gatewayAPI:
+  enabled: false
+  gatewayName: shared-gateway
+  gatewayNamespace: gateway-api
+  # Real content hosts (get full routing: /, /apps, /wsb, /ws rewrite, the
+  # results-with-style response header). Each attaches to the shared
+  # Gateway listener whose sectionName is this host with dots replaced by
+  # dashes (see updates/gateway-api/manifests/gateway.yaml), unless
+  # sectionName below overrides that for every host in this list at once.
+  hosts: []
+  # Fixed sectionName override, for when every host in `hosts` shares one
+  # Gateway listener instead of getting its own — review apps only, which
+  # all attach to one wildcard *.review.metager.de listener.
+  sectionName: ""
+  # Alias hosts that 301 to a real content host, replicating the old
+  # Ingress's configuration-snippet host-based redirects. toPathPrefix is
+  # only set for the locale aliases (metager.es -> metager.org/es-ES etc.);
+  # omit it for a same-path redirect.
+  redirects: []
+  #  - host: www.metager.de
+  #    toHost: metager.de
+  #  - host: metager.es
+  #    toHost: metager.org
+  #    toPathPrefix: /es-ES
+
 resources:
   requests:
     fpm: {}

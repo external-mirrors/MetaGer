@@ -11,6 +11,19 @@ ingress:
         - "*.review.metager.de"
       secretName: review-tls
 
+# Gateway API parity for the still-live Ingress above -- see chart/values.yaml
+# for the full explanation. Testing here first: cheapest blast radius of the
+# three environments, and CI recreates a fresh review app end to end on every
+# push, so a bad template is caught by opening/updating a merge request rather
+# than by a production deploy. hosts[0] is set at deploy time
+# (update_deployment.sh --set gatewayAPI.hosts[0]), same as ingress.hosts[0].host.
+# sectionName is fixed because every review app shares one wildcard Gateway
+# listener (*.review.metager.de) rather than getting its own.
+gatewayAPI:
+  enabled: true
+  sectionName: review-metager-de
+  hosts: []
+
 autoscaling:
   enabled: false
 

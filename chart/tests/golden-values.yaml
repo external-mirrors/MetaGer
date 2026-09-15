@@ -43,6 +43,17 @@ ingress:
       hosts:
         - metager.de
 
+gatewayAPI:
+  enabled: true
+  hosts:
+    - metager.de
+  redirects:
+    - host: www.metager.de
+      toHost: metager.de
+    - host: metager.es
+      toHost: metager.org
+      toPathPrefix: /es-ES/
+
 env:
   MATOMO_ENABLED: "true"
   LOG_CHANNEL: stderr

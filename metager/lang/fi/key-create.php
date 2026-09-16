@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'Avainta ei juuri nyt voitu luoda. Se on meidän vikamme eikä sinun — yritä hetken päästä uudelleen.',
         'too_many_attempts' => 'Tästä yhteydestä on juuri luotu hyvin monta avainta. Odota muutama minuutti ja lataa sivu sitten uudelleen.',
         'no_key' => 'Avain katosi matkalla — niin käy, kun sivu on ollut kauan auki. Tässä on uusi.',
+        'already_member' => 'Tämä avain kuuluu jo aktiiviseen jäsenyyteen — sillä ei voi tehdä toista hakemusta.',
     ],
 ];

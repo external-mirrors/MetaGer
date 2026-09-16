@@ -46,14 +46,21 @@ class MembershipAppCallbackCarryTest extends TestCase
         //
         // suma-crm eröffnet im letzten Schritt die Checkout-Sitzung. Die Fälschung
         // gibt als `checkout_url` den `return_url` zurück, den sie bekommen hat —
-        // so, als wäre der Besucher bei suma-payments sofort fertig geworden. Genau
-        // dieser URL ist die Stelle, an der die Marker die Zahlungsstrecke
-        // überqueren müssen; trägt er sie nicht, endet der Weg ohne sie.
+        // so, als wäre der Besucher bei suma-payments sofort fertig geworden UND
+        // gleich über suma-crms Rückgabe-Hop zurückgereicht worden, samt der dort
+        // angehängten `payment_method` (siehe MembershipCheckoutReturnController
+        // in suma-crm — dessen eigenes Verhalten hat dort seine eigenen Tests,
+        // hier zählt nur, dass der Marker den ganzen Weg übersteht). Genau dieser
+        // URL ist die Stelle, an der die Marker die Zahlungsstrecke überqueren
+        // müssen; trägt er sie nicht, endet der Weg ohne sie.
         Http::fake(function ($request) {
             if (str($request->url())->contains("/api/membership-checkouts")) {
+                $returnUrl = $request["return_url"];
+                $returnUrl .= (str_contains($returnUrl, "?") ? "&" : "?") . "payment_method=banktransfer";
+
                 return Http::response([
                     "payment_reference" => "M-TESTREFERENCE",
-                    "checkout_url" => $request["return_url"],
+                    "checkout_url" => $returnUrl,
                 ], 201);
             }
 
@@ -110,11 +117,13 @@ class MembershipAppCallbackCarryTest extends TestCase
         $url = $this->step($url, ["amount" => "10.00"])->headers->get("Location");
         $url = $this->step($url, ["interval" => "monthly"])->headers->get("Location");
 
-        // Der Schritt „Zahlungsart“ führt nicht mehr auf das Formular zurück,
-        // sondern zur gehosteten Checkout-Seite — und von dort auf den
-        // `return_url`, also die Erfolgsseite. Die Fälschung oben kürzt beides
-        // zu einer Weiterleitung ab, weil suma-payments hier nicht läuft.
-        return $this->step($url, ["payment-method" => "banktransfer"])->headers->get("Location");
+        // Der letzte Schritt verlangt kein eigenes Feld mehr — die Zahlungsart
+        // wird nicht mehr im Formular gewählt. Er führt nicht mehr auf das
+        // Formular zurück, sondern zur gehosteten Checkout-Seite — und von
+        // dort auf den `return_url`, also die Erfolgsseite. Die Fälschung oben
+        // kürzt beides zu einer Weiterleitung ab, weil suma-payments hier
+        // nicht läuft.
+        return $this->step($url, [])->headers->get("Location");
     }
 
     public function testTheMarkersSurviveEveryStep(): void

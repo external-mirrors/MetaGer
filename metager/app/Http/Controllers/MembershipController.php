@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Vite;
 use App;
 use App\Authentication\KeyBackup;
 use App\Authentication\KeyIssuer;
+use App\Authentication\KeyUser;
 use App\Landing\AppCallback;
 use App\Localization;
 use App\Mail\Membership\ApplicationDeny;
@@ -189,6 +190,28 @@ class MembershipController extends Controller
      */
     public function success(Request $request, ?string $application_id = null)
     {
+        // Der Antragsteller trägt die tatsächlich gewählte Zahlungsart erst
+        // jetzt nach — gewählt wurde sie auf suma-payments' eigener
+        // Auswahlseite, nicht im Formular (submitMembershipForm() eröffnet
+        // die Checkout-Sitzung dort ohne bekannte Methode). Das war früher
+        // Teil von submitMembershipForm() selbst, läuft aber erst hier, weil
+        // es erst hier bekannt ist; `payment_method === null` schützt davor,
+        // bei einem erneuten Aufruf dieser Seite (Reload, zurück) doppelt zu
+        // benachrichtigen oder doppelt zu pushen.
+        if ($application_id !== null && $request->query("payment_method") !== null) {
+            $pending = MembershipApplication::find($application_id);
+            if ($pending !== null && $pending->payment_method === null && $pending->payment_reference !== null) {
+                $pending->payment_method = $request->query("payment_method");
+                $pending->save();
+
+                if (!$pending->is_update) {
+                    Artisan::call("membership:notify-admin", ["subject" => "[SUMA-EV] Neuer Aufnahmeantrag"]);
+                }
+
+                $this->maybePushToSumaCrm($pending);
+            }
+        }
+
         $application = null;
         if ($application_id !== null) {
             $application = MembershipApplication::finishedUser()->where("id", "=", $application_id)->first();
@@ -353,9 +376,6 @@ class MembershipController extends Controller
         $validator->sometimes("interval", 'required|in:annual,six-monthly,quarterly,monthly', function (Fluent $input) use ($application) {
             return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval === null;
         });
-        $validator->sometimes("payment-method", 'required|in:directdebit,banktransfer,paypal', function (Fluent $input) use ($application) {
-            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-        });
         if ($validator->fails()) {
             return $this->formAgain($application_id, $validator->errors());
         }
@@ -392,6 +412,17 @@ class MembershipController extends Controller
                 if ($key === null) {
                     return $this->formAgain($application_id, null, "keyserver_unreachable");
                 }
+            } elseif ((new KeyUser($key))->isMember()) {
+                // Legacy's own guard (gap found in live testing): applying
+                // again with a key that already carries an active
+                // membership used to be impossible, and this app dropped
+                // that check somewhere along the way — nothing stopped the
+                // same key from ending up with two or three independent
+                // Membership rows in suma-crm once an admin accepted each
+                // application in turn. Only checked for an existing key,
+                // never a freshly issued one (issue() above), which cannot
+                // be a member yet.
+                return $this->formAgain($application_id, null, "already_member");
             }
         }
 
@@ -477,10 +508,15 @@ class MembershipController extends Controller
             $application->interval = $form_data["interval"];
             $application->save();
             return redirect($membership_form_url . "#membership-payment-method");
-        } elseif ($application->payment_method === null) {
+        } elseif ($application->payment_reference === null) {
             /**
-             * Die Zahlungsart ist der letzte Schritt — und der, an dem der
-             * Antragsteller die Zahlung auch gleich autorisiert.
+             * Die Zahlungsart wird nicht mehr hier abgefragt — sie wird auf
+             * suma-payments' eigener Auswahlseite getroffen, nicht in diesem
+             * Formular (siehe die generische Weiter-Schaltfläche in
+             * membership.form). Dieser Schritt eröffnet die Checkout-Sitzung
+             * bereits ohne bekannte Zahlungsart; `payment_method` bleibt an
+             * diesem Antrag null, bis der Antragsteller von suma-payments
+             * zurückkommt und success() ihn nachträgt (siehe dort).
              *
              * Früher sammelte dieses Formular die IBAN selbst und legte sie
              * als MembershipPaymentDirectdebit ab; PayPal lief hier schon
@@ -496,7 +532,6 @@ class MembershipController extends Controller
              * stehen und wandert bei der Annahme mit — siehe
              * {@see \App\Membership\MembershipIssuer}.
              */
-            $method = $form_data["payment-method"];
             $email = $application->contact?->email ?? $application->company?->email;
 
             if ($email === null) {
@@ -508,28 +543,21 @@ class MembershipController extends Controller
                 // Der Monatsbeitrag, nicht der je Zahlungsintervall —
                 // suma-crm rechnet das selbst um (periodAmount()).
                 "amount" => $application->amount,
-                "payment_method" => $method,
                 "email" => $email,
                 "name" => $application->contact !== null
                     ? trim($application->contact->first_name . " " . $application->contact->last_name)
                     : $application->company?->company,
                 "locale" => $application->locale,
                 "return_url" => route("membership_success", array_merge(["application_id" => $application->id], AppCallback::markers($request))),
+                "cancel_url" => route("membership_abort", ["application_id" => $application->id]),
             ]);
 
             if ($checkout === null) {
                 return $this->formAgain($application_id, null, "crm_unreachable");
             }
 
-            $application->payment_method = $method;
             $application->payment_reference = $checkout["payment_reference"];
             $application->save();
-
-            if (!$application->is_update) {
-                Artisan::call("membership:notify-admin", ["subject" => "[SUMA-EV] Neuer Aufnahmeantrag"]);
-            }
-
-            $this->maybePushToSumaCrm($application);
 
             return redirect($checkout["checkout_url"]);
         } else {

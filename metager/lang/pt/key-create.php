@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'Não foi possível criar uma chave neste momento. A culpa é nossa e não sua — tente novamente daqui a pouco.',
         'too_many_attempts' => 'A partir desta ligação acabaram de ser criadas muitíssimas chaves. Espere alguns minutos e volte a carregar a página.',
         'no_key' => 'A chave perdeu-se pelo caminho — isso acontece quando a página esteve aberta muito tempo. Aqui está uma nova.',
+        'already_member' => 'Esta chave já pertence a uma associação ativa — não é possível apresentar com ela um segundo pedido.',
     ],
 ];

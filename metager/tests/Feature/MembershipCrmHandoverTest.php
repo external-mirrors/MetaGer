@@ -91,10 +91,12 @@ class MembershipCrmHandoverTest extends TestCase
     }
 
     /**
-     * Bis einschließlich Zahlungsart, also bis zu der Weiterleitung, die den
-     * Antragsteller zur gehosteten Checkout-Seite schickt.
+     * Bis einschließlich der Zahlungsstufe, also bis zu der Weiterleitung,
+     * die den Antragsteller zur gehosteten Checkout-Seite schickt. Diese
+     * Stufe verlangt kein eigenes Feld mehr — die Zahlungsart wird dort
+     * gewählt, nicht hier.
      */
-    private function applyThrough(string $paymentMethod): \Illuminate\Testing\TestResponse
+    private function applyThrough(): \Illuminate\Testing\TestResponse
     {
         $url = $this->step("/de-DE/membership", [
             "type" => "person",
@@ -107,7 +109,18 @@ class MembershipCrmHandoverTest extends TestCase
         $url = $this->step($url, ["amount" => "10.00"])->headers->get("Location");
         $url = $this->step($url, ["interval" => "monthly"])->headers->get("Location");
 
-        return $this->step($url, ["payment-method" => $paymentMethod]);
+        return $this->step($url, []);
+    }
+
+    /**
+     * Simuliert die Rückkehr von suma-payments über suma-crms Rückgabe-Hop —
+     * der Antragsteller landet hier mit der tatsächlich gewählten
+     * Zahlungsart im Query-String, die success() nachträgt (siehe dort).
+     */
+    private function returnFromCheckout(string $applicationId, string $paymentMethod): \Illuminate\Testing\TestResponse
+    {
+        return $this->withUnencryptedCookies(["key" => self::A_KEY])
+            ->get(route("membership_success", ["application_id" => $applicationId, "payment_method" => $paymentMethod]));
     }
 
     /**
@@ -122,19 +135,25 @@ class MembershipCrmHandoverTest extends TestCase
     {
         $this->fakeCrm();
 
-        $this->applyThrough("directdebit")
+        $this->applyThrough()
             ->assertRedirect("https://payments.example.com/checkout/abc");
 
-        Http::assertSent(fn ($request) => str($request->url())->contains("/api/membership-applications")
-            && $request["payment_reference"] === self::REFERENCE
-            && $request["payment_method"] === "directdebit");
+        // The push into suma-crm's own review queue no longer fires right
+        // here — the payment method isn't known yet at this point (chosen
+        // on suma-payments' own picker page, not this form); see
+        // testANonReducedApplicationPushesToSumaCrmAndIsMarkedPushedAfterCheckout()
+        // for what happens once the applicant returns.
+        Http::assertNotSent(fn ($request) => str($request->url())->contains("/api/membership-applications"));
+
+        $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
+        $this->assertNull($application->payment_method);
     }
 
     public function testTheCheckoutCallSendsTheMonthlyFeeAndTheApplicantsOwnDetails(): void
     {
         $this->fakeCrm();
 
-        $this->applyThrough("directdebit");
+        $this->applyThrough();
 
         Http::assertSent(function ($request) {
             if (!str($request->url())->contains("/api/membership-checkouts")) {
@@ -143,13 +162,34 @@ class MembershipCrmHandoverTest extends TestCase
 
             // Der Monatsbeitrag, nicht der je Intervall — suma-crm rechnet um
             // (gap #32). Bei „monthly“ sind beide gleich; die Zusicherung
-            // steht hier trotzdem, weil sie die Richtung festhält.
+            // steht hier trotzdem, weil sie die Richtung festhält. Keine
+            // `payment_method` mehr im Payload — die Wahl trifft der
+            // Antragsteller erst bei suma-payments.
             return $request["amount"] == 10.00
                 && $request["interval"] === "monthly"
-                && $request["payment_method"] === "directdebit"
+                && !isset($request["payment_method"])
                 && $request["email"] === "test@example.com"
-                && $request["name"] === "Test Person";
+                && $request["name"] === "Test Person"
+                && isset($request["cancel_url"]);
         });
+    }
+
+    /**
+     * The abort link on every suma-payments checkout page needs somewhere
+     * real to send an aborting payer back to — the existing
+     * `membership_abort` action, which already deletes the in-progress
+     * application (see `abortApplication()`).
+     */
+    public function testTheCancelUrlPointsAtTheExistingAbortAction(): void
+    {
+        $this->fakeCrm();
+
+        $this->applyThrough();
+
+        $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
+
+        Http::assertSent(fn ($request) => str($request->url())->contains("/api/membership-checkouts")
+            && $request["cancel_url"] === route("membership_abort", ["application_id" => $application->id]));
     }
 
     /**
@@ -162,7 +202,7 @@ class MembershipCrmHandoverTest extends TestCase
     {
         $this->fakeCrm();
 
-        $this->applyThrough("directdebit")->assertRedirect("https://payments.example.com/checkout/abc");
+        $this->applyThrough()->assertRedirect("https://payments.example.com/checkout/abc");
 
         // Not read off the just-created application: for a non-reduced
         // application it's already gone (pushed to suma-crm's own queue,
@@ -179,7 +219,7 @@ class MembershipCrmHandoverTest extends TestCase
     {
         $this->fakeCrm(checkoutStatus: 500);
 
-        $this->applyThrough("directdebit");
+        $this->applyThrough();
 
         $application = MembershipApplication::orderBy("created_at", "desc")->first();
 
@@ -332,7 +372,19 @@ class MembershipCrmHandoverTest extends TestCase
     {
         $this->fakeCrm();
 
-        $this->applyThrough("directdebit")->assertRedirect("https://payments.example.com/checkout/abc");
+        $this->applyThrough()->assertRedirect("https://payments.example.com/checkout/abc");
+
+        // Not orderBy(desc)->first(): this app's test database is a real,
+        // persistent one shared with manual testing, not a throwaway
+        // in-memory one — filtered by this test's own unique reference
+        // instead of trusting "the newest row" to be the one it just made.
+        $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
+
+        // Nothing pushes yet — the payment method isn't known until the
+        // applicant returns from suma-payments' own picker.
+        Http::assertNotSent(fn ($request) => str($request->url())->contains("/api/membership-applications"));
+
+        $this->returnFromCheckout($application->id, "directdebit")->assertOk();
 
         Http::assertSent(function ($request) {
             if (!str($request->url())->contains("/api/membership-applications")) {
@@ -343,14 +395,12 @@ class MembershipCrmHandoverTest extends TestCase
                 && $request["last_name"] === "Person"
                 && $request["email"] === "test@example.com"
                 && $request["payment_reference"] === self::REFERENCE
+                && $request["payment_method"] === "directdebit"
                 && $request["reduced"] === false;
         });
 
-        // Not orderBy(desc)->first(): this app's test database is a real,
-        // persistent one shared with manual testing, not a throwaway
-        // in-memory one — filtered by this test's own unique reference
-        // instead of trusting "the newest row" to be the one it just made.
-        $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
+        $application->refresh();
+        $this->assertSame("directdebit", $application->payment_method);
         $this->assertNotNull($application->pushed_to_crm_at);
 
         $this->get(route("membership_admin_overview"))->assertDontSee("test@example.com");
@@ -370,7 +420,6 @@ class MembershipCrmHandoverTest extends TestCase
             "locale" => "de-DE",
             "amount" => 3.00,
             "interval" => "monthly",
-            "payment_method" => "directdebit",
             "payment_reference" => self::REFERENCE,
             "key" => self::A_KEY,
         ]);
@@ -386,14 +435,15 @@ class MembershipCrmHandoverTest extends TestCase
             "file_mimetype" => "application/pdf",
         ]);
 
-        // Reaching the form's payment-method step directly (rather than
-        // through applyThrough(), which starts a fresh application) —
-        // step 4 has nothing left to validate for an application that
-        // already carries contact/amount/interval.
-        $this->step(route("membership_form", ["application_id" => $application->id]), ["payment-method" => "directdebit"]);
+        // Simulates the return trip from suma-payments — the reduction is
+        // still pending, so this must not push even though payment_method
+        // just became known.
+        $this->returnFromCheckout($application->id, "directdebit");
 
         Http::assertNotSent(fn ($request) => str($request->url())->contains("/api/membership-applications"));
-        $this->assertNull(MembershipApplication::find($application->id)->pushed_to_crm_at);
+        $application->refresh();
+        $this->assertSame("directdebit", $application->payment_method);
+        $this->assertNull($application->pushed_to_crm_at);
 
         $this->post(route("membership_admin_reduction_accept"), [
             "id" => $reduction->id,
@@ -414,10 +464,13 @@ class MembershipCrmHandoverTest extends TestCase
     {
         $this->fakeCrm(applicationPushStatus: 500);
 
-        $this->applyThrough("directdebit")->assertRedirect("https://payments.example.com/checkout/abc");
+        $this->applyThrough()->assertRedirect("https://payments.example.com/checkout/abc");
 
         $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
-        $this->assertNull($application->pushed_to_crm_at);
+        $this->returnFromCheckout($application->id, "directdebit");
+
+        Http::assertSent(fn ($request) => str($request->url())->contains("/api/membership-applications"));
+        $this->assertNull($application->fresh()->pushed_to_crm_at);
     }
 
     /**
@@ -438,10 +491,33 @@ class MembershipCrmHandoverTest extends TestCase
         ])->headers->get("Location");
         $url = $this->step($url, ["amount" => "20.00"])->headers->get("Location");
         $url = $this->step($url, ["interval" => "monthly"])->headers->get("Location");
-        $this->step($url, ["payment-method" => "directdebit"]);
+        $this->step($url, []);
+
+        $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
+        $this->returnFromCheckout($application->id, "directdebit");
 
         Http::assertNotSent(fn ($request) => str($request->url())->contains("/api/membership-applications"));
+        $this->assertNull($application->fresh()->pushed_to_crm_at);
+    }
+
+    /**
+     * A revisited or refreshed success page must not notify the admin or
+     * push a second time — `payment_method` already being set is what
+     * guards the trigger block in success() from running twice.
+     */
+    public function testRevisitingTheSuccessPageDoesNotPushOrNotifyTwice(): void
+    {
+        $this->fakeCrm();
+
+        $this->applyThrough()->assertRedirect("https://payments.example.com/checkout/abc");
         $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
-        $this->assertNull($application->pushed_to_crm_at);
+
+        $pushCount = fn () => Http::recorded(fn ($request) => str($request->url())->contains("/api/membership-applications"))->count();
+
+        $this->returnFromCheckout($application->id, "directdebit")->assertOk();
+        $this->assertSame(1, $pushCount());
+
+        $this->returnFromCheckout($application->id, "directdebit")->assertOk();
+        $this->assertSame(1, $pushCount());
     }
 }

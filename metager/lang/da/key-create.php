@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'Der kunne ikke oprettes en nøgle lige nu. Det er vores skyld og ikke din — prøv igen om et øjeblik.',
         'too_many_attempts' => 'Der er lige oprettet meget mange nøgler fra denne forbindelse. Vent et par minutter, og genindlæs så siden.',
         'no_key' => 'Nøglen gik tabt undervejs — det sker, når siden har stået åben længe. Her er en ny.',
+        'already_member' => 'Denne nøgle tilhører allerede et aktivt medlemskab — endnu en ansøgning er ikke mulig med den.',
     ],
 ];

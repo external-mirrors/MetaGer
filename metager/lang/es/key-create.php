@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'Ahora mismo no se ha podido crear ninguna clave. Es cosa nuestra y no suya: inténtelo de nuevo en un momento.',
         'too_many_attempts' => 'Desde esta conexión se acaban de crear muchísimas claves. Espere unos minutos y vuelva a cargar la página.',
         'no_key' => 'La clave se perdió por el camino; eso pasa cuando la página ha estado abierta mucho tiempo. Aquí tiene una nueva.',
+        'already_member' => 'Esta clave ya pertenece a una afiliación activa — no es posible presentar con ella una segunda solicitud.',
     ],
 ];

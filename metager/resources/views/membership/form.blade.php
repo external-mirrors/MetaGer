@@ -252,117 +252,35 @@
         @endif
     </div>
     @php
+    // Die Zahlungsart wird hier nicht mehr abgefragt — sie wird auf der
+    // gehosteten Checkout-Seite von suma-payments gewählt, zu der das
+    // Abschicken weiterleitet (siehe MembershipController::submitMembershipForm()).
+    // $editable hängt deshalb an payment_reference, nicht mehr an
+    // payment_method: Letzteres steht an diesem Antrag erst fest, wenn der
+    // Antragsteller von dort zurückkommt.
     $visible = $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-    $editable = $visible && $application->payment_method === null;
-    $payment_method = $application !== null && $application->payment_method !== null ? $application->payment_method : request()->input("payment-method", null);
+    $editable = $visible && $application->payment_reference === null;
     @endphp
     <div id="membership-payment-method" @if(!$visible)class="disabled"@endif>
-        <h3>4. Ihre Zahlungsmethode
-            @if($visible && !$editable)
-            <a href="{{  route("membership_form", array_merge(Request::all(), [Request::route("application_id")], ["edit" => "membership-payment-method"])) }}">Bearbeiten</a>
-            @endif
+        <h3>4. Zahlung
             <div class="funding-sources">
                 <img src="/img/funding_source/sepa.svg" alt="SEPA">
                 <img src="/img/funding_source/paypal.svg" alt="PayPal">
             </div>
         </h3>
         @if($visible)
-        @if(isset($errors) && $errors->has("payment-method"))
-            @foreach($errors->get("payment-method") as $error)
-                <div class="error">{{ $error }}</div>
-            @endforeach
-        @endif
         <div @if(!$editable)class="disabled"@endif>
-            <input type="radio" name="payment-method" id="payment-method-directdebit" value="directdebit"
-                @if(in_array($payment_method, [null, "directdebit"]) )checked @endif
-                required>
-            <label for="payment-method-directdebit">SEPA Lastschrift</label>
-            <input type="radio" name="payment-method" id="payment-method-banktransfer" value="banktransfer"
-                @if($payment_method==="banktransfer" )checked @endif required>
-            <label for="payment-method-banktransfer">Banküberweisung</label>
-            <input type="radio" name="payment-method" id="payment-method-paypal" class="js-only" value="paypal"
-                @if($payment_method==="paypal" )checked @endif required>
-            <label for="payment-method-paypal" class="js-only">PayPal</label>
-            {{-- Die IBAN wird hier nicht mehr erhoben: sie nimmt die
-                 gehostete Checkout-Seite von suma-payments entgegen, zu der
-                 das Abschicken weiterleitet — wie bei PayPal schon immer und
-                 wie auf der Spendenseite inzwischen auch. --}}
-            <div id="directdebit-data" class="info-container">
-                <div>Mit Abschicken des Formulars werden Sie zur Eingabe Ihrer Bankverbindung und zur Erteilung des SEPA-Lastschriftmandats weitergeleitet.</div>
-            </div>
-            <div id="banktransfer-data" class="info-container">
-                <div>Mit Abschicken des Formulars erhalten Sie die Überweisungsdaten samt Ihrer Zahlungsreferenz.</div>
-            </div>
-            <div id="paypal-data" class="info-container">
-                <div>Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>
+            <div class="info-container">
+                <div>Mit Abschicken des Formulars werden Sie zu unserem Zahlungsdienstleister weitergeleitet und wählen dort Ihre Zahlungsart sowie die zugehörigen Daten.</div>
                 @if($application !== null && $application->is_update)
                 <div>@lang('membership.application.payment_block')</div>
                 @endif
             </div>
-            {{-- Credit card memberships are disabled for now
-            <div id="creditcard-data" class="info-container" data-loading-text="{{ __('spende.execute-payment.card.loading') }}" data-is-update="{{ $application !== null ? $application->is_update : false }}">
-                <div id="creditcard-name-container">
-                    <label for="creditcard-name">@lang("spende.execute-payment.card.name")</label>
-                    <div id="creditcard-name"></div>
-                </div>
-                <div id="errors">
-                    <div id="card-acceptance-error" class="error hidden">@lang('spende.execute-payment.card.error.acceptance')</div>
-                    <div id="syntax-error" class="error hidden">@lang('spende.execute-payment.card.error.syntax')</div>
-                </div>
-                <div id="creditcard-details">
-                    <div id="creditcard-number-container">
-                        <label for="creditcard-number">@lang("spende.execute-payment.card.number")</label>
-                        <div id="creditcard-number"></div>
-                    </div>
-                    <div id="creditcard-valid-until-container">
-                        <label for="creditcard-valid-until">@lang("spende.execute-payment.card.expiration")</label>
-                        <div id="creditcard-valid-until"></div>
-                    </div>
-                    <div id="creditcard-valid-until-container">
-                        <label for="creditcard-cvv">@lang("spende.execute-payment.card.cvv")</label>
-                        <div id="creditcard-cvv"></div>
-                    </div>
-                </div>
-                <div id="billing-address">
-                    <h4>@lang('spende.execute-payment.card.billing.address')</h4>
-                    <div>@lang('spende.execute-payment.card.billing.hint')</div>
-                    <div class="inputs">
-                        <div class="input-group">
-                            <label for="card-billing-address-line-1">@lang('spende.execute-payment.card.billing.address-line-1')</label>
-                            <input type="text" id="card-billing-address-line-1" name="card-billing-address-line-1" autocomplete="off" placeholder="Musterstraße 3" />
-                        </div>
-                        <div class="input-group">
-                            <label for="card-billing-address-line-2">@lang('spende.execute-payment.card.billing.address-line-2')</label>
-                            <input type="text" id="card-billing-address-line-2" name="card-billing-address-line-2" autocomplete="off" placeholder="Appartment 3"/>
-                        </div>
-                        <div class="input-group">
-                            <label for="card-billing-address-admin-area-line-1">@lang('spende.execute-payment.card.billing.address-admin-area-line-1')</label>
-                            <input type="text" id="card-billing-address-admin-area-line-1" name="card-billing-address-admin-area-line-1" autocomplete="off" placeholder="Musterstadt"/>
-                        </div>
-                        <div class="input-group">
-                            <label for="card-billing-address-admin-area-line-2">@lang('spende.execute-payment.card.billing.address-admin-area-line-2')</label>
-                            <input type="text" id="card-billing-address-admin-area-line-2" name="card-billing-address-admin-area-line-2" autocomplete="off" placeholder="Niedersachsen"/>
-                        </div>
-                        <div class="input-group">
-                            <label for="card-billing-address-country-code">@lang('spende.execute-payment.card.billing.address-country-code')</label>
-                            <input type="text" id="card-billing-address-country-code" name="card-billing-address-country-code" autocomplete="off" placeholder="DE"/>
-                        </div>
-                        <div class="input-group">
-                        <label for="card-billing-address-postal-code">@lang('spende.execute-payment.card.billing.address-postal-code')</label>
-                            <input type="text" id="card-billing-address-postal-code" name="card-billing-address-postal-code" autocomplete="off" placeholder="30159"/>
-                        </div>
-                    </div>
-                </div>
-                @if($application !== null && $application->is_update)
-                <div id="payment-block">@lang('membership.application.payment_block')</div>
-                @endif
-            </div>
-            --}}
         </div>
         @endif
     </div>
     @if($editable)
-    <button type="submit" class="btn btn-primary">Abschicken</button>
+    <button type="submit" class="btn btn-primary">Weiter zur Zahlung</button>
     @endif
     @if($application !== null && $application->id !== null)
     @if($application->is_update && $application->isComplete())

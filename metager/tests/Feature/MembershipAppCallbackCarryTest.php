@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Membership\MembershipApplication;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
@@ -137,9 +136,17 @@ class MembershipAppCallbackCarryTest extends TestCase
     public function testTheWayEndsOnTheSuccessPage(): void
     {
         $success = $this->walkTheForm();
-        $application = MembershipApplication::orderBy("created_at", "desc")->first();
 
-        $this->assertStringContainsString("/membership/success/" . $application->id, $success);
+        // Not looked up via MembershipApplication::orderBy(...)->first():
+        // this application is a non-reduced, non-company, non-update one
+        // (banktransfer, per walkTheForm()), so by the time this line runs
+        // it has already been pushed into suma-crm's own review queue and
+        // deleted locally (see MembershipController::maybePushToSumaCrm(),
+        // docs/civicrm-replacement.md "Membership application review moves
+        // to suma-crm") — there is nothing left in this table to look up.
+        // The success URL itself is the thing under test: it must carry an
+        // application_id segment, not the bare key a stale redirect used to.
+        $this->assertMatchesRegularExpression('#/membership/success/[0-9a-f-]{36}(\?|$)#', $success);
 
         $this->withUnencryptedCookies(["key" => self::A_KEY])
             ->get($success)

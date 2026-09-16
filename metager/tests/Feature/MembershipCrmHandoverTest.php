@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Membership\MembershipApplication;
 use App\Models\Membership\MembershipContact;
+use App\Models\Membership\MembershipPaymentDirectdebit;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
@@ -52,11 +53,17 @@ class MembershipCrmHandoverTest extends TestCase
      * Test, der einen Fehlerfall braucht, müsste also gegen einen Erfolgsfall
      * aus setUp() anlaufen und bekäme still den Erfolg.
      */
-    private function fakeCrm(int $checkoutStatus = 201, int $membershipStatus = 201, int $voidStatus = 200): void
+    private function fakeCrm(int $checkoutStatus = 201, int $membershipStatus = 201, int $voidStatus = 200, int $applicationPushStatus = 201): void
     {
-        Http::fake(function ($request) use ($checkoutStatus, $membershipStatus, $voidStatus) {
+        Http::fake(function ($request) use ($checkoutStatus, $membershipStatus, $voidStatus, $applicationPushStatus) {
             if (str($request->url())->contains("/void")) {
                 return Http::response(["status" => "voided"], $voidStatus);
+            }
+
+            // Checked before the plain /api/membership-checkouts branch
+            // below — that URL is a prefix of this one.
+            if (str($request->url())->contains("/api/membership-applications")) {
+                return Http::response(["id" => "app-uuid"], $applicationPushStatus);
             }
 
             if (str($request->url())->contains("/api/membership-checkouts")) {
@@ -103,6 +110,14 @@ class MembershipCrmHandoverTest extends TestCase
         return $this->step($url, ["payment-method" => $paymentMethod]);
     }
 
+    /**
+     * The reference minted at step 4 survives the handoff into suma-crm's
+     * own review queue (docs/civicrm-replacement.md, "Membership
+     * application review moves to suma-crm") — this application is
+     * non-reduced, so nothing blocks that push from firing immediately;
+     * see testANonReducedApplicationPushesToSumaCrmAndIsRemovedLocallyAfterCheckout()
+     * for the queue-push assertions themselves.
+     */
     public function testTheFormRedirectsToTheHostedCheckoutAndKeepsTheReference(): void
     {
         $this->fakeCrm();
@@ -110,10 +125,9 @@ class MembershipCrmHandoverTest extends TestCase
         $this->applyThrough("directdebit")
             ->assertRedirect("https://payments.example.com/checkout/abc");
 
-        $application = MembershipApplication::orderBy("created_at", "desc")->first();
-
-        $this->assertSame(self::REFERENCE, $application->payment_reference);
-        $this->assertSame("directdebit", $application->payment_method);
+        Http::assertSent(fn ($request) => str($request->url())->contains("/api/membership-applications")
+            && $request["payment_reference"] === self::REFERENCE
+            && $request["payment_method"] === "directdebit");
     }
 
     public function testTheCheckoutCallSendsTheMonthlyFeeAndTheApplicantsOwnDetails(): void
@@ -150,9 +164,11 @@ class MembershipCrmHandoverTest extends TestCase
 
         $this->applyThrough("directdebit")->assertRedirect("https://payments.example.com/checkout/abc");
 
-        $application = MembershipApplication::orderBy("created_at", "desc")->first();
-
-        $this->assertNull($application->directdebit);
+        // Not read off the just-created application: for a non-reduced
+        // application it's already gone (pushed to suma-crm's own queue,
+        // see maybePushToSumaCrm()) by the time this line runs — the real
+        // assertion is that the flow never created a directdebit row at all.
+        $this->assertSame(0, MembershipPaymentDirectdebit::count());
     }
 
     /**
@@ -301,5 +317,131 @@ class MembershipCrmHandoverTest extends TestCase
         $this->post(route("membership_admin_deny"), ["id" => $application->id, "type" => "unfinished"]);
 
         Http::assertNotSent(fn ($request) => str($request->url())->contains("/void"));
+    }
+
+    /**
+     * docs/civicrm-replacement.md, "Membership application review moves to
+     * suma-crm" — once step 4 (§1.4) completes for a non-reduced, non-
+     * company, non-update application, it moves straight into suma-crm's
+     * own review queue rather than waiting on adminAccept()/adminDeny()
+     * here. The local row stays (not deleted): success() still resolves it
+     * by id for the confirmation page the applicant is redirected to right
+     * after this — only adminIndex()'s own list stops offering it.
+     */
+    public function testANonReducedApplicationPushesToSumaCrmAndIsMarkedPushedAfterCheckout(): void
+    {
+        $this->fakeCrm();
+
+        $this->applyThrough("directdebit")->assertRedirect("https://payments.example.com/checkout/abc");
+
+        Http::assertSent(function ($request) {
+            if (!str($request->url())->contains("/api/membership-applications")) {
+                return false;
+            }
+
+            return $request["first_name"] === "Test"
+                && $request["last_name"] === "Person"
+                && $request["email"] === "test@example.com"
+                && $request["payment_reference"] === self::REFERENCE
+                && $request["reduced"] === false;
+        });
+
+        // Not orderBy(desc)->first(): this app's test database is a real,
+        // persistent one shared with manual testing, not a throwaway
+        // in-memory one — filtered by this test's own unique reference
+        // instead of trusting "the newest row" to be the one it just made.
+        $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
+        $this->assertNotNull($application->pushed_to_crm_at);
+
+        $this->get(route("membership_admin_overview"))->assertDontSee("test@example.com");
+    }
+
+    /**
+     * Reduction review runs entirely in MetaGer (out of scope for this
+     * migration) — an application must not reach suma-crm's queue while its
+     * reduced-fee proof is still pending, even though step 4 has otherwise
+     * completed.
+     */
+    public function testAReducedApplicationWaitsForReductionApprovalBeforePushing(): void
+    {
+        $this->fakeCrm();
+
+        $application = MembershipApplication::create([
+            "locale" => "de-DE",
+            "amount" => 3.00,
+            "interval" => "monthly",
+            "payment_method" => "directdebit",
+            "payment_reference" => self::REFERENCE,
+            "key" => self::A_KEY,
+        ]);
+        MembershipContact::create([
+            "title" => "Neutral",
+            "first_name" => "Test",
+            "last_name" => "Person",
+            "email" => "test@example.com",
+            "application_id" => $application->id,
+        ]);
+        $reduction = $application->reduction()->create([
+            "file_path" => storage_path("metager/does-not-exist.pdf"),
+            "file_mimetype" => "application/pdf",
+        ]);
+
+        // Reaching the form's payment-method step directly (rather than
+        // through applyThrough(), which starts a fresh application) —
+        // step 4 has nothing left to validate for an application that
+        // already carries contact/amount/interval.
+        $this->step(route("membership_form", ["application_id" => $application->id]), ["payment-method" => "directdebit"]);
+
+        Http::assertNotSent(fn ($request) => str($request->url())->contains("/api/membership-applications"));
+        $this->assertNull(MembershipApplication::find($application->id)->pushed_to_crm_at);
+
+        $this->post(route("membership_admin_reduction_accept"), [
+            "id" => $reduction->id,
+            "reduction_until" => now()->addYear()->toDateString(),
+        ]);
+
+        Http::assertSent(fn ($request) => str($request->url())->contains("/api/membership-applications")
+            && $request["reduced"] === true);
+        $this->assertNotNull(MembershipApplication::find($application->id)->pushed_to_crm_at);
+    }
+
+    /**
+     * A failed push must not lose the application — it falls back to the
+     * legacy adminAccept()/adminDeny() review path here, exactly as before
+     * this queue existed.
+     */
+    public function testAFailedPushLeavesTheApplicationInPlace(): void
+    {
+        $this->fakeCrm(applicationPushStatus: 500);
+
+        $this->applyThrough("directdebit")->assertRedirect("https://payments.example.com/checkout/abc");
+
+        $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
+        $this->assertNull($application->pushed_to_crm_at);
+    }
+
+    /**
+     * suma-crm's own intake still rejects a company application outright —
+     * no contact-person fields are collected here to send (§ adminAccept()'s
+     * own guard) — so it must never be pushed, and stays fully on the
+     * legacy review path.
+     */
+    public function testACompanyApplicationIsNeverPushed(): void
+    {
+        $this->fakeCrm();
+
+        $url = $this->step("/de-DE/membership", [
+            "type" => "company",
+            "company" => "Acme GmbH",
+            "employees" => "1-19",
+            "email" => "info@acme.example",
+        ])->headers->get("Location");
+        $url = $this->step($url, ["amount" => "20.00"])->headers->get("Location");
+        $url = $this->step($url, ["interval" => "monthly"])->headers->get("Location");
+        $this->step($url, ["payment-method" => "directdebit"]);
+
+        Http::assertNotSent(fn ($request) => str($request->url())->contains("/api/membership-applications"));
+        $application = MembershipApplication::where("payment_reference", self::REFERENCE)->sole();
+        $this->assertNull($application->pushed_to_crm_at);
     }
 }

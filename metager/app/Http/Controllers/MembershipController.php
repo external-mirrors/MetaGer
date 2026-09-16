@@ -12,6 +12,7 @@ use App\Mail\Membership\ApplicationDeny;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\ReductionDeny;
 use App\Mail\Membership\WelcomeMail;
+use App\Membership\MembershipApplicationPusher;
 use App\Membership\MembershipCheckoutIssuer;
 use App\Membership\MembershipCheckoutVoider;
 use App\Membership\MembershipIssuer;
@@ -528,6 +529,8 @@ class MembershipController extends Controller
                 Artisan::call("membership:notify-admin", ["subject" => "[SUMA-EV] Neuer Aufnahmeantrag"]);
             }
 
+            $this->maybePushToSumaCrm($application);
+
             return redirect($checkout["checkout_url"]);
         } else {
             // application_id und nicht key: `key` ist hier kein Routenparameter,
@@ -739,7 +742,14 @@ class MembershipController extends Controller
 
     public function adminIndex(Request $request)
     {
-        $membership_applications = MembershipApplication::finishedAdmin()->get();
+        // whereNull("pushed_to_crm_at"): a finished new application that has
+        // already moved into suma-crm's own review queue (docs/civicrm-
+        // replacement.md, "Membership application review moves to
+        // suma-crm") has nothing left to decide here — see
+        // maybePushToSumaCrm(). What remains in this list is exactly the
+        // legacy fallback: company applications (never pushed) and any
+        // application a failed push left behind.
+        $membership_applications = MembershipApplication::finishedAdmin()->whereNull("pushed_to_crm_at")->get();
         $membership_update_requests = MembershipApplication::updateRequestsAdmin()->get();
         $reduction_requests = MembershipApplication::reductionRequests()->get();
         $unfinished_applications = MembershipApplication::unfinishedUser()->get();
@@ -808,6 +818,12 @@ class MembershipController extends Controller
 
         $application->reduction->expires_at = $date;
         if ($application->reduction->save()) {
+            // Reduction was the only thing still blocking this application
+            // from suma-crm's own review queue (see maybePushToSumaCrm()) —
+            // check again now that it's resolved, for an application whose
+            // step 4 (checkout) already completed while this was pending.
+            $this->maybePushToSumaCrm($application->fresh());
+
             return redirect(route("membership_admin_overview", ["success" => "Successfully accepted reduction application"]));
         } else {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't update application"]));
@@ -1045,6 +1061,63 @@ class MembershipController extends Controller
      * Nicht-UUID-Schlüssel per MD5 in denselben Raum ({@see KeyIssuer}), und
      * wer noch einen davon hat, soll ihn behalten.
      */
+    /**
+     * Once a new (non-update) application has both a mandate (step 4, §1.4
+     * — {@see MembershipCheckoutIssuer} already ran) and a resolved fee (no
+     * reduction still pending review), it moves to suma-crm's own admin
+     * review queue rather than waiting on the legacy adminAccept()/
+     * adminDeny() flow here — see docs/civicrm-replacement.md, "Membership
+     * application review moves to suma-crm". Called right after step 4
+     * completes (the common case) and again from
+     * adminMembershipReductionAccept() (the minority case where reduction
+     * resolves after step 4 already did).
+     *
+     * A company application is deliberately left alone — suma-crm's intake
+     * still rejects one outright (no contact-person fields are collected
+     * here to send; see adminAccept()'s own guard), so it stays on the
+     * legacy path exactly as before, which already surfaces that
+     * limitation to the admin. A push failure also leaves the row in
+     * place, for the same reason: better a slightly-stale local fallback
+     * than a silently lost application.
+     */
+    private function maybePushToSumaCrm(MembershipApplication $application): void
+    {
+        if ($application->is_update || $application->company !== null || $application->contact === null) {
+            return;
+        }
+        if ($application->payment_method === null || $application->payment_reference === null) {
+            return;
+        }
+        if ($application->reduction !== null && $application->reduction->expires_at === null) {
+            return;
+        }
+
+        $pushed = app(MembershipApplicationPusher::class)->create([
+            "membership_type" => "person",
+            "first_name" => $application->contact->first_name,
+            "last_name" => $application->contact->last_name,
+            "email" => $application->contact->email,
+            "reduced" => (float) $application->amount < 5,
+            "interval" => $application->interval,
+            "amount" => $application->amount,
+            "payment_method" => $application->payment_method,
+            "payment_reference" => $application->payment_reference,
+            "key" => $application->key,
+            "locale" => $application->locale,
+        ]);
+
+        if ($pushed) {
+            // Not deleted: MembershipController::success() still resolves
+            // this row locally by id (finishedUser(), a different scope
+            // than the admin-review one below) to render the confirmation
+            // the applicant is redirected to right after this runs. Marking
+            // it instead just stops adminIndex() offering it for a review
+            // that already happened over in suma-crm.
+            $application->pushed_to_crm_at = now();
+            $application->save();
+        }
+    }
+
     private function keyOfVisitor(Request $request): ?string
     {
         $candidates = [

@@ -52,9 +52,13 @@ class MembershipCrmHandoverTest extends TestCase
      * Test, der einen Fehlerfall braucht, müsste also gegen einen Erfolgsfall
      * aus setUp() anlaufen und bekäme still den Erfolg.
      */
-    private function fakeCrm(int $checkoutStatus = 201, int $membershipStatus = 201): void
+    private function fakeCrm(int $checkoutStatus = 201, int $membershipStatus = 201, int $voidStatus = 200): void
     {
-        Http::fake(function ($request) use ($checkoutStatus, $membershipStatus) {
+        Http::fake(function ($request) use ($checkoutStatus, $membershipStatus, $voidStatus) {
+            if (str($request->url())->contains("/void")) {
+                return Http::response(["status" => "voided"], $voidStatus);
+            }
+
             if (str($request->url())->contains("/api/membership-checkouts")) {
                 return Http::response([
                     "payment_reference" => self::REFERENCE,
@@ -238,5 +242,64 @@ class MembershipCrmHandoverTest extends TestCase
         $this->post(route("membership_admin_accept"), ["id" => $application->id]);
 
         $this->assertNotNull(MembershipApplication::find($application->id));
+    }
+
+    /**
+     * Ein Antrag, der Schritt 1 (§1.4) schon durchlaufen hat, trägt ein
+     * `held`-Mandat bei suma-payments — lehnt die Verwaltung ihn ab, statt
+     * ihn anzunehmen, muss genau dieses Mandat aktiv geschlossen werden,
+     * nicht nur der Antrag gelöscht.
+     */
+    public function testDenyingAnApplicationVoidsItsHeldMandate(): void
+    {
+        $this->fakeCrm();
+
+        $application = MembershipApplication::create([
+            "locale" => "de-DE",
+            "amount" => 10.00,
+            "interval" => "monthly",
+            "payment_method" => "directdebit",
+            "payment_reference" => self::REFERENCE,
+            "key" => self::A_KEY,
+        ]);
+        MembershipContact::create([
+            "title" => "Neutral",
+            "first_name" => "Test",
+            "last_name" => "Person",
+            "email" => "test@example.com",
+            "application_id" => $application->id,
+        ]);
+
+        $this->post(route("membership_admin_deny"), ["id" => $application->id])
+            ->assertRedirect();
+
+        Http::assertSent(fn ($request) => str($request->url())->contains("/api/membership-checkouts/" . self::REFERENCE . "/void"));
+        $this->assertNull(MembershipApplication::find($application->id));
+    }
+
+    /**
+     * Ohne Referenz wurde nie ein Mandat eröffnet (Schritt 1 nie abgeschlossen,
+     * oder Zahlungsart `exempt`) — es gibt bei suma-payments nichts zu
+     * schließen.
+     */
+    public function testDenyingAnApplicationWithNoPaymentReferenceCallsNoVoid(): void
+    {
+        $this->fakeCrm();
+
+        $application = MembershipApplication::create([
+            "locale" => "de-DE",
+            "key" => self::A_KEY,
+        ]);
+        MembershipContact::create([
+            "title" => "Neutral",
+            "first_name" => "Test",
+            "last_name" => "Person",
+            "email" => "test@example.com",
+            "application_id" => $application->id,
+        ]);
+
+        $this->post(route("membership_admin_deny"), ["id" => $application->id, "type" => "unfinished"]);
+
+        Http::assertNotSent(fn ($request) => str($request->url())->contains("/void"));
     }
 }

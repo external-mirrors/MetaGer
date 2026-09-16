@@ -13,6 +13,7 @@ use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\ReductionDeny;
 use App\Mail\Membership\WelcomeMail;
 use App\Membership\MembershipCheckoutIssuer;
+use App\Membership\MembershipCheckoutVoider;
 use App\Membership\MembershipIssuer;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
@@ -967,7 +968,7 @@ class MembershipController extends Controller
         return redirect(route("membership_admin_overview", ["success" => "Membership Request accepted"]));
     }
 
-    public function adminDeny(Request $request)
+    public function adminDeny(Request $request, MembershipCheckoutVoider $voider)
     {
         switch ($request->input("type", "application")) {
             case "application":
@@ -983,6 +984,17 @@ class MembershipController extends Controller
 
         if ($application === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
+        }
+
+        /**
+         * Neuantrag mit bereits eröffnetem (held) Mandat bei suma-payments —
+         * das Formular hat Schritt 1 (§1.4) schon durchlaufen, aber niemand
+         * hat adminAccept() aufgerufen, das es freigeben würde. Ein
+         * Änderungsantrag (is_update) durchläuft diesen Pfad nie, siehe
+         * adminAccept()s eigene Verzweigung.
+         */
+        if (!$application->is_update && $application->payment_reference !== null) {
+            $voider->void($application->payment_reference);
         }
 
         if ($application->directdebit !== null) {

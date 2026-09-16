@@ -255,9 +255,6 @@
     $visible = $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
     $editable = $visible && $application->payment_method === null;
     $payment_method = $application !== null && $application->payment_method !== null ? $application->payment_method : request()->input("payment-method", null);
-    $payment_directdebit_accountholder = $application !== null && $application->directdebit !== null ? $application->directdebit->accountholder : request()->input("accountholder", "");
-    $payment_directdebit_iban = $application !== null && $application->directdebit !== null ? $application->directdebit->iban : request()->input("iban", "");
-    $payment_directdebit_bic = $application !== null && $application->directdebit !== null ? $application->directdebit->bic : request()->input("bic", "");
     @endphp
     <div id="membership-payment-method" @if(!$visible)class="disabled"@endif>
         <h3>4. Ihre Zahlungsmethode
@@ -286,27 +283,15 @@
             <input type="radio" name="payment-method" id="payment-method-paypal" class="js-only" value="paypal"
                 @if($payment_method==="paypal" )checked @endif required>
             <label for="payment-method-paypal" class="js-only">PayPal</label>
+            {{-- Die IBAN wird hier nicht mehr erhoben: sie nimmt die
+                 gehostete Checkout-Seite von suma-payments entgegen, zu der
+                 das Abschicken weiterleitet — wie bei PayPal schon immer und
+                 wie auf der Spendenseite inzwischen auch. --}}
             <div id="directdebit-data" class="info-container">
-                @if(isset($errors) && $errors->has("iban"))
-                    @foreach($errors->get("iban") as $error)
-                        <div class="error">{{ $error }}</div>
-                    @endforeach
-                @endif
-                <div class="input-group accountholder">
-                    <label for="accountholder">Kontoinhaber (falls abweichend)</label>
-                    <input type="text" name="accountholder" id="accountholder" placeholder="Max Mustermann"
-                        value="{{ $payment_directdebit_accountholder }}">
-                </div>
-                <div class="input-group iban">
-                    <label for="iban">IBAN</label>
-                    <input type="text" name="iban" id="iban" placeholder="DE80 1234 5678 9012 3456 78"
-                        value="{{ $payment_directdebit_iban }}" autofocus>
-                </div>
-                <div class="input-group bic">
-                    <label for="bic">BIC (optional)</label>
-                    <input type="text" name="bic" id="bic" placeholder=""
-                        value="{{ $payment_directdebit_bic }}">
-                </div>
+                <div>Mit Abschicken des Formulars werden Sie zur Eingabe Ihrer Bankverbindung und zur Erteilung des SEPA-Lastschriftmandats weitergeleitet.</div>
+            </div>
+            <div id="banktransfer-data" class="info-container">
+                <div>Mit Abschicken des Formulars erhalten Sie die Überweisungsdaten samt Ihrer Zahlungsreferenz.</div>
             </div>
             <div id="paypal-data" class="info-container">
                 <div>Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>

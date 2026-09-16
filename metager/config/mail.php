@@ -50,7 +50,12 @@ return [
         ],
 
         'membership' => [
-            'transport' => 'smtp',
+            // Configurable for the same reason MAIL_MAILER is: this mailer is
+            // reached through Mail::mailer("membership") directly, so it
+            // bypasses MAIL_MAILER entirely and a local stack otherwise sends
+            // real mail from verein@metager.de over real SMTP. Production
+            // leaves it unset and keeps smtp.
+            'transport' => env('MEMBERSHIP_MAIL_TRANSPORT', 'smtp'),
             'url' => env('MEMBERSHIP_MAIL_URL'),
             'host' => env('MEMBERSHIP_MAIL_HOST', '127.0.0.1'),
             'port' => env('MEMBERSHIP_MAIL_PORT', 2525),

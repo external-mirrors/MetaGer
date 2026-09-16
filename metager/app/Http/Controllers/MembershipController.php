@@ -12,11 +12,12 @@ use App\Mail\Membership\ApplicationDeny;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\ReductionDeny;
 use App\Mail\Membership\WelcomeMail;
+use App\Membership\MembershipCheckoutIssuer;
+use App\Membership\MembershipIssuer;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
 use App\Models\Membership\MembershipPaymentPaypal;
 use App\Models\Membership\PayPal;
-use App\Rules\IBANValidator;
 use Arr;
 use Artisan;
 use Cache;
@@ -353,16 +354,6 @@ class MembershipController extends Controller
         $validator->sometimes("payment-method", 'required|in:directdebit,banktransfer,paypal', function (Fluent $input) use ($application) {
             return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
         });
-        $validator->sometimes("iban", ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()], function (Fluent $input) use ($application) {
-            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-        });
-        $validator->sometimes("bic", ["exclude_unless:payment-method,directdebit", "nullable"], function (Fluent $input) use ($application) {
-            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-        });
-        $validator->sometimes("accountholder", ["exclude_unless:payment-method,directdebit", "nullable", "string", "max:100"], function (Fluent $input) use ($application) {
-            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-        });
-
         if ($validator->fails()) {
             return $this->formAgain($application_id, $validator->errors());
         }
@@ -485,36 +476,58 @@ class MembershipController extends Controller
             $application->save();
             return redirect($membership_form_url . "#membership-payment-method");
         } elseif ($application->payment_method === null) {
-            switch ($form_data["payment-method"]) {
-                case "banktransfer":
-                    $application->payment_method = $form_data["payment-method"];
-                    $application->save();
-                    break;
-                case "directdebit":
-                    $attributes = [
-                        "iban" => $form_data["iban"],
-                        "bic" => $form_data["bic"],
-                        "accountholder" => $form_data["accountholder"]
-                    ];
-                    if ($application->directdebit !== null)
-                        $application->directdebit()->delete();
-                    $application->directdebit()->create($attributes);
-                    $application->payment_method = $form_data["payment-method"];
-                    $application->save();
-                    break;
-                case "paypal":
-                    return $this->createPayPalAuthorizeOrder(
-                        $application,
-                        $form_data["payment-method"],
-                        route("membership_success", array_merge(["application_id" => $application->id], AppCallback::markers($request))),
-                        $membership_form_url . "#membership-payment-method"
-                    );
+            /**
+             * Die Zahlungsart ist der letzte Schritt — und der, an dem der
+             * Antragsteller die Zahlung auch gleich autorisiert.
+             *
+             * Früher sammelte dieses Formular die IBAN selbst und legte sie
+             * als MembershipPaymentDirectdebit ab; PayPal lief hier schon
+             * über einen eigenen Redirect (createPayPalAuthorizeOrder). Seit
+             * die Zahlungsabwicklung bei suma-payments liegt, gilt für alle
+             * Verfahren dasselbe: suma-crm eröffnet eine Checkout-Sitzung,
+             * und die gehostete Seite dort nimmt IBAN bzw. PayPal-Freigabe
+             * entgegen.
+             *
+             * Warum hier und nicht erst bei der Annahme durch die Verwaltung:
+             * beim Annehmen ist niemand mehr da, der etwas freigeben könnte.
+             * Die Referenz, die suma-crm dabei vergibt, bleibt am Antrag
+             * stehen und wandert bei der Annahme mit — siehe
+             * {@see \App\Membership\MembershipIssuer}.
+             */
+            $method = $form_data["payment-method"];
+            $email = $application->contact?->email ?? $application->company?->email;
+
+            if ($email === null) {
+                return $this->formAgain($application_id, null, "crm_unreachable");
             }
+
+            $checkout = app(MembershipCheckoutIssuer::class)->create([
+                "interval" => $application->interval,
+                // Der Monatsbeitrag, nicht der je Zahlungsintervall —
+                // suma-crm rechnet das selbst um (periodAmount()).
+                "amount" => $application->amount,
+                "payment_method" => $method,
+                "email" => $email,
+                "name" => $application->contact !== null
+                    ? trim($application->contact->first_name . " " . $application->contact->last_name)
+                    : $application->company?->company,
+                "locale" => $application->locale,
+                "return_url" => route("membership_success", array_merge(["application_id" => $application->id], AppCallback::markers($request))),
+            ]);
+
+            if ($checkout === null) {
+                return $this->formAgain($application_id, null, "crm_unreachable");
+            }
+
+            $application->payment_method = $method;
+            $application->payment_reference = $checkout["payment_reference"];
+            $application->save();
 
             if (!$application->is_update) {
                 Artisan::call("membership:notify-admin", ["subject" => "[SUMA-EV] Neuer Aufnahmeantrag"]);
             }
-            return redirect($membership_form_url);
+
+            return redirect($checkout["checkout_url"]);
         } else {
             // application_id und nicht key: `key` ist hier kein Routenparameter,
             // sondern landete als Query am Ziel — ein Erfolgs-URL ohne
@@ -837,74 +850,71 @@ class MembershipController extends Controller
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
         }
         if (!$application->is_update) {
-            // Create CiviCRM contact
-            if ($application->crm_contact === null) {
-                if ($application->company !== null) {
-                    $contact = CiviCrm::FIND_COMPANY($application->company);
-                    if ($contact === null) {
-                        $contact = CiviCrm::CREATE_COMPANY($application->company);
-                        if ($contact !== null && Arr::get($contact, "id") !== null) {
-                            $application->crm_contact = Arr::get($contact, "id");
-                            $application->save();
-                            $application->contact()->delete();
-                        } else {
-                            return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
-                        }
-                    } else if (Arr::get($contact, "id") !== null) {
-                        $application->crm_contact = Arr::get($contact, "id");
-                        $application->save();
-                        $application->contact()->delete();
-                    } else {
-                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
-                    }
-                } elseif ($application->contact !== null) {
-                    $contact = CiviCrm::FIND_CONTACT($application->contact);
-                    if ($contact === null) {
-                        $contact = CiviCrm::CREATE_CONTACT($application->contact);
-                        if ($contact !== null && Arr::get($contact, "id") !== null) {
-                            $application->crm_contact = Arr::get($contact, "id");
-                            $application->save();
-                            $application->contact()->delete();
-                        } else {
-                            return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
-                        }
-                    } else if (Arr::get($contact, "id") !== null) {
-                        $application->crm_contact = Arr::get($contact, "id");
-                        $application->save();
-                    } else {
-                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
-                    }
-                }
+            /**
+             * Neue Mitgliedschaft: das legt jetzt suma-crm an, nicht mehr
+             * CiviCRM. Contact/Organization und Membership entstehen dort in
+             * einer Transaktion; die Referenz, die beim Absenden des
+             * Formulars vergeben wurde, wandert mit, damit suma-crm das
+             * bereits autorisierte Mandat übernimmt statt ein zweites zu
+             * eröffnen.
+             *
+             * Die Willkommensmail verschickt von hier an suma-crm selbst
+             * (App\Mail\WelcomeMail dort, gegen die neu angelegte
+             * Membership) — deshalb fehlt der frühere Mail-Block unten.
+             *
+             * Firmenanträge sind hier bewusst noch nicht dabei: suma-crm
+             * verlangt für eine Company einen eigenen Ansprechpartner
+             * (Vor-/Nachname), über den Membership::recipientEmail() und
+             * resolvedLocale() gehen. CiviCRM hing die Mailadresse direkt an
+             * die Organisation (CiviCrm::CREATE_COMPANY), dieses Formular
+             * erhebt nur Firma/Beschäftigte/E-Mail — es gibt schlicht keinen
+             * Namen zu senden. Lieber ein sichtbarer Fehler als ein
+             * erfundener Ansprechpartner.
+             */
+            if ($application->company !== null) {
+                return redirect(route("membership_admin_overview", ["error" => "[suma-crm] Firmenmitgliedschaften sind noch nicht umgestellt: suma-crm braucht einen Ansprechpartner mit Vor- und Nachnamen, den dieses Formular nicht erhebt."]));
             }
 
-            /**
-             * Create CiviCRM Membership
-             */
-            if ($application->crm_membership === null) {
-                $memberships = CiviCrm::FIND_MEMBERSHIPS($application->crm_contact);
-                if ($memberships === null) {
-                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] An error occured while fetching existing memberships"]));
-                }
-                if (sizeof($memberships) > 0) {
-                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] Contact already has an active membership"]));
-                }
-                $civicrm_membership = CiviCrm::CREATE_MEMBERSHIP($application);
-                if ($civicrm_membership === null) {
-                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] An error occured while creating a new membership"]));
-                } else {
-                    $application->crm_membership = Arr::get($civicrm_membership, "id");
-                    $application->amount = null;
-                    $application->interval = null;
-                    $application->locale = null;
-                    $application->key = null;
-                    $application->payment_reference = null;
-                    $application->save();
-                    if ($application->reduction !== null)
-                        $application->reduction->delete();
-                }
+            if ($application->contact === null) {
+                return redirect(route("membership_admin_overview", ["error" => "[suma-crm] Der Antrag hat weder Kontakt noch Firma."]));
             }
+
+            $membership_id = app(MembershipIssuer::class)->create([
+                "membership_type" => "person",
+                "first_name" => $application->contact->first_name,
+                "last_name" => $application->contact->last_name,
+                "email" => $application->contact->email,
+                "interval" => $application->interval,
+                // Monatsbeitrag — suma-crm rechnet auf das Zahlungsintervall
+                // um (periodAmount(), gap #32).
+                "amount" => $application->amount,
+                "payment_method" => $application->payment_method,
+                // Der beim Absenden des Formulars vergebene Schlüssel wird
+                // belastet, nicht neu erzeugt (KeyCharger dort).
+                "key" => $application->key,
+                "locale" => $application->locale,
+                // Das Mandat steht schon: suma-crm übernimmt die Referenz und
+                // eröffnet keine zweite Checkout-Sitzung, deshalb auch kein
+                // return_url.
+                "payment_reference" => $application->payment_reference,
+            ]);
+
+            if ($membership_id === null) {
+                return redirect(route("membership_admin_overview", ["error" => "[suma-crm] Mitgliedschaft konnte nicht angelegt werden — siehe Log. Der Antrag bleibt offen."]));
+            }
+
+            if ($application->reduction !== null) {
+                $application->reduction->delete();
+            }
+
+            $application->delete();
+
+            return redirect(route("membership_admin_overview", ["success" => "Membership Request accepted"]));
         }
 
+        // Ab hier: nur noch Änderungsanträge (is_update). Unverändert gegen
+        // CiviCRM — suma-crm hat für das Ändern einer bestehenden
+        // Mitgliedschaft noch keinen Endpunkt.
 
         // Add Payment method to CiviCRM
         if (CiviCrm::UPDATE_MEMBERSHIP($application) !== null) {
@@ -946,16 +956,11 @@ class MembershipController extends Controller
             return redirect(route("membership_admin_overview", ["error" => "Couldn't update membership"]));
         }
 
-        if (!$application->is_update) {
-            try {
-                $mail = new WelcomeMail($application->crm_membership, $request->input("message", ""));
-                if (Mail::mailer("membership")->send($mail) === null) {
-                    return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
-                }
-            } catch (Exception $e) {
-                return redirect(route("membership_admin_overview", ["error" => sprintf("[Welcome Mail] Error while sending welcome mail: %s", $e->getMessage())]));
-            }
-        }
+        // Keine Willkommensmail mehr an dieser Stelle: der Zweig, der sie
+        // verschickt hätte, ist der Neuantrag — und der kehrt oben schon
+        // zurück, nachdem suma-crm die Mitgliedschaft (und damit seine
+        // eigene WelcomeMail) angelegt hat. Ein Änderungsantrag bekam hier
+        // noch nie eine.
 
         $application->delete();
 

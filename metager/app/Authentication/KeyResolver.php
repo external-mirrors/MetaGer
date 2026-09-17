@@ -68,12 +68,19 @@ final class KeyResolver
     }
 
     /**
-     * The key inside an uploaded image, if there is one.
+     * The key inside an uploaded file, if there is one.
      *
-     * The bytes go up raw rather than as multipart: the form is served here,
-     * the file is taken apart here, and what crosses is only its content. A
-     * second multipart parse would be a second place with a second size limit
-     * that could disagree with this one.
+     * Not only an image any more: suma-crm's membership confirmation page
+     * now offers a plain-text download of a freshly-minted key alongside its
+     * QR code, and this input has no way to know which one somebody picked
+     * before reading it. A key found directly in the contents
+     * ({@see KeyIssuer::findInText()}) is resolved the same way a typed-in
+     * one is, never sent to the keymanager's image endpoint at all.
+     *
+     * Otherwise, the bytes go up raw rather than as multipart: the form is
+     * served here, the file is taken apart here, and what crosses is only its
+     * content. A second multipart parse would be a second place with a
+     * second size limit that could disagree with this one.
      */
     public function resolveImage(UploadedFile $file): array
     {
@@ -81,6 +88,10 @@ final class KeyResolver
 
         if ($contents === false || $contents === "") {
             return ["result" => self::ERROR, "error" => "file_unreadable"];
+        }
+
+        if (($key = KeyIssuer::findInText($contents)) !== null) {
+            return $this->resolve($key);
         }
 
         return $this->ask("/key/resolve-image", $contents, raw: true);

@@ -94,4 +94,35 @@ final class KeyIssuer
             $key
         ) === 1;
     }
+
+    /**
+     * The first key-shaped UUID found anywhere inside arbitrary file
+     * contents, or null.
+     *
+     * Built for {@see \App\Authentication\KeyResolver::resolveImage()}:
+     * suma-crm's membership confirmation page now offers a plain-text
+     * download of a freshly-minted key alongside its QR code, and the sign-in
+     * form's file input — built for a QR-code screenshot — has no way to
+     * tell the two apart before reading them. Unlike isKey(), deliberately
+     * unanchored (a search within a whole file, not a check of one
+     * already-isolated string) and tolerant of surrounding text.
+     *
+     * The UTF-8 check is what keeps this from ever running the search
+     * against an actual QR-code image at all: real image bytes are all but
+     * certain to contain an invalid UTF-8 sequence somewhere across the
+     * whole file, so this returns null for one before the regex does any
+     * work, rather than relying on the regex alone to simply find nothing.
+     */
+    public static function findInText(string $contents): ?string
+    {
+        if (!mb_check_encoding($contents, "UTF-8")) {
+            return null;
+        }
+
+        if (preg_match("/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/i", $contents, $matches) !== 1) {
+            return null;
+        }
+
+        return strtolower($matches[0]);
+    }
 }

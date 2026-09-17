@@ -37,6 +37,14 @@ return [
             'contact' => 'We use this data exclusively for possible queries or for invoicing and under no circumstances pass it on to third parties.',
             'payment' => 'The payment details will only be used to process the donation and will not be passed on to third parties under any circumstances. For tax reasons, we are obliged to keep and therefore save this data for 10 years. They will then be automatically deleted and will not otherwise be processed further.',
         ],
+        'membership' => [
+            'title' => 'Applying for and managing a SUMA-EV membership',
+            'description' => 'When applying for a SUMA-EV membership, and for the duration of your membership, the following data is generated:',
+            'contact' => 'For individuals, name and email address; for organisations, the organisation\'s name, its approximate size, and the name and email address of a contact person. A postal address is optional and, if provided, is used in particular to issue a donation receipt. We do not pass this data on to third parties under any circumstances.',
+            'payment' => 'Your payment details are used exclusively for the recurring collection of your membership fee and will not be passed on to third parties under any circumstances. For tax reasons, we are obliged to keep this data for the duration of the statutory retention periods (up to 10 years).',
+            'reduction' => 'If you apply for a reduced membership fee, we process the proof you upload (e.g. a notice of transfer payments) exclusively to verify your entitlement to the reduction. Such proof may contain particularly sensitive data under Art. 9 GDPR; we therefore only store it for as long as this verification requires, and do not pass it on to third parties.',
+            'crm' => 'To manage memberships, we use our own membership administration system, also operated by SUMA-EV. The data listed above is stored there for the duration of your membership and afterwards for the duration of the statutory retention periods. Your membership is also linked to a MetaGer key, through which your membership fee is credited as usage credit for MetaGer (see "Checkout MetaGer key").',
+        ],
         'suma' => [
             'title' => 'Use of the website <a href="https://suma-ev.de">suma-ev.de</a>',
             'description' => 'When visiting websites of the domain "suma-ev.de", the following data is collected and stored for up to one week:',
@@ -135,6 +143,10 @@ return [
             'title' => 'Message',
             'description' => 'The message entered here will be transmitted to us and used to process your request.',
         ],
+        'reduction' => [
+            'title' => 'Proof for a reduced membership fee',
+            'description' => 'A document you upload to prove your entitlement to a reduced membership fee, for example a notice confirming receipt of transfer payments.',
+        ],
         'error' => [
             'title' => 'Error Report (Stack Trace)',
             'description' => 'When a technical error occurs in our application, an error description together with a stack trace is automatically generated. This shows us where in the source code the error occurred so that we can fix it.',
@@ -194,6 +206,7 @@ return [
         'contact' => 'Contact Details',
         'message' => 'Message',
         'payment' => 'Payment Data',
+        'reduction' => 'Reduction Proof',
         'error' => 'Error Report',
         'referrer' => 'the referrer you sent',
         'gps' => 'Location Data',

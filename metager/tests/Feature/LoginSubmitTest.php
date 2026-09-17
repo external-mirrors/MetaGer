@@ -253,6 +253,35 @@ class LoginSubmitTest extends TestCase
     }
 
     /**
+     * suma-crm's membership confirmation page now offers a plain-text
+     * download of a freshly-minted key alongside its QR code, and this
+     * input has no way to tell the two apart before reading them — a key
+     * found directly in the file's contents (App\Authentication\KeyIssuer::
+     * findInText()) must sign in exactly like a typed-in one, never reaching
+     * the keymanager's image endpoint at all.
+     */
+    public function testATextFileContainingAKeyIsResolvedDirectlyWithoutTheImageEndpoint(): void
+    {
+        Http::preventStrayRequests();
+        Http::fake([
+            "*/api/json/key/resolve" => Http::response(["result" => "key", "key" => self::A_KEY]),
+        ]);
+
+        $this->withHeaders(["Origin" => config("app.url")])
+            ->post("/de-DE/anmelden", [
+                "file" => UploadedFile::fake()->createWithContent(
+                    "suma-ev-schluessel.txt",
+                    "Ihr SUMA-EV-Schlüssel\n\n".self::A_KEY."\n\nBewahren Sie diese Datei sicher auf.\n"
+                ),
+            ])
+            ->assertCookie("key", self::A_KEY, false);
+
+        Http::assertSent(fn ($request) => str_ends_with($request->url(), "/key/resolve")
+            && $request["input"] === self::A_KEY);
+        Http::assertNotSent(fn ($request) => str_contains($request->url(), "/key/resolve-image"));
+    }
+
+    /**
      * Ein fremdes Formular meldet niemanden an.
      *
      * Webrouten laufen ohne Session, es gibt also kein CSRF-Token — und für ein

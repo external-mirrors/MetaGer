@@ -37,6 +37,14 @@ return [
             'contact' => 'Fem servir aquestes dades exclusivament per a possibles consultes o per a la facturació i en cap cas les cedim a tercers.',
             'payment' => 'Les dades de pagament només es faran servir per tramitar el donatiu i en cap cas es cediran a tercers. Per motius fiscals estem obligats a conservar-les i, per tant, a desar-les durant 10 anys. Després s\'eliminaran automàticament i no es tractaran de cap altra manera.',
         ],
+        'membership' => [
+            'title' => 'Sol·licitud i gestió d\'una afiliació a SUMA-EV',
+            'description' => 'En sol·licitar una afiliació a SUMA-EV, i durant la durada de la vostra afiliació, es generen les dades següents:',
+            'contact' => 'Per a particulars, el nom i l\'adreça de correu electrònic; per a organitzacions, el nom de l\'organització, la seva mida aproximada, i el nom i l\'adreça de correu electrònic d\'una persona de contacte. L\'adreça postal és opcional i, si es proporciona, s\'utilitza en particular per emetre un certificat de donatiu. En cap cas cedim aquestes dades a tercers.',
+            'payment' => 'Les vostres dades de pagament només es fan servir per al cobrament periòdic de la vostra quota d\'afiliació i en cap cas es cedeixen a tercers. Per motius fiscals estem obligats a conservar aquestes dades durant els terminis de conservació legals (fins a 10 anys).',
+            'reduction' => 'Si sol·liciteu una quota d\'afiliació reduïda, tractem el justificant que pugeu (per exemple, una notificació de prestacions socials) exclusivament per verificar el vostre dret a la reducció. Aquest justificant pot contenir dades especialment sensibles segons l\'art. 9 del RGPD; per això només el conservem mentre calgui per a aquesta verificació, i no el cedim a tercers.',
+            'crm' => 'Per gestionar les afiliacions fem servir un sistema propi de gestió d\'associats, també operat per SUMA-EV. Les dades esmentades es conserven allà durant la durada de la vostra afiliació i, després, durant els terminis de conservació legals. La vostra afiliació també queda vinculada a una clau de MetaGer, mitjançant la qual la vostra quota d\'afiliació s\'acredita com a saldo d\'ús per a MetaGer (vegeu «Compra d\'una clau de MetaGer»).',
+        ],
         'suma' => [
             'title' => 'Ús del lloc web <a href="https://suma-ev.de">suma-ev.de</a>',
             'description' => 'En visitar llocs web del domini «suma-ev.de» es recullen i es desen les dades següents durant un màxim d\'una setmana:',
@@ -135,6 +143,10 @@ return [
             'title' => 'Missatge',
             'description' => 'El missatge que hi escriviu se\'ns transmetrà i es farà servir per tramitar la vostra petició.',
         ],
+        'reduction' => [
+            'title' => 'Justificant per a una quota d\'afiliació reduïda',
+            'description' => 'Un document que pugeu per justificar el vostre dret a una quota d\'afiliació reduïda, per exemple una notificació de percepció de prestacions socials.',
+        ],
         'error' => [
             'title' => 'Informe d\'error (traça de la pila)',
             'description' => 'Quan es produeix un error tècnic a la nostra aplicació, es genera automàticament una descripció de l\'error juntament amb una traça de la pila. Això ens mostra en quin punt del codi font s\'ha produït l\'error perquè el puguem corregir.',
@@ -194,6 +206,7 @@ return [
         'contact' => 'Dades de contacte',
         'message' => 'Missatge',
         'payment' => 'Dades de pagament',
+        'reduction' => 'Justificant de reducció',
         'error' => 'Informe d\'error',
         'referrer' => 'el referent que heu enviat',
         'gps' => 'Dades d\'ubicació',

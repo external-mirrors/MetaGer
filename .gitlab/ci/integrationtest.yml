@@ -136,6 +136,23 @@ test:
     - name: valkey/valkey:9.1.0-alpine
       alias: redis
   script:
+    # This job's own schema guarantee, not a side effect of the deploy stage.
+    #
+    # `test` has no `needs: [deploy_review]` — the whole point of the comment
+    # above this job is that it runs against nothing deployed and must not wait
+    # on that stage. But `$ENV_PRODUCTION`, copied into `.env` above, points at
+    # the same shared `database-rw.postgresql` a review deployment's own
+    # `migrate --force` initContainer (chart/templates/_helpers.tpl) migrates —
+    # and with no `needs` edge between the two, nothing orders them against each
+    # other. Pipeline 14141 (job 64795) is the failure this closes: `deploy_review`
+    # finished successfully, and `test` still failed a `MembershipCrmHandoverTest`
+    # case with `SQLSTATE[42703]: column "pushed_to_crm_at" ... does not exist`,
+    # a migration landing in the very same commit — a race, not a broken
+    # migration, since a later, unrelated run of the same pipeline could easily
+    # have passed. Idempotent and cheap (`artisan migrate` no-ops on anything
+    # already applied), so running it here trades a race for a fixed cost on
+    # every run rather than trying to win the race some other way.
+    - php artisan migrate --force
     # Deliberately run with the route cache `php artisan optimize` just wrote, and
     # not with `route:clear` in front of it as this job used to need.
     #

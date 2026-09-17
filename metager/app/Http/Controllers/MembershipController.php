@@ -9,6 +9,7 @@ use App\Authentication\KeyIssuer;
 use App\Authentication\KeyUser;
 use App\Landing\AppCallback;
 use App\Localization;
+use App\Localization\LocaleContext;
 use App\Mail\Membership\ApplicationDeny;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\ReductionDeny;
@@ -47,9 +48,21 @@ class MembershipController extends Controller
     /**
      * First stage of membership form
      * gather information for contact data
+     *
+     * A brand-new visitor (no `$application_id` — nothing in flight to
+     * resume) is sent straight to suma-crm's own native application form
+     * instead of starting the multi-step form below; see
+     * crmMembershipFormUrl()'s own docblock. Everything from here down
+     * exists solely to let an application already in progress — a resume
+     * link an earlier email sent out, a bookmarked step — finish the flow
+     * it started; nothing new can begin on this page any more.
      */
     public function contactData(Request $request, ?string $application_id = null)
     {
+        if ($application_id === null) {
+            return redirect()->away($this->crmMembershipFormUrl($request));
+        }
+
         if (Localization::getLanguage() === "de") {
             $csrf_token = Crypt::encrypt(now()->addHour());
 
@@ -1161,6 +1174,39 @@ class MembershipController extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * Where a brand-new visitor to `contactData()` is sent instead of this
+     * app's own legacy form — see that method's own docblock.
+     *
+     * `?lang=` carries this request's already-resolved locale
+     * (App\Localization\LocaleContext, bound by ResolveLocale before this
+     * ever runs) across to suma-crm's own App\Localization\CrmLocale::resolve(),
+     * which understands the very same `?lang=` parameter and priority order
+     * by design — see that class's own docblock in the suma-crm repository.
+     * Without it, suma-crm would have to resolve the locale fresh from
+     * Accept-Language alone, which is not necessarily the same answer this
+     * app's own richer resolution (URL prefix, `mg_locale` cookie included)
+     * already gave for this exact request.
+     *
+     * `key` rides along too, via the same keyOfVisitor() check
+     * submitMembershipForm() uses to decide whether a visitor already has
+     * one — an already-recognised MetaGer user (cookie, header, or query)
+     * clicking "become a member" should land on suma-crm's form already
+     * tied to their own key, exactly as the legacy form itself would have
+     * done via keyOfVisitor() at its own first step.
+     */
+    private function crmMembershipFormUrl(Request $request): string
+    {
+        $params = ["lang" => app(LocaleContext::class)->locale];
+
+        $key = $this->keyOfVisitor($request);
+        if ($key !== null) {
+            $params["key"] = $key;
+        }
+
+        return config("metager.metager.crm.url") . "/mitglied-werden?" . http_build_query($params);
     }
 
     /**

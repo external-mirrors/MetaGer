@@ -36,6 +36,14 @@ return [
             'contact' => 'Diese Daten nutzen wir ausschließlich für eventuelle Rückfragen bzw. zur Rechnungsstellung und geben Sie unter keinen Umständen weiter an Dritte.',
             'payment' => 'Die Zahlungsdaten werden ausschließlich zur Abwicklung der Spende genutzt und unter keinen Umständen an Dritte weitergegeben. Aus steuerrechtlichen Gründen sind wir dazu verpflichtet diese Daten 10 Jahre lang aufzubewahren und somit abzuspeichern. Sie werden anschließend automatisch gelöscht und ansonsten nicht weiter verarbeitet.',
         ],
+        'membership' => [
+            'title' => 'Beantragung und Verwaltung einer Mitgliedschaft im SUMA-EV',
+            'description' => 'Bei der Beantragung einer Mitgliedschaft im SUMA-EV sowie während der Dauer Ihrer Mitgliedschaft fallen folgende Daten an:',
+            'contact' => 'Für Privatpersonen Name und E-Mail-Adresse, für Organisationen der Name der Organisation, deren ungefähre Größe sowie Name und E-Mail-Adresse einer Ansprechperson. Eine Postanschrift ist freiwillig und wird, sofern angegeben, insbesondere zur Ausstellung einer Zuwendungsbestätigung genutzt. Wir geben diese Daten unter keinen Umständen an Dritte weiter.',
+            'payment' => 'Ihre Zahlungsdaten werden ausschließlich zum wiederkehrenden Einzug Ihres Mitgliedsbeitrags genutzt und unter keinen Umständen an Dritte weitergegeben. Aus steuerrechtlichen Gründen sind wir verpflichtet, diese Daten für die Dauer der gesetzlichen Aufbewahrungsfristen (bis zu 10 Jahre) aufzubewahren.',
+            'reduction' => 'Beantragen Sie einen ermäßigten Mitgliedsbeitrag, verarbeiten wir den von Ihnen hochgeladenen Nachweis (z.\u{a0}B. einen Bescheid über Transferleistungen) ausschließlich zur Prüfung Ihres Anspruchs auf die Ermäßigung. Ein solcher Nachweis kann besonders schützenswerte Angaben nach Art. 9 DSGVO enthalten; wir speichern ihn deshalb nur so lange, wie es für diese Prüfung erforderlich ist, und geben ihn nicht an Dritte weiter.',
+            'crm' => 'Zur Verwaltung von Mitgliedschaften nutzen wir ein eigenes, ebenfalls vom SUMA-EV betriebenes Vereinsverwaltungssystem. Die oben genannten Daten werden dort für die Dauer Ihrer Mitgliedschaft und im Anschluss für die Dauer der gesetzlichen Aufbewahrungsfristen gespeichert. Ihre Mitgliedschaft wird außerdem mit einem MetaGer-Schlüssel verknüpft, über den Ihr Mitgliedsbeitrag als Nutzungsguthaben für MetaGer gutgeschrieben wird (siehe „Kaufabwicklung MetaGer Schlüssel“).',
+        ],
         'suma' => [
             'title' => 'Nutzung des Webangebotes <a href="https://suma-ev.de">suma-ev.de</a>',
             'description' => 'Wir verwenden die genannten Daten, um die Funktionsfähigkeit der Webseite sicherzustellen und uns vor Angriffen zu schützen. Die Rechtsgrundlage für die Verarbeitung ist damit ein berechtigtes Interesse nach Art. 6 Abs. 1 lit. f DSGVO.',
@@ -134,6 +142,10 @@ return [
             'title' => 'Nachricht',
             'description' => 'Die hier eingegebene Nachricht wird an uns übertragen und zur Bearbeitung Ihres Anliegens genutzt.',
         ],
+        'reduction' => [
+            'title' => 'Nachweis für einen ermäßigten Mitgliedsbeitrag',
+            'description' => 'Ein von Ihnen zum Nachweis Ihres Anspruchs auf einen ermäßigten Mitgliedsbeitrag hochgeladenes Dokument, zum Beispiel ein Bescheid über den Bezug von Transferleistungen.',
+        ],
         'error' => [
             'title' => 'Fehlerbericht (Stacktrace)',
             'description' => 'Tritt in unserer Anwendung ein technischer Fehler auf, wird automatisch eine Fehlerbeschreibung samt Stacktrace erstellt. Dieser zeigt uns, an welcher Stelle im Quellcode der Fehler aufgetreten ist, damit wir ihn beheben können.',
@@ -193,6 +205,7 @@ return [
         'contact' => 'Kontaktdaten',
         'message' => 'Nachricht',
         'payment' => 'Zahlungsdaten',
+        'reduction' => 'Ermäßigungsnachweis',
         'error' => 'Fehlerbericht',
         'referrer' => 'der von Ihnen gesendete Referrer',
         'gps' => 'Ortungsdaten',

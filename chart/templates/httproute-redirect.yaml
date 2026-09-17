@@ -19,11 +19,29 @@ Attaches to both the host's own HTTPS listener (sectionName == host with
 dots replaced by dashes) and the shared Gateway's plain :80 `http`
 listener, so the same redirect fires on the old Ingress's behavior of
 sending both http:// and https:// requests straight to the target https://
-URL in one hop (added 2026-09-17 for the HTTP cutover -- see memory:
-gateway-api-migration). `scheme: https` is required for the :80 copy:
-RequestRedirect defaults to keeping the incoming request's scheme when
-unset, which would otherwise turn this into an http->http loop on the http
-listener instead of an upgrade.
+URL (added 2026-09-17 for the HTTP cutover -- see memory:
+gateway-api-migration).
+
+`scheme` is deliberately left UNSET on the filter (an earlier version set
+`scheme: https` explicitly, reasoning that RequestRedirect defaults to
+preserving the incoming request's scheme, which would otherwise be an
+http->http loop on the http listener -- correct in isolation, but wrong
+about what Cilium actually generates for a route with two parentRefs plus
+an explicit scheme: it emits ONE shared Envoy route for both listeners,
+guarded by `X-Forwarded-Proto != https` to dodge the loop on the :80 leg
+-- but that guard also suppresses the redirect on the :443 leg, since
+Envoy sets X-Forwarded-Proto: https for TLS-terminated connections there
+too, so the route fell through to a 404 for every one of these 10 hosts
+over HTTPS. Confirmed via `kubectl get cec -n gateway-api
+cilium-gateway-shared-gateway -o json` -- listener-secure and
+listener-insecure had byte-identical route config for these vhosts).
+Leaving scheme unset makes the redirect preserve whatever scheme the
+request arrived on: :443 stays a single https->https hop (correct), :80
+becomes a two-hop http->http->https (via the generic http-upgrade route
+in gateway-api/manifests/routes/http-redirects.yaml, since every toHost
+here -- metager.de/metager.org -- is covered by it) instead of a bare
+protocol upgrade first-hop -- an acceptable trade for not 404ing every
+HTTPS visit to these hosts.
 */}}
 {{- $fullName := include "chart.fullname" . -}}
 {{- $root := . -}}
@@ -54,7 +72,6 @@ spec:
       filters:
         - type: RequestRedirect
           requestRedirect:
-            scheme: https
             hostname: {{ .toHost }}
             statusCode: 301
 {{- if .toPathPrefix }}

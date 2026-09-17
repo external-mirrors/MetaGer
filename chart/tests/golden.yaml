@@ -2413,7 +2413,6 @@ spec:
       filters:
         - type: RequestRedirect
           requestRedirect:
-            scheme: https
             hostname: metager.de
             statusCode: 301
 
@@ -2448,7 +2447,6 @@ spec:
       filters:
         - type: RequestRedirect
           requestRedirect:
-            scheme: https
             hostname: metager.org
             statusCode: 301
             path:

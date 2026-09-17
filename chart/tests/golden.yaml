@@ -2400,6 +2400,9 @@ spec:
     - name: shared-gateway
       namespace: gateway-api
       sectionName: www-metager-de
+    - name: shared-gateway
+      namespace: gateway-api
+      sectionName: http
   hostnames:
     - "www.metager.de"
   rules:
@@ -2410,6 +2413,7 @@ spec:
       filters:
         - type: RequestRedirect
           requestRedirect:
+            scheme: https
             hostname: metager.de
             statusCode: 301---
 apiVersion: gateway.networking.k8s.io/v1
@@ -2428,6 +2432,9 @@ spec:
     - name: shared-gateway
       namespace: gateway-api
       sectionName: metager-es
+    - name: shared-gateway
+      namespace: gateway-api
+      sectionName: http
   hostnames:
     - "metager.es"
   rules:
@@ -2438,6 +2445,7 @@ spec:
       filters:
         - type: RequestRedirect
           requestRedirect:
+            scheme: https
             hostname: metager.org
             statusCode: 301
             path:

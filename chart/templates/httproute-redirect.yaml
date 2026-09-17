@@ -14,6 +14,16 @@ plain string concat where $request_uri supplies its own leading slash, but
 Gateway API's ReplacePrefixMatch strips the matched "/" prefix first and
 then prepends the replacement verbatim -- without the trailing slash,
 `/foo/bar` becomes `/es-ESfoo/bar` (no separator), not `/es-ES/foo/bar`.
+
+Attaches to both the host's own HTTPS listener (sectionName == host with
+dots replaced by dashes) and the shared Gateway's plain :80 `http`
+listener, so the same redirect fires on the old Ingress's behavior of
+sending both http:// and https:// requests straight to the target https://
+URL in one hop (added 2026-09-17 for the HTTP cutover -- see memory:
+gateway-api-migration). `scheme: https` is required for the :80 copy:
+RequestRedirect defaults to keeping the incoming request's scheme when
+unset, which would otherwise turn this into an http->http loop on the http
+listener instead of an upgrade.
 */}}
 {{- $fullName := include "chart.fullname" . -}}
 {{- $root := . -}}
@@ -31,6 +41,9 @@ spec:
     - name: {{ $root.Values.gatewayAPI.gatewayName }}
       namespace: {{ $root.Values.gatewayAPI.gatewayNamespace }}
       sectionName: {{ $sectionName }}
+    - name: {{ $root.Values.gatewayAPI.gatewayName }}
+      namespace: {{ $root.Values.gatewayAPI.gatewayNamespace }}
+      sectionName: http
   hostnames:
     - {{ .host | quote }}
   rules:
@@ -41,6 +54,7 @@ spec:
       filters:
         - type: RequestRedirect
           requestRedirect:
+            scheme: https
             hostname: {{ .toHost }}
             statusCode: 301
             {{- if .toPathPrefix }}

@@ -29,7 +29,7 @@ final class MembershipIssuer
         try {
             $response = Http::timeout(15)
                 ->withHeaders(["Authorization" => "Bearer " . config("metager.metager.crm.token")])
-                ->post(config("metager.metager.crm.url") . "/api/memberships", $payload);
+                ->post(config("metager.metager.crm.internal_url") . "/api/memberships", $payload);
         } catch (\Throwable $e) {
             Log::warning("suma-crm membership intake unreachable: " . $e->getMessage());
 

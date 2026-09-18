@@ -32,6 +32,7 @@ class DonationCheckoutTest extends TestCase
         Bus::fake([DonationNotification::class]);
         config([
             "metager.metager.crm.url" => "https://crm.example.com",
+            "metager.metager.crm.internal_url" => "https://crm.example.com",
             "metager.metager.crm.token" => "secret-token",
         ]);
     }

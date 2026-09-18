@@ -26,7 +26,7 @@ final class DonationCheckoutIssuer
         try {
             $response = Http::timeout(10)
                 ->withHeaders(["Authorization" => "Bearer " . config("metager.metager.crm.token")])
-                ->post(config("metager.metager.crm.url") . "/api/donations", $payload);
+                ->post(config("metager.metager.crm.internal_url") . "/api/donations", $payload);
         } catch (\Throwable $e) {
             Log::warning("suma-crm donation checkout unreachable: " . $e->getMessage());
 

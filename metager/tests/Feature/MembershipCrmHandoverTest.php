@@ -42,7 +42,11 @@ class MembershipCrmHandoverTest extends TestCase
         parent::setUp();
 
         Http::preventStrayRequests();
-        config(["metager.metager.crm.url" => "https://crm.example.com", "metager.metager.crm.token" => "test-token"]);
+        config([
+            "metager.metager.crm.url" => "https://crm.example.com",
+            "metager.metager.crm.internal_url" => "https://crm.example.com",
+            "metager.metager.crm.token" => "test-token",
+        ]);
         Mail::fake();
     }
 

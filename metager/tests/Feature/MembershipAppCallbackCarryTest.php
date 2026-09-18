@@ -39,7 +39,11 @@ class MembershipAppCallbackCarryTest extends TestCase
         parent::setUp();
 
         Http::preventStrayRequests();
-        config(["metager.metager.crm.url" => "https://crm.example.com", "metager.metager.crm.token" => "test-token"]);
+        config([
+            "metager.metager.crm.url" => "https://crm.example.com",
+            "metager.metager.crm.internal_url" => "https://crm.example.com",
+            "metager.metager.crm.token" => "test-token",
+        ]);
         // Angemeldet unterwegs: die Seiten fragen den Keyserver nach dem Konto,
         // zu dem das Cookie gehört (Guthaben, Zustand). Hier ist der Schlüssel
         // Kulisse — geprüft wird der Weg, den die Marker nehmen.

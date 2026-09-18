@@ -29,7 +29,7 @@ final class MembershipApplicationPusher
         try {
             $response = Http::timeout(10)
                 ->withHeaders(["Authorization" => "Bearer " . config("metager.metager.crm.token")])
-                ->post(config("metager.metager.crm.url") . "/api/membership-applications", $payload);
+                ->post(config("metager.metager.crm.internal_url") . "/api/membership-applications", $payload);
         } catch (\Throwable $e) {
             Log::warning("suma-crm membership application push unreachable: " . $e->getMessage());
 

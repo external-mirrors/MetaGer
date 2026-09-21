@@ -71,7 +71,7 @@ class MembershipKeyTest extends TestCase
         return $this->withHeaders(["Origin" => config("app.url")])
             ->withUnencryptedCookies($cookies)
             ->post("/de-DE/membership", array_merge([
-                "_token" => Crypt::encrypt(now()->addHour()),
+                "_token" => Crypt::encrypt(now()->addHour()->subSeconds(10)),
                 "type" => "person",
                 "title" => "Neutral",
                 "firstname" => "Test",
@@ -218,7 +218,7 @@ class MembershipKeyTest extends TestCase
         $location = $this->withHeaders(["Origin" => config("app.url")])
             ->withUnencryptedCookies(["key" => self::FRESH_KEY])
             ->post("/de-DE/membership/" . $application->id . "?key=" . self::FRESH_KEY, [
-                "_token" => Crypt::encrypt(now()->addHour()),
+                "_token" => Crypt::encrypt(now()->addHour()->subSeconds(10)),
                 "amount" => "10.00",
             ])
             ->headers->get("Location");

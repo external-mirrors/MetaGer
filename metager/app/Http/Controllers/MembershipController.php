@@ -252,6 +252,26 @@ class MembershipController extends Controller
         ), 200, ["Cache-Control" => "no-store, private"]);
     }
 
+    /** How long a form token is valid; also what its issue time is derived from. */
+    private const TOKEN_LIFETIME_MINUTES = 60;
+    /**
+     * A person needs longer than this to fill in the first step; a script that
+     * fetches the form and posts it straight back does not.
+     */
+    private const MIN_SECONDS_TO_FILL_FIRST_STEP = 2;
+    /**
+     * Hidden field a person never sees and so never fills. Named so browser
+     * autofill has nothing to recognise it by.
+     */
+    public const HONEYPOT_FIELD = "contact_note_hp";
+    /**
+     * Set to "1" by membership.js when `navigator.webdriver` is true. Only ever
+     * set by JS, so visitors without JS are unaffected.
+     */
+    public const AUTOMATION_FIELD = "client_automation";
+    /** First steps (which capture an email address) per client IP and hour. */
+    private const FIRST_STEPS_PER_IP_PER_HOUR = 5;
+
     public function getToken(Request $request)
     {
         $executed = RateLimiter::attempt("_token", 3, function () {
@@ -275,12 +295,14 @@ class MembershipController extends Controller
             $application = MembershipApplication::find($application_id);
         }
 
+        $token_issued_at = null;
         $validator = Validator::make(array_merge($request->all(), ["application_id" => $application_id]), [
             "_token" => [
                 'required',
-                function (string $attribute, mixed $value, Closure $fail) {
+                function (string $attribute, mixed $value, Closure $fail) use (&$token_issued_at) {
                     try {
                         $expiration = Crypt::decrypt($value);
+                        $token_issued_at = $expiration->copy()->subMinutes(self::TOKEN_LIFETIME_MINUTES);
                         if (now()->isAfter($expiration) || Cache::has("membership_" . $expiration->unix())) {
                             $fail("Please try again.");
                         } else {
@@ -391,6 +413,28 @@ class MembershipController extends Controller
         $key = null;
         $key_is_fresh = false;
         if ($application === null || ($application->contact === null && $application->company === null)) {
+            /**
+             * Der erste Schritt nimmt eine Mailadresse entgegen, die niemand
+             * bestätigt hat, und schickt später eine Mail an sie. Darum
+             * stehen die Abwehrmaßnahmen hier, vor dem Keyserver und vor dem
+             * Antrag: was sie abweisen, kostet uns nichts.
+             *
+             * Honeypot, Automationsflagge (navigator.webdriver, von JS gesetzt) und Mindestzeit weisen still ab, ohne Fehlermeldung, aus
+             * der ein Skript lernen könnte. Wer sie trifft, landet auf dem
+             * leeren Formular.
+             */
+            if ($request->filled(self::HONEYPOT_FIELD) || $request->filled(self::AUTOMATION_FIELD)) {
+                return redirect(route("membership_form"));
+            }
+            if ($token_issued_at === null || $token_issued_at->addSeconds(self::MIN_SECONDS_TO_FILL_FIRST_STEP)->isFuture()) {
+                return redirect(route("membership_form"));
+            }
+            $ip_limiter = "membership:first-step:ip:" . $request->ip();
+            if (RateLimiter::tooManyAttempts($ip_limiter, self::FIRST_STEPS_PER_IP_PER_HOUR)) {
+                abort(429);
+            }
+            RateLimiter::hit($ip_limiter, 3600);
+
             $key = $this->keyOfVisitor($request);
             if ($key === null) {
                 $key = $issuer->issue();
@@ -427,7 +471,7 @@ class MembershipController extends Controller
          * Der Schlüssel steht seit dem ersten Schritt auf dem Antrag, und die
          * Erfolgsseite zeigt ihn samt QR-Code und Lesezeichen-URL.
          */
-        $request_data = array_merge($request->except(["edit", "_token", "key"]), ["application_id" => $application->id]);
+        $request_data = array_merge($request->except(["edit", "_token", "key", self::HONEYPOT_FIELD, self::AUTOMATION_FIELD]), ["application_id" => $application->id]);
         $membership_form_url = route("membership_form", $request_data);
 
         if ($application->contact === null && $application->company === null) {

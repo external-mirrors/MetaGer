@@ -1,3 +1,13 @@
+// A browser under remote control (WebDriver, Playwright, Puppeteer) says so in
+// navigator.webdriver. Report it in a hidden field; the server refuses the first
+// step when it is set. Without JS nothing is set, so the form still works.
+if (navigator.webdriver === true) {
+  const flag = document.querySelector("input[name=client_automation]");
+  if (flag) {
+    flag.value = "1";
+  }
+}
+
 // Add event when custom amount is selected to focus the input field
 document.querySelector("#amount-custom")?.addEventListener("change", (e) => {
   if (!e.target.checked) {

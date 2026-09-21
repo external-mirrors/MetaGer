@@ -38,7 +38,7 @@
     wird er nur einmal, im ersten Schritt, und dort liest ihn der Controller
     direkt aus der Anfrage (MembershipController::keyOfVisitor()).
 --}}
-<form id="membership-form" method="POST" enctype="multipart/form-data" action="{{ route("membership_form", array_merge(request()->except(["edit", "key"]), ["application_id" => $application_id])) }}">
+<form id="membership-form" method="POST" enctype="multipart/form-data" action="{{ route("membership_form", array_merge(request()->except(["edit", "key", App\Http\Controllers\MembershipController::HONEYPOT_FIELD, App\Http\Controllers\MembershipController::AUTOMATION_FIELD]), ["application_id" => $application_id])) }}">
     <input type="hidden" name="_token" value="{{$csrf_token}}" autocomplete="off">
     @php
         $editable = $application === null || ($application->contact === null && $application->company === null);
@@ -59,6 +59,13 @@
         $employees = $application !== null && $application->company !== null ? $application->company->employees : Request::input('employees', '');
     @endphp
     <input type="hidden" name="type" value="{{ $type }}">
+    @if($editable)
+    <input type="hidden" name="{{ App\Http\Controllers\MembershipController::AUTOMATION_FIELD }}" value="" autocomplete="off">
+    {{-- Honeypot: für Menschen unsichtbar, ohne CSS-Datei und ohne JS. Ein Skript, das jedes Feld füllt, verrät sich hier (MembershipController::HONEYPOT_FIELD). --}}
+    <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
+        <input type="text" name="{{ App\Http\Controllers\MembershipController::HONEYPOT_FIELD }}" value="" tabindex="-1" autocomplete="off">
+    </div>
+    @endif
     <div id="contact-data" @if($type === "company")class="company"@else class="person"@endif>
         <h3 id="contact_data">1. Ihre Kontaktdaten 
             @if($editable)

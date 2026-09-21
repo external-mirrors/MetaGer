@@ -69,7 +69,7 @@ class MembershipAppCallbackCarryTest extends TestCase
 
         return $this->withHeaders(["Origin" => config("app.url")])
             ->withUnencryptedCookies(["key" => self::A_KEY])
-            ->post($url, array_merge(["_token" => Crypt::encrypt(now()->addHour())], $fields));
+            ->post($url, array_merge(["_token" => Crypt::encrypt(now()->addHour()->subSeconds(10))], $fields));
     }
 
     /**

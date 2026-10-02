@@ -6,14 +6,15 @@ use Tests\TestCase;
 
 /**
  * config/metager/metager.php's `crm.url` is a visitor's own browser's
- * address for suma-crm (the "become a member"/donation redirects); `crm.internal_url`
+ * address for suma-crm (the "become a member" redirect, to its portal host); `crm.internal_url`
  * is what the fpm container itself uses for server-to-server API calls
  * (MembershipIssuer, DonationCheckoutIssuer, etc.). Under compose those
  * differ: suma-crm publishes its port on the host, so the browser reaches it
  * at `localhost:8002`, but `localhost` from inside fpm is the container
  * itself, not the host — CRM_INTERNAL_URL has to say `host.docker.internal`
- * instead. In every other environment (production included, until it wires
- * up its own value) there is only one real address, so CRM_INTERNAL_URL
+ * instead. Production differs too, for another reason: the browser goes to
+ * suma-crm's portal host (my.suma-ev.de), the API calls to its admin host
+ * (crm.suma-ev.de). Where there is only one real address, CRM_INTERNAL_URL
  * defaults to CRM_BASE_URL rather than requiring both to be set.
  *
  * config/metager/metager.php reads env() directly, so the file is
@@ -91,9 +92,8 @@ class CrmUrlConfigTest extends TestCase
     }
 
     /**
-     * A fresh docker-compose checkout sets only CRM_BASE_URL and never
-     * CRM_INTERNAL_URL — production's own single-URL deployment relies on
-     * this too, until it gets a container-networking split of its own.
+     * A deployment that sets only CRM_BASE_URL and never CRM_INTERNAL_URL
+     * still reaches the API — suma-crm answers /api on its portal host too.
      */
     public function testAnUnsetInternalUrlFallsBackToTheBaseUrl(): void
     {

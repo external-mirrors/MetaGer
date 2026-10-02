@@ -99,16 +99,18 @@ return [
     ],
     "crm" => [
         // The address a visitor's own browser is sent to (the "become a
-        // member"/donation form redirects). In compose, suma-crm publishes
-        // its port on the host, so this is a host-reachable URL, not a
-        // container one.
+        // member" redirect): suma-crm's portal host — https://my.suma-ev.de
+        // in production. In compose, suma-crm publishes its port on the
+        // host, so this is a host-reachable URL, not a container one.
         "url" => env("CRM_BASE_URL"),
         // The address the fpm container itself uses for server-to-server API
-        // calls (MembershipIssuer, DonationCheckoutIssuer, etc.). Defaults to
-        // CRM_BASE_URL, which is right in production where both are the same
-        // public URL, but wrong under compose: "localhost" from inside fpm
-        // is the container, not the host, so local dev needs this set
-        // separately to host.docker.internal — see .env.example.
+        // calls (MembershipIssuer, DonationCheckoutIssuer, etc.): suma-crm's
+        // admin host — https://crm.suma-ev.de in production. Defaults to
+        // CRM_BASE_URL, which works (suma-crm answers /api on either host)
+        // but is only right where both really are one address; under
+        // compose "localhost" from inside fpm is the container, not the
+        // host, so local dev needs this set to host.docker.internal — see
+        // .env.example.
         "internal_url" => env("CRM_INTERNAL_URL", env("CRM_BASE_URL")),
         "token" => env("CRM_TOKEN"),
     ],

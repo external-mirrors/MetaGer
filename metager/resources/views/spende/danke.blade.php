@@ -13,7 +13,9 @@
     <ul id="breadcrumps">
         <li class="done"><a href="#">{{ number_format($donation["amount"], 2, ",", ".") }}€</a></li>
         <li class="done"><a href="#">@lang('spende.interval.frequency.' . $donation["interval"])</a></li>
+        @if($donation["funding_source"] !== null)
         <li class="done"><a href="#">@lang('spende.payment-method.methods.' . $donation["funding_source"])</a></li>
+        @endif
     </ul>
     <div id="content-container" class="banktransfer">
         <h2>@lang('spende.thankyou.heading')</h2>

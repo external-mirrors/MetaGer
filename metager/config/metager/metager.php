@@ -89,7 +89,6 @@ return [
         "apikey" => env("TICKET_APIKEY", ""),
         "germanmail" => env("TICKET_GERMAN_MAIL", ""),
         "englishmail" => env("TICKET_ENGLISH_MAIL", ""),
-        "donation_ticket_id" => env("TICKET_DONATION_ID", "")
     ],
     "civicrm" => [
         "enabled" => env("CIVICRM_NOTIFICATIONS_ENABLED", true),

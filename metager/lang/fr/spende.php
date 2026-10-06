@@ -71,6 +71,7 @@ return [
         ],
         'name' => [
             'label' => 'Votre nom',
+            'placeholder' => 'John Smith',
         ],
     ],
     'execute-payment' => [
@@ -252,6 +253,7 @@ return [
             'description' => 'À chaque période, vous recevrez par e-mail un lien de paiement Wero, que vous utiliserez pour valider le don depuis l\'application Wero de votre banque. Il s\'agit d\'un mandat récurrent : il n\'est pas possible d\'effectuer un don Wero ponctuel.',
             'name' => [
                 'label' => 'Votre nom',
+                'placeholder' => 'John Smith',
             ],
             'email' => [
                 'label' => 'Votre adresse e-mail',

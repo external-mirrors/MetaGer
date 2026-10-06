@@ -45,6 +45,7 @@ return [
         'heading' => 'Hvordan vil du gerne foretage betalingen?',
         'name' => [
             'label' => 'Dit navn',
+            'placeholder' => 'John Smith',
         ],
     ],
     'amount' => [
@@ -252,6 +253,7 @@ return [
             'description' => 'Du vil hver periode modtage et Wero-betalingslink via e-mail, som du bruger til at bekræfte donationen via din banks Wero-app. Der er tale om en løbende betalingsfuldmagt — det er ikke muligt at foretage en engangsdonation via Wero.',
             'name' => [
                 'label' => 'Dit navn',
+                'placeholder' => 'John Smith',
             ],
             'email' => [
                 'label' => 'Din e-mailadresse',

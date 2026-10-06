@@ -56,8 +56,12 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Luotto-/pankkikortti',
+            'wero_link' => 'Wero',
         ],
         'heading' => 'Miten haluatte suorittaa maksun?',
+        'name' => [
+            'label' => 'Nimesi',
+        ],
     ],
     'interval' => [
         'heading' => 'Voiko se olla säännöllinen lahjoitus?',
@@ -240,6 +244,20 @@ return [
         'errors' => [
             'authorization_denied' => 'Maksua ei voitu hyväksyä',
             'capture_failed' => 'Maksua ei saatu kiinni',
+        ],
+        'error' => [
+            'unavailable' => 'Maksua ei voitu käsitellä juuri nyt. Yritä uudelleen muutaman minuutin kuluttua.',
+        ],
+        'wero_link' => [
+            'description' => 'Saat jokaisella jaksolla sähköpostitse Wero-maksulinkin, jonka avulla voit vahvistaa lahjoituksen pankkisi Wero-sovelluksessa. Kyseessä on toistuva valtuutus – kertaluonteista Wero-lahjoitusta ei ole tarjolla.',
+            'name' => [
+                'label' => 'Nimesi',
+            ],
+            'email' => [
+                'label' => 'Sähköpostiosoitteesi',
+                'placeholder' => 'john.smith@example.com',
+            ],
+            'submit' => 'Lahjoituksen järjestäminen',
         ],
     ],
     'thankyou' => [

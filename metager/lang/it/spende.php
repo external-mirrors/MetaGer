@@ -179,6 +179,7 @@ return [
             'description' => 'Ogni periodo riceverai via e-mail un link di pagamento Wero, che dovrai utilizzare per confermare la donazione dall\'app Wero della tua banca. Si tratta di un mandato ricorrente: non è prevista la possibilità di effettuare una donazione Wero una tantum.',
             'name' => [
                 'label' => 'Il tuo nome',
+                'placeholder' => 'John Smith',
             ],
             'email' => [
                 'label' => 'Il tuo indirizzo e-mail',
@@ -238,6 +239,7 @@ return [
         'heading' => 'Come desidera effettuare il pagamento?',
         'name' => [
             'label' => 'Il tuo nome',
+            'placeholder' => 'John Smith',
         ],
     ],
     'thankyou' => [

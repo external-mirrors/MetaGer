@@ -61,6 +61,7 @@ return [
         'heading' => 'Hur skulle du vilja göra betalningen?',
         'name' => [
             'label' => 'Ditt namn',
+            'placeholder' => 'John Smith',
         ],
     ],
     'execute-payment' => [
@@ -242,6 +243,7 @@ return [
             'description' => 'Du kommer varje period att få en Wero-betalningslänk via e-post, som du använder för att bekräfta donationen via din banks Wero-app. Det här är ett återkommande betalningsuppdrag – det går inte att göra en engångsdonation via Wero.',
             'name' => [
                 'label' => 'Ditt namn',
+                'placeholder' => 'John Smith',
             ],
             'email' => [
                 'label' => 'Din e-postadress',

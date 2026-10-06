@@ -84,6 +84,29 @@ class MembershipFormEntryRedirectsToCrmTest extends TestCase
             ->assertRedirect("https://crm.example.com/mitglied-werden?lang=de-DE&key=5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15");
     }
 
+    /**
+     * Applying from inside the MetaGer app: suma-crm hands the key back to
+     * the app from its thanks page ({@see \App\Landing\AppCallback}), which
+     * it can only do if the app's markers arrive there.
+     */
+    public function testTheAppCallbackMarkersAreCarriedAlong(): void
+    {
+        $this->get("/de-DE/membership?keystore=release&variant=fdroid")
+            ->assertRedirect("https://crm.example.com/mitglied-werden?lang=de-DE&keystore=release&variant=fdroid");
+    }
+
+    /** Where the app's key-less flow starts: the landing page /keys redirects to. */
+    public function testTheLandingPageMembershipLinksKeepTheAppCallbackMarkers(): void
+    {
+        $html = $this->get("/de-DE/?keystore=release&variant=fdroid")->assertOk()->getContent();
+
+        preg_match_all('~href="([^"]*/membership[^"]*)"~', $html, $matches);
+        $this->assertNotEmpty($matches[1]);
+        foreach ($matches[1] as $href) {
+            $this->assertStringContainsString("keystore=release&variant=fdroid", html_entity_decode($href), $href);
+        }
+    }
+
     public function testAnInFlightApplicationStillRendersTheLegacyForm(): void
     {
         $application = MembershipApplication::create(["locale" => "de-DE"]);

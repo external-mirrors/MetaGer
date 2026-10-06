@@ -1240,6 +1240,12 @@ class MembershipController extends Controller
      * clicking "become a member" should land on suma-crm's form already
      * tied to their own key, exactly as the legacy form itself would have
      * done via keyOfVisitor() at its own first step.
+     *
+     * The MetaGer app's `keystore`/`variant` markers ride along as well:
+     * suma-crm carries them through its form and checkout and hands the key
+     * back to the app from its thanks page (App\Keys\AppCallback there,
+     * {@see AppCallback} here). Dropped, the key an app user gets with their
+     * membership never reaches the app.
      */
     private function crmMembershipFormUrl(Request $request): string
     {
@@ -1249,6 +1255,8 @@ class MembershipController extends Controller
         if ($key !== null) {
             $params["key"] = $key;
         }
+
+        $params += AppCallback::markers($request);
 
         return config("metager.metager.crm.url") . "/mitglied-werden?" . http_build_query($params);
     }

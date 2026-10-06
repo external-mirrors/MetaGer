@@ -40,7 +40,7 @@
          language (App\Support\MembershipOffer). --}}
     @if(\App\Support\MembershipOffer::isAdvertised())
       <p class="landing-steps__membership">
-        {!! __('index.landing.howitworks.steps.1.membership', ['linkMembership' => route('membership_form')]) !!}
+        {!! __('index.landing.howitworks.steps.1.membership', ['linkMembership' => route('membership_form', App\Landing\AppCallback::markers())]) !!}
       </p>
     @endif
 

@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'Właśnie nie udało się utworzyć klucza. To nasza wina, nie twoja — spróbuj za chwilę jeszcze raz.',
         'too_many_attempts' => 'Z tego łącza utworzono właśnie bardzo wiele kluczy. Odczekaj kilka minut i wtedy odśwież stronę.',
         'no_key' => 'Klucz zgubił się po drodze — tak bywa, gdy strona długo stoi otwarta. Oto nowy.',
+        'already_member' => 'Ten klucz należy już do aktywnego członkostwa — nie można z nim złożyć drugiego wniosku.',
     ],
 ];

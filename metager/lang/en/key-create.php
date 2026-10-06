@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'No key could be created just now. That is on us, not on you — try again in a moment.',
         'too_many_attempts' => 'A great many keys have just been created from this connection. Wait a few minutes and then reload the page.',
         'no_key' => 'The key got lost along the way — that happens when the page has been open for a long time. Here is a new one.',
+        'already_member' => 'This key already belongs to an active membership — a second application is not possible with it.',
     ],
 ];

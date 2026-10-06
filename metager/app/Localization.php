@@ -118,14 +118,17 @@ class Localization
      * computed over. `URL::signedRoute()` signs what `route()` produces, and
      * `route()` produces the prefixed URL — so the check has to be made against
      * the URL as it arrived.
+     *
+     * @param array<int, string> $ignoreQuery query parameters added after
+     *   signing that must not invalidate it
      */
-    public static function hasValidSignature(): bool
+    public static function hasValidSignature(array $ignoreQuery = []): bool
     {
         $original = self::context()->originalUrl;
         if ($original === "") {
             return false;
         }
 
-        return URL::hasValidSignature(Request::create($original));
+        return URL::hasValidSignature(Request::create($original), true, $ignoreQuery);
     }
 }

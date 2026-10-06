@@ -76,8 +76,16 @@
 					Javascript wählte man eine Datei und sah nirgends, welche.
 				--}}
 				<label class="login-alternative__label" for="login-file">@lang('login.file.button')</label>
+				{{--
+					Not image/* alone any more: suma-crm's membership confirmation
+					page now offers a plain-text download of a freshly-minted key
+					next to its QR code (App\Authentication\KeyIssuer::findInText(),
+					which KeyResolver::resolveImage() checks first), and an OS file
+					picker filtered to images only would hide the exact file most
+					people just downloaded from there.
+				--}}
 				<input class="login-alternative__file" type="file" name="file" id="login-file"
-					accept="image/*" aria-describedby="login-file-hint">
+					accept="image/*,.txt,text/plain" aria-describedby="login-file-hint">
 				<p class="login-alternative__hint" id="login-file-hint">@lang('login.file.hint')</p>
 			</div>
 

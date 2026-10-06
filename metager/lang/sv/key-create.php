@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'Det gick inte att skapa någon nyckel just nu. Det beror på oss och inte på dig — försök igen om en stund.',
         'too_many_attempts' => 'Väldigt många nycklar har just skapats från den här anslutningen. Vänta några minuter och ladda sedan om sidan.',
         'no_key' => 'Nyckeln kom bort på vägen — det händer när sidan har stått öppen länge. Här är en ny.',
+        'already_member' => 'Den här nyckeln tillhör redan ett aktivt medlemskap — det går inte att göra en andra ansökan med den.',
     ],
 ];

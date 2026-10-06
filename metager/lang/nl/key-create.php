@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'Er kon zojuist geen sleutel worden aangemaakt. Dat ligt aan ons en niet aan u — probeer het zo meteen opnieuw.',
         'too_many_attempts' => 'Vanaf deze verbinding zijn zojuist heel veel sleutels aangemaakt. Wacht een paar minuten en laad de pagina dan opnieuw.',
         'no_key' => 'De sleutel is onderweg verloren gegaan — dat gebeurt als de pagina lang open heeft gestaan. Hier is een nieuwe.',
+        'already_member' => 'Deze sleutel behoort al tot een actief lidmaatschap — een tweede aanvraag is er niet mee mogelijk.',
     ],
 ];

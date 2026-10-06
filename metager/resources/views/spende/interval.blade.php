@@ -17,13 +17,18 @@
     </ul>
     <div id="content-container" class="interval">
         <h3>@lang('spende.interval.heading')</h3>
-        <ul>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/once') }}">@lang('spende.interval.frequency.once')</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/monthly') }}">@lang('spende.interval.frequency.monthly')</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/quarterly') }}">@lang('spende.interval.frequency.quarterly')</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/six-monthly') }}">@lang('spende.interval.frequency.six-monthly')</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/annual') }}">@lang('spende.interval.frequency.annual')</a></li>
-        </ul>
+        @if($errors->has("crm"))
+        <div class="error">{{ $errors->first("crm") }}</div>
+        @endif
+        {{-- Picking the interval hands off to suma-payments, which asks for
+             the payment method itself (DonationController::checkout()). --}}
+        <form method="POST" action="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount']) }}">
+            <ul>
+                @foreach(["once", "monthly", "quarterly", "six-monthly", "annual"] as $interval)
+                <li><button type="submit" name="interval" value="{{ $interval }}">@lang('spende.interval.frequency.' . $interval)</button></li>
+                @endforeach
+            </ul>
+        </form>
     </div>
 </div>
 @endsection

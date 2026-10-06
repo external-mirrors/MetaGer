@@ -75,6 +75,40 @@
                         </ol>
                     </article>
                     <article class="kontext">
+                        <h1 id="membership">@lang('privacy.contexts.membership.title')</h1>
+                        <div>@lang('privacy.contexts.membership.description')</div>
+                        <ol class="datum-list">
+                            <li><a href="#ip-address">@lang('privacy.data.ip'):</a> @lang('privacy.data.unused')</li>
+                            <li><a href="#user-agent">@lang('privacy.data.useragent'):</a> @lang('privacy.data.unused')</li>
+                            <li><a href="#contact-data">@lang('privacy.data.contact'):</a>
+                                @lang('privacy.contexts.membership.contact')</li>
+                            <li><a href="#payment-data">@lang('privacy.data.payment'):</a>
+                                @lang('privacy.contexts.membership.payment')</li>
+                            <li><a href="#reduction-proof">@lang('privacy.data.reduction') (@lang('privacy.data.optional')):</a>
+                                @lang('privacy.contexts.membership.reduction')</li>
+                        </ol>
+                        <div>@lang('privacy.contexts.membership.crm')</div>
+                        <div>@lang('privacy.contexts.membership.cookies')</div>
+                    </article>
+                    <article class="kontext">
+                        <h1 id="payments">@lang('privacy.contexts.payments.title')</h1>
+                        <div>@lang('privacy.contexts.payments.description')</div>
+                        <ol class="datum-list">
+                            <li><a href="#ip-address">@lang('privacy.data.ip'):</a>
+                                @lang('privacy.contexts.payments.ip')</li>
+                            <li><a href="#user-agent">@lang('privacy.data.useragent'):</a>
+                                @lang('privacy.contexts.payments.useragent')</li>
+                            <li><a href="#contact-data">@lang('privacy.data.contact'):</a>
+                                @lang('privacy.contexts.payments.contact')</li>
+                            <li><a href="#payment-data">@lang('privacy.data.payment'):</a>
+                                @lang('privacy.contexts.payments.payment')</li>
+                        </ol>
+                        <div>@lang('privacy.contexts.payments.methods')</div>
+                        <div>@lang('privacy.contexts.payments.mandate')</div>
+                        <div>@lang('privacy.contexts.payments.cookies')</div>
+                        <div>@lang('privacy.contexts.payments.retention')</div>
+                    </article>
+                    <article class="kontext">
                         <h1>@lang('privacy.contexts.suma.title')</h1>
                         <div>@lang('privacy.contexts.suma.description')</div>
                         <ul>
@@ -227,6 +261,12 @@
                     </article>
                 </li>
                 <li>
+                    <article id="reduction-proof" class="datum">
+                        <h2>@lang('privacy.description.reduction.title')</h2>
+                        <div>@lang('privacy.description.reduction.description')</div>
+                    </article>
+                </li>
+                <li>
                     <article id="error-report" class="datum">
                         <h2>@lang('privacy.description.error.title')</h2>
                         <div>@lang('privacy.description.error.description')</div>
@@ -283,6 +323,6 @@
         <div class="section">
             <h1>@lang('privacy.changes.title')</h1>
             <div>@lang('privacy.changes.description')</div>
-            <div>@lang('privacy.changes.date', ['date' => '2026-07-02'])</div>
+            <div>@lang('privacy.changes.date', ['date' => '2026-09-28'])</div>
         </div>
 @endsection

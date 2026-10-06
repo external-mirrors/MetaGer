@@ -20,9 +20,21 @@ There is **no local PHP or Composer toolchain**. Everything runs through the com
 
 ```bash
 docker compose build fpm                     # build the image first
-docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/php fpm artisan test
+docker compose run --rm -T --entrypoint /usr/local/bin/php fpm artisan test
 docker compose run --rm --entrypoint /usr/bin/composer composer install
 ```
+
+No `--no-deps` on that middle line: `fpm` depends on `valkey` (`condition: service_healthy`), and
+nothing user-facing works without it — the authorization path and the search path's
+`Redis::brpop` (see "Search request flow" below) both reach `Redis::connection()` directly,
+`CACHE_STORE=array` in `phpunit.xml` notwithstanding. Skip it and every one of those calls fails
+closed with a real Predis connection exception, once per request that touches them; on a long run
+enough of those accumulate to exhaust `memory_limit`, surfacing as an unrelated-looking "Allowed
+memory size exhausted" wherever the next allocation happens to land (a YAML parser, Whoops's own
+renderer) rather than the connection error it actually is — `.gitlab/ci/integrationtest.yml` hit
+this exact failure and fixed it for CI the same way, by declaring the service. `fpm`'s other
+dependency, `assets`, is a one-shot container that stays satisfied once it has exited 0, so leaving
+`--no-deps` off does not mean rebuilding the frontend on every test run — only the first one.
 
 For the browser suite you need the app and Selenium running:
 

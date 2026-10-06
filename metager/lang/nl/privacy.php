@@ -63,6 +63,27 @@ return [
             'title' => 'Gebruik van de citatenzoekfunctie',
             'description' => 'De ingevoerde zoekterm wordt gebruikt om resultaten te zoeken in de citatiedatabase. In tegenstelling tot webzoekopdrachten met MetaGer is het niet nodig om de zoekterm door te geven aan derden, omdat de citatiedatabase zich op onze server bevindt. Andere gegevens worden niet opgeslagen of doorgegeven.',
         ],
+        'membership' => [
+            'title' => 'Een SUMA-EV-lidmaatschap aanvragen en beheren',
+            'description' => 'Bij het aanvragen van een SUMA-EV-lidmaatschap en gedurende de looptijd van uw lidmaatschap worden de volgende gegevens gegenereerd:',
+            'contact' => 'Voor particulieren: naam en e-mailadres; voor organisaties: de naam van de organisatie, de geschatte omvang ervan, en de naam en het e-mailadres van een contactpersoon. Een postadres is optioneel en wordt, indien opgegeven, met name gebruikt voor het versturen van een donatiebewijs. Wij geven deze gegevens onder geen enkele omstandigheid door aan derden.',
+            'payment' => 'Wij gebruiken uw betalingsgegevens uitsluitend voor de periodieke incasso van uw lidmaatschapsbijdrage. Hoe wij deze gegevens verwerken, wie ze ontvangt en hoe lang wij ze bewaren, wordt beschreven onder „Betalingsverwerking“.',
+            'reduction' => 'Als u een aanvraag indient voor een verlaagde contributie, verwerken wij het door u geüploade bewijsstuk (bijvoorbeeld een afschrift van een overschrijving) uitsluitend om te controleren of u recht hebt op de korting. Een dergelijk bewijsstuk kan bijzonder gevoelige gegevens bevatten in de zin van artikel 9 van de AVG; wij bewaren het daarom alleen zolang als nodig is voor deze controle en geven het niet door aan derden.',
+            'crm' => 'Voor het beheer van lidmaatschappen maken we gebruik van ons eigen lidmaatschapsbeheersysteem, dat eveneens door SUMA-EV wordt beheerd. De hierboven genoemde gegevens worden daar bewaard voor de duur van uw lidmaatschap en daarna gedurende de wettelijk voorgeschreven bewaartermijnen. Uw lidmaatschap is bovendien gekoppeld aan een MetaGer-sleutel, waarmee uw lidmaatschapsbijdrage wordt bijgeschreven als gebruikstegoed voor MetaGer (zie „MetaGer-sleutel afrekenen”).',
+            'cookies' => 'Het aanmeldingsformulier en het ledenportaal plaatsen geen cookies wanneer u ze alleen maar opent. Pas wanneer u een formulier indient of inlogt op het ledenportaal, plaatsen wij een technisch noodzakelijke sessiecookie, zodat we u bijvoorbeeld invoerfouten kunnen laten zien of u ingelogd kunnen houden. Deze cookie verloopt na twee uur inactiviteit en wordt verwijderd wanneer u uitlogt. Als u het formulier opent via een link waarin een andere taal is aangegeven dan de taalinstelling van uw browser, slaan wij die taal op in een cookie die wordt verwijderd wanneer u uw browser sluit. De rechtsgrondslag hiervoor is artikel 25, lid 2, nr. 2 van de TDDDG.',
+        ],
+        'payments' => [
+            'title' => 'Betalingsverwerking',
+            'description' => 'Betalingen aan SUMA-EV – momenteel lidmaatschapsbijdragen, in de toekomst ook donaties en MetaGer-sleutels – worden verwerkt via ons eigen betalingssysteem, dat eveneens door SUMA-EV wordt beheerd. Hierbij worden de volgende gegevens gegenereerd:',
+            'ip' => 'Alleen bij betaling via SEPA-incasso: als onderdeel van de registratie van uw incassomachtiging (zie hieronder). Anders wordt deze niet opgeslagen.',
+            'useragent' => 'Alleen bij betaling via SEPA-incasso: als onderdeel van de registratie van uw incassomachtiging (zie hieronder). Anders wordt deze niet opgeslagen.',
+            'contact' => 'Wij ontvangen je naam en e-mailadres via de dienst waarvoor je betaalt (bijvoorbeeld de lidmaatschapsaanvraag). Wij gebruiken deze gegevens voor e-mails over je betaling, zoals bankgegevens, betalingslinks of betalingsherinneringen.',
+            'payment' => 'Afhankelijk van de betaalmethode, de rekeninghouder en het IBAN, een verwijzing naar je PayPal-rekening of je kaart bij de betreffende aanbieder, en het bedrag, het tijdstip en de status van elke betaling.',
+            'methods' => 'Wij verwerken SEPA-incasso’s en bankoverschrijvingen zelf; incasso’s worden bij onze bank ingediend met vermelding van de rekeninghouder, het IBAN-nummer, het bedrag en het mandaatreferentienummer. Wanneer u met PayPal betaalt, voert u uw gegevens rechtstreeks in bij PayPal (Europe) S.à r.l. et Cie, S.C.A.; pas wanneer u PayPal als betaalmethode kiest, laadt de betaalpagina programmacode van PayPal, waardoor PayPal uw IP-adres ontvangt en zijn eigen cookies kan plaatsen. Bij betaling met een kaart of via Wero voert u uw gegevens rechtstreeks in bij VR Payment GmbH. Wij ontvangen nooit kaartnummers of inloggegevens van PayPal of Wero, maar alleen een referentie waarmee wij terugkerende bedragen kunnen innen. De rechtsgrondslag is art. 6, lid 1, onder b) van de AVG.',
+            'mandate' => 'Als u ons online een SEPA-incassomachtiging verleent, slaan wij de inhoud van de machtiging (rekeninghouder, IBAN, referentienummer van de machtiging, bedrag en frequentie, de aan u getoonde tekst van de machtiging) op, samen met het tijdstip waarop deze is verleend, uw IP-adres en uw user agent. We hebben deze gegevens nodig om aan onze bank aan te tonen dat u de machtiging hebt verleend, mocht er een geschil ontstaan over een automatische incasso; alleen in dat geval leggen we deze gegevens aan de bank voor. De rechtsgrondslag hiervoor is artikel 6, lid 1, onder b), van de AVG en ons gerechtvaardigd belang om de machtiging te kunnen aantonen (artikel 6, lid 1, onder f), van de AVG).',
+            'cookies' => 'De betaalpagina’s zelf plaatsen geen cookies wanneer u ze opent. Alleen als uw invoer onvolledig of ongeldig is, plaatsen we kortstondig een technisch noodzakelijke sessiecookie om u de fouten te tonen; deze wordt verwijderd zodra de fouten zijn weergegeven (artikel 25, lid 2, nr. 2 TDDDG).',
+            'retention' => 'Als een betaling niet wordt uitgevoerd omdat u deze afbreekt, verwijderen wij uw naam en e-mailadres één week nadat de betalingstermijn is verstreken. Als bijvoorbeeld een lidmaatschapsaanvraag wordt afgewezen voordat er iets in rekening is gebracht, verwijderen wij uw betalingsgegevens en het machtigingsdossier onmiddellijk. Alle overige betalingsgegevens en machtigingsgegevens worden bewaard zolang de betalingsrelatie bestaat en daarna gedurende de wettelijk voorgeschreven bewaartermijnen (maximaal 10 jaar).',
+        ],
     ],
     'introduction' => 'Voor maximale transparantie zetten we op een rij welke gegevens we van je verzamelen en hoe we deze gebruiken. De bescherming van uw gegevens is belangrijk voor ons en zou dat ook voor u moeten zijn. <strong>Lees deze verklaring zorgvuldig; het is in uw belang.</strong>',
     'responsible_party' => [
@@ -115,6 +136,10 @@ return [
         'error' => [
             'title' => 'Foutrapport (stacktrace)',
             'description' => 'Wanneer er een technische fout optreedt in onze applicatie, wordt er automatisch een foutbeschrijving samen met een stacktrace gegenereerd. Hieruit blijkt waar in de broncode de fout is opgetreden, zodat we deze kunnen verhelpen.',
+        ],
+        'reduction' => [
+            'title' => 'Bewijs voor een verlaagde contributie',
+            'description' => 'Een document dat u uploadt om aan te tonen dat u recht hebt op een gereduceerd lidmaatschapsbedrag, bijvoorbeeld een bevestiging van ontvangst van overschrijvingen.',
         ],
     ],
     'base' => [
@@ -171,6 +196,7 @@ return [
         'contact' => 'Contactgegevens',
         'message' => 'Bericht',
         'error' => 'Foutrapport',
+        'reduction' => 'Bewijs van reductie',
     ],
     'title' => 'privacybeleid',
     'principles' => [

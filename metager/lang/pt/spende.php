@@ -30,8 +30,13 @@ return [
             'mulitbanco' => 'Multibanco',
             'satispay' => 'Satispay',
             'card' => 'Cartão de crédito/débito',
+            'wero_link' => 'Wero',
         ],
         'heading' => 'Como gostaria de efetuar o pagamento?',
+        'name' => [
+            'label' => 'O teu nome',
+            'placeholder' => 'John Smith',
+        ],
     ],
     'thankyou' => [
         'taxes' => 'Nota: A SUMA-EV é reconhecida como uma associação sem fins lucrativos. Isto significa que o seu donativo pode ser deduzido nos impostos. Até um montante de donativo de 300€, um extrato bancário é suficiente para a sua repartição de finanças como prova do donativo. Se ainda assim desejar receber um recibo de donativo, indique-nos o seu endereço completo através do nosso formulário de contacto <a href=":kontakt"></a> .',
@@ -246,6 +251,21 @@ return [
         'errors' => [
             'authorization_denied' => 'O pagamento não pôde ser autorizado',
             'capture_failed' => 'O pagamento não pôde ser captado',
+        ],
+        'error' => [
+            'unavailable' => 'Não foi possível processar o pagamento neste momento. Por favor, tente novamente daqui a alguns minutos.',
+        ],
+        'wero_link' => [
+            'description' => 'Receberá por e-mail, em cada período, um link de pagamento da Wero, que deverá utilizar para confirmar a doação através da aplicação da Wero do seu banco. Trata-se de uma autorização recorrente — não é possível efetuar uma doação pontual à Wero.',
+            'name' => [
+                'label' => 'O teu nome',
+                'placeholder' => 'John Smith',
+            ],
+            'email' => [
+                'label' => 'O teu endereço de e-mail',
+                'placeholder' => 'john.smith@example.com',
+            ],
+            'submit' => 'Configurar doação',
         ],
     ],
 ];

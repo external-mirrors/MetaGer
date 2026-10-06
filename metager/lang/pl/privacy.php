@@ -63,6 +63,27 @@ return [
             'title' => 'Korzystanie z wtyczki MetaGer',
             'description' => 'Podczas korzystania z wtyczki MetaGer generowane są następujące dane:',
         ],
+        'membership' => [
+            'title' => 'Składanie wniosku o członkostwo w SUMA-EV i zarządzanie nim',
+            'description' => 'Podczas składania wniosku o członkostwo w SUMA-EV oraz w trakcie trwania członkostwa generowane są następujące dane:',
+            'contact' => 'W przypadku osób fizycznych: imię i nazwisko oraz adres e-mail; w przypadku organizacji: nazwa organizacji, jej przybliżona wielkość oraz imię i nazwisko oraz adres e-mail osoby kontaktowej. Adres pocztowy jest opcjonalny, a jeśli zostanie podany, służy przede wszystkim do wystawienia pokwitowania darowizny. W żadnym wypadku nie przekazujemy tych danych stronom trzecim.',
+            'payment' => 'Twoje dane płatnicze wykorzystujemy wyłącznie do cyklicznego pobierania opłaty członkowskiej. Sposób ich przetwarzania, odbiorcy tych danych oraz okres ich przechowywania opisano w sekcji „Przetwarzanie płatności”.',
+            'reduction' => 'Jeśli złożysz wniosek o obniżoną składkę członkowską, przetwarzamy przesłane przez Ciebie dokumenty potwierdzające (np. potwierdzenie przelewu) wyłącznie w celu zweryfikowania Twojego uprawnienia do zniżki. Dokumenty te mogą zawierać dane szczególnie wrażliwe w rozumieniu art. 9 RODO; w związku z tym przechowujemy je tylko tak długo, jak jest to konieczne do przeprowadzenia tej weryfikacji, i nie przekazujemy ich osobom trzecim.',
+            'crm' => 'Do zarządzania członkostwami korzystamy z naszego własnego systemu administracji członkostwami, obsługiwanym również przez SUMA-EV. Wymienione powyżej dane są tam przechowywane przez cały okres trwania członkostwa, a następnie przez okresy przechowywania określone przepisami prawa. Twoje członkostwo jest również powiązane z kluczem MetaGer, za pomocą którego Twoja składka członkowska jest zaliczana jako kredyt użytkowy w serwisie MetaGer (zobacz „Klucz MetaGer przy kasie”).',
+            'cookies' => 'Formularz zgłoszeniowy i portal dla członków nie zapisują plików cookie w momencie ich otwarcia. Dopiero po przesłaniu formularza lub zalogowaniu się do portalu dla członków zapisujemy technicznie niezbędny plik cookie sesji, abyśmy mogli na przykład wskazać błędy w wprowadzonych danych lub utrzymać stan zalogowania. Plik ten traci ważność po dwóch godzinach bezczynności i jest usuwany po wylogowaniu. Jeśli otworzysz formularz poprzez link wskazujący język inny niż ustawiony w przeglądarce, zapamiętujemy ten język w pliku cookie, który jest usuwany po zamknięciu przeglądarki. Podstawą prawną jest § 25 ust. 2 pkt 2 TDDDG.',
+        ],
+        'payments' => [
+            'title' => 'Przetwarzanie płatności',
+            'description' => 'Płatności na rzecz SUMA-EV – obecnie składki członkowskie, a w przyszłości również darowizny i klucze MetaGer – są przetwarzane przez nasz własny system płatności, również obsługiwany przez SUMA-EV. Generowane są następujące dane:',
+            'ip' => 'Wyłącznie w przypadku płatności poleceniem zapłaty SEPA: w ramach dokumentacji upoważnienia do polecenia zapłaty (patrz poniżej). W przeciwnym razie dane te nie są przechowywane.',
+            'useragent' => 'Wyłącznie w przypadku płatności poleceniem zapłaty SEPA: w ramach dokumentacji upoważnienia do polecenia zapłaty (patrz poniżej). W przeciwnym razie dane te nie są przechowywane.',
+            'contact' => 'Otrzymujemy Twoje imię i nazwisko oraz adres e-mail od dostawcy usługi, za którą płacisz (np. w ramach wniosku o członkostwo). Wykorzystujemy te dane do wysyłania wiadomości e-mail dotyczących Twojej płatności, takich jak dane do przelewu bankowego, linki do płatności lub przypomnienia o płatnościach.',
+            'payment' => 'W zależności od metody płatności, posiadacza rachunku i numeru IBAN – odniesienie do konta PayPal lub karty u danego dostawcy, a także kwota, czas i status każdej płatności.',
+            'methods' => 'Pobrania SEPA i przelewy bankowe realizujemy we własnym zakresie; zlecenia pobrania są przekazywane do naszego banku wraz z danymi posiadacza rachunku, numerem IBAN, kwotą oraz numerem referencyjnym upoważnienia. W przypadku płatności za pomocą PayPal dane użytkownika są wprowadzane bezpośrednio w systemie PayPal (Europe) S.à r.l. et Cie, S.C.A.; dopiero po wybraniu PayPal jako metody płatności strona płatności ładuje kod programu z serwisu PayPal, co przekazuje PayPal adres IP użytkownika i umożliwia mu ustawienie własnych plików cookie. W przypadku płatności kartą lub za pośrednictwem serwisu Wero dane użytkownika są wprowadzane bezpośrednio w systemie VR Payment GmbH. Nigdy nie otrzymujemy numerów kart ani danych logowania do serwisów PayPal lub Wero, a jedynie numer referencyjny, który pozwala nam pobierać opłaty cykliczne. Podstawą prawną jest art. 6 ust. 1 lit. b) RODO.',
+            'mandate' => 'Jeśli udzielisz nam upoważnienia do polecenia zapłaty SEPA przez Internet, przechowujemy dane dotyczące treści upoważnienia (posiadacz rachunku, numer IBAN, numer referencyjny upoważnienia, kwota i częstotliwość, treść upoważnienia wyświetlona użytkownikowi) wraz z datą i godziną jego udzielenia, Twoim adresem IP oraz informacją o przeglądarce. Potrzebujemy tej dokumentacji, aby udowodnić naszemu bankowi, że udzieliłeś upoważnienia, w przypadku zakwestionowania polecenia zapłaty; tylko w takim przypadku udostępniamy ją bankowi. Podstawą prawną jest art. 6 ust. 1 lit. b) RODO oraz nasz uzasadniony interes polegający na możliwości udowodnienia istnienia upoważnienia (art. 6 ust. 1 lit. f) RODO).',
+            'cookies' => 'Same strony płatności nie zapisują żadnych plików cookie po ich otwarciu. Tylko w przypadku, gdy wprowadzone dane są niekompletne lub nieprawidłowe, zapisujemy na krótki czas niezbędny z technicznego punktu widzenia plik cookie sesji, aby wyświetlić użytkownikowi komunikaty o błędach; plik ten jest usuwany natychmiast po wyświetleniu komunikatów (art. 25 ust. 2 pkt 2 TDDDG).',
+            'retention' => 'Jeśli płatność nie zostanie zrealizowana z powodu jej rezygnacji, usuwamy imię i nazwisko oraz adres e-mail użytkownika tydzień po upływie terminu realizacji płatności. Jeśli na przykład wniosek o członkostwo zostanie odrzucony przed pobraniem jakichkolwiek opłat, natychmiast usuwamy dane dotyczące płatności oraz zapis upoważnienia. Wszystkie pozostałe dane dotyczące płatności oraz zapisy dotyczące upoważnień są przechowywane przez cały okres trwania stosunku płatniczego, a następnie przez okres przewidziany w przepisach dotyczących przechowywania danych (do 10 lat).',
+        ],
     ],
     'title' => 'polityka prywatności',
     'introduction' => 'W celu zapewnienia maksymalnej przejrzystości podajemy, jakie dane zbieramy od użytkowników i w jaki sposób je wykorzystujemy. Ochrona danych użytkownika jest dla nas ważna i powinna być również ważna dla użytkownika. <strong>Prosimy o uważne przeczytanie niniejszego oświadczenia; leży to w Państwa interesie.</strong>',
@@ -120,6 +141,10 @@ return [
         'error' => [
             'title' => 'Raport o błędzie (ślad stosu)',
             'description' => 'Gdy w naszej aplikacji wystąpi błąd techniczny, automatycznie generowany jest opis błędu wraz ze śladem stosu. Dzięki temu wiemy, w którym miejscu kodu źródłowego wystąpił błąd, co pozwala nam go naprawić.',
+        ],
+        'reduction' => [
+            'title' => 'Dowód uprawniający do obniżonej składki członkowskiej',
+            'description' => 'Dokument, który należy przesłać w celu udowodnienia uprawnień do obniżonej opłaty członkowskiej, na przykład potwierdzenie otrzymania środków z tytułu transferu.',
         ],
     ],
     'base' => [
@@ -181,6 +206,7 @@ return [
         'optional' => 'opcjonalny',
         'unused' => 'Nie będą zapisywane ani udostępniane.',
         'error' => 'Raport o błędach',
+        'reduction' => 'Dowód redukcji',
     ],
     'monitoring' => [
         'collected' => [

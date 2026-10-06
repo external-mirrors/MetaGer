@@ -67,6 +67,27 @@ return [
             'title' => 'Brug af MetaGer-plugin\'et',
             'description' => 'Når du bruger MetaGer-pluginet, genereres følgende data:',
         ],
+        'membership' => [
+            'title' => 'Ansøgning om og administration af et SUMA-EV-medlemskab',
+            'description' => 'Når du ansøger om medlemskab af SUMA-EV, og i hele medlemskabsperioden, genereres følgende data:',
+            'contact' => 'For enkeltpersoner: navn og e-mailadresse; for organisationer: organisationens navn, dens omtrentlige størrelse samt navn og e-mailadresse på en kontaktperson. En postadresse er valgfri, og hvis den angives, bruges den især til at udstede en kvittering for donation. Vi videregiver under ingen omstændigheder disse oplysninger til tredjeparter.',
+            'payment' => 'Vi bruger udelukkende dine betalingsoplysninger til den løbende opkrævning af dit medlemsgebyr. Hvordan vi behandler disse oplysninger, hvem der modtager dem, og hvor længe vi opbevarer dem, er beskrevet under »Betalingsbehandling«.',
+            'reduction' => 'Hvis du ansøger om nedsat medlemsgebyr, behandler vi det bevis, du uploader (f.eks. en oversigt over overførsler), udelukkende med henblik på at kontrollere, om du er berettiget til nedsættelsen. Et sådant bevis kan indeholde særligt følsomme oplysninger i henhold til artikel 9 i GDPR; vi opbevarer det derfor kun så længe, som denne kontrol kræver, og videregiver det ikke til tredjeparter.',
+            'crm' => 'Til administration af medlemskaber bruger vi vores eget medlemsadministrationssystem, som ligeledes drives af SUMA-EV. De ovenfor anførte oplysninger opbevares der i hele medlemskabsperioden og derefter i den lovbestemte opbevaringsperiode. Dit medlemskab er desuden knyttet til en MetaGer-nøgle, hvorigennem dit medlemskontingent krediteres som brugskredit til MetaGer (se »Checkout MetaGer-nøgle«).',
+            'cookies' => 'Ansøgningsformularen og medlemsportalen gemmer ingen cookies, når du blot åbner dem. Først når du indsender en formular eller logger ind på medlemsportalen, gemmer vi en teknisk nødvendig sessionscookie, så vi f.eks. kan vise dig indtastningsfejl eller holde dig logget ind. Den udløber efter to timers inaktivitet og slettes, når du logger ud. Hvis du åbner formularen via et link, der angiver et andet sprog end din browsers sprogindstilling, gemmer vi dette sprog i en cookie, der slettes, når du lukker din browser. Retsgrundlaget er § 25, stk. 2, nr. 2, i TDDDG.',
+        ],
+        'payments' => [
+            'title' => 'Betalingsbehandling',
+            'description' => 'Betalinger til SUMA-EV – i øjeblikket medlemsbidrag, fremover også donationer og MetaGer-nøgler – behandles via vores eget betalingssystem, som ligeledes drives af SUMA-EV. Følgende data genereres:',
+            'ip' => 'Kun ved betaling via SEPA-autogiro: som en del af registreringen af dit autogiromandat (se nedenfor). I øvrigt gemmes oplysningerne ikke.',
+            'useragent' => 'Kun ved betaling via SEPA-autogiro: som en del af registreringen af dit autogiromandat (se nedenfor). I øvrigt gemmes oplysningerne ikke.',
+            'contact' => 'Vi modtager dit navn og din e-mailadresse fra den tjeneste, du betaler for (f.eks. medlemskabsansøgningen). Vi bruger disse oplysninger til at sende dig e-mails vedrørende din betaling, såsom oplysninger om bankoverførsel, betalingslinks eller betalingspåmindelser.',
+            'payment' => 'Afhængigt af betalingsmetode, kontoindehaver og IBAN vises der en henvisning til din PayPal-konto eller dit kort hos den pågældende udbyder samt beløb, tidspunkt og status for hver enkelt betaling.',
+            'methods' => 'Vi behandler selv SEPA-autogiroer og bankoverførsler; autogiroerne indsendes til vores bank med oplysninger om kontohaver, IBAN, beløb og mandatnummer. Når du betaler med PayPal, indtaster du dine oplysninger direkte hos PayPal (Europe) S.à r.l. et Cie, S.C.A.; først når du vælger PayPal som betalingsmetode, indlæser betalingssiden programkode fra PayPal, hvilket giver PayPal din IP-adresse og gør det muligt for dem at sætte deres egne cookies. Når du betaler med kort eller Wero, indtaster du dine oplysninger direkte hos VR Payment GmbH. Vi modtager aldrig kortnumre eller loginoplysninger til PayPal eller Wero, men kun en reference, der giver os mulighed for at opkræve tilbagevendende gebyrer. Retsgrundlaget er artikel 6, stk. 1, litra b), i GDPR.',
+            'mandate' => 'Hvis du giver os en SEPA-direktebetalingsfuldmagt online, gemmer vi oplysninger om fuldmagtens indhold (kontohaver, IBAN, fuldmagtens referencenummer, beløb og interval samt den fuldmagttekst, du har fået vist) sammen med tidspunktet for afgivelsen, din IP-adresse og din user agent. Vi har brug for denne registrering for at kunne bevise over for vores bank, at du har givet mandatet, hvis en direkte debitering bestrides; kun i det tilfælde viser vi den til banken. Retsgrundlaget er artikel 6, stk. 1, litra b), i GDPR og vores legitime interesse i at kunne bevise mandatet (artikel 6, stk. 1, litra f), i GDPR).',
+            'cookies' => 'Selve betalingssiderne gemmer ingen cookies, når du åbner dem. Kun hvis dine indtastninger er ufuldstændige eller ugyldige, gemmer vi kortvarigt en teknisk nødvendig sessionscookie for at vise dig fejlene; den slettes, så snart fejlene er blevet vist (§ 25, stk. 2, nr. 2, i TDDDG).',
+            'retention' => 'Hvis en betaling ikke gennemføres, fordi du afbryder den, sletter vi dit navn og din e-mailadresse en uge efter, at betalingsprocessen er udløbet. Hvis f.eks. en medlemsansøgning afvises, før der er opkrævet noget, sletter vi straks dine betalingsoplysninger og fuldmagtoplysningerne. Alle øvrige betalingsoplysninger og fuldmagtoptegnelser opbevares, så længe betalingsforholdet består, og derefter i den lovbestemte opbevaringsperiode (op til 10 år).',
+        ],
     ],
     'description' => [
         'title' => 'Beskrivelse af de resulterende data',
@@ -110,6 +131,10 @@ return [
         'error' => [
             'title' => 'Fejlrapport (stakspor)',
             'description' => 'Når der opstår en teknisk fejl i vores applikation, genereres der automatisk en fejlbeskrivelse sammen med et stack trace. Det viser os, hvor i kildekoden fejlen opstod, så vi kan rette den.',
+        ],
+        'reduction' => [
+            'title' => 'Bevis for nedsat medlemsgebyr',
+            'description' => 'Et dokument, du uploader for at dokumentere din ret til et nedsat medlemsgebyr, f.eks. en kvittering, der bekræfter modtagelsen af overførselsbeløb.',
         ],
     ],
     'rights' => [
@@ -181,6 +206,7 @@ return [
         'optional' => 'valgfri',
         'unused' => 'Vil ikke blive gemt eller delt.',
         'error' => 'Fejlrapport',
+        'reduction' => 'Bevis for reduktion',
     ],
     'monitoring' => [
         'title' => 'Fejlsporing og applikationsovervågning',

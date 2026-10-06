@@ -43,6 +43,10 @@ return [
             'title' => 'Segnalazione di errore (traccia dello stack)',
             'description' => 'Quando si verifica un errore tecnico nella nostra applicazione, viene generata automaticamente una descrizione dell\'errore accompagnata da una traccia dello stack. Questo ci permette di individuare il punto del codice sorgente in cui si è verificato l\'errore, in modo da poterlo correggere.',
         ],
+        'reduction' => [
+            'title' => 'Giustificativo per una quota associativa ridotta',
+            'description' => 'Un documento da caricare per dimostrare il diritto a una quota associativa ridotta, ad esempio una comunicazione che confermi la ricezione dei pagamenti di trasferimento.',
+        ],
     ],
     'base' => [
         'title' => 'Base giuridica del trattamento',
@@ -103,6 +107,7 @@ return [
         'message' => 'Messaggio',
         'unused' => 'Non verrà salvato o condiviso.',
         'error' => 'Segnalazione di errore',
+        'reduction' => 'Dimostrazione della riduzione',
     ],
     'principles' => [
         'description' => 'Come associazione senza scopo di lucro, ci impegniamo per il libero accesso alla conoscenza. Poiché sappiamo che la libera ricerca non è compatibile con la sorveglianza di massa, prendiamo molto sul serio anche la protezione dei dati. Abbiamo sempre trattato solo i dati assolutamente necessari per il funzionamento dei nostri servizi. La protezione dei dati è sempre il nostro standard. Non effettuiamo profilazione, ossia la creazione automatica di profili di utenti.',
@@ -171,6 +176,27 @@ return [
             'description' => 'Quando si utilizza il plugin MetaGer, vengono generati i seguenti dati:',
         ],
         'title' => 'Dati in arrivo per contesto',
+        'membership' => [
+            'title' => 'Richiesta e gestione dell\'iscrizione a SUMA-EV',
+            'description' => 'Al momento della richiesta di adesione a SUMA-EV e per tutta la durata dell\'adesione, vengono generati i seguenti dati:',
+            'contact' => 'Per le persone fisiche: nome e indirizzo e-mail; per le organizzazioni: nome dell’organizzazione, dimensioni approssimative e nome e indirizzo e-mail di una persona di contatto. L’indirizzo postale è facoltativo e, se fornito, viene utilizzato in particolare per l’emissione di una ricevuta di donazione. In nessun caso trasmettiamo questi dati a terzi.',
+            'payment' => 'Utilizziamo i tuoi dati di pagamento esclusivamente per l\'addebito ricorrente della quota associativa. Le modalità di trattamento di tali dati, i destinatari e il periodo di conservazione sono descritti nella sezione "Elaborazione dei pagamenti".',
+            'reduction' => 'Se richiedi una quota associativa ridotta, trattiamo la documentazione che carichi (ad esempio, un avviso di pagamento) esclusivamente per verificare il tuo diritto alla riduzione. Tale documentazione può contenere dati particolarmente sensibili ai sensi dell’art. 9 del GDPR; pertanto, la conserviamo solo per il tempo necessario a tale verifica e non la trasmettiamo a terzi.',
+            'crm' => 'Per gestire le iscrizioni, utilizziamo il nostro sistema di gestione delle iscrizioni, gestito anch’esso da SUMA-EV. I dati sopra elencati vengono conservati in tale sistema per tutta la durata della vostra iscrizione e, successivamente, per la durata dei periodi di conservazione previsti dalla legge. La tua iscrizione è inoltre collegata a una chiave MetaGer, tramite la quale la quota associativa viene accreditata come credito di utilizzo per MetaGer (vedi «Checkout chiave MetaGer»).',
+            'cookies' => 'Il modulo di richiesta e il portale dei membri non impostano cookie quando li si apre semplicemente. Solo una volta inviato un modulo o effettuato l’accesso al portale dei membri, impostiamo un cookie di sessione tecnicamente necessario, in modo da poter, ad esempio, segnalare eventuali errori di inserimento dati o mantenere attivo l’accesso. Il cookie decade dopo due ore di inattività e viene cancellato al momento della disconnessione. Se si apre il modulo tramite un link che indica una lingua diversa dall’impostazione linguistica del browser, memorizziamo tale lingua in un cookie che viene cancellato alla chiusura del browser. La base giuridica è l’articolo 25, paragrafo 2, n. 2 della TDDDG.',
+        ],
+        'payments' => [
+            'title' => 'Elaborazione dei pagamenti',
+            'description' => 'I pagamenti a favore di SUMA-EV – attualmente le quote associative, in futuro anche le donazioni e le chiavi MetaGer – vengono elaborati dal nostro sistema di pagamento, gestito anch’esso da SUMA-EV. Vengono generati i seguenti dati:',
+            'ip' => 'Solo in caso di pagamento tramite addebito diretto SEPA: nell’ambito della registrazione del mandato di addebito diretto (vedi sotto). In caso contrario, il dato non viene conservato.',
+            'useragent' => 'Solo in caso di pagamento tramite addebito diretto SEPA: nell’ambito della registrazione del mandato di addebito diretto (vedi sotto). In caso contrario, il dato non viene conservato.',
+            'contact' => 'Riceviamo il tuo nome e il tuo indirizzo e-mail dal servizio per cui stai effettuando il pagamento (ad esempio, la richiesta di iscrizione). Li utilizziamo per inviarti e-mail relative al pagamento, quali i dettagli per il bonifico bancario, i link per il pagamento o i promemoria di pagamento.',
+            'payment' => 'A seconda del metodo di pagamento, del titolare del conto e dell’IBAN, un riferimento al tuo conto PayPal o alla tua carta presso il rispettivo fornitore, nonché l’importo, l’ora e lo stato di ciascun pagamento.',
+            'methods' => 'Gestiamo direttamente gli addebiti diretti SEPA e i bonifici bancari; gli addebiti diretti vengono inviati alla nostra banca indicando il titolare del conto, l’IBAN, l’importo e il riferimento del mandato. Quando paghi con PayPal, inserisci i tuoi dati direttamente presso PayPal (Europe) S.à r.l. et Cie, S.C.A.; solo dopo aver scelto PayPal come metodo di pagamento, la pagina di pagamento carica il codice di programma di PayPal, che fornisce a PayPal il tuo indirizzo IP e gli consente di impostare i propri cookie. Quando si paga con carta o tramite Wero, si inseriscono i propri dati direttamente presso VR Payment GmbH. Non riceviamo mai numeri di carta né dati di accesso a PayPal o Wero, ma solo un riferimento che ci consente di riscuotere gli addebiti ricorrenti. La base giuridica è l’art. 6, comma 1, lett. b) del GDPR.',
+            'mandate' => 'Se ci conferisci online un mandato di addebito diretto SEPA, conserviamo una registrazione del contenuto del mandato (titolare del conto, IBAN, riferimento del mandato, importo e periodicità, testo del mandato che ti è stato mostrato) insieme all’ora in cui è stato conferito, al tuo indirizzo IP e al tuo user agent. Abbiamo bisogno di questa registrazione per dimostrare alla nostra banca che hai conferito il mandato nel caso in cui un addebito diretto venga contestato; solo in tal caso la mostriamo alla banca. La base giuridica è l’art. 6, comma 1, lett. b) del GDPR e il nostro legittimo interesse a poter dimostrare l’esistenza del mandato (art. 6, comma 1, lett. f) del GDPR).',
+            'cookies' => 'Le pagine di pagamento non impostano alcun cookie quando vengono aperte. Solo nel caso in cui i dati inseriti siano incompleti o non validi, impostiamo temporaneamente un cookie di sessione tecnicamente necessario per segnalare gli errori; tale cookie viene cancellato non appena gli errori sono stati segnalati (art. 25, comma 2, n. 2 della TDDDG).',
+            'retention' => 'Se un pagamento non va a buon fine perché lo interrompi, cancelliamo il tuo nome e il tuo indirizzo e-mail una settimana dopo la scadenza della procedura di pagamento. Se, ad esempio, una richiesta di iscrizione viene rifiutata prima che sia stato addebitato alcun importo, cancelliamo immediatamente i tuoi dati di pagamento e la registrazione dell’autorizzazione. Tutti gli altri dati di pagamento e le registrazioni relative alle autorizzazioni vengono conservati per tutta la durata del rapporto di pagamento e, successivamente, per la durata dei periodi di conservazione previsti dalla legge (fino a 10 anni).',
+        ],
     ],
     'hosting' => [
         'description' => 'I nostri servizi sono amministrati da noi, il SUMA-EV, e gestiti su hardware noleggiato da Hetzner Online GmbH.',

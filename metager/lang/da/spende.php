@@ -40,8 +40,13 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Kredit-/betalingskort',
+            'wero_link' => 'Wero',
         ],
         'heading' => 'Hvordan vil du gerne foretage betalingen?',
+        'name' => [
+            'label' => 'Dit navn',
+            'placeholder' => 'John Smith',
+        ],
     ],
     'amount' => [
         'description' => 'Først skal du vælge det beløb, du gerne vil donere. Derefter kan du vælge den ønskede betalingsmetode.',
@@ -240,6 +245,21 @@ return [
         'errors' => [
             'authorization_denied' => 'Betalingen kunne ikke godkendes',
             'capture_failed' => 'Betalingen kunne ikke opfanges',
+        ],
+        'error' => [
+            'unavailable' => 'Betalingen kunne ikke gennemføres lige nu. Prøv venligst igen om et par minutter.',
+        ],
+        'wero_link' => [
+            'description' => 'Du vil hver periode modtage et Wero-betalingslink via e-mail, som du bruger til at bekræfte donationen via din banks Wero-app. Der er tale om en løbende betalingsfuldmagt — det er ikke muligt at foretage en engangsdonation via Wero.',
+            'name' => [
+                'label' => 'Dit navn',
+                'placeholder' => 'John Smith',
+            ],
+            'email' => [
+                'label' => 'Din e-mailadresse',
+                'placeholder' => 'john.smith@example.com',
+            ],
+            'submit' => 'Opret en donation',
         ],
     ],
     'thankyou' => [

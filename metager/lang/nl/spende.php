@@ -61,6 +61,7 @@ return [
         ],
         'name' => [
             'label' => 'Je naam',
+            'placeholder' => 'John Smith',
         ],
     ],
     'execute-payment' => [
@@ -242,6 +243,7 @@ return [
             'description' => 'Je ontvangt elke periode per e-mail een Wero-betalingslink, waarmee je de donatie via de Wero-app van je bank kunt bevestigen. Dit is een doorlopende machtiging — een eenmalige Wero-donatie is niet mogelijk.',
             'name' => [
                 'label' => 'Je naam',
+                'placeholder' => 'John Smith',
             ],
             'email' => [
                 'label' => 'Je e-mailadres',

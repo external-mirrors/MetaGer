@@ -69,6 +69,10 @@ return [
             'paidy' => 'Paidy',
             'card' => 'Tarjeta de crédito/débito',
         ],
+        'name' => [
+            'label' => 'Su nombre',
+            'placeholder' => 'Max Mustermann',
+        ],
     ],
     'execute-payment' => [
         'heading' => 'Pago completo',
@@ -241,6 +245,15 @@ return [
         'errors' => [
             'authorization_denied' => 'No se ha podido autorizar el pago',
             'capture_failed' => 'El pago no pudo ser capturado',
+        ],
+        'wero_link' => [
+            'name' => [
+                'label' => 'Su nombre',
+                'placeholder' => 'Max Mustermann',
+            ],
+            'email' => [
+                'label' => 'Su dirección de correo electrónico',
+            ],
         ],
     ],
     'thankyou' => [

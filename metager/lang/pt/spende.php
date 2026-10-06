@@ -35,6 +35,7 @@ return [
         'heading' => 'Como gostaria de efetuar o pagamento?',
         'name' => [
             'label' => 'O teu nome',
+            'placeholder' => 'John Smith',
         ],
     ],
     'thankyou' => [
@@ -258,6 +259,7 @@ return [
             'description' => 'Receberá por e-mail, em cada período, um link de pagamento da Wero, que deverá utilizar para confirmar a doação através da aplicação da Wero do seu banco. Trata-se de uma autorização recorrente — não é possível efetuar uma doação pontual à Wero.',
             'name' => [
                 'label' => 'O teu nome',
+                'placeholder' => 'John Smith',
             ],
             'email' => [
                 'label' => 'O teu endereço de e-mail',

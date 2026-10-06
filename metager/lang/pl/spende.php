@@ -67,6 +67,10 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Karta kredytowa/debetowa',
+            'wero_link' => 'Wero',
+        ],
+        'name' => [
+            'label' => 'Twoje imię i nazwisko',
         ],
     ],
     'execute-payment' => [
@@ -240,6 +244,20 @@ return [
         'errors' => [
             'authorization_denied' => 'Płatność nie mogła zostać autoryzowana',
             'capture_failed' => 'Płatność nie mogła zostać przechwycona',
+        ],
+        'error' => [
+            'unavailable' => 'W tej chwili nie można zrealizować płatności. Proszę spróbować ponownie za kilka minut.',
+        ],
+        'wero_link' => [
+            'description' => 'W każdym okresie otrzymasz e-mailem link płatniczy Wero, za pomocą którego potwierdzisz darowiznę w aplikacji Wero swojego banku. Jest to zlecenie cykliczne — nie ma możliwości dokonania jednorazowej darowizny za pośrednictwem Wero.',
+            'name' => [
+                'label' => 'Twoje imię i nazwisko',
+            ],
+            'email' => [
+                'label' => 'Twój adres e-mail',
+                'placeholder' => 'john.smith@example.com',
+            ],
+            'submit' => 'Skonfiguruj darowiznę',
         ],
     ],
     'thankyou' => [

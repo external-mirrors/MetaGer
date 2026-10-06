@@ -57,6 +57,10 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Creditcard/Debetaalpas',
+            'wero_link' => 'Wero',
+        ],
+        'name' => [
+            'label' => 'Je naam',
         ],
     ],
     'execute-payment' => [
@@ -230,6 +234,20 @@ return [
         'errors' => [
             'authorization_denied' => 'De betaling kon niet worden geautoriseerd',
             'capture_failed' => 'De betaling kon niet worden vastgelegd',
+        ],
+        'error' => [
+            'unavailable' => 'De betaling kon op dit moment niet worden verwerkt. Probeer het over een paar minuten nog eens.',
+        ],
+        'wero_link' => [
+            'description' => 'Je ontvangt elke periode per e-mail een Wero-betalingslink, waarmee je de donatie via de Wero-app van je bank kunt bevestigen. Dit is een doorlopende machtiging — een eenmalige Wero-donatie is niet mogelijk.',
+            'name' => [
+                'label' => 'Je naam',
+            ],
+            'email' => [
+                'label' => 'Je e-mailadres',
+                'placeholder' => 'john.smith@example.com',
+            ],
+            'submit' => 'Donatie instellen',
         ],
     ],
     'thankyou' => [

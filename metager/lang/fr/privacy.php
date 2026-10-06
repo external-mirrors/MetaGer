@@ -43,6 +43,10 @@ return [
             'description' => 'Lorsqu\'une erreur technique survient dans notre application, une description de l\'erreur accompagnée d\'une trace de pile est automatiquement générée. Cela nous permet de localiser l\'endroit où l\'erreur s\'est produite dans le code source afin de pouvoir la corriger.',
             'title' => 'Rapport d\'erreur (trace de pile)',
         ],
+        'reduction' => [
+            'title' => 'Justificatif permettant de bénéficier d\'une réduction sur la cotisation',
+            'description' => 'Un document que vous téléchargez pour justifier votre droit à une cotisation réduite, par exemple un avis confirmant la réception de prestations sociales.',
+        ],
     ],
     'base' => [
         'title' => 'Base juridique du traitement',
@@ -103,6 +107,7 @@ return [
         'optional' => 'facultatif',
         'unused' => 'Ne sera ni sauvegardé ni partagé.',
         'error' => 'Rapport d\'erreur',
+        'reduction' => 'Preuve de réduction',
     ],
     'title' => 'Politique de confidentialité',
     'responsible_party' => [
@@ -175,6 +180,27 @@ return [
         'plugin' => [
             'title' => 'Utilisation du plugin MetaGer',
             'description' => 'Lors de l\'utilisation du plugin MetaGer, les données suivantes sont générées :',
+        ],
+        'membership' => [
+            'title' => 'Demande d\'adhésion à SUMA-EV et gestion de l\'adhésion',
+            'description' => 'Lors de votre demande d\'adhésion à SUMA-EV, et pendant toute la durée de votre adhésion, les données suivantes sont générées :',
+            'contact' => 'Pour les particuliers : nom et adresse e-mail ; pour les organisations : nom de l\'organisation, taille approximative, ainsi que nom et adresse e-mail d\'une personne de contact. L\'adresse postale est facultative et, si elle est fournie, elle sert notamment à établir un reçu de don. Nous ne transmettons en aucun cas ces données à des tiers.',
+            'payment' => 'Nous utilisons vos informations de paiement exclusivement pour le prélèvement récurrent de votre cotisation. La manière dont nous les traitons, les destinataires de ces informations et la durée de leur conservation sont décrites dans la rubrique « Traitement des paiements ».',
+            'reduction' => 'Si vous demandez à bénéficier d\'une réduction de votre cotisation, nous traitons le justificatif que vous téléchargez (par exemple, un relevé de virement) dans le seul but de vérifier que vous remplissez les conditions requises pour bénéficier de cette réduction. Ce justificatif peut contenir des données particulièrement sensibles au sens de l\'article 9 du RGPD ; nous ne le conservons donc que pendant la durée nécessaire à cette vérification et ne le transmettons pas à des tiers.',
+            'crm' => 'Pour gérer les adhésions, nous utilisons notre propre système de gestion des adhésions, également exploité par SUMA-EV. Les données mentionnées ci-dessus y sont conservées pendant toute la durée de votre adhésion, puis pendant la durée des délais de conservation prévus par la loi. Votre adhésion est également associée à une clé MetaGer, grâce à laquelle votre cotisation est créditée sous forme de crédit d\'utilisation pour MetaGer (voir « Clé MetaGer de paiement »).',
+            'cookies' => 'Le formulaire de demande et le portail des membres n\'enregistrent aucun cookie lorsque vous vous contentez de les ouvrir. Ce n\'est que lorsque vous envoyez un formulaire ou que vous vous connectez au portail des membres que nous installons un cookie de session techniquement nécessaire, afin, par exemple, de vous signaler des erreurs de saisie ou de maintenir votre connexion. Ce cookie expire après deux heures d\'inactivité et est supprimé lorsque vous vous déconnectez. Si vous ouvrez le formulaire via un lien indiquant une langue différente de celle définie dans les paramètres de votre navigateur, nous enregistrons cette langue dans un cookie qui est supprimé lorsque vous fermez votre navigateur. La base juridique est l\'article 25, paragraphe 2, point 2, de la TDDDG.',
+        ],
+        'payments' => [
+            'title' => 'Traitement des paiements',
+            'description' => 'Les paiements versés à SUMA-EV – qui concernent actuellement les cotisations, mais concerneront à l\'avenir également les dons et les clés MetaGer – sont traités par notre propre système de paiement, également géré par SUMA-EV. Les données suivantes sont générées :',
+            'ip' => 'Uniquement en cas de paiement par prélèvement SEPA : dans le cadre de l\'enregistrement de votre mandat de prélèvement (voir ci-dessous). Dans le cas contraire, cette information n\'est pas conservée.',
+            'useragent' => 'Uniquement en cas de paiement par prélèvement SEPA : dans le cadre de l\'enregistrement de votre mandat de prélèvement (voir ci-dessous). Dans le cas contraire, cette information n\'est pas conservée.',
+            'contact' => 'Nous recevons votre nom et votre adresse e-mail de la part du service pour lequel vous effectuez un paiement (par exemple, la demande d\'adhésion). Nous les utilisons pour vous envoyer des e-mails concernant votre paiement, tels que les coordonnées bancaires, les liens de paiement ou les rappels de paiement.',
+            'payment' => 'En fonction du mode de paiement, du titulaire du compte et de l\'IBAN, une référence à votre compte PayPal ou à votre carte auprès de l\'opérateur concerné, ainsi que le montant, la date et le statut de chaque paiement.',
+            'methods' => 'Nous traitons nous-mêmes les prélèvements SEPA et les virements bancaires ; les prélèvements sont transmis à notre banque avec les informations relatives au titulaire du compte, l\'IBAN, le montant et la référence du mandat. Lorsque vous payez via PayPal, vous saisissez vos informations directement auprès de PayPal (Europe) S.à r.l. et Cie, S.C.A. ; ce n’est qu’une fois que vous avez choisi PayPal comme moyen de paiement que la page de paiement charge le code de programme de PayPal, ce qui communique votre adresse IP à PayPal et lui permet d’installer ses propres cookies. Lorsque vous payez par carte bancaire ou via Wero, vous saisissez vos informations directement auprès de VR Payment GmbH. Nous ne recevons jamais de numéros de carte ni d’identifiants PayPal ou Wero, mais uniquement une référence qui nous permet de prélever les frais récurrents. La base juridique est l’article 6, paragraphe 1, point b) du RGPD.',
+            'mandate' => 'Si vous nous donnez un mandat de prélèvement SEPA en ligne, nous conservons une trace du contenu de ce mandat (titulaire du compte, IBAN, référence du mandat, montant et fréquence, texte du mandat qui vous a été présenté), ainsi que l\'heure à laquelle il a été donné, votre adresse IP et votre agent utilisateur. Nous avons besoin de cet enregistrement pour prouver à notre banque que vous avez donné le mandat en cas de contestation d’un prélèvement ; ce n’est que dans ce cas que nous le communiquons à la banque. La base juridique est l’article 6, paragraphe 1, point b) du RGPD et notre intérêt légitime à pouvoir prouver l’existence du mandat (article 6, paragraphe 1, point f) du RGPD).',
+            'cookies' => 'Les pages de paiement elles-mêmes n\'installent aucun cookie lorsque vous les ouvrez. Ce n\'est que si les informations que vous avez saisies sont incomplètes ou non valides que nous installons brièvement un cookie de session techniquement nécessaire afin de vous signaler les erreurs ; celui-ci est supprimé dès que ces erreurs ont été signalées (article 25, paragraphe 2, point 2, de la TDDDG).',
+            'retention' => 'Si un paiement n\'est pas effectué parce que vous y avez renoncé, nous supprimons votre nom et votre adresse e-mail une semaine après l\'expiration du délai de paiement. Si, par exemple, une demande d\'adhésion est refusée avant qu\'un prélèvement n\'ait été effectué, nous supprimons immédiatement vos informations de paiement et l\'enregistrement de l\'autorisation de prélèvement. Toutes les autres informations de paiement et tous les enregistrements de mandat sont conservés tant que la relation de paiement existe, puis pendant la durée des délais de conservation légaux (jusqu’à 10 ans).',
         ],
     ],
     'introduction' => 'Pour une transparence maximale, nous énumérons les données que nous collectons auprès de vous et l\'usage que nous en faisons. La protection de vos données est importante pour nous et devrait l\'être pour vous aussi. <strong>Veuillez lire attentivement cette déclaration ; il en va de votre intérêt.</strong>',

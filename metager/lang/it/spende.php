@@ -172,6 +172,21 @@ return [
             'authorization_denied' => 'Non è stato possibile autorizzare il pagamento',
             'capture_failed' => 'Non è stato possibile catturare il pagamento',
         ],
+        'error' => [
+            'unavailable' => 'Al momento non è stato possibile elaborare il pagamento. Si prega di riprovare tra qualche minuto.',
+        ],
+        'wero_link' => [
+            'description' => 'Ogni periodo riceverai via e-mail un link di pagamento Wero, che dovrai utilizzare per confermare la donazione dall\'app Wero della tua banca. Si tratta di un mandato ricorrente: non è prevista la possibilità di effettuare una donazione Wero una tantum.',
+            'name' => [
+                'label' => 'Il tuo nome',
+                'placeholder' => 'John Smith',
+            ],
+            'email' => [
+                'label' => 'Il tuo indirizzo e-mail',
+                'placeholder' => 'john.smith@example.com',
+            ],
+            'submit' => 'Imposta una donazione',
+        ],
     ],
     'amount' => [
         'description' => 'Innanzitutto, selezionate l\'importo che desiderate donare. Quindi è possibile selezionare il metodo di pagamento desiderato.',
@@ -219,8 +234,13 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Carta di credito/debito',
+            'wero_link' => 'Wero',
         ],
         'heading' => 'Come desidera effettuare il pagamento?',
+        'name' => [
+            'label' => 'Il tuo nome',
+            'placeholder' => 'John Smith',
+        ],
     ],
     'thankyou' => [
         'heading' => 'Grazie mille!',

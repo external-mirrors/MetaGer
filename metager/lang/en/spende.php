@@ -38,6 +38,10 @@ return [
     ],
     'payment-method' => [
         'heading' => 'How would you like to make the payment?',
+        'name' => [
+            'label' => 'Your name',
+            'placeholder' => 'John Smith',
+        ],
         'methods' => [
             'banktransfer' => 'Bank transfer',
             'directdebit' => 'Sepa direct debit',
@@ -67,6 +71,7 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Credit/Debit Card',
+            'wero_link' => 'Wero',
         ],
     ],
     'execute-payment' => [
@@ -75,6 +80,9 @@ return [
         'errors' => [
             'authorization_denied' => 'The payment couldn\'t be authorized',
             'capture_failed' => 'The payment couldn\'t be captured'
+        ],
+        'error' => [
+            'unavailable' => 'The payment could not be prepared right now. Please try again in a few minutes.',
         ],
         'card' => [
             'loading' => 'Loading Creditcard Form',
@@ -239,6 +247,18 @@ return [
                 'error' => 'The IBAN entered is invalid.',
             ],
             'submit' => 'Make payment',
+        ],
+        'wero_link' => [
+            'description' => 'You will receive a Wero payment link by email each period, which you use to confirm the donation from your bank\'s Wero app. This is a recurring mandate — a one-time Wero donation is not offered.',
+            'name' => [
+                'label' => 'Your name',
+                'placeholder' => 'John Smith',
+            ],
+            'email' => [
+                'label' => 'Your email address',
+                'placeholder' => 'john.smith@example.com',
+            ],
+            'submit' => 'Set up donation',
         ],
         'processing' => 'Payment is processed',
     ],

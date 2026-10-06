@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Membership\MembershipApplication;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
@@ -40,10 +39,37 @@ class MembershipAppCallbackCarryTest extends TestCase
         parent::setUp();
 
         Http::preventStrayRequests();
+        config([
+            "metager.metager.crm.url" => "https://crm.example.com",
+            "metager.metager.crm.internal_url" => "https://crm.example.com",
+            "metager.metager.crm.token" => "test-token",
+        ]);
         // Angemeldet unterwegs: die Seiten fragen den Keyserver nach dem Konto,
         // zu dem das Cookie gehört (Guthaben, Zustand). Hier ist der Schlüssel
         // Kulisse — geprüft wird der Weg, den die Marker nehmen.
-        Http::fake(["*" => Http::response(["key" => self::A_KEY, "charge" => 0])]);
+        //
+        // suma-crm eröffnet im letzten Schritt die Checkout-Sitzung. Die Fälschung
+        // gibt als `checkout_url` den `return_url` zurück, den sie bekommen hat —
+        // so, als wäre der Besucher bei suma-payments sofort fertig geworden UND
+        // gleich über suma-crms Rückgabe-Hop zurückgereicht worden, samt der dort
+        // angehängten `payment_method` (siehe MembershipCheckoutReturnController
+        // in suma-crm — dessen eigenes Verhalten hat dort seine eigenen Tests,
+        // hier zählt nur, dass der Marker den ganzen Weg übersteht). Genau dieser
+        // URL ist die Stelle, an der die Marker die Zahlungsstrecke überqueren
+        // müssen; trägt er sie nicht, endet der Weg ohne sie.
+        Http::fake(function ($request) {
+            if (str($request->url())->contains("/api/membership-checkouts")) {
+                $returnUrl = $request["return_url"];
+                $returnUrl .= (str_contains($returnUrl, "?") ? "&" : "?") . "payment_method=banktransfer";
+
+                return Http::response([
+                    "payment_reference" => "M-TESTREFERENCE",
+                    "checkout_url" => $returnUrl,
+                ], 201);
+            }
+
+            return Http::response(["key" => self::A_KEY, "charge" => 0]);
+        });
         // Der letzte Schritt benachrichtigt die Verwaltung.
         Mail::fake();
     }
@@ -94,12 +120,14 @@ class MembershipAppCallbackCarryTest extends TestCase
 
         $url = $this->step($url, ["amount" => "10.00"])->headers->get("Location");
         $url = $this->step($url, ["interval" => "monthly"])->headers->get("Location");
-        $url = $this->step($url, ["payment-method" => "banktransfer"])->headers->get("Location");
 
-        // Das Formular schickt einen fertigen Antrag selbst auf die Erfolgsseite.
-        return $this->withUnencryptedCookies(["key" => self::A_KEY])
-            ->get(strtok($url, "#"))
-            ->headers->get("Location");
+        // Der letzte Schritt verlangt kein eigenes Feld mehr — die Zahlungsart
+        // wird nicht mehr im Formular gewählt. Er führt nicht mehr auf das
+        // Formular zurück, sondern zur gehosteten Checkout-Seite — und von
+        // dort auf den `return_url`, also die Erfolgsseite. Die Fälschung oben
+        // kürzt beides zu einer Weiterleitung ab, weil suma-payments hier
+        // nicht läuft.
+        return $this->step($url, [])->headers->get("Location");
     }
 
     public function testTheMarkersSurviveEveryStep(): void
@@ -121,9 +149,17 @@ class MembershipAppCallbackCarryTest extends TestCase
     public function testTheWayEndsOnTheSuccessPage(): void
     {
         $success = $this->walkTheForm();
-        $application = MembershipApplication::orderBy("created_at", "desc")->first();
 
-        $this->assertStringContainsString("/membership/success/" . $application->id, $success);
+        // Not looked up via MembershipApplication::orderBy(...)->first():
+        // this application is a non-reduced, non-company, non-update one
+        // (banktransfer, per walkTheForm()), so by the time this line runs
+        // it has already been pushed into suma-crm's own review queue and
+        // deleted locally (see MembershipController::maybePushToSumaCrm(),
+        // docs/civicrm-replacement.md "Membership application review moves
+        // to suma-crm") — there is nothing left in this table to look up.
+        // The success URL itself is the thing under test: it must carry an
+        // application_id segment, not the bare key a stale redirect used to.
+        $this->assertMatchesRegularExpression('#/membership/success/[0-9a-f-]{36}(\?|$)#', $success);
 
         $this->withUnencryptedCookies(["key" => self::A_KEY])
             ->get($success)

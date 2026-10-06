@@ -6,17 +6,22 @@ use Illuminate\Support\Facades\Vite;
 use App;
 use App\Authentication\KeyBackup;
 use App\Authentication\KeyIssuer;
+use App\Authentication\KeyUser;
 use App\Landing\AppCallback;
 use App\Localization;
+use App\Localization\LocaleContext;
 use App\Mail\Membership\ApplicationDeny;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\ReductionDeny;
 use App\Mail\Membership\WelcomeMail;
+use App\Membership\MembershipApplicationPusher;
+use App\Membership\MembershipCheckoutIssuer;
+use App\Membership\MembershipCheckoutVoider;
+use App\Membership\MembershipIssuer;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
 use App\Models\Membership\MembershipPaymentPaypal;
 use App\Models\Membership\PayPal;
-use App\Rules\IBANValidator;
 use Arr;
 use Artisan;
 use Cache;
@@ -43,9 +48,21 @@ class MembershipController extends Controller
     /**
      * First stage of membership form
      * gather information for contact data
+     *
+     * A brand-new visitor (no `$application_id` — nothing in flight to
+     * resume) is sent straight to suma-crm's own native application form
+     * instead of starting the multi-step form below; see
+     * crmMembershipFormUrl()'s own docblock. Everything from here down
+     * exists solely to let an application already in progress — a resume
+     * link an earlier email sent out, a bookmarked step — finish the flow
+     * it started; nothing new can begin on this page any more.
      */
     public function contactData(Request $request, ?string $application_id = null)
     {
+        if ($application_id === null) {
+            return redirect()->away($this->crmMembershipFormUrl($request));
+        }
+
         if (Localization::getLanguage() === "de") {
             $csrf_token = Crypt::encrypt(now()->addHour());
 
@@ -186,6 +203,28 @@ class MembershipController extends Controller
      */
     public function success(Request $request, ?string $application_id = null)
     {
+        // Der Antragsteller trägt die tatsächlich gewählte Zahlungsart erst
+        // jetzt nach — gewählt wurde sie auf suma-payments' eigener
+        // Auswahlseite, nicht im Formular (submitMembershipForm() eröffnet
+        // die Checkout-Sitzung dort ohne bekannte Methode). Das war früher
+        // Teil von submitMembershipForm() selbst, läuft aber erst hier, weil
+        // es erst hier bekannt ist; `payment_method === null` schützt davor,
+        // bei einem erneuten Aufruf dieser Seite (Reload, zurück) doppelt zu
+        // benachrichtigen oder doppelt zu pushen.
+        if ($application_id !== null && $request->query("payment_method") !== null) {
+            $pending = MembershipApplication::find($application_id);
+            if ($pending !== null && $pending->payment_method === null && $pending->payment_reference !== null) {
+                $pending->payment_method = $request->query("payment_method");
+                $pending->save();
+
+                if (!$pending->is_update) {
+                    Artisan::call("membership:notify-admin", ["subject" => "[SUMA-EV] Neuer Aufnahmeantrag"]);
+                }
+
+                $this->maybePushToSumaCrm($pending);
+            }
+        }
+
         $application = null;
         if ($application_id !== null) {
             $application = MembershipApplication::finishedUser()->where("id", "=", $application_id)->first();
@@ -372,19 +411,6 @@ class MembershipController extends Controller
         $validator->sometimes("interval", 'required|in:annual,six-monthly,quarterly,monthly', function (Fluent $input) use ($application) {
             return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval === null;
         });
-        $validator->sometimes("payment-method", 'required|in:directdebit,banktransfer,paypal', function (Fluent $input) use ($application) {
-            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-        });
-        $validator->sometimes("iban", ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()], function (Fluent $input) use ($application) {
-            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-        });
-        $validator->sometimes("bic", ["exclude_unless:payment-method,directdebit", "nullable"], function (Fluent $input) use ($application) {
-            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-        });
-        $validator->sometimes("accountholder", ["exclude_unless:payment-method,directdebit", "nullable", "string", "max:100"], function (Fluent $input) use ($application) {
-            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-        });
-
         if ($validator->fails()) {
             return $this->formAgain($application_id, $validator->errors());
         }
@@ -443,6 +469,17 @@ class MembershipController extends Controller
                 if ($key === null) {
                     return $this->formAgain($application_id, null, "keyserver_unreachable");
                 }
+            } elseif ((new KeyUser($key))->isMember()) {
+                // Legacy's own guard (gap found in live testing): applying
+                // again with a key that already carries an active
+                // membership used to be impossible, and this app dropped
+                // that check somewhere along the way — nothing stopped the
+                // same key from ending up with two or three independent
+                // Membership rows in suma-crm once an admin accepted each
+                // application in turn. Only checked for an existing key,
+                // never a freshly issued one (issue() above), which cannot
+                // be a member yet.
+                return $this->formAgain($application_id, null, "already_member");
             }
         }
 
@@ -528,37 +565,58 @@ class MembershipController extends Controller
             $application->interval = $form_data["interval"];
             $application->save();
             return redirect($membership_form_url . "#membership-payment-method");
-        } elseif ($application->payment_method === null) {
-            switch ($form_data["payment-method"]) {
-                case "banktransfer":
-                    $application->payment_method = $form_data["payment-method"];
-                    $application->save();
-                    break;
-                case "directdebit":
-                    $attributes = [
-                        "iban" => $form_data["iban"],
-                        "bic" => $form_data["bic"],
-                        "accountholder" => $form_data["accountholder"]
-                    ];
-                    if ($application->directdebit !== null)
-                        $application->directdebit()->delete();
-                    $application->directdebit()->create($attributes);
-                    $application->payment_method = $form_data["payment-method"];
-                    $application->save();
-                    break;
-                case "paypal":
-                    return $this->createPayPalAuthorizeOrder(
-                        $application,
-                        $form_data["payment-method"],
-                        route("membership_success", array_merge(["application_id" => $application->id], AppCallback::markers($request))),
-                        $membership_form_url . "#membership-payment-method"
-                    );
+        } elseif ($application->payment_reference === null) {
+            /**
+             * Die Zahlungsart wird nicht mehr hier abgefragt — sie wird auf
+             * suma-payments' eigener Auswahlseite getroffen, nicht in diesem
+             * Formular (siehe die generische Weiter-Schaltfläche in
+             * membership.form). Dieser Schritt eröffnet die Checkout-Sitzung
+             * bereits ohne bekannte Zahlungsart; `payment_method` bleibt an
+             * diesem Antrag null, bis der Antragsteller von suma-payments
+             * zurückkommt und success() ihn nachträgt (siehe dort).
+             *
+             * Früher sammelte dieses Formular die IBAN selbst und legte sie
+             * als MembershipPaymentDirectdebit ab; PayPal lief hier schon
+             * über einen eigenen Redirect (createPayPalAuthorizeOrder). Seit
+             * die Zahlungsabwicklung bei suma-payments liegt, gilt für alle
+             * Verfahren dasselbe: suma-crm eröffnet eine Checkout-Sitzung,
+             * und die gehostete Seite dort nimmt IBAN bzw. PayPal-Freigabe
+             * entgegen.
+             *
+             * Warum hier und nicht erst bei der Annahme durch die Verwaltung:
+             * beim Annehmen ist niemand mehr da, der etwas freigeben könnte.
+             * Die Referenz, die suma-crm dabei vergibt, bleibt am Antrag
+             * stehen und wandert bei der Annahme mit — siehe
+             * {@see \App\Membership\MembershipIssuer}.
+             */
+            $email = $application->contact?->email ?? $application->company?->email;
+
+            if ($email === null) {
+                return $this->formAgain($application_id, null, "crm_unreachable");
             }
 
-            if (!$application->is_update) {
-                Artisan::call("membership:notify-admin", ["subject" => "[SUMA-EV] Neuer Aufnahmeantrag"]);
+            $checkout = app(MembershipCheckoutIssuer::class)->create([
+                "interval" => $application->interval,
+                // Der Monatsbeitrag, nicht der je Zahlungsintervall —
+                // suma-crm rechnet das selbst um (periodAmount()).
+                "amount" => $application->amount,
+                "email" => $email,
+                "name" => $application->contact !== null
+                    ? trim($application->contact->first_name . " " . $application->contact->last_name)
+                    : $application->company?->company,
+                "locale" => $application->locale,
+                "return_url" => route("membership_success", array_merge(["application_id" => $application->id], AppCallback::markers($request))),
+                "cancel_url" => route("membership_abort", ["application_id" => $application->id]),
+            ]);
+
+            if ($checkout === null) {
+                return $this->formAgain($application_id, null, "crm_unreachable");
             }
-            return redirect($membership_form_url);
+
+            $application->payment_reference = $checkout["payment_reference"];
+            $application->save();
+
+            return redirect($checkout["checkout_url"]);
         } else {
             // application_id und nicht key: `key` ist hier kein Routenparameter,
             // sondern landete als Query am Ziel — ein Erfolgs-URL ohne
@@ -769,7 +827,14 @@ class MembershipController extends Controller
 
     public function adminIndex(Request $request)
     {
-        $membership_applications = MembershipApplication::finishedAdmin()->get();
+        // whereNull("pushed_to_crm_at"): a finished new application that has
+        // already moved into suma-crm's own review queue (docs/civicrm-
+        // replacement.md, "Membership application review moves to
+        // suma-crm") has nothing left to decide here — see
+        // maybePushToSumaCrm(). What remains in this list is exactly the
+        // legacy fallback: company applications (never pushed) and any
+        // application a failed push left behind.
+        $membership_applications = MembershipApplication::finishedAdmin()->whereNull("pushed_to_crm_at")->get();
         $membership_update_requests = MembershipApplication::updateRequestsAdmin()->get();
         $reduction_requests = MembershipApplication::reductionRequests()->get();
         $unfinished_applications = MembershipApplication::unfinishedUser()->get();
@@ -838,6 +903,12 @@ class MembershipController extends Controller
 
         $application->reduction->expires_at = $date;
         if ($application->reduction->save()) {
+            // Reduction was the only thing still blocking this application
+            // from suma-crm's own review queue (see maybePushToSumaCrm()) —
+            // check again now that it's resolved, for an application whose
+            // step 4 (checkout) already completed while this was pending.
+            $this->maybePushToSumaCrm($application->fresh());
+
             return redirect(route("membership_admin_overview", ["success" => "Successfully accepted reduction application"]));
         } else {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't update application"]));
@@ -881,74 +952,71 @@ class MembershipController extends Controller
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
         }
         if (!$application->is_update) {
-            // Create CiviCRM contact
-            if ($application->crm_contact === null) {
-                if ($application->company !== null) {
-                    $contact = CiviCrm::FIND_COMPANY($application->company);
-                    if ($contact === null) {
-                        $contact = CiviCrm::CREATE_COMPANY($application->company);
-                        if ($contact !== null && Arr::get($contact, "id") !== null) {
-                            $application->crm_contact = Arr::get($contact, "id");
-                            $application->save();
-                            $application->contact()->delete();
-                        } else {
-                            return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
-                        }
-                    } else if (Arr::get($contact, "id") !== null) {
-                        $application->crm_contact = Arr::get($contact, "id");
-                        $application->save();
-                        $application->contact()->delete();
-                    } else {
-                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
-                    }
-                } elseif ($application->contact !== null) {
-                    $contact = CiviCrm::FIND_CONTACT($application->contact);
-                    if ($contact === null) {
-                        $contact = CiviCrm::CREATE_CONTACT($application->contact);
-                        if ($contact !== null && Arr::get($contact, "id") !== null) {
-                            $application->crm_contact = Arr::get($contact, "id");
-                            $application->save();
-                            $application->contact()->delete();
-                        } else {
-                            return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
-                        }
-                    } else if (Arr::get($contact, "id") !== null) {
-                        $application->crm_contact = Arr::get($contact, "id");
-                        $application->save();
-                    } else {
-                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
-                    }
-                }
+            /**
+             * Neue Mitgliedschaft: das legt jetzt suma-crm an, nicht mehr
+             * CiviCRM. Contact/Organization und Membership entstehen dort in
+             * einer Transaktion; die Referenz, die beim Absenden des
+             * Formulars vergeben wurde, wandert mit, damit suma-crm das
+             * bereits autorisierte Mandat übernimmt statt ein zweites zu
+             * eröffnen.
+             *
+             * Die Willkommensmail verschickt von hier an suma-crm selbst
+             * (App\Mail\WelcomeMail dort, gegen die neu angelegte
+             * Membership) — deshalb fehlt der frühere Mail-Block unten.
+             *
+             * Firmenanträge sind hier bewusst noch nicht dabei: suma-crm
+             * verlangt für eine Company einen eigenen Ansprechpartner
+             * (Vor-/Nachname), über den Membership::recipientEmail() und
+             * resolvedLocale() gehen. CiviCRM hing die Mailadresse direkt an
+             * die Organisation (CiviCrm::CREATE_COMPANY), dieses Formular
+             * erhebt nur Firma/Beschäftigte/E-Mail — es gibt schlicht keinen
+             * Namen zu senden. Lieber ein sichtbarer Fehler als ein
+             * erfundener Ansprechpartner.
+             */
+            if ($application->company !== null) {
+                return redirect(route("membership_admin_overview", ["error" => "[suma-crm] Firmenmitgliedschaften sind noch nicht umgestellt: suma-crm braucht einen Ansprechpartner mit Vor- und Nachnamen, den dieses Formular nicht erhebt."]));
             }
 
-            /**
-             * Create CiviCRM Membership
-             */
-            if ($application->crm_membership === null) {
-                $memberships = CiviCrm::FIND_MEMBERSHIPS($application->crm_contact);
-                if ($memberships === null) {
-                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] An error occured while fetching existing memberships"]));
-                }
-                if (sizeof($memberships) > 0) {
-                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] Contact already has an active membership"]));
-                }
-                $civicrm_membership = CiviCrm::CREATE_MEMBERSHIP($application);
-                if ($civicrm_membership === null) {
-                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] An error occured while creating a new membership"]));
-                } else {
-                    $application->crm_membership = Arr::get($civicrm_membership, "id");
-                    $application->amount = null;
-                    $application->interval = null;
-                    $application->locale = null;
-                    $application->key = null;
-                    $application->payment_reference = null;
-                    $application->save();
-                    if ($application->reduction !== null)
-                        $application->reduction->delete();
-                }
+            if ($application->contact === null) {
+                return redirect(route("membership_admin_overview", ["error" => "[suma-crm] Der Antrag hat weder Kontakt noch Firma."]));
             }
+
+            $membership_id = app(MembershipIssuer::class)->create([
+                "membership_type" => "person",
+                "first_name" => $application->contact->first_name,
+                "last_name" => $application->contact->last_name,
+                "email" => $application->contact->email,
+                "interval" => $application->interval,
+                // Monatsbeitrag — suma-crm rechnet auf das Zahlungsintervall
+                // um (periodAmount(), gap #32).
+                "amount" => $application->amount,
+                "payment_method" => $application->payment_method,
+                // Der beim Absenden des Formulars vergebene Schlüssel wird
+                // belastet, nicht neu erzeugt (KeyCharger dort).
+                "key" => $application->key,
+                "locale" => $application->locale,
+                // Das Mandat steht schon: suma-crm übernimmt die Referenz und
+                // eröffnet keine zweite Checkout-Sitzung, deshalb auch kein
+                // return_url.
+                "payment_reference" => $application->payment_reference,
+            ]);
+
+            if ($membership_id === null) {
+                return redirect(route("membership_admin_overview", ["error" => "[suma-crm] Mitgliedschaft konnte nicht angelegt werden — siehe Log. Der Antrag bleibt offen."]));
+            }
+
+            if ($application->reduction !== null) {
+                $application->reduction->delete();
+            }
+
+            $application->delete();
+
+            return redirect(route("membership_admin_overview", ["success" => "Membership Request accepted"]));
         }
 
+        // Ab hier: nur noch Änderungsanträge (is_update). Unverändert gegen
+        // CiviCRM — suma-crm hat für das Ändern einer bestehenden
+        // Mitgliedschaft noch keinen Endpunkt.
 
         // Add Payment method to CiviCRM
         if (CiviCrm::UPDATE_MEMBERSHIP($application) !== null) {
@@ -990,23 +1058,18 @@ class MembershipController extends Controller
             return redirect(route("membership_admin_overview", ["error" => "Couldn't update membership"]));
         }
 
-        if (!$application->is_update) {
-            try {
-                $mail = new WelcomeMail($application->crm_membership, $request->input("message", ""));
-                if (Mail::mailer("membership")->send($mail) === null) {
-                    return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
-                }
-            } catch (Exception $e) {
-                return redirect(route("membership_admin_overview", ["error" => sprintf("[Welcome Mail] Error while sending welcome mail: %s", $e->getMessage())]));
-            }
-        }
+        // Keine Willkommensmail mehr an dieser Stelle: der Zweig, der sie
+        // verschickt hätte, ist der Neuantrag — und der kehrt oben schon
+        // zurück, nachdem suma-crm die Mitgliedschaft (und damit seine
+        // eigene WelcomeMail) angelegt hat. Ein Änderungsantrag bekam hier
+        // noch nie eine.
 
         $application->delete();
 
         return redirect(route("membership_admin_overview", ["success" => "Membership Request accepted"]));
     }
 
-    public function adminDeny(Request $request)
+    public function adminDeny(Request $request, MembershipCheckoutVoider $voider)
     {
         switch ($request->input("type", "application")) {
             case "application":
@@ -1022,6 +1085,17 @@ class MembershipController extends Controller
 
         if ($application === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
+        }
+
+        /**
+         * Neuantrag mit bereits eröffnetem (held) Mandat bei suma-payments —
+         * das Formular hat Schritt 1 (§1.4) schon durchlaufen, aber niemand
+         * hat adminAccept() aufgerufen, das es freigeben würde. Ein
+         * Änderungsantrag (is_update) durchläuft diesen Pfad nie, siehe
+         * adminAccept()s eigene Verzweigung.
+         */
+        if (!$application->is_update && $application->payment_reference !== null) {
+            $voider->void($application->payment_reference);
         }
 
         if ($application->directdebit !== null) {
@@ -1072,6 +1146,63 @@ class MembershipController extends Controller
      * Nicht-UUID-Schlüssel per MD5 in denselben Raum ({@see KeyIssuer}), und
      * wer noch einen davon hat, soll ihn behalten.
      */
+    /**
+     * Once a new (non-update) application has both a mandate (step 4, §1.4
+     * — {@see MembershipCheckoutIssuer} already ran) and a resolved fee (no
+     * reduction still pending review), it moves to suma-crm's own admin
+     * review queue rather than waiting on the legacy adminAccept()/
+     * adminDeny() flow here — see docs/civicrm-replacement.md, "Membership
+     * application review moves to suma-crm". Called right after step 4
+     * completes (the common case) and again from
+     * adminMembershipReductionAccept() (the minority case where reduction
+     * resolves after step 4 already did).
+     *
+     * A company application is deliberately left alone — suma-crm's intake
+     * still rejects one outright (no contact-person fields are collected
+     * here to send; see adminAccept()'s own guard), so it stays on the
+     * legacy path exactly as before, which already surfaces that
+     * limitation to the admin. A push failure also leaves the row in
+     * place, for the same reason: better a slightly-stale local fallback
+     * than a silently lost application.
+     */
+    private function maybePushToSumaCrm(MembershipApplication $application): void
+    {
+        if ($application->is_update || $application->company !== null || $application->contact === null) {
+            return;
+        }
+        if ($application->payment_method === null || $application->payment_reference === null) {
+            return;
+        }
+        if ($application->reduction !== null && $application->reduction->expires_at === null) {
+            return;
+        }
+
+        $pushed = app(MembershipApplicationPusher::class)->create([
+            "membership_type" => "person",
+            "first_name" => $application->contact->first_name,
+            "last_name" => $application->contact->last_name,
+            "email" => $application->contact->email,
+            "reduced" => (float) $application->amount < 5,
+            "interval" => $application->interval,
+            "amount" => $application->amount,
+            "payment_method" => $application->payment_method,
+            "payment_reference" => $application->payment_reference,
+            "key" => $application->key,
+            "locale" => $application->locale,
+        ]);
+
+        if ($pushed) {
+            // Not deleted: MembershipController::success() still resolves
+            // this row locally by id (finishedUser(), a different scope
+            // than the admin-review one below) to render the confirmation
+            // the applicant is redirected to right after this runs. Marking
+            // it instead just stops adminIndex() offering it for a review
+            // that already happened over in suma-crm.
+            $application->pushed_to_crm_at = now();
+            $application->save();
+        }
+    }
+
     private function keyOfVisitor(Request $request): ?string
     {
         $candidates = [
@@ -1087,6 +1218,47 @@ class MembershipController extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * Where a brand-new visitor to `contactData()` is sent instead of this
+     * app's own legacy form — see that method's own docblock.
+     *
+     * `?lang=` carries this request's already-resolved locale
+     * (App\Localization\LocaleContext, bound by ResolveLocale before this
+     * ever runs) across to suma-crm's own App\Localization\CrmLocale::resolve(),
+     * which understands the very same `?lang=` parameter and priority order
+     * by design — see that class's own docblock in the suma-crm repository.
+     * Without it, suma-crm would have to resolve the locale fresh from
+     * Accept-Language alone, which is not necessarily the same answer this
+     * app's own richer resolution (URL prefix, `mg_locale` cookie included)
+     * already gave for this exact request.
+     *
+     * `key` rides along too, via the same keyOfVisitor() check
+     * submitMembershipForm() uses to decide whether a visitor already has
+     * one — an already-recognised MetaGer user (cookie, header, or query)
+     * clicking "become a member" should land on suma-crm's form already
+     * tied to their own key, exactly as the legacy form itself would have
+     * done via keyOfVisitor() at its own first step.
+     *
+     * The MetaGer app's `keystore`/`variant` markers ride along as well:
+     * suma-crm carries them through its form and checkout and hands the key
+     * back to the app from its thanks page (App\Keys\AppCallback there,
+     * {@see AppCallback} here). Dropped, the key an app user gets with their
+     * membership never reaches the app.
+     */
+    private function crmMembershipFormUrl(Request $request): string
+    {
+        $params = ["lang" => app(LocaleContext::class)->locale];
+
+        $key = $this->keyOfVisitor($request);
+        if ($key !== null) {
+            $params["key"] = $key;
+        }
+
+        $params += AppCallback::markers($request);
+
+        return config("metager.metager.crm.url") . "/mitglied-werden?" . http_build_query($params);
     }
 
     /**

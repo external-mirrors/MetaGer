@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Authentication\KeyUser;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /**
@@ -175,6 +176,26 @@ class KeyPagesNavigationTest extends TestCase
      */
     public function testThePricePageLeadsBackToTheAccountForASignedInVisitor(): void
     {
+        // KeyUser::getKeyData() ruft die eigene /api/json/key/*-Route auf, statt
+        // sie im selben Prozess aufzulösen — ohne Fake also ein echter
+        // HTTP-Request, der nur zufällig funktioniert, wenn nginx nebenbei
+        // läuft. Siehe AccountPageTest::keyserverKnows() für dieselbe Antwortform.
+        Http::preventStrayRequests();
+        Http::fake([
+            "*/api/json/price" => Http::response([
+                "per_token" => 0.01,
+                "vat" => 7,
+                "purchasable" => [500, 1000, 2000],
+            ]),
+            "*/api/json/key/*" => Http::response([
+                "key" => "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15",
+                "charge" => 0,
+                "expiration" => "2027-03-14 00:00:00",
+                "charge_orders" => [],
+                "key_config" => ["membershipEndDate" => null],
+            ]),
+        ]);
+
         // false: `key` steht in EncryptCookies::$except — derselbe Aufbau wie
         // AccountPageTest::signedIn().
         $response = $this->withUnencryptedCookie("key", "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15")

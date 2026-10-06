@@ -43,6 +43,10 @@ return [
             'title' => 'Relatório de erro (rastreio da pilha)',
             'description' => 'Quando ocorre um erro técnico na nossa aplicação, é gerada automaticamente uma descrição do erro, juntamente com um rastreio da pilha. Isto permite-nos identificar em que ponto do código-fonte ocorreu o erro, para que possamos corrigi-lo.',
         ],
+        'reduction' => [
+            'title' => 'Comprovativo para uma quota reduzida',
+            'description' => 'Um documento que deve carregar para comprovar o seu direito a uma quota de sócio reduzida, por exemplo, um aviso a confirmar a receção de pagamentos de transferência.',
+        ],
     ],
     'data' => [
         'referrer' => 'o referenciador que enviou',
@@ -57,6 +61,7 @@ return [
         'message' => 'Mensagem',
         'payment' => 'Dados de pagamento',
         'error' => 'Relatório de erros',
+        'reduction' => 'Prova de redução',
     ],
     'base' => [
         'title' => 'Base jurídica do tratamento',
@@ -124,6 +129,27 @@ return [
         'proxy' => [
             'title' => 'Utilização do proxy de anonimização',
             'description' => 'Ao utilizar o proxy de anonimização, são gerados os seguintes dados:',
+        ],
+        'membership' => [
+            'title' => 'Candidatar-se e gerir a adesão à SUMA-EV',
+            'description' => 'Ao candidatar-se a uma adesão à SUMA-EV e durante o período de vigência da sua adesão, são gerados os seguintes dados:',
+            'contact' => 'No caso de particulares, o nome e o endereço de e-mail; no caso de organizações, o nome da organização, a sua dimensão aproximada e o nome e endereço de e-mail de uma pessoa de contacto. O endereço postal é opcional e, caso seja fornecido, é utilizado, nomeadamente, para emitir um recibo de doação. Não transmitimos estes dados a terceiros em circunstância alguma.',
+            'payment' => 'Utilizamos os seus dados de pagamento exclusivamente para a cobrança recorrente da sua quota de sócio. A forma como os processamos, quem os recebe e durante quanto tempo os conservamos está descrita na secção «Processamento de pagamentos».',
+            'reduction' => 'Se solicitar uma quota de sócio reduzida, processamos o comprovativo que carregar (por exemplo, um extrato de transferência bancária) exclusivamente para verificar o seu direito à redução. Esse comprovativo pode conter dados particularmente sensíveis nos termos do artigo 9.º do RGPD; por conseguinte, apenas o guardamos durante o tempo necessário para essa verificação e não o transmitimos a terceiros.',
+            'crm' => 'Para gerir as adesões, utilizamos o nosso próprio sistema de gestão de adesões, também operado pela SUMA-EV. Os dados acima indicados são armazenados nesse sistema durante o período de vigência da sua adesão e, posteriormente, durante os períodos de conservação previstos na lei. A sua adesão está também associada a uma chave MetaGer, através da qual a sua quota de adesão é creditada como crédito de utilização do MetaGer (ver «Verificar a chave MetaGer»).',
+            'cookies' => 'O formulário de candidatura e o portal de membros não definem cookies quando os abre simplesmente. Só quando submete um formulário ou inicia sessão no portal de membros é que definimos um cookie de sessão tecnicamente necessário, para que possamos, por exemplo, indicar-lhe erros de introdução de dados ou manter a sua sessão ativa. Este cookie perde a validade após duas horas de inatividade e é eliminado quando terminar a sessão. Se abrir o formulário através de um link que indique um idioma diferente da configuração de idioma do seu navegador, guardamos esse idioma num cookie que é eliminado quando fechar o navegador. A base jurídica é o artigo 25.º, n.º 2, n.º 2, da TDDDG.',
+        ],
+        'payments' => [
+            'title' => 'Processamento de pagamentos',
+            'description' => 'Os pagamentos à SUMA-EV — atualmente quotas de sócio e, no futuro, também donativos e chaves MetaGer — são processados pelo nosso próprio sistema de pagamentos, também gerido pela SUMA-EV. São gerados os seguintes dados:',
+            'ip' => 'Apenas no caso de pagamento por débito direto SEPA: como parte do registo da sua autorização de débito direto (ver abaixo). Caso contrário, não é guardada.',
+            'useragent' => 'Apenas no caso de pagamento por débito direto SEPA: como parte do registo da sua autorização de débito direto (ver abaixo). Caso contrário, não é guardada.',
+            'contact' => 'Recebemos o seu nome e endereço de e-mail através do serviço pelo qual está a pagar (por exemplo, o pedido de adesão). Utilizamos esses dados para lhe enviar e-mails relacionados com o seu pagamento, tais como detalhes de transferência bancária, links de pagamento ou lembretes de pagamento.',
+            'payment' => 'Dependendo do método de pagamento, do titular da conta e do IBAN, uma referência à sua conta PayPal ou ao seu cartão junto do respetivo prestador de serviços, bem como o montante, a hora e o estado de cada pagamento.',
+            'methods' => 'Nós próprios processamos os débitos diretos SEPA e as transferências bancárias; os débitos diretos são enviados ao nosso banco com o nome do titular da conta, o IBAN, o montante e a referência da autorização. Ao efetuar o pagamento com PayPal, introduz os seus dados diretamente junto da PayPal (Europe) S.à r.l. et Cie, S.C.A.; só quando escolhe o PayPal como método de pagamento é que a página de pagamento carrega o código de programa do PayPal, o que fornece ao PayPal o seu endereço IP e lhe permite definir os seus próprios cookies. Ao efetuar o pagamento com cartão ou Wero, introduz os seus dados diretamente junto da VR Payment GmbH. Nunca recebemos números de cartão nem dados de início de sessão do PayPal ou do Wero, apenas uma referência que nos permite cobrar taxas recorrentes. A base jurídica é o Art. 6.º, n.º 1, alínea b) do RGPD.',
+            'mandate' => 'Se nos conceder uma autorização de débito direto SEPA online, guardamos um registo do conteúdo da autorização (titular da conta, IBAN, referência da autorização, montante e periodicidade, bem como o texto da autorização que lhe foi apresentado), juntamente com a hora em que foi concedida, o seu endereço IP e o seu agente de utilizador. Precisamos deste registo para provar ao nosso banco que concedeu a autorização, caso um débito direto seja contestado; só nesse caso é que o apresentamos ao banco. A base jurídica é o Art. 6.º, n.º 1, alínea b) do RGPD e o nosso interesse legítimo em poder comprovar a autorização (Art. 6.º, n.º 1, alínea f) do RGPD).',
+            'cookies' => 'As próprias páginas de pagamento não definem cookies quando as abre. Apenas se os dados introduzidos estiverem incompletos ou inválidos é que definimos, por um breve período, um cookie de sessão tecnicamente necessário para lhe mostrar os erros; este é eliminado assim que os erros forem apresentados (artigo 25.º, n.º 2, n.º 2 da TDDDG).',
+            'retention' => 'Se um pagamento não for efetuado porque o utilizador o abandonou, eliminamos o seu nome e endereço de e-mail uma semana após o termo do prazo do processo de pagamento. Se, por exemplo, um pedido de adesão for recusado antes de ter sido cobrado qualquer montante, eliminamos imediatamente os seus dados de pagamento e o registo da autorização. Todos os outros dados de pagamento e registos de autorização são conservados enquanto a relação de pagamento existir e, posteriormente, durante os períodos de retenção previstos na lei (até 10 anos).',
         ],
     ],
     'hosting' => [

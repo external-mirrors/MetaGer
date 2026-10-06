@@ -38,6 +38,10 @@ return [
     ],
     'payment-method' => [
         'heading' => 'Wie möchten Sie die Zahlung durchführen?',
+        'name' => [
+            'label' => 'Ihr Name',
+            'placeholder' => 'Max Mustermann',
+        ],
         'methods' => [
             'banktransfer' => 'Überweisung',
             'directdebit' => 'Lastschrift',
@@ -67,11 +71,15 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Kredit-/Debitkarte',
+            'wero_link' => 'Wero',
         ],
     ],
     'execute-payment' => [
         'heading' => 'Zahlung abschließen',
         'item-name' => 'Spende an den SUMA-EV',
+        'error' => [
+            'unavailable' => 'Die Zahlung konnte gerade nicht vorbereitet werden. Bitte versuchen Sie es in ein paar Minuten erneut.',
+        ],
         'card' => [
             'number' => 'Kartennummer',
             'expiration' => 'Gültig bis',
@@ -235,6 +243,18 @@ return [
                 'error' => 'Die eingegebene IBAN ist ungültig.',
             ],
             'submit' => 'Zahlung durchführen',
+        ],
+        'wero_link' => [
+            'description' => 'Sie erhalten jede Periode per E-Mail einen Wero-Zahlungslink, mit dem Sie die Spende in der Wero-App Ihrer Bank bestätigen. Dies ist ein wiederkehrendes Mandat — eine einmalige Wero-Spende wird nicht angeboten.',
+            'name' => [
+                'label' => 'Ihr Name',
+                'placeholder' => 'Max Mustermann',
+            ],
+            'email' => [
+                'label' => 'Ihre E-Mail-Adresse',
+                'placeholder' => 'max.mustermann@example.com',
+            ],
+            'submit' => 'Spende einrichten',
         ],
         'processing' => 'Zahlung wird verarbeitet',
         'errors' => [

@@ -96,5 +96,6 @@ return [
         'keyserver_unreachable' => 'Es ließ sich gerade kein Schlüssel erstellen. Das liegt an uns und nicht an Ihnen — versuchen Sie es gleich noch einmal.',
         'too_many_attempts' => 'Von diesem Anschluss wurden gerade sehr viele Schlüssel erstellt. Warten Sie ein paar Minuten und laden Sie die Seite dann neu.',
         'no_key' => 'Der Schlüssel ist auf dem Weg verlorengegangen — das passiert, wenn die Seite lange offen lag. Hier ist ein neuer.',
+        'already_member' => 'Dieser Schlüssel gehört bereits zu einer aktiven Mitgliedschaft — ein weiterer Aufnahmeantrag ist damit nicht möglich.',
     ],
 ];

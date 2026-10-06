@@ -67,6 +67,11 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Carte de crédit/débit',
+            'wero_link' => 'Wero',
+        ],
+        'name' => [
+            'label' => 'Votre nom',
+            'placeholder' => 'John Smith',
         ],
     ],
     'execute-payment' => [
@@ -240,6 +245,21 @@ return [
         'errors' => [
             'authorization_denied' => 'Le paiement n\'a pas pu être autorisé',
             'capture_failed' => 'Le paiement n\'a pas pu être saisi',
+        ],
+        'error' => [
+            'unavailable' => 'Le paiement n\'a pas pu être traité pour le moment. Veuillez réessayer dans quelques minutes.',
+        ],
+        'wero_link' => [
+            'description' => 'À chaque période, vous recevrez par e-mail un lien de paiement Wero, que vous utiliserez pour valider le don depuis l\'application Wero de votre banque. Il s\'agit d\'un mandat récurrent : il n\'est pas possible d\'effectuer un don Wero ponctuel.',
+            'name' => [
+                'label' => 'Votre nom',
+                'placeholder' => 'John Smith',
+            ],
+            'email' => [
+                'label' => 'Votre adresse e-mail',
+                'placeholder' => 'john.smith@example.com',
+            ],
+            'submit' => 'Mettre en place un système de dons',
         ],
     ],
     'thankyou' => [

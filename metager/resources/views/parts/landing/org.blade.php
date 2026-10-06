@@ -28,7 +28,7 @@
                nur dort beworben werden. Übrig bleiben zwei Links, die jeder
                lesen kann. --}}
           @if(\App\Support\MembershipOffer::isAdvertised())
-            <li><a href="{{ route('membership_form') }}" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
+            <li><a href="{{ route('membership_form', App\Landing\AppCallback::markers()) }}" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
             <li><a href="https://suma-ev.de/mitglieder/" target="_blank">{{ trans('mg-story.btn-member-advantage') }}</a></li>
           @endif
         </ul>

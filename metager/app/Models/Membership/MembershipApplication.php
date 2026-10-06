@@ -34,7 +34,7 @@ class MembershipApplication extends Model
 {
     use HasUuids;
 
-    protected $fillable = ["locale", "amount", "interval", "payment_method", "payment_reference", "key", "crm_contact", "crm_membership", "payment_reference", "is_update"];
+    protected $fillable = ["locale", "amount", "interval", "payment_method", "payment_reference", "key", "crm_contact", "crm_membership", "payment_reference", "is_update", "pushed_to_crm_at"];
 
     /**
      * The model's default values for attributes.

@@ -184,7 +184,9 @@
     </li>
     @if (App\Support\MembershipOffer::isAdvertised())
     <li>
-      <a href="{{ route('membership_form') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+      {{-- The app's callback markers too, like the account actions above:
+           the membership form hands the key it comes with back to the app. --}}
+      <a href="{{ route('membership_form', App\Landing\AppCallback::markers()) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/svg-icons/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-member"> 
         <span>{{ trans('sidebar.nav23') }}</span>
       </a>

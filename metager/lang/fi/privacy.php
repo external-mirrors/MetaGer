@@ -69,6 +69,27 @@ return [
             'title' => 'MetaGer-lisäosan käyttö',
             'description' => 'MetaGer-lisäosaa käytettäessä luodaan seuraavat tiedot:',
         ],
+        'membership' => [
+            'title' => 'SUMA-EV-jäsenyyden hakeminen ja hallinnointi',
+            'description' => 'SUMA-EV-jäsenyyttä haettaessa ja jäsenyyden voimassaoloaikana kerätään seuraavat tiedot:',
+            'contact' => 'Yksityishenkilöiden osalta nimi ja sähköpostiosoite; organisaatioiden osalta organisaation nimi, sen arvioitu koko sekä yhteyshenkilön nimi ja sähköpostiosoite. Postiosoite on vapaaehtoinen, ja jos se annetaan, sitä käytetään erityisesti lahjoituskuitin lähettämiseen. Emme luovuta näitä tietoja missään tapauksessa kolmansille osapuolille.',
+            'payment' => 'Käytämme maksutietojasi yksinomaan jäsenmaksusi säännölliseen perimiseen. Se, miten käsittelemme niitä, kenelle ne toimitetaan ja kuinka kauan säilytämme niitä, on kuvattu kohdassa ”Maksujen käsittely”.',
+            'reduction' => 'Jos haet alennettua jäsenmaksua, käsittelemme lataamasi todistusasiakirjan (esim. tilisiirtoilmoituksen) yksinomaan sen tarkistamiseksi, oletko oikeutettu alennukseen. Tällainen todistusasiakirja voi sisältää GDPR:n 9 artiklan mukaisia erityisen arkaluonteisia tietoja; siksi säilytämme sitä vain niin kauan kuin tarkistus vaatii, emmekä luovuta sitä kolmansille osapuolille.',
+            'crm' => 'Jäsenyyksien hallinnointiin käytämme omaa jäsenhallintajärjestelmäämme, jota myös SUMA-EV ylläpitää. Edellä luetellut tiedot säilytetään siellä jäsenyytesi keston ajan ja sen jälkeen lakisääteisten säilytysaikojen ajan. Jäsenyytesi on myös liitetty MetaGer-avaimeen, jonka kautta jäsenmaksusi hyvitetään MetaGer-käyttöluottona (katso ”MetaGer-avaimen lunastaminen”).',
+            'cookies' => 'Hakulomake ja jäsenportaali eivät tallenna evästeitä, kun avaat ne pelkästään. Vasta kun lähetät lomakkeen tai kirjaudut jäsenportaaliin, tallennamme teknisesti välttämättömän istuntoevästeen, jotta voimme esimerkiksi ilmoittaa sinulle syöttövirheistä tai pitää sinut kirjautuneena sisään. Eväste vanhenee kahden tunnin käyttämättömyyden jälkeen ja poistetaan, kun kirjaudut ulos. Jos avaat lomakkeen linkin kautta, jossa on määritetty eri kieli kuin selaimesi kieliasetuksessa, tallennamme kyseisen kielen evästeeseen, joka poistetaan, kun suljet selaimesi. Oikeusperusteena on TDDDG:n 25 §:n 2 momentin 2 kohta.',
+        ],
+        'payments' => [
+            'title' => 'Maksujen käsittely',
+            'description' => 'SUMA-EV:lle suoritettavat maksut – tällä hetkellä jäsenmaksut, tulevaisuudessa myös lahjoitukset ja MetaGer-avaimet – käsitellään omalla maksujärjestelmällämme, jota myös SUMA-EV ylläpitää. Tällöin syntyy seuraavat tiedot:',
+            'ip' => 'Ainoastaan maksettaessa SEPA-suoraveloituksella: osana suoraveloitusvaltuutuksesi tietoja (katso alla). Muussa tapauksessa tietoja ei tallenneta.',
+            'useragent' => 'Ainoastaan maksettaessa SEPA-suoraveloituksella: osana suoraveloitusvaltuutuksesi tietoja (katso alla). Muussa tapauksessa tietoja ei tallenneta.',
+            'contact' => 'Saamme nimesi ja sähköpostiosoitteesi palvelusta, josta olet maksamassa (esim. jäsenhakemuksesta). Käytämme niitä maksuasi koskeviin sähköposteihin, kuten pankkisiirron tietoihin, maksulinkkeihin tai maksumuistutuksiin.',
+            'payment' => 'Maksutavasta, tilinhaltijasta ja IBAN-numerosta riippuen tiedot, jotka viittaavat PayPal-tiliisi tai korttiisi kyseisen palveluntarjoajan järjestelmässä, sekä kunkin maksun summa, ajankohta ja tila.',
+            'methods' => 'Käsittelemme SEPA-suoraveloitukset ja pankkisiirrot itse; suoraveloitukset toimitetaan pankillemme, ja niissä ilmoitetaan tilinhaltijan tiedot, IBAN-numero, summa ja valtuutuksen viitenumero. Kun maksat PayPalilla, syötät tietosi suoraan PayPal (Europe) S.à r.l. et Cie, S.C.A.:lle; vasta kun valitset PayPalin maksutavaksi, maksusivu lataa PayPalin ohjelmakoodin, joka välittää PayPalille IP-osoitteesi ja antaa sille luvan asettaa omia evästeitään. Kun maksat kortilla tai Wero-palvelulla, syötät tietosi suoraan VR Payment GmbH:lle. Emme koskaan saa korttinumeroita tai PayPal- tai Wero-kirjautumistietoja, vaan ainoastaan viitteen, jonka avulla voimme periä toistuvia maksuja. Oikeusperusteena on GDPR:n 6 artiklan 1 kohdan b alakohta.',
+            'mandate' => 'Jos annat meille SEPA-suoraveloitusvaltuutuksen verkossa, tallennamme valtuutuksen sisällön (tilinhaltija, IBAN, valtuutuksen viitenumero, summa ja veloitusväli sekä sinulle näytetty valtuutuksen teksti) sekä valtuutuksen antamisajankohdan, IP-osoitteesi ja käyttäjäagentin. Tarvitsemme tätä tietoa todistaaksemme pankillemme, että olet antanut valtuutuksen, jos suoraveloituksesta syntyy riita; näytämme tiedot pankille vain tällaisessa tapauksessa. Oikeusperusteena on GDPR:n 6 artiklan 1 kohdan b alakohta sekä oikeutettu etumme pystyä todistamaan valtuutuksen (GDPR:n 6 artiklan 1 kohdan f alakohta).',
+            'cookies' => 'Maksusivut eivät itsessään aseta evästeitä, kun avaat ne. Vain jos syöttämäsi tiedot ovat puutteellisia tai virheellisiä, asetamme hetkellisesti teknisesti välttämättömän istuntoevästeen virheiden näyttämiseksi; se poistetaan heti, kun virheet on näytetty (TDDDG:n 25 §:n 2 momentin 2 kohta).',
+            'retention' => 'Jos maksua ei suoriteta, koska keskeytät sen, poistamme nimesi ja sähköpostiosoitteesi viikon kuluttua siitä, kun maksuprosessi on päättynyt. Jos esimerkiksi jäsenhakemus hylätään ennen kuin maksuja on peritty, poistamme maksutietosi ja valtuutustiedot välittömästi. Kaikki muut maksutiedot ja valtuutustiedot säilytetään niin kauan kuin maksusuhde on voimassa ja sen jälkeen lakisääteisten säilytysaikojen ajan (enintään 10 vuotta).',
+        ],
     ],
     'description' => [
         'preferences' => [
@@ -113,6 +134,10 @@ return [
             'title' => 'Virheilmoitus (pinojälki)',
             'description' => 'Kun sovelluksessamme ilmenee tekninen virhe, virheen kuvaus ja pinojälki luodaan automaattisesti. Näin näemme, missä kohdassa lähdekoodia virhe tapahtui, jotta voimme korjata sen.',
         ],
+        'reduction' => [
+            'title' => 'Todistus alennetusta jäsenmaksusta',
+            'description' => 'Asiakirja, jonka lataat todistaaksesi oikeutesi alennettuun jäsenmaksuun, esimerkiksi ilmoitus, jossa vahvistetaan siirtomaksujen vastaanottaminen.',
+        ],
     ],
     'data' => [
         'payment' => 'Maksutiedot',
@@ -127,6 +152,7 @@ return [
         'optional' => 'valinnainen',
         'unused' => 'Ei tallenneta eikä jaeta.',
         'error' => 'Virheilmoitus',
+        'reduction' => 'Pienentämisen todistus',
     ],
     'responsible_party' => [
         'title' => 'Vastuuhenkilöt ja yhteyshenkilöt',

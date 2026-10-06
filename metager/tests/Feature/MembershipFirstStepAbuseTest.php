@@ -175,9 +175,18 @@ class MembershipFirstStepAbuseTest extends TestCase
             ], $fields));
     }
 
+    /**
+     * Ohne `application_id` leitet /membership inzwischen zu suma-crms eigenem
+     * Antragsformular weiter (siehe MembershipController::contactData()) —
+     * das Formular hier rendert nur noch für einen Antrag, der schon existiert.
+     * Ein Antrag ohne Kontakt ist genau der Zustand, in dem die Abweisungen
+     * des ersten Schritts greifen.
+     */
     public function testTheFormCarriesBothTrapFieldsEmptyAndNotIntoItsAction(): void
     {
-        $html = $this->get("/de-DE/membership?" . MembershipController::HONEYPOT_FIELD . "=x&" . MembershipController::AUTOMATION_FIELD . "=1")
+        $application = MembershipApplication::create(["locale" => "de-DE"]);
+
+        $html = $this->get("/de-DE/membership/" . $application->id . "?" . MembershipController::HONEYPOT_FIELD . "=x&" . MembershipController::AUTOMATION_FIELD . "=1")
             ->assertOk()->getContent();
 
         $this->assertStringContainsString('name="' . MembershipController::HONEYPOT_FIELD . '"', $html);

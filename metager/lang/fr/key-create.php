@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'Aucune clé n\'a pu être créée à l\'instant. Cela vient de nous et non de vous — réessayez dans un moment.',
         'too_many_attempts' => 'Un très grand nombre de clés viennent d\'être créées depuis cette connexion. Attendez quelques minutes, puis rechargez la page.',
         'no_key' => 'La clé s\'est perdue en chemin — cela arrive quand la page est restée longtemps ouverte. En voici une nouvelle.',
+        'already_member' => 'Cette clé appartient déjà à une adhésion active — une seconde demande n\'est pas possible avec elle.',
     ],
 ];

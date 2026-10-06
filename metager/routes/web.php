@@ -221,16 +221,11 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         Route::get('/', [DonationController::class, "amount"])->name("spende");
         Route::get('/qr', [DonationController::class, "amountQr"]);
         Route::get('/{amount}', [DonationController::class, "interval"]);
-        Route::get('/{amount}/{interval}', [DonationController::class, "paymentMethod"]);
-        Route::get('/{amount}/{interval}/{funding_source}/{timestamp}/finished', [DonationController::class, "donationFinished"])->name("thankyou");
-        Route::get('/{amount}/{interval}/banktransfer', [DonationController::class, 'banktransfer']);
-        Route::get('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebit']);
-        Route::post('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebitExecute']);
-        Route::get('/{amount}/{interval}/banktransfer/qr', [DonationController::class, 'banktransferQr']);
-        Route::get('/{amount}/{interval}/paypal/{funding_source}', [DonationController::class, 'paypalPayment'])->name("paypalPayment");
-        Route::get('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCreateOrder']);
-        Route::post('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCaptureOrder']);
-        Route::post('/{amount}/{interval}/paypal/{funding_source}/subscription', [DonationController::class, 'paypalCreateSubscription'])->name("paypal-subscription");
+        Route::post('/{amount}', [DonationController::class, "checkout"]);
+        // The step that used to pick the payment method; an old link lands
+        // on the interval step instead.
+        Route::get('/{amount}/{interval}', fn ($amount) => redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount)));
+        Route::get('/{amount}/{interval}/{timestamp}/finished', [DonationController::class, "donationFinished"])->name("thankyou");
     });
 
     Route::get('beitritt', function () {

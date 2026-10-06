@@ -40,6 +40,15 @@ class MembershipKeyTest extends TestCase
     /** Der, den der Keyserver auf `key/new` herausgibt. */
     private const FRESH_KEY = "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d";
 
+    /**
+     * Eigener Schlüssel statt EXISTING_KEY: `KeyUser::getKeyData()` cached
+     * unter `array` (phpunit.xml), das über den ganzen Testlauf hinweg lebt
+     * — ein zweiter Test am selben Schlüssel läse sonst die von einem
+     * früheren Test zwischengespeicherte (dort: keine Mitgliedschaft)
+     * Antwort statt des hier gesetzten Fakes.
+     */
+    private const ACTIVE_MEMBER_KEY = "9f4d2a1c-3b5e-4d7f-8a91-6c2e0b4d8f13";
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -85,6 +94,25 @@ class MembershipKeyTest extends TestCase
         return MembershipApplication::orderBy("created_at", "desc")->first();
     }
 
+    /**
+     * What the keyserver answers on `GET /key/{key}` for an existing key —
+     * the call `(new KeyUser($key))->isMember()` makes, per its own
+     * docblock. Defaults to "no active membership": `key_config` absent
+     * entirely, which `isMember()` treats as false, same as a key that was
+     * never a member at all.
+     */
+    private function existingKeyAnswers(string $key, array $keyConfig = []): void
+    {
+        // `charge` is required: getKeyData() treats a response with none as
+        // unusable and returns null outright (a real keyserver answer always
+        // has one), which would make isMember() see no data at all rather
+        // than "not a member".
+        Http::fake(["*/key/" . $key => Http::response(array_merge(
+            ["key" => $key, "charge" => 0],
+            $keyConfig !== [] ? ["key_config" => $keyConfig] : []
+        ))]);
+    }
+
     // ── Wer schon angemeldet ist ─────────────────────────────────────────────
 
     /**
@@ -96,20 +124,27 @@ class MembershipKeyTest extends TestCase
     public function testALoggedInVisitorKeepsTheirKey(): void
     {
         $this->keyserverAnswers(Http::response(["key" => self::FRESH_KEY]));
+        $this->existingKeyAnswers(self::EXISTING_KEY);
 
         $this->submitContactData(cookies: ["key" => self::EXISTING_KEY]);
 
         $this->assertSame(self::EXISTING_KEY, $this->latestApplication()?->key);
     }
 
-    /** Und der Keyserver wird gar nicht erst gefragt. */
-    public function testALoggedInVisitorCostsNoKeyserverCall(): void
+    /**
+     * Kein `key/new`: ein mitgebrachter Schlüssel bekommt keinen zweiten,
+     * auch keinen ungenutzten. Ein Aufruf geht trotzdem raus — der
+     * Mitgliedschafts-Check unten (`GET /key/{key}`) braucht ihn, seit ein
+     * bereits aktives Mitglied hier nicht mehr durchkommt.
+     */
+    public function testALoggedInVisitorDoesNotMintAFreshKey(): void
     {
         $this->keyserverAnswers(Http::response(["key" => self::FRESH_KEY]));
+        $this->existingKeyAnswers(self::EXISTING_KEY);
 
         $this->submitContactData(cookies: ["key" => self::EXISTING_KEY]);
 
-        Http::assertNothingSent();
+        Http::assertNotSent(fn ($request) => str_ends_with($request->url(), "/api/json/key/new"));
     }
 
     /**
@@ -119,12 +154,34 @@ class MembershipKeyTest extends TestCase
     public function testALoggedInVisitorGoesStraightToTheNextStep(): void
     {
         $this->keyserverAnswers(Http::response(["key" => self::FRESH_KEY]));
+        $this->existingKeyAnswers(self::EXISTING_KEY);
 
         $location = $this->submitContactData(cookies: ["key" => self::EXISTING_KEY])
             ->headers->get("Location");
 
         $this->assertStringContainsString("#membership-fee", $location);
         $this->assertStringNotContainsString("load-settings", $location);
+    }
+
+    /**
+     * Legacy's own guard, wieder da: ein Schlüssel, an dem schon eine
+     * laufende Mitgliedschaft hängt, kommt hier nicht noch einmal durch —
+     * sonst entstünden zwei unabhängige Mitgliedschaften am selben
+     * Schlüssel, sobald beide Anträge angenommen sind. Vor
+     * MembershipApplication::create(), aus demselben Grund wie beim
+     * unerreichbaren Keyserver oben: kein leerer/abgelehnter Antrag bleibt
+     * zurück.
+     */
+    public function testAnAlreadyActiveMemberCannotApplyAgain(): void
+    {
+        $this->keyserverAnswers(Http::response(["key" => self::FRESH_KEY]));
+        $this->existingKeyAnswers(self::ACTIVE_MEMBER_KEY, ["membershipEndDate" => now()->addMonths(6)->toIso8601String()]);
+
+        $before = MembershipApplication::count();
+        $response = $this->submitContactData(cookies: ["key" => self::ACTIVE_MEMBER_KEY]);
+
+        $this->assertSame($before, MembershipApplication::count());
+        $response->assertOk()->assertSeeText(__("key-create.errors.already_member"));
     }
 
     // ── Wer noch keinen hat ──────────────────────────────────────────────────

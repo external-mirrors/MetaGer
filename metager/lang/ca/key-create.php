@@ -67,5 +67,6 @@ return [
         'keyserver_unreachable' => 'Ara mateix no s\'ha pogut crear cap clau. És cosa nostra i no vostra: torneu-ho a provar de seguida.',
         'too_many_attempts' => 'Des d\'aquesta connexió s\'acaben de crear moltíssimes claus. Espereu uns minuts i torneu a carregar la pàgina.',
         'no_key' => 'La clau s\'ha perdut pel camí; això passa quan la pàgina ha estat oberta molta estona. Aquí en teniu una de nova.',
+        'already_member' => 'Aquesta clau ja pertany a una afiliació activa — no és possible presentar-hi una segona sol·licitud.',
     ],
 ];

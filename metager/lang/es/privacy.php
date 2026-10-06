@@ -69,6 +69,27 @@ return [
             'title' => 'Utilización del plugin MetaGer',
             'description' => 'Cuando se utiliza el plugin MetaGer, se generan los siguientes datos:',
         ],
+        'membership' => [
+            'title' => 'Solicitar y gestionar una afiliación a SUMA-EV',
+            'description' => 'Al solicitar la afiliación a SUMA-EV, y durante todo el periodo de vigencia de la misma, se generan los siguientes datos:',
+            'contact' => 'En el caso de las personas físicas, el nombre y la dirección de correo electrónico; en el caso de las organizaciones, el nombre de la organización, su tamaño aproximado y el nombre y la dirección de correo electrónico de una persona de contacto. La dirección postal es opcional y, si se facilita, se utiliza principalmente para emitir un recibo de donación. En ningún caso cedemos estos datos a terceros.',
+            'payment' => 'Utilizamos tus datos de pago exclusivamente para el cobro periódico de tu cuota de socio. En el apartado «Gestión de pagos» se describe cómo los tratamos, quién los recibe y durante cuánto tiempo los conservamos.',
+            'reduction' => 'Si solicitas una cuota de afiliación reducida, tratamos el justificante que subas (por ejemplo, un extracto de transferencias) con el único fin de verificar tu derecho a la reducción. Dicho justificante puede contener datos especialmente sensibles según el artículo 9 del RGPD; por lo tanto, solo lo conservamos durante el tiempo que sea necesario para dicha verificación y no lo cedemos a terceros.',
+            'crm' => 'Para gestionar las afiliaciones, utilizamos nuestro propio sistema de administración de afiliaciones, gestionado también por SUMA-EV. Los datos mencionados anteriormente se almacenan en dicho sistema mientras dure tu afiliación y, posteriormente, durante los plazos de conservación establecidos por la ley. Tu afiliación también está vinculada a una clave MetaGer, a través de la cual tu cuota de afiliación se abona como crédito de uso para MetaGer (véase «Comprobar la clave MetaGer»).',
+            'cookies' => 'El formulario de solicitud y el portal de miembros no instalan cookies con solo abrirlos. Solo cuando envías un formulario o inicias sesión en el portal de miembros, instalamos una cookie de sesión técnicamente necesaria, para poder, por ejemplo, mostrarte los errores de introducción de datos o mantenerte conectado. Esta cookie caduca tras dos horas de inactividad y se elimina cuando cierras la sesión. Si abres el formulario a través de un enlace que indica un idioma diferente al configurado en tu navegador, recordamos ese idioma en una cookie que se elimina al cerrar el navegador. La base jurídica es el artículo 25, apartado 2, n.º 2, de la TDDDG.',
+        ],
+        'payments' => [
+            'title' => 'Gestión de pagos',
+            'description' => 'Los pagos a SUMA-EV —actualmente las cuotas de socio y, en el futuro, también las donaciones y las claves de MetaGer— se gestionan a través de nuestro propio sistema de pagos, gestionado asimismo por SUMA-EV. Se generan los siguientes datos:',
+            'ip' => 'Solo en caso de pago mediante domiciliación bancaria SEPA: como parte del registro de tu orden de domiciliación (véase más abajo). En los demás casos, no se almacena.',
+            'useragent' => 'Solo en caso de pago mediante domiciliación bancaria SEPA: como parte del registro de tu orden de domiciliación (véase más abajo). En los demás casos, no se almacena.',
+            'contact' => 'Recibimos tu nombre y tu dirección de correo electrónico a través del servicio por el que estás pagando (por ejemplo, la solicitud de afiliación). Los utilizamos para enviarte correos electrónicos relacionados con tu pago, como datos para la transferencia bancaria, enlaces de pago o recordatorios de pago.',
+            'payment' => 'En función de la forma de pago, el titular de la cuenta y el IBAN, una referencia a tu cuenta de PayPal o a tu tarjeta en el proveedor correspondiente, así como el importe, la hora y el estado de cada pago.',
+            'methods' => 'Nosotros mismos tramitamos los adeudos directos SEPA y las transferencias bancarias; los adeudos directos se envían a nuestro banco indicando el titular de la cuenta, el IBAN, el importe y la referencia de la autorización. Al pagar con PayPal, introduces tus datos directamente en PayPal (Europe) S.à r.l. et Cie, S.C.A.; solo cuando eliges PayPal como método de pago, la página de pago carga el código de programa de PayPal, lo que proporciona a PayPal tu dirección IP y le permite instalar sus propias cookies. Al pagar con tarjeta o mediante Wero, introduces tus datos directamente en VR Payment GmbH. Nunca recibimos números de tarjeta ni datos de acceso a PayPal o Wero, sino únicamente una referencia que nos permite cobrar las cuotas periódicas. La base jurídica es el artículo 6, apartado 1, letra b), del RGPD.',
+            'mandate' => 'Si nos das una autorización de domiciliación bancaria SEPA por internet, guardamos un registro del contenido de la autorización (titular de la cuenta, IBAN, referencia de la autorización, importe e intervalo, así como el texto de la autorización que se te mostró), junto con la hora en que se otorgó, tu dirección IP y tu agente de usuario. Necesitamos este registro para demostrar a nuestro banco que usted ha otorgado la autorización en caso de que se impugne un adeudo directo; solo en ese caso se lo mostramos al banco. La base jurídica es el artículo 6, apartado 1, letra b) del RGPD y nuestro interés legítimo en poder demostrar la autorización (artículo 6, apartado 1, letra f) del RGPD).',
+            'cookies' => 'Las propias páginas de pago no instalan cookies al abrirlas. Solo si los datos introducidos están incompletos o son incorrectos, instalamos temporalmente una cookie de sesión técnicamente necesaria para mostrarte los errores; esta se elimina tan pronto como se han mostrado (artículo 25, apartado 2, n.º 2, de la TDDDG).',
+            'retention' => 'Si un pago no se lleva a cabo porque lo abandonas, eliminamos tu nombre y tu dirección de correo electrónico una semana después de que haya caducado el proceso de pago. Si, por ejemplo, se rechaza una solicitud de afiliación antes de que se haya cobrado nada, eliminamos inmediatamente tus datos de pago y el registro de la autorización. El resto de datos de pago y registros de autorizaciones se conservan mientras exista la relación de pago y, posteriormente, durante los plazos de conservación legales (hasta 10 años).',
+        ],
     ],
     'data' => [
         'message' => 'Mensaje',
@@ -83,6 +104,7 @@ return [
         'optional' => 'opcional',
         'unused' => 'No se guardará ni compartirá.',
         'error' => 'Informe de errores',
+        'reduction' => 'Demostración de la reducción',
     ],
     'principles' => [
         'title' => 'Principios',
@@ -134,6 +156,10 @@ return [
         'error' => [
             'title' => 'Informe de error (traza de pila)',
             'description' => 'Cuando se produce un error técnico en nuestra aplicación, se genera automáticamente una descripción del error junto con un seguimiento de la pila. Esto nos permite saber en qué parte del código fuente se ha producido el error para poder solucionarlo.',
+        ],
+        'reduction' => [
+            'title' => 'Justificante para una cuota de socio reducida',
+            'description' => 'Un documento que debes subir para acreditar tu derecho a una cuota de socio reducida, por ejemplo, un aviso que confirme la recepción de transferencias.',
         ],
     ],
     'base' => [

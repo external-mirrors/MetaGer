@@ -61,6 +61,7 @@ return [
         'heading' => 'Miten haluatte suorittaa maksun?',
         'name' => [
             'label' => 'Nimesi',
+            'placeholder' => 'John Smith',
         ],
     ],
     'interval' => [
@@ -252,6 +253,7 @@ return [
             'description' => 'Saat jokaisella jaksolla sähköpostitse Wero-maksulinkin, jonka avulla voit vahvistaa lahjoituksen pankkisi Wero-sovelluksessa. Kyseessä on toistuva valtuutus – kertaluonteista Wero-lahjoitusta ei ole tarjolla.',
             'name' => [
                 'label' => 'Nimesi',
+                'placeholder' => 'John Smith',
             ],
             'email' => [
                 'label' => 'Sähköpostiosoitteesi',

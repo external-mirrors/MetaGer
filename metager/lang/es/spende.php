@@ -68,6 +68,7 @@ return [
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
             'card' => 'Tarjeta de crédito/débito',
+            'wero_link' => 'Wero',
         ],
         'name' => [
             'label' => 'Su nombre',
@@ -253,7 +254,13 @@ return [
             ],
             'email' => [
                 'label' => 'Su dirección de correo electrónico',
+                'placeholder' => 'john.smith@example.com',
             ],
+            'description' => 'Cada período recibirás por correo electrónico un enlace de pago de Wero, que deberás utilizar para confirmar la donación desde la aplicación de Wero de tu banco. Se trata de una orden de domiciliación periódica; no se ofrece la posibilidad de realizar una donación única a través de Wero.',
+            'submit' => 'Configurar una donación',
+        ],
+        'error' => [
+            'unavailable' => 'No se ha podido procesar el pago en este momento. Inténtalo de nuevo dentro de unos minutos.',
         ],
     ],
     'thankyou' => [

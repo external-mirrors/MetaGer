@@ -63,6 +63,27 @@ return [
             'title' => 'Användning av MetaGer-plugin',
             'description' => 'Vid användning av MetaGer-plugin genereras följande data:',
         ],
+        'membership' => [
+            'title' => 'Att ansöka om och hantera ett SUMA-EV-medlemskap',
+            'description' => 'När du ansöker om medlemskap i SUMA-EV, och under hela din medlemsperiod, samlas följande uppgifter in:',
+            'contact' => 'För privatpersoner: namn och e-postadress; för organisationer: organisationens namn, dess ungefärliga storlek samt namn och e-postadress till en kontaktperson. Postadress är frivillig och används, om den anges, framför allt för att utfärda ett donationskvitto. Vi lämnar under inga omständigheter ut dessa uppgifter till tredje part.',
+            'payment' => 'Vi använder dina betalningsuppgifter uteslutande för att regelbundet dra in din medlemsavgift. Hur vi behandlar uppgifterna, vem som tar del av dem och hur länge vi lagrar dem beskrivs under ”Betalningshantering”.',
+            'reduction' => 'Om du ansöker om nedsatt medlemsavgift behandlar vi de handlingar du laddar upp (t.ex. ett utdrag över överföringar) uteslutande för att kontrollera att du har rätt till nedsättningen. Sådana handlingar kan innehålla särskilt känsliga uppgifter enligt artikel 9 i GDPR; vi lagrar dem därför endast så länge som denna kontroll kräver och vidarebefordrar dem inte till tredje part.',
+            'crm' => 'För att hantera medlemskap använder vi vårt eget medlemsadministrationssystem, som också drivs av SUMA-EV. De uppgifter som anges ovan lagras där under hela din medlemsperiod och därefter under de lagstadgade bevarandeperioderna. Ditt medlemskap är dessutom kopplat till en MetaGer-nyckel, genom vilken din medlemsavgift krediteras som användarkredit för MetaGer (se ”Kassa – MetaGer-nyckel”).',
+            'cookies' => 'Ansökningsformuläret och medlemsportalen placerar inga cookies när du bara öppnar dem. Först när du skickar in ett formulär eller loggar in på medlemsportalen placerar vi en tekniskt nödvändig sessionscookie, så att vi till exempel kan visa dig inmatningsfel eller se till att du förblir inloggad. Den upphör att gälla efter två timmars inaktivitet och raderas när du loggar ut. Om du öppnar formuläret via en länk som anger ett annat språk än det som är inställt i din webbläsare, lagrar vi det språket i en cookie som raderas när du stänger webbläsaren. Den rättsliga grunden är § 25(2) nr 2 i TDDDG.',
+        ],
+        'payments' => [
+            'title' => 'Betalningshantering',
+            'description' => 'Betalningar till SUMA-EV – för närvarande medlemsavgifter, i framtiden även donationer och MetaGer-nycklar – hanteras via vårt eget betalningssystem, som också drivs av SUMA-EV. Följande uppgifter genereras:',
+            'ip' => 'Endast vid betalning via SEPA-autogiro: som en del av registreringen av ditt autogiromandat (se nedan). I övrigt sparas uppgiften inte.',
+            'useragent' => 'Endast vid betalning via SEPA-autogiro: som en del av registreringen av ditt autogiromandat (se nedan). I övrigt sparas uppgiften inte.',
+            'contact' => 'Vi får ditt namn och din e-postadress från den tjänst du betalar för (t.ex. medlemsansökan). Vi använder dessa uppgifter för att skicka e-postmeddelanden om din betalning, till exempel uppgifter om banköverföring, betalningslänkar eller betalningspåminnelser.',
+            'payment' => 'Beroende på betalningssätt, kontoinnehavare och IBAN, en hänvisning till ditt PayPal-konto eller ditt kort hos respektive leverantör, samt belopp, tidpunkt och status för varje betalning.',
+            'methods' => 'Vi hanterar SEPA-autogiro och banköverföringar själva; autogirouppdragen skickas till vår bank med uppgifter om kontoinnehavare, IBAN, belopp och fullmaktsreferens. När du betalar med PayPal anger du dina uppgifter direkt hos PayPal (Europe) S.à r.l. et Cie, S.C.A.; först när du väljer PayPal som betalningsmetod laddar betalningssidan in programkod från PayPal, vilket ger PayPal din IP-adress och gör det möjligt för dem att sätta sina egna cookies. När du betalar med kort eller Wero anger du dina uppgifter direkt hos VR Payment GmbH. Vi får aldrig tillgång till kortnummer eller inloggningsuppgifter för PayPal eller Wero, utan endast en referens som gör det möjligt för oss att dra in återkommande avgifter. Den rättsliga grunden är artikel 6.1 b i GDPR.',
+            'mandate' => 'Om du ger oss ett SEPA-autogiromandat online sparar vi uppgifter om mandatets innehåll (kontoinnehavare, IBAN, mandatreferens, belopp och intervall samt den mandattext som visades för dig) tillsammans med tidpunkten för när mandatet gavs, din IP-adress och din användaragent. Vi behöver denna dokumentation för att kunna bevisa för vår bank att du har gett fullmakten om en autogirobetalning bestrids; endast i det fallet visar vi den för banken. Den rättsliga grunden är artikel 6.1 b i GDPR och vårt berättigade intresse av att kunna bevisa fullmakten (artikel 6.1 f i GDPR).',
+            'cookies' => 'Betalningssidorna i sig sätter inga cookies när du öppnar dem. Endast om dina uppgifter är ofullständiga eller ogiltiga sätter vi tillfälligt en tekniskt nödvändig sessionscookie för att visa dig felmeddelandena; den raderas så snart felmeddelandena har visats (25 § andra stycket nr 2 i TDDDG).',
+            'retention' => 'Om en betalning inte går igenom på grund av att du avbryter den raderar vi ditt namn och din e-postadress en vecka efter att betalningsprocessen har löpt ut. Om till exempel en medlemsansökan avslås innan någon betalning har mottagits raderar vi dina betalningsuppgifter och fullmaktsregistret omedelbart. Alla övriga betalningsuppgifter och fullmaktsregister sparas så länge som betalningsförhållandet består och därefter under de lagstadgade bevarandeperioderna (upp till 10 år).',
+        ],
     ],
     'description' => [
         'ip' => [
@@ -106,6 +127,10 @@ return [
         'error' => [
             'title' => 'Felrapport (stacktrace)',
             'description' => 'När ett tekniskt fel uppstår i vår applikation genereras automatiskt en felbeskrivning tillsammans med en stacktrace. Detta visar oss var i källkoden felet inträffade, så att vi kan åtgärda det.',
+        ],
+        'reduction' => [
+            'title' => 'Intyg för reducerad medlemsavgift',
+            'description' => 'Ett dokument som du laddar upp för att styrka din rätt till reducerad medlemsavgift, till exempel ett kvitto som bekräftar mottagandet av överföringsbetalningar.',
         ],
     ],
     'base' => [
@@ -162,6 +187,7 @@ return [
         'optional' => 'valfri',
         'unused' => 'Kommer inte att sparas eller delas.',
         'error' => 'Felrapport',
+        'reduction' => 'Reduktionsbevis',
     ],
     'title' => 'Integritetspolicy',
     'introduction' => 'För maximal transparens listar vi vilka uppgifter vi samlar in från dig och hur vi använder dem. Skyddet av dina uppgifter är viktigt för oss och det borde det vara för dig också. <strong>Vänligen läs detta uttalande noggrant; det ligger i ditt intresse.</strong>',

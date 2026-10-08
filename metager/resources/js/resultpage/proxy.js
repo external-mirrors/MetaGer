@@ -7,6 +7,24 @@ let wsTestInProgress = false;
 // intercepted, silently sending exactly those users to the old proxy.
 let wsTestResult = null;
 
+// One SafeBrowse session for the results opened from this page, for browsers that cannot store
+// SafeBrowse's own session id: every proxy link carries this id (#…&sid=), and such a browser
+// uses it instead of starting a session per tab. Browsers with storage ignore it. SafeBrowse only
+// accepts it from a same-origin referrer, so a copied link cannot hand a session to someone else
+// (or a crafted one fix the session a victim then uses).
+const pageSessionId = randomUuid();
+
+function randomUuid() {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        try { return window.crypto.randomUUID(); } catch (e) { /* insecure context (local http) */ }
+    }
+    const b = window.crypto.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    const h = Array.from(b, function (x) { return x.toString(16).padStart(2, "0"); }).join("");
+    return h.slice(0, 8) + "-" + h.slice(8, 12) + "-" + h.slice(12, 16) + "-" + h.slice(16, 20) + "-" + h.slice(20);
+}
+
 export default function updateProxyLinks() {
     if (!browserSupportsSafebrowse()) {
         // Links keep their native href (old proxy) when SafeBrowse won't work in this browser
@@ -22,9 +40,14 @@ export default function updateProxyLinks() {
     links.forEach(function (link) {
         if (link.dataset.proxyHandlerAttached) return; // updateProxyLinks runs again after "load more"
         link.dataset.proxyHandlerAttached = "1";
+        const oldProxyHref = link.href;
+        const href = link.dataset.proxyLink ? link.dataset.proxyLink + "&sid=" + pageSessionId : "";
+        // The SafeBrowse URL is the link's own href, so that middle click, Ctrl+click and "open in
+        // new tab" open SafeBrowse as well. Should WebSockets turn out not to work there,
+        // SafeBrowse itself sends the tab on to the &fallback= URL (the old proxy).
+        if (href) link.href = href;
 
         link.addEventListener("click", function (e) {
-            const href = link.dataset.proxyLink;
             // Intercept unless the reachability test has actually come back negative. window.open
             // must be called synchronously within the click handler — popup blockers silently drop
             // calls made after an async WebSocket test — so a click landing before the test
@@ -33,12 +56,16 @@ export default function updateProxyLinks() {
             // old-proxy link), whereas guessing the other way sends everyone who clicks early to
             // the old proxy with no way back. That window is every page load for users whose
             // browser denies storage, since the cached result cannot survive for them.
-            if (!href || getCachedWebsocketResult() === "failed") return;
+            if (!href) return;
+            if (getCachedWebsocketResult() === "failed") {
+                // Followed natively, now to the old proxy.
+                link.href = oldProxyHref;
+                return;
+            }
             e.preventDefault();
-            // Reuses the named tab if already open: since all SafeBrowse parameters travel in
-            // the URL hash, this only fires hashchange there instead of reloading the app.
-            const proxyWindow = window.open(href, "metagerproxy");
-            if (proxyWindow) proxyWindow.focus();
+            // Every result in a tab of its own: SafeBrowse binds each of its tabs to a tab of the
+            // remote browser, and all of them share the one session.
+            window.open(href, "_blank", "noopener");
         });
     });
 }

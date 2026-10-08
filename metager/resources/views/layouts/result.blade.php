@@ -114,9 +114,9 @@
                 </a>
             @endif
             @if (request()->header("is-proxy") !== "true")
-                {{-- All SafeBrowse parameters travel in the hash (never the query string): clicking
-                     another result must only change the fragment of the already-open named tab, so
-                     the running SafeBrowse app receives a hashchange instead of a full reload.
+                {{-- All SafeBrowse parameters travel in the hash (never the query string), which
+                     never reaches a server or its access logs. Each result opens in a tab of its
+                     own (resultpage/proxy.js), all of them in one SafeBrowse session.
                      Only a query login carries the key here. SafeBrowse is same-origin, so a
                      cookie login already sends the key on the WebSocket upgrade by itself, and a
                      header login gets anonymous-token-key injected by the webextension the same

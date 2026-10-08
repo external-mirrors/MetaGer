@@ -51,6 +51,20 @@ class LocalizationRedirect
         if (!$this->isNavigation($request)) {
             return $next($request);
         }
+
+        /**
+         * And only a navigation that can be repeated.
+         *
+         * Submitting a form is a navigation as well, but a browser answers a
+         * 302 to a POST by asking again with GET — the body does not come
+         * along. A sign-in relocated this way lands on an empty form with no
+         * error, because as far as the server knows nothing was submitted.
+         * The page the form sits on was already relocated when it was loaded,
+         * so its action is in the right locale to begin with.
+         */
+        if (!$request->isMethodSafe()) {
+            return $next($request);
+        }
         if ($request->routeIs('loadSettings')) {
             return $next($request);
         }

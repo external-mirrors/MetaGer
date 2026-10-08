@@ -73,6 +73,33 @@ class LocaleRedirectsOnlyNavigationsTest extends TestCase
         );
     }
 
+    /**
+     * A form submission is a navigation too — `Sec-Fetch-Mode: navigate` — and
+     * that is exactly why it must not be relocated: a browser repeats a POST
+     * that was answered with a 302 as a GET, and whatever was in the body is
+     * gone.
+     *
+     * On the sign-in page that looks like nothing at all. The visitor presses
+     * "Anmelden", the GET lands on a fresh form — empty field, no error,
+     * because no attempt was ever made — and there is nothing on screen to say
+     * why. A support ticket described precisely that, and a locale prefix the
+     * POST considered redundant is one of the few ways to produce it.
+     *
+     * `/en-US/…` with no `Accept-Language` on localhost is such a prefix:
+     * en-US is already this browser's default, so `verifyPathLocaleNeeded()`
+     * wants it gone. The controller answering — with its own `no_input`
+     * redirect, since the form is empty — is the proof the POST got through.
+     */
+    public function testAFormSubmissionIsNeverRelocated(): void
+    {
+        $response = $this->withHeaders([
+            "Origin" => config("app.url"),
+            "Sec-Fetch-Mode" => "navigate",
+        ])->post("/en-US/anmelden");
+
+        $response->assertRedirectContains("key_error=no_input");
+    }
+
     public static function nonNavigationHeaders(): array
     {
         return [

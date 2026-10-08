@@ -220,13 +220,16 @@ final class LoginController extends Controller
             abort(403);
         }
 
+        $entered = $request->input("key");
+        $entered = is_string($entered) ? trim($entered) : "";
+
+        // Mit der Eingabe zurück, wie jeder andere abgewiesene Versuch: wer in
+        // ein paar Minuten noch einmal will, soll nicht neu abtippen müssen.
         if (RateLimiter::tooManyAttempts($this->attemptKey($request), self::MAX_ATTEMPTS)) {
-            return $this->back($callback, $redirectSuccess, "too_many_attempts");
+            return $this->back($callback, $redirectSuccess, "too_many_attempts", $entered);
         }
         RateLimiter::hit($this->attemptKey($request), self::ATTEMPT_WINDOW_SECONDS);
 
-        $entered = $request->input("key");
-        $entered = is_string($entered) ? trim($entered) : "";
         $file = $request->file("file");
 
         if ($entered !== "") {

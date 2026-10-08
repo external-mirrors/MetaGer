@@ -333,6 +333,27 @@ class LoginSubmitTest extends TestCase
             ->assertRedirectContains("key_error=too_many_attempts");
     }
 
+    /**
+     * Gebremst, aber die Eingabe bleibt im Feld — wie bei jedem anderen
+     * abgewiesenen Versuch.
+     *
+     * Das war der einzige Fehler, nach dem das Feld leer zurückkam. Wer nach
+     * ein paar Minuten noch einmal versucht, soll seinen Schlüssel nicht ein
+     * zweites Mal abtippen müssen.
+     */
+    public function testASlowedDownAttemptKeepsWhatWasEntered(): void
+    {
+        $this->keyserverAnswers(["result" => "error", "error" => "invalid_login_code"]);
+
+        for ($i = 0; $i < 20; $i++) {
+            RateLimiter::hit("login:127.0.0.1", 300);
+        }
+
+        $this->submit(["key" => "123456"])
+            ->assertRedirectContains("key_error=too_many_attempts")
+            ->assertRedirectContains("invalid_key=123456");
+    }
+
     /** Und dann wird der Keyserver auch nicht mehr gefragt. */
     public function testANoLongerAcceptedAttemptIsNotEvenAsked(): void
     {

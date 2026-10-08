@@ -221,4 +221,44 @@ class CookieBlindNoticeTest extends TestCase
         $response = $this->withCookie("key", self::KEY)->get($location)->assertOk();
         $response->assertDontSeeText(trans("login.no_cookies_notice"));
     }
+
+    // ── The webextension ─────────────────────────────────────────────────
+
+    /**
+     * What a sign-in's redirect looks like when the webextension has already
+     * deleted the fresh cookie but not yet installed the rule that sends it
+     * as a `Key` header: marker and key in the query, neither cookie nor
+     * header — only the `Mg-Webext` header the extension sends on every
+     * request. Nothing is wrong with this browser's cookies, so no notice,
+     * and no key carried into the page's links either.
+     *
+     * "Links" meaning the ones CookieCarryingUrlGenerator builds. The key is
+     * still on the page elsewhere: the language switcher and the settings
+     * link echo the current URL, and parts/searchbar.blade.php carries a
+     * query `key` into the search form by its own `filled()` check — both
+     * predate this and neither goes through CookieSupport.
+     */
+    public function testTheStartpageTrustsTheWebextensionMidHandoff(): void
+    {
+        $this->keyserverKnows();
+
+        $response = $this->withHeader("Mg-Webext", "1.29")
+            ->get("/?key=" . self::KEY . "&" . CookieSupport::MARKER . "=1")
+            ->assertOk();
+
+        $response->assertDontSeeText(trans("login.no_cookies_notice"));
+        $response->assertSee('/kontakt"', false);
+        $response->assertDontSee("kontakt?key=", false);
+    }
+
+    public function testTheAccountPageTrustsTheWebextensionMidHandoff(): void
+    {
+        $this->keyserverKnows();
+
+        $response = $this->withHeader("Mg-Webext", "1.29")
+            ->get("/konto?key=" . self::KEY . "&" . CookieSupport::MARKER . "=1")
+            ->assertOk();
+
+        $response->assertDontSeeText(trans("login.no_cookies_notice"));
+    }
 }

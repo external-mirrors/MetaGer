@@ -58,10 +58,14 @@ final class CookieSupport
      * `carryIntoUrl()`, producing a bare trailing `?` on any link built from
      * within that same request (surfaced by `KeymanagerLinks::voucher()`
      * during a login POST, `http_build_query` silently drops a null value).
+     *
+     * Never true for the webextension — see {@see cookieTakenByExtension()}.
      */
     public static function keyMissingCookie(Request $request): bool
     {
-        return !empty($request->query("key")) && $request->cookie("key") === null;
+        return !empty($request->query("key"))
+            && $request->cookie("key") === null
+            && !self::cookieTakenByExtension($request);
     }
 
     /**
@@ -78,17 +82,39 @@ final class CookieSupport
      * the notice, which needs it spelled out explicitly because it checks
      * the cookie's absence directly rather than going through `filled()`.
      *
-     * This does not close every gap: if the extension's own handoff from
-     * "just read the fresh cookie" to "now sending the header instead" spans
-     * more than one page load, that one in-between request can still look
-     * cookie-blind. Nothing server-side can see far enough into that handoff
-     * to do better; the steady state — every request afterward — is correct.
+     * The `key` header alone does not cover the extension's handoff from
+     * "deleted the fresh cookie" to "sending the header instead": a request
+     * in between has neither. {@see cookieTakenByExtension()} closes that.
      */
     public static function justAuthenticatedWithoutCookie(Request $request): bool
     {
         return $request->query(self::MARKER) === "1"
             && $request->cookie("key") === null
-            && !$request->hasHeader("key");
+            && !$request->hasHeader("key")
+            && !self::cookieTakenByExtension($request);
+    }
+
+    /**
+     * Whether a missing `key` cookie is the webextension's doing rather than
+     * the browser's.
+     *
+     * The extension deletes every `key` cookie it sees and sends the key as a
+     * header instead — but only once its header rule is installed, which
+     * waits on a keyserver round trip, while the browser follows the
+     * sign-in's redirect at once. Before extension 1.30 the cookie was even
+     * deleted *before* that round trip started (TokenManager
+     * `_load_key_from_browser`), so that redirect regularly arrived with
+     * neither cookie nor `key` header. Older versions stay installed, so this
+     * is not something the extension fix alone can retire.
+     *
+     * `Mg-Webext` is the signal: its rule is installed independently of any
+     * sign-in and covers every top-level navigation. It is absent when the
+     * user switched off settings storage in the extension; such a user falls
+     * back to the cookie-blind handling, which still keeps them signed in.
+     */
+    private static function cookieTakenByExtension(Request $request): bool
+    {
+        return $request->hasHeader("Mg-Webext");
     }
 
     /**

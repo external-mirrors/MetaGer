@@ -4,6 +4,7 @@ import {
     formatKey,
     isSubmittable,
 } from "./login/keyInput";
+import { fetchCharge } from "./login/chargeCheck";
 import { maskKeyFieldWhileUnfocused } from "./login/maskKeyField";
 
 /**
@@ -124,8 +125,9 @@ function enhanceFileField() {
  * lands on another well-formed key, and the only visible difference is a
  * balance of zero. So: ask, once, and only for a complete key.
  *
- * If the keyserver does not answer, the form submits. A balance check is not
- * worth standing between a visitor and their account.
+ * If the keyserver does not answer — or not within login/chargeCheck.js's
+ * timeout — the form submits. A balance check is not worth standing between a
+ * visitor and their account.
  */
 function guardEmptyKeys() {
     const dialog = document.getElementById("login-empty-key");
@@ -154,17 +156,9 @@ function guardEmptyKeys() {
 
         event.preventDefault();
 
-        let charge = null;
-        try {
-            const response = await fetch(endpoint + encodeURIComponent(value), {
-                headers: { Accept: "application/json" },
-            });
-            if (response.ok) {
-                charge = (await response.json()).charge;
-            }
-        } catch {
-            // Unreachable keyserver: nothing to warn about, so do not.
-        }
+        // null when the keyserver cannot say, in time or at all: nothing to
+        // warn about, so do not.
+        const charge = await fetchCharge(endpoint, value);
 
         if (charge !== 0) {
             confirmed = true;

@@ -54,6 +54,25 @@ class CookieSupportTest extends TestCase
         $this->assertFalse(CookieSupport::keyMissingCookie($request));
     }
 
+    /**
+     * `Mg-Webext` says the webextension is installed with host permissions,
+     * and such an extension deletes every `key` cookie it sees. A missing
+     * cookie is then the extension's doing, not the browser's, and carrying
+     * the key into every link would put it in history and Referer headers
+     * for nothing: the extension authenticates by header.
+     *
+     * The case that reaches this is a sign-in's redirect landing before the
+     * extension has its header rule in place — it removed the cookie, but
+     * `Key` is not on this request yet.
+     */
+    public function testFalseWhenTheWebextensionIsPresent(): void
+    {
+        $request = Request::create("/?key=" . self::KEY);
+        $request->headers->set("Mg-Webext", "1.29");
+
+        $this->assertFalse(CookieSupport::keyMissingCookie($request));
+    }
+
     // ── justAuthenticatedWithoutCookie(): drives the notice ──────────────
 
     public function testTrueWithTheMarkerAndNoCookie(): void
@@ -97,6 +116,20 @@ class CookieSupportTest extends TestCase
     {
         $request = Request::create("/?" . CookieSupport::MARKER . "=1");
         $request->headers->set("key", self::KEY);
+
+        $this->assertFalse(CookieSupport::justAuthenticatedWithoutCookie($request));
+    }
+
+    /**
+     * The handoff the header exclusion above cannot see: the extension has
+     * already deleted the cookie but not yet installed the rule that sends
+     * `Key`, so this request has neither. Its `Mg-Webext` header is there
+     * regardless — a different rule, in place long before any sign-in.
+     */
+    public function testFalseWithTheMarkerWhenTheWebextensionIsPresent(): void
+    {
+        $request = Request::create("/?key=" . self::KEY . "&" . CookieSupport::MARKER . "=1");
+        $request->headers->set("Mg-Webext", "1.29");
 
         $this->assertFalse(CookieSupport::justAuthenticatedWithoutCookie($request));
     }

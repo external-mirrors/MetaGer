@@ -7,12 +7,38 @@ let wsTestInProgress = false;
 // intercepted, silently sending exactly those users to the old proxy.
 let wsTestResult = null;
 
-// One SafeBrowse session for the results opened from this page, for browsers that cannot store
+const TAB_SESSION_PREFIX = "safebrowse-sid:";
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+// One SafeBrowse session for the results opened from this tab, for browsers that cannot store
 // SafeBrowse's own session id: every proxy link carries this id (#…&sid=), and such a browser
 // uses it instead of starting a session per tab. Browsers with storage ignore it. SafeBrowse only
 // accepts it from a same-origin referrer, so a copied link cannot hand a session to someone else
 // (or a crafted one fix the session a victim then uses).
-const pageSessionId = randomUuid();
+const pageSessionId = tabSessionId(window, document.referrer);
+
+/**
+ * The session id of this tab, kept in window.name: a new search, the next page or a reload opens
+ * its results into the same session, not one per results page. window.name is the one place that
+ * outlives a navigation without being storage (blocked along with cookies) or part of the URL
+ * (copied, bookmarked, logged). Browsers clear it when a tab moves to another site, and it is only
+ * taken over when the page was reached from one of our own, so another site cannot set it to fix
+ * the session.
+ * @param {{name: string, location: Location}} win
+ * @param {string} referrer
+ * @returns {string}
+ */
+export function tabSessionId(win, referrer) {
+    let fromUs = false;
+    try { fromUs = new URL(referrer).origin === win.location.origin; } catch (e) { }
+    const ours = win.name.indexOf(TAB_SESSION_PREFIX) === 0;
+    const kept = ours ? win.name.substring(TAB_SESSION_PREFIX.length) : "";
+    if (fromUs && UUID_PATTERN.test(kept)) return kept;
+    const id = randomUuid();
+    // Someone else's name may be what a link targets this tab by
+    if (!win.name || ours) win.name = TAB_SESSION_PREFIX + id;
+    return id;
+}
 
 function randomUuid() {
     if (window.crypto && typeof window.crypto.randomUUID === "function") {

@@ -86,6 +86,28 @@ class SettingsPostRedirectTest extends TestCase
         $this->assertTrue($this->isForgotten($response, self::ENABLED_ENGINE_FOKUS . "_engine_" . self::ENABLED_ENGINE));
     }
 
+    /**
+     * Regression test: `disableSearchEngine` / `enableSearchEngine` indexed
+     * the fokus's engine list with the posted `suma` unchecked, so a name the
+     * fokus does not contain — an engine from another fokus, or the sqlmap
+     * payloads scanners post here — raised "Undefined array key" and
+     * answered 500. In production that was 321 distinct GlitchTip issues.
+     * It is now treated like an empty `suma`.
+     */
+    #[Test]
+    public function disabling_an_engine_the_fokus_does_not_have_is_a_404(): void
+    {
+        $this->post("/meta/settings/de", ["suma" => self::ENABLED_ENGINE, "focus" => "web"])->assertNotFound();
+        $this->post("/meta/settings/de", ["suma" => "pixabay' ORDER BY 1-- -", "focus" => self::ENABLED_ENGINE_FOKUS])->assertNotFound();
+    }
+
+    #[Test]
+    public function enabling_an_engine_the_fokus_does_not_have_is_a_404(): void
+    {
+        $this->post("/meta/settings/ee", ["suma" => self::ENABLED_ENGINE, "focus" => "web"])->assertNotFound();
+        $this->post("/meta/settings/ee", ["suma" => "no-such-engine", "focus" => "web"])->assertNotFound();
+    }
+
     #[Test]
     public function changing_the_market_filter_stores_it_and_redirects_to_the_filter_anchor(): void
     {

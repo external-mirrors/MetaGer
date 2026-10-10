@@ -200,16 +200,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [Vite::asset('resources/less/metager/pages/adblocker.less')]]));
     })->name("adblocker");
 
-    Route::group(["prefix" => "membership"], function () {
-        Route::get("token", [MembershipController::class, "getToken"]);
-        Route::get("paypal/authorized/{application_id}", [MembershipController::class, "paypalHandleAuthorized"])->name("membership_paypal_authorized");
-        Route::get("paypal/cancelled/{application_id}", [MembershipController::class, "paypalHandleCancelled"])->name("membership_paypal_cancelled");
-        Route::post("webhook/paypal", [MembershipController::class, "paypalWebhook"]);
-        Route::get("/success/{application_id?}", [MembershipController::class, "success"])->name("membership_success");
-        Route::get("/{application_id?}", [MembershipController::class, "contactData"])->name("membership_form");
-        Route::post("/{application_id?}", [MembershipController::class, "submitMembershipForm"]);
-        Route::get("/{application_id}/abort", [MembershipController::class, "abortApplication"])->name("membership_abort");
-    });
+    Route::get("membership/{application_id?}", [MembershipController::class, "form"])->name("membership_form");
 
     Route::get('tor', function () {
         return view('tor')

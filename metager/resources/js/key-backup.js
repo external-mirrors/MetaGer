@@ -2,9 +2,8 @@
  * Die beiden Dinge, die der Block zum Aufbewahren ohne Javascript nicht kann.
  *
  * Ausgelagert, als /membership/success denselben Block bekam
- * (resources/views/parts/key-backup.blade.php): der Aufnahmeantrag erstellt im
- * ersten Schritt still einen Schlüssel, und die Erfolgsseite ist für viele
- * Mitglieder die einzige Gelegenheit, ihn zu sehen.
+ * (resources/views/parts/key-backup.blade.php). Die Seite ist mit dem
+ * Aufnahmeantrag zu suma-crm umgezogen; die Trennung ist geblieben.
  *
  * Was hier *nicht* steht, ist die Nachfrage vor dem zweiten Schlüssel — die
  * gehört zur Seite zum Erstellen und nur dorthin (resources/js/key-create.js).

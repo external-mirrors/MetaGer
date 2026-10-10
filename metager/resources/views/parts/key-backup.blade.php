@@ -1,21 +1,14 @@
 {{--
 	Den Schlüssel behalten.
 
-	Derselbe Block auf zwei Seiten, die sonst nichts miteinander zu tun haben:
-	/schluessel-erstellen zeigt ihn, wenn jemand gerade einen erstellt hat, und
-	/membership/success, wenn der Aufnahmeantrag im ersten Schritt still einen
-	angelegt hat. Für ein Mitglied ist diese Seite oft die einzige Gelegenheit,
-	ihn überhaupt zu sehen — die Willkommensmail nennt ihn erst nach der
-	Bearbeitung.
+	/schluessel-erstellen zeigt ihn, wenn jemand gerade einen erstellt hat. Bis
+	der Aufnahmeantrag zu suma-crm umzog, stand derselbe Block auch auf
+	/membership/success; daher das eigene Partial.
 
 	Erwartet:
 	  $key         der Schlüssel
 	  $settingsUrl der URL, der ihn samt Sucheinstellungen wieder einrichtet
 	  $qrUri       derselbe Weg als Bild, als data:-URI
-	  $keyLabel    optional, die Beschriftung des Feldes. Voreingestellt ist
-	               „Ihr neuer Schlüssel“ — das stimmt beim Erstellen und nicht
-	               auf der Erfolgsseite des Aufnahmeantrags, wo ein bereits
-	               angemeldetes Mitglied seinen bestehenden behält.
 
 	Alles, was ohne Javascript nicht geht, steht `hidden` im Markup und wird von
 	dort aufgedeckt (resources/js/key-backup.js): die Kopierknöpfe — ein
@@ -41,7 +34,7 @@
 </p>
 
 <div class="keybackup-key">
-	<label class="keybackup-key__label" for="new-key">{{ $keyLabel ?? __('key-create.key.label') }}</label>
+	<label class="keybackup-key__label" for="new-key">{{ __('key-create.key.label') }}</label>
 	{{--
 		readonly und nicht disabled: ein deaktiviertes Feld lässt sich weder
 		markieren noch vorlesen, und beides ist hier genau das, was jemand ohne

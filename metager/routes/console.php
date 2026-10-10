@@ -31,10 +31,6 @@ Schedule::call(function () {
     DB::disconnect('mysql');
 })->monthlyOn(1, '00:00');
 
-// Membership Commands
-Schedule::command('membership:notify-admin')->dailyAt("06:00")->onOneServer();
-Schedule::command('membership:notify-unfinished')->hourly()->onOneServer();
-
 // Logs Commands
 Schedule::command('logs:create-order')->onOneServer()->dailyAt("06:00");
 Schedule::command('logs:create-invoice')->onOneServer()->dailyAt("07:00");

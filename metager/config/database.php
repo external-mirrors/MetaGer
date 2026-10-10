@@ -195,7 +195,7 @@ return [
          * anyone makes on it.
          *
          * That is AnonymousToken::PAYMENT_WAIT_SECONDS (30s); after it come the
-         * 10s brpops in Suggestions, KeyAuthorization, PayPal and CiviCrm, and
+         * 10s brpops in Suggestions and KeyAuthorization, and
          * EngineOrchestrator's WAIT_SECONDS on the result page. A timeout under
          * any of those would abort a caller that was waiting exactly as
          * intended, which is why this cannot simply be tightened to match the

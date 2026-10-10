@@ -13,10 +13,11 @@ this repo used to carry.
   detection, and the still-open Hibiscus/Jameica Payment-Server integration spike —
   `suma-payments`' own `docs/civicrm-replacement.md`.
 
-`app/Http/Controllers/MembershipController`/`DonationController`, `app/Models/Membership/*`, and
-their PayPal integration code are untouched here and were never part of this move — see the
-extraction plan's Phase B for their eventual fate (thin pages calling into suma-crm/suma-payments
-instead of doing everything locally).
+Membership has since left this repo entirely (Phase B). `MembershipController` is a redirect to
+suma-crm's application form and nothing else; the legacy form, its admin review, its mails, the
+PayPal integration and the `CiviCrm` client were deleted, along with the crons that kept reading
+the frozen CiviCRM after cutover (`tests/Feature/MembershipCivicrmCronsRemovedTest` says what that
+cost).
 
 This file's own git history (up to and including the commit that removed the ported `Assoc` code
 from this repo) still holds the original, single-app version of this document if the detailed

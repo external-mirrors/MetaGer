@@ -31,6 +31,6 @@ Schedule::call(function () {
     DB::disconnect('mysql');
 })->monthlyOn(1, '00:00');
 
-// Logs Commands
-Schedule::command('logs:create-order')->onOneServer()->dailyAt("06:00");
-Schedule::command('logs:create-invoice')->onOneServer()->dailyAt("07:00");
+// The Logs API's billing — `logs:create-order` and `logs:create-invoice` — is
+// not scheduled: the feature has no customers. The commands are kept for when
+// it is picked up again. See tests/Feature/LogsBillingCronsDisabledTest.

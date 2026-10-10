@@ -184,6 +184,9 @@ class SettingsController extends Controller
 
         $settings = app(SearchSettings::class);
         $engines = app(Searchengines::class)->getSearchEnginesForFokus();
+        if (!isset($engines[$sumaName])) {
+            abort(404);
+        }
         $secure = app()->environment("local") ? false : true;
         $cookieName = $settings->fokus . "_engine_" . $sumaName;
         if (!$engines[$sumaName]->configuration->disabled) {
@@ -217,6 +220,9 @@ class SettingsController extends Controller
 
         $settings = app(SearchSettings::class);
         $engines = app(Searchengines::class)->getSearchEnginesForFokus();
+        if (!isset($engines[$sumaName])) {
+            abort(404);
+        }
         $secure = app()->environment("local") ? false : true;
         $cookieName = $settings->fokus . "_engine_" . $sumaName;
         if ($engines[$sumaName]->configuration->disabled) {

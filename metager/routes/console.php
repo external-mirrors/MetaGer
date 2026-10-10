@@ -32,8 +32,6 @@ Schedule::call(function () {
 })->monthlyOn(1, '00:00');
 
 // Membership Commands
-Schedule::command('membership:paypal-payments')->hourly()->onOneServer();
-Schedule::command('membership:payment-reminder')->cron("0 6-23 * * *")->onOneServer();
 Schedule::command('membership:notify-admin')->dailyAt("06:00")->onOneServer();
 Schedule::command('membership:notify-unfinished')->hourly()->onOneServer();
 

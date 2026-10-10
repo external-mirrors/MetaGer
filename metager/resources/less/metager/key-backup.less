@@ -2,19 +2,13 @@
 
 // Der Block, mit dem man einen Schlüssel behält.
 //
-// Kennung, Schlüsselfeld, QR-Code, Lesezeichen-URL — dreimal dasselbe auf zwei
-// Seiten, die sonst nichts miteinander zu tun haben:
+// Kennung, Schlüsselfeld, QR-Code, Lesezeichen-URL. pages/key-create.less
+// importiert diese Datei. Sie stand für sich, solange /membership/success sie
+// als eigenes Stylesheet lud; die Seite ist mit dem Aufnahmeantrag zu suma-crm
+// umgezogen.
 //
-//   /schluessel-erstellen   pages/key-create.less importiert diese Datei; der
-//                           Ausgang dieser Seite ist unverändert derselbe.
-//   /membership/success     lädt sie als eigenes Stylesheet daneben. Die
-//                           Mitgliedsseiten sind noch ein Hell-/Dunkel-Paar mit
-//                           media-Attribut am <link>; hier hineinimportiert
-//                           stünde der Block zweimal im Ausgang, und die
-//                           data-theme-Umschaltung griffe darin nicht.
-//
-// Beide Paletten kommen deshalb aus den Tokens in variables.less und nicht aus
-// einer zweiten Übersetzung dieser Datei.
+// Beide Paletten kommen aus den Tokens in variables.less und nicht aus einer
+// zweiten Übersetzung dieser Datei.
 //
 // Die Klassen hießen `create-*`, solange es die Seite zum Erstellen allein gab.
 // `.create-card[data-state]` in pages/key-create.less schaltet `.keybackup-save`

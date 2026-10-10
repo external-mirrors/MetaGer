@@ -90,12 +90,6 @@ return [
         "germanmail" => env("TICKET_GERMAN_MAIL", ""),
         "englishmail" => env("TICKET_ENGLISH_MAIL", ""),
     ],
-    "civicrm" => [
-        "enabled" => env("CIVICRM_NOTIFICATIONS_ENABLED", true),
-        "url" => env("CIVICRM_URL", "https://metager.de"),
-        "apikey" => env("CIVICRM_API_KEY", ""),
-        "sitekey" => env("CIVICRM_SITE_KEY", ""),
-    ],
     "crm" => [
         // The address a visitor's own browser is sent to (the "become a
         // member" redirect): suma-crm's portal host — https://my.suma-ev.de
@@ -116,35 +110,6 @@ return [
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),
         "key" => env("WEBDRIVER_KEY", ""),
-    ],
-    "membership" => [
-        "membership_id_testing" => env("MEMBERSHIP_TESTING_ID", ""),
-        "notification_address" => env("MEMBERSHIP_NOTIFICATION_EMAIL", "")
-    ],
-    "paypal" => [
-        'pdt_token' => env("PAYPAL_PDT_TOKEN", ""),
-        'base_url' => env("APP_ENV") === "local" ? "https://api-m.sandbox.paypal.com" : "https://api-m.paypal.com",
-        'client_id' => env("APP_ENV") === "local" ? env("PAYPAL_SANDBOX_CLIENT_ID") : env("PAYPAL_CLIENT_ID"),
-        'secret' => env("APP_ENV") === "local" ? env("PAYPAL_SANDBOX_SECRET") : env("PAYPAL_SECRET"),
-        'membership' => [
-            'client_id' => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_CLIENT_ID") : env("PAYPAL_MEMBERSHIP_CLIENT_ID"),
-            'secret' => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_SECRET") : env("PAYPAL_MEMBERSHIP_SECRET"),
-            "webhook_id" => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_WEBHOOKID") : env("PAYPAL_MEMBERSHIP_WEBHOOKID"),
-        ],
-        'subscription_plans' => [
-            'de' => [
-                'monthly' => env("APP_ENV") === "local" ? "P-9K924561XA8341447MR4OWLY" : "P-5T792079318830948MR7RKNQ",
-                'quarterly' => env("APP_ENV") === "local" ? "P-0FB89268F4436550RMR44A4Q" : "P-62V62940SW941451CMSADXYY",
-                'six-monthly' => env("APP_ENV") === "local" ? "P-6HV135640N2728211MR44BEA" : "P-02012023JU117583VMSADYCA",
-                'annual' => env("APP_ENV") === "local" ? "P-9PS701646J694893UMR44BKY" : "P-76933683ME4978749MSADYKA",
-            ],
-            'en' => [
-                'monthly' => env("APP_ENV") === "local" ? "P-9K924561XA8341447MR4OWLY" : "P-4KU89480TX608823SMR7RL5Q",
-                'quarterly' => env("APP_ENV") === "local" ? "P-0FB89268F4436550RMR44A4Q" : "P-84X85829590029937MSADY4I",
-                'six-monthly' => env("APP_ENV") === "local" ? "P-6HV135640N2728211MR44BEA" : "P-4BN89043UV429704AMSADZDY",
-                'annual' => env("APP_ENV") === "local" ? "P-9PS701646J694893UMR44BKY" : "P-5BK5465420316543SMSADZKY",
-            ]
-        ]
     ],
     "maps" => [
         "version" => env("maps_version"),

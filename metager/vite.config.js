@@ -72,7 +72,6 @@ const assets = laravel({
         "resources/less/metager/pages/price.less",
         "resources/less/metager/pages/agb.less",
         "resources/less/metager/pages/login.less",
-        "resources/less/metager/key-backup.less",
         "resources/less/metager/pages/key-create.less",
         "resources/less/metager/pages/voucher.less",
         "resources/less/metager/pages/account.less",
@@ -84,12 +83,9 @@ const assets = laravel({
         "resources/less/metager/pages/count/style-dark.less",
         "resources/less/metager/pages/spende/base.less",
         "resources/less/metager/pages/spende/base-dark.less",
-        "resources/less/metager/pages/membership/base.less",
-        "resources/less/metager/pages/membership/base-dark.less",
         "resources/less/metager/pages/widget/widget.less",
         "resources/less/metager/pages/widget/widget-template.less",
         "resources/less/metager/pages/admin/logs.less",
-        "resources/less/metager/pages/admin/membership.less",
 
         // -- scripts ------------------------------------------------
         "resources/js/utility.js",
@@ -105,11 +101,8 @@ const assets = laravel({
         "resources/js/checkout-paypal.js",
         "resources/js/contact.js",
         "resources/js/widgets.js",
-        "resources/js/membership.js",
-        "resources/js/membership-success.js",
         "resources/js/donation/base.js",
         "resources/js/admin/count.js",
-        "resources/js/admin/membership.js",
     ],
     // Blade changes do not need a browser reload without a dev server.
     refresh: false,

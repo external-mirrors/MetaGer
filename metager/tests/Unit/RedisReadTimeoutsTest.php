@@ -91,7 +91,7 @@ class RedisReadTimeoutsTest extends TestCase
         foreach (
             [
                 "AnonymousToken::GET_PAYMENT" => AnonymousToken::PAYMENT_WAIT_SECONDS,
-                "the 10s brpops in Suggestions/KeyAuthorization/PayPal/CiviCrm" => 10,
+                "the 10s brpops in Suggestions/KeyAuthorization" => 10,
                 "EngineOrchestrator::waitForMainResults" => EngineOrchestrator::WAIT_SECONDS,
             ] as $caller => $blockingWait
         ) {

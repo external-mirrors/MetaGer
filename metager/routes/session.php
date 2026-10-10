@@ -1,7 +1,6 @@
 <?php
 use App\Http\Controllers\AdminInterface;
 use App\Http\Controllers\LogsApiController;
-use App\Http\Controllers\MembershipController;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Mail\LogsLoginCode;
 use Illuminate\Http\Request;
@@ -24,13 +23,6 @@ Route::get('callback', [Vizir\KeycloakWebGuard\Controllers\AuthController::class
  */
 Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], 'prefix' => 'admin'], function () {
     Route::match(["get", "post"], "logs", [LogsApiController::class, "admin"])->name("logs:admin");
-    Route::get("membership", [MembershipController::class, "adminIndex"])->name("membership_admin_overview");
-    Route::get("membership/test", [MembershipController::class, "test"]);
-    Route::get("membership/reduction", [MembershipController::class, "adminMembershipReduction"])->name("membership_admin_reduction");
-    Route::post("membership/reduction/deny", [MembershipController::class, "adminMembershipReductionDeny"])->name("membership_admin_reduction_deny");
-    Route::post("membership/reduction/accept", [MembershipController::class, "adminMembershipReductionAccept"])->name("membership_admin_reduction_accept");
-    Route::post("membership/accept", [MembershipController::class, "adminAccept"])->name("membership_admin_accept");
-    Route::post("membership/deny", [MembershipController::class, "adminDeny"])->name("membership_admin_deny");
     Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');

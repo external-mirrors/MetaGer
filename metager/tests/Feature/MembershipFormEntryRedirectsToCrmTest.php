@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Membership\MembershipApplication;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 /**
@@ -13,15 +11,15 @@ use Tests\TestCase;
  * a brand-new visitor straight to suma-crm's own native application form
  * instead of rendering this app's legacy multi-step one.
  *
- * An `$application_id` (a resume link an earlier email sent out, or a
- * bookmarked step) is untouched by this and keeps rendering the legacy form
- * exactly as before — see MembershipKeyTest/MembershipCrmHandoverTest for
- * that path's own coverage.
+ * That redirect is all that is left of membership in this app. suma-crm
+ * owns the application, its review, the welcome mail and the member portal;
+ * suma-payments owns reminders and collecting the fee. The legacy multi-step
+ * form, its admin review, its mails and the CiviCRM client behind them were
+ * deleted — see MembershipCivicrmCronsRemovedTest for why leaving any of it
+ * running against a frozen CiviCRM is not harmless.
  */
 class MembershipFormEntryRedirectsToCrmTest extends TestCase
 {
-    use DatabaseTransactions;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -47,7 +45,7 @@ class MembershipFormEntryRedirectsToCrmTest extends TestCase
      * redirect a non-German locale prefix gets sent through before this
      * controller ever runs) — `de-AT` is a real, fully-supported German
      * regional locale distinct from the site's own de-DE default, so it
-     * reaches contactData() without that redirect and still proves the
+     * reaches the controller without that redirect and still proves the
      * locale carried through is the one actually resolved for this request,
      * not a hardcoded default.
      */
@@ -72,9 +70,8 @@ class MembershipFormEntryRedirectsToCrmTest extends TestCase
 
     /**
      * An already-recognised MetaGer user (via cookie, not just the URL) gets
-     * the same treatment — the same keyOfVisitor() check
-     * submitMembershipForm() itself uses to decide whether a visitor already
-     * has a key, so someone signed in when they click "become a member"
+     * the same treatment — keyOfVisitor() reads the same sources, in the same
+     * order, as the key guard, so someone signed in when they click "become a member"
      * lands on suma-crm's form already tied to their own key.
      */
     public function testAKeyKnownOnlyByCookieIsCarriedAlong(): void
@@ -107,12 +104,29 @@ class MembershipFormEntryRedirectsToCrmTest extends TestCase
         }
     }
 
-    public function testAnInFlightApplicationStillRendersTheLegacyForm(): void
+    /**
+     * Resume links in mails the legacy form sent out, and bookmarked steps,
+     * still point at `/membership/{id}`. The form behind them is gone, so
+     * they land where a new application starts.
+     */
+    public function testALegacyResumeLinkIsRedirectedToSumaCrm(): void
     {
-        $application = MembershipApplication::create(["locale" => "de-DE"]);
+        $this->get("/de-DE/membership/0b6f1f4e-6f0e-4a8e-9d3c-2a1b5c7d9e0f?keystore=release&variant=fdroid")
+            ->assertRedirect("https://crm.example.com/mitglied-werden?lang=de-DE&keystore=release&variant=fdroid");
+    }
 
-        $this->get("/de-DE/membership/{$application->id}")
-            ->assertOk()
-            ->assertDontSee("crm.example.com", false);
+    /**
+     * Every other legacy membership URL is gone, the PayPal webhook included:
+     * suma-payments receives PayPal's webhooks now.
+     */
+    public function testTheLegacyFormEndpointsAreGone(): void
+    {
+        foreach (["membership_success", "membership_abort", "membership_paypal_authorized", "membership_paypal_cancelled", "membership_admin_overview", "membership_admin_accept", "membership_admin_deny", "membership_admin_reduction"] as $name) {
+            $this->assertFalse(\Route::has($name), "route $name should be gone");
+        }
+
+        $uris = collect(\Route::getRoutes()->getRoutes())->map(fn($route) => $route->uri());
+        $this->assertNotContains("membership/webhook/paypal", $uris);
+        $this->assertNotContains("membership/token", $uris);
     }
 }

@@ -25,6 +25,7 @@ return [
         'vat' => 'ALV (:rate %)',
         'total' => 'Kokonaismäärä',
         'exchange_rate' => 'Valuuttakurssi',
+        'documents' => 'Kuitti ja lasku',
         'download_confirmation' => 'Lataa tilausvahvistus',
         'request_invoice' => 'Luo lasku',
         'request_refund' => 'Pyydä palautusta',

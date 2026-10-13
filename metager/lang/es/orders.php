@@ -25,6 +25,7 @@ return [
         'vat' => 'IVA (:rate %)',
         'total' => 'Importe total',
         'exchange_rate' => 'Tipo de cambio',
+        'documents' => 'Justificante y factura',
         'download_confirmation' => 'Descargar confirmación de pedido',
         'request_invoice' => 'Crear factura',
         'request_refund' => 'Solicitar reembolso',

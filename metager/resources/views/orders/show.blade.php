@@ -16,7 +16,9 @@
 	wird und deren übrige Beträge („10 €", „1.000 Token") längst lokalisiert
 	sind.
 
-	darunter die Auftragsbestätigung als PDF, der Link zur Rechnung
+	darunter „Beleg und Rechnung“ — die Seite der Bestellung im CRM, wenn der
+	Keymanager ihren Link mitliefert ($documentsUrl) —, sonst noch die
+	Auftragsbestätigung als PDF, der Link zur Rechnung
 	(InvoiceNinja, App\Http\Controllers\OrderController::invoice()) und,
 	sofern refund_available zutrifft, der Link zur Erstattung
 	(App\Http\Controllers\OrderController::refund()) — payments[0], dieselbe
@@ -78,8 +80,12 @@
 		@if(count($order['payments']) > 0)
 			<p class="account-section__lede">@lang('orders.show.thanks')</p>
 			<div class="checkout-returned__actions">
-				<a class="account-btn account-btn--primary" href="{{ $confirmationUrl }}" target="_blank" rel="noopener">@lang('orders.show.download_confirmation')</a>
-				<a class="account-btn account-btn--quiet" href="{{ route('account.orders.invoice', ['reference' => $order['public_id']]) }}">@lang('orders.show.request_invoice')</a>
+				@if($documentsUrl)
+					<a class="account-btn account-btn--primary" href="{{ $documentsUrl }}" rel="noreferrer">@lang('orders.show.documents')</a>
+				@else
+					<a class="account-btn account-btn--primary" href="{{ $confirmationUrl }}" target="_blank" rel="noopener">@lang('orders.show.download_confirmation')</a>
+					<a class="account-btn account-btn--quiet" href="{{ route('account.orders.invoice', ['reference' => $order['public_id']]) }}">@lang('orders.show.request_invoice')</a>
+				@endif
 				@if($order['payments'][0]['refund_available'])
 					<a class="account-btn account-btn--quiet" href="{{ route('account.orders.refund', ['reference' => $order['public_id']]) }}">@lang('orders.show.request_refund')</a>
 				@endif

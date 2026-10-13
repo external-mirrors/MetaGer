@@ -37,6 +37,7 @@ return [
         'vat' => 'MwSt. (:rate %)',
         'total' => 'Gesamtbetrag',
         'exchange_rate' => 'Wechselkurs',
+        'documents' => 'Beleg und Rechnung',
         'download_confirmation' => 'Auftragsbestätigung herunterladen',
         'request_invoice' => 'Rechnung erstellen',
         'request_refund' => 'Erstattung anfragen',

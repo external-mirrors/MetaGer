@@ -25,6 +25,7 @@ return [
         'vat' => 'moms (:rate %)',
         'total' => 'Totalt belopp',
         'exchange_rate' => 'Växelkurs',
+        'documents' => 'Kvitto och faktura',
         'download_confirmation' => 'Ladda ner orderbekräftelse',
         'request_invoice' => 'Skapa faktura',
         'request_refund' => 'Begär återbetalning',

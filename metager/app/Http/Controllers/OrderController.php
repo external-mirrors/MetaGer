@@ -31,6 +31,12 @@ use Illuminate\Support\Facades\Vite;
  * ab, bevor irgendetwas davon angezeigt oder ein PDF gestreamt wird — dieselbe
  * Prüfung wie {@see ChargeController::returned()}.
  *
+ * **Beleg und Rechnung kommen aus dem CRM**, sobald der Keymanager die
+ * signierte Adresse der Bestellseite mitliefert (`crm_url`, suma-crm
+ * docs/keymanager-migration-plan.md, Schritt 4): eine Rechnung pro Zahlung,
+ * die Zahlungsbestätigung. Bis dahin — und bis Schritt 7 sie entfernt — gibt
+ * es die alten Wege unten noch.
+ *
  * **Die Rechnung (InvoiceNinja)** ist dasselbe Reference-Scoping wie die
  * Auftragsbestätigung, nur mit einem Formular davor: {@see invoice()} zeigt
  * es und nimmt es entgegen, {@see invoiceDownload()} liefert das fertige PDF.
@@ -121,6 +127,10 @@ final class OrderController extends Controller
         return $this->render("orders.show", $key, [
             "order" => $order,
             "confirmationUrl" => route("account.orders.confirmation", ["reference" => $order["public_id"]]),
+            // Die Seite der Bestellung im CRM (Zahlungsbestätigung, Rechnung pro
+            // Zahlung) — der Keymanager signiert den Link. Solange er keinen
+            // liefert, bleiben Auftragsbestätigung und InvoiceNinja-Rechnung.
+            "documentsUrl" => $order["crm_url"] !== null ? $order["crm_url"] . "?lang=" . urlencode(app()->getLocale()) : null,
         ]);
     }
 

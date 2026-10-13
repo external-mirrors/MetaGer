@@ -16,6 +16,8 @@ return [
         'change' => 'Modifier la quantité',
         'steps' => [
             'aria' => 'Rechargement en trois étapes',
+            // Alle Zahlungsarten liegen bei suma-payments: die Wahl dort, hier nur Menge und Bezahlen.
+            'aria_two' => 'Rechargement en deux étapes',
             'amount' => 'Quantité',
             'method' => 'Mode de paiement',
             'pay' => 'Payer',

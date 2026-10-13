@@ -19,9 +19,19 @@
 	Häkchen als Text (nicht als Bild), damit sie vorgelesen als „erledigt“
 	ankommen und nicht bloß grau sind.
 --}}
-<nav class="checkout-steps" aria-label="@lang('checkout.page.steps.aria')">
+@php
+	// Every payment method at suma-payments (SumaPaymentsChargeIssuer::allMoved()):
+	// the method is chosen on its picker, after „Bezahlen“, so there is no
+	// method step here — Menge → Bezahlen, and the pay page is step 2.
+	$withoutMethodStep = $withoutMethodStep ?? false;
+	$steps = $withoutMethodStep
+		? [1 => ['amount', $changeAmountUrl], 2 => ['pay', null]]
+		: [1 => ['amount', $changeAmountUrl], 2 => ['method', $methodsUrl], 3 => ['pay', null]];
+	$step = $withoutMethodStep && $step === 3 ? 2 : $step;
+@endphp
+<nav class="checkout-steps" aria-label="@lang($withoutMethodStep ? 'checkout.page.steps.aria_two' : 'checkout.page.steps.aria')">
 	<ol class="checkout-steps__list">
-		@foreach ([1 => ['amount', $changeAmountUrl], 2 => ['method', $methodsUrl]] + [3 => ['pay', null]] as $index => [$name, $backUrl])
+		@foreach ($steps as $index => [$name, $backUrl])
 			<li class="checkout-steps__step @if($index < $step) checkout-steps__step--done @elseif($index === $step) checkout-steps__step--current @endif"
 				@if($index === $step) aria-current="step" @endif>
 				@if($index < $step && $backUrl !== null)

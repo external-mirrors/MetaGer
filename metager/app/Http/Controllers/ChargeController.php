@@ -171,6 +171,9 @@ final class ChargeController extends Controller
             "step" => 3,
             "error" => $error,
             "methods" => $issuer->methods(),
+            // The method is chosen on suma-payments' picker then, not here
+            // (partials/checkout-steps).
+            "withoutMethodStep" => $issuer->allMoved(),
             // Back means the method list — unless the picker is all there is.
             "backUrl" => $issuer->allMoved() ? null : route("account.checkout", ["amount" => $amount]),
         ])->header("Content-Security-Policy", $this->redirectingProviderCsp((string) config("metager.metager.keymanager.suma_payments_host")));

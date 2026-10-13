@@ -16,6 +16,8 @@ return [
         'change' => 'Canvia la quantitat',
         'steps' => [
             'aria' => 'Recàrrega en tres passos',
+            // Alle Zahlungsarten liegen bei suma-payments: die Wahl dort, hier nur Menge und Bezahlen.
+            'aria_two' => 'Recàrrega en dos passos',
             'amount' => 'Quantitat',
             'method' => 'Mètode de pagament',
             'pay' => 'Pagar',

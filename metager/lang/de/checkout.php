@@ -43,6 +43,8 @@ return [
          */
         'steps' => [
             'aria' => 'Aufladen in drei Schritten',
+            // Alle Zahlungsarten liegen bei suma-payments: die Wahl dort, hier nur Menge und Bezahlen.
+            'aria_two' => 'Aufladen in zwei Schritten',
             'amount' => 'Menge',
             'method' => 'Zahlungsart',
             'pay' => 'Bezahlen',

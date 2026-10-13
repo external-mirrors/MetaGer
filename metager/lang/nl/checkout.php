@@ -16,6 +16,8 @@ return [
         'change' => 'Aantal wijzigen',
         'steps' => [
             'aria' => 'Opwaarderen in drie stappen',
+            // Alle Zahlungsarten liegen bei suma-payments: die Wahl dort, hier nur Menge und Bezahlen.
+            'aria_two' => 'Opwaarderen in twee stappen',
             'amount' => 'Aantal',
             'method' => 'Betaalmethode',
             'pay' => 'Betalen',

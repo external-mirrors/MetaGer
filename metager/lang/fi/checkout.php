@@ -16,6 +16,8 @@ return [
         'change' => 'Muuta määrää',
         'steps' => [
             'aria' => 'Lataus kolmessa vaiheessa',
+            // Alle Zahlungsarten liegen bei suma-payments: die Wahl dort, hier nur Menge und Bezahlen.
+            'aria_two' => 'Lataus kahdessa vaiheessa',
             'amount' => 'Määrä',
             'method' => 'Maksutapa',
             'pay' => 'Maksa',

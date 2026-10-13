@@ -16,6 +16,8 @@ return [
         'change' => 'Change amount',
         'steps' => [
             'aria' => 'Topping up in three steps',
+            // Alle Zahlungsarten liegen bei suma-payments: die Wahl dort, hier nur Menge und Bezahlen.
+            'aria_two' => 'Topping up in two steps',
             'amount' => 'Amount',
             'method' => 'Payment method',
             'pay' => 'Pay',

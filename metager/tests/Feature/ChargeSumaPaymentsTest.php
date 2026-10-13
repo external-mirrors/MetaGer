@@ -105,7 +105,10 @@ class ChargeSumaPaymentsTest extends TestCase
 
         $this->signedIn()->get("/de-DE/konto/aufladen/1000/bezahlen")->assertOk()
             ->assertSee("Weiter zur Zahlung")
-            ->assertDontSee("Andere Zahlungsart wählen");
+            ->assertDontSee("Andere Zahlungsart wählen")
+            // No method step left: Menge → Bezahlen.
+            ->assertSee("Aufladen in zwei Schritten")
+            ->assertDontSee("Zahlungsart</span>", false);
     }
 
     public function testTheConsentPageAllowsTheRedirectToSumaPayments(): void
@@ -154,5 +157,14 @@ class ChargeSumaPaymentsTest extends TestCase
 
         $this->submit(["revocation" => "on"])
             ->assertRedirect(route("account.checkout.suma", ["amount" => 1000]) . "?error=unreachable");
+    }
+
+    public function testWhileSomeMethodsStayTheStepsKeepTheMethodStep(): void
+    {
+        $this->keyserverKnows(["banktransfer"]);
+
+        $this->signedIn()->get("/de-DE/konto/aufladen/1000/bezahlen")->assertOk()
+            ->assertSee("Aufladen in drei Schritten")
+            ->assertSee("Zahlungsart</span>", false);
     }
 }

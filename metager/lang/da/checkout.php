@@ -16,6 +16,8 @@ return [
         'change' => 'Skift beløb',
         'steps' => [
             'aria' => 'Opladning i tre trin',
+            // Alle Zahlungsarten liegen bei suma-payments: die Wahl dort, hier nur Menge und Bezahlen.
+            'aria_two' => 'Opladning i to trin',
             'amount' => 'Beløb',
             'method' => 'Betalingsmetode',
             'pay' => 'Betal',

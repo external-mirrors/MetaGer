@@ -16,6 +16,8 @@ return [
         'change' => 'Modifica quantità',
         'steps' => [
             'aria' => 'Ricarica in tre passaggi',
+            // Alle Zahlungsarten liegen bei suma-payments: die Wahl dort, hier nur Menge und Bezahlen.
+            'aria_two' => 'Ricarica in due passaggi',
             'amount' => 'Quantità',
             'method' => 'Metodo di pagamento',
             'pay' => 'Pagare',

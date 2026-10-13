@@ -16,6 +16,8 @@ return [
         'change' => 'Ändra mängd',
         'steps' => [
             'aria' => 'Laddning i tre steg',
+            // Alle Zahlungsarten liegen bei suma-payments: die Wahl dort, hier nur Menge und Bezahlen.
+            'aria_two' => 'Laddning i två steg',
             'amount' => 'Mängd',
             'method' => 'Betalningsmetod',
             'pay' => 'Betala',

@@ -40,6 +40,22 @@ return [
         'cancel' => 'Terug naar account',
     ],
 
+    'suma' => [
+        'label' => 'Overschrijving, incasso en meer',
+        'heading' => 'Betalen',
+        'lede' => 'Op de volgende pagina kiest u hoe u betaalt: :methods. Anoniem blijven kan nog steeds – naam en e-mail zijn vrijwillig, behalve bij incasso.',
+        'submit' => 'Verder naar betaling',
+        'privacy' => 'De betaling loopt via het betaalgedeelte van SUMA-EV (payments.suma-ev.de) en, afhankelijk van de betaalmethode, via VR Payment of PayPal.',
+        'methods' => [
+            'banktransfer' => 'Bankoverschrijving',
+            'sepa_directdebit' => 'SEPA-incasso',
+            'card' => 'Credit-/debitcard',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Contant per post',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Contant',
         'description' => 'Je kunt je sleutel ook contant opladen. Stuur ons hiervoor het volgende bestelnummer per post samen met het gewenste geldbedrag. Houd er rekening mee dat het bestelnummer leesbaar moet zijn om door ons verwerkt te kunnen worden.',

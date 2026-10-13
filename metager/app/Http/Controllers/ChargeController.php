@@ -7,6 +7,7 @@ use App\Authentication\KeyUser;
 use App\Authentication\ManualChargeIssuer;
 use App\Authentication\MicropaymentChargeIssuer;
 use App\Authentication\PayPalChargeIssuer;
+use App\Authentication\SumaPaymentsChargeIssuer;
 use App\Authentication\VRPaymentChargeIssuer;
 use App\Http\Controllers\Concerns\HandlesKeyCheckout;
 use App\Landing\ChargeEligibility;
@@ -123,6 +124,13 @@ final class ChargeController extends Controller
             return redirect()->to(route("account") . "#charge");
         }
 
+        // Every method lives at suma-payments now: its picker is the only
+        // choice there is, so no second one here (Step 3).
+        $suma = app(SumaPaymentsChargeIssuer::class);
+        if ($suma->allMoved()) {
+            return redirect()->route("account.checkout.suma", ["amount" => $amount]);
+        }
+
         // Kommt von einer Zahlweisen-Seite zurück, deren Auswahl ungültig war
         // oder deren Keyserver nicht antwortete (micropaymentServiceShow,
         // paypalServiceShow), oder vom SDK, wenn PayPal eine Zahlweise beim
@@ -136,7 +144,73 @@ final class ChargeController extends Controller
         return $this->render("checkout.index", $request, $key, $amount, [
             "error" => $error,
             "weroAvailable" => $this->weroAvailable($request),
+            // Moved methods: one tile for them, MetaGer's own one each gone.
+            "moved" => $suma->methods(),
         ]);
+    }
+
+    /**
+     * The methods already at suma-payments ({@see SumaPaymentsChargeIssuer}):
+     * the consent here, as on every method page, then suma-payments' picker.
+     */
+    public function sumaShow(Request $request, int $amount, SumaPaymentsChargeIssuer $issuer): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (!$this->knownTier($amount) || $issuer->methods() === []) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
+        $error = $request->query("error");
+        $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
+
+        return $this->render("checkout.suma-payments", $request, $key, $amount, [
+            "step" => 3,
+            "error" => $error,
+            "methods" => $issuer->methods(),
+            // Back means the method list — unless the picker is all there is.
+            "backUrl" => $issuer->allMoved() ? null : route("account.checkout", ["amount" => $amount]),
+        ])->header("Content-Security-Policy", $this->redirectingProviderCsp((string) config("metager.metager.keymanager.suma_payments_host")));
+    }
+
+    public function sumaSubmit(Request $request, int $amount, SumaPaymentsChargeIssuer $issuer): RedirectResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [$user, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (
+            !array_key_exists($amount, KeyPrice::tiers())
+            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
+        ) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
+        if (!$request->boolean("revocation")) {
+            return redirect()
+                ->to(route("account.checkout.suma", ["amount" => $amount]) . "?error=consent", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        $order = $issuer->create($key, $amount, AppHosts::currentOrigin($request), app()->getLocale());
+        if ($order === null) {
+            return redirect()
+                ->to(route("account.checkout.suma", ["amount" => $amount]) . "?error=unreachable", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        // A foreign host: the choice and the payment happen at suma-payments.
+        return redirect()
+            ->away($order["redirect_url"], 303)
+            ->header("Cache-Control", "no-store, private");
     }
 
     public function cashShow(Request $request, int $amount): Response|RedirectResponse

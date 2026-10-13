@@ -40,6 +40,22 @@ return [
         'cancel' => 'Tillbaka till kontot',
     ],
 
+    'suma' => [
+        'label' => 'Banköverföring, autogiro och mer',
+        'heading' => 'Betala',
+        'lede' => 'På nästa sida väljer du hur du betalar: :methods. Du kan fortfarande vara anonym – namn och e-post är frivilliga, utom vid autogiro.',
+        'submit' => 'Vidare till betalning',
+        'privacy' => 'Betalningen går via SUMA-EV:s betalningsområde (payments.suma-ev.de) och, beroende på betalsätt, via VR Payment eller PayPal.',
+        'methods' => [
+            'banktransfer' => 'Banköverföring',
+            'sepa_directdebit' => 'SEPA-autogiro',
+            'card' => 'Kredit-/betalkort',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Kontanter per post',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Kontanter',
         'description' => 'Du kan också ladda din nyckel mot kontanter. Skicka då följande ordernummer till oss per post tillsammans med önskad summa pengar. Observera att ordernumret måste vara läsbart för att vi ska kunna behandla det.',

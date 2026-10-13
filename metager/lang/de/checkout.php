@@ -91,6 +91,25 @@ return [
         'cancel' => 'Zurück zum Konto',
     ],
 
+    // Die Zahlungsarten, die schon bei suma-payments liegen
+    // (App\Authentication\SumaPaymentsChargeIssuer): eine Kachel, eine
+    // Zustimmungsseite, dann die Auswahl dort.
+    'suma' => [
+        'label' => 'Überweisung, Lastschrift und mehr',
+        'heading' => 'Bezahlen',
+        'lede' => 'Auf der nächsten Seite wählen Sie, wie Sie bezahlen: :methods. Anonym geht weiterhin – Name und E-Mail sind freiwillig, außer bei der Lastschrift.',
+        'submit' => 'Weiter zur Zahlung',
+        'privacy' => 'Die Zahlung läuft über den Zahlungsbereich des SUMA-EV (payments.suma-ev.de) und, je nach Zahlungsart, über VR Payment oder PayPal.',
+        'methods' => [
+            'banktransfer' => 'Überweisung',
+            'sepa_directdebit' => 'SEPA-Lastschrift',
+            'card' => 'Kredit-/Debitkarte',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Bargeld per Post',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Bargeld',
         'description' => 'Sie können Ihren Schlüssel auch gegen Bargeld aufladen. Lassen Sie uns hierfür einfach folgende Zahlungs-ID postalisch zusammen mit der gewünschten Geldsumme zukommen. Achten Sie bitte darauf, dass die Zahlungs-ID lesbar sein muss, um von uns verarbeitet werden zu können.',

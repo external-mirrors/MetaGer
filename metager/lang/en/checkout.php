@@ -40,6 +40,25 @@ return [
         'cancel' => 'Back to account',
     ],
 
+    // The payment methods already at suma-payments
+    // (App\Authentication\SumaPaymentsChargeIssuer): one tile, one consent
+    // page, then the choice there.
+    'suma' => [
+        'label' => 'Bank transfer, direct debit and more',
+        'heading' => 'Pay',
+        'lede' => 'On the next page you choose how to pay: :methods. Staying anonymous still works – name and email are voluntary, except for direct debit.',
+        'submit' => 'Continue to payment',
+        'privacy' => 'The payment runs through SUMA-EV\'s payment area (payments.suma-ev.de) and, depending on the method, through VR Payment or PayPal.',
+        'methods' => [
+            'banktransfer' => 'Bank transfer',
+            'sepa_directdebit' => 'SEPA direct debit',
+            'card' => 'Credit/debit card',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Cash by post',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Cash',
         'description' => 'You can also charge your key for cash. To do so, simply send us the following order number by mail together with the desired amount of money. Please note that the order number must be legible in order to be processed by us.',

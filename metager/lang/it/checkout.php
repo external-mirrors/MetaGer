@@ -40,6 +40,22 @@ return [
         'cancel' => 'Torna al conto',
     ],
 
+    'suma' => [
+        'label' => 'Bonifico, addebito diretto e altro',
+        'heading' => 'Paga',
+        'lede' => 'Nella pagina successiva scegli come pagare: :methods. Restare anonimi è ancora possibile – nome ed e-mail sono facoltativi, tranne per l’addebito diretto.',
+        'submit' => 'Continua al pagamento',
+        'privacy' => 'Il pagamento passa per l’area pagamenti di SUMA-EV (payments.suma-ev.de) e, a seconda del metodo, per VR Payment o PayPal.',
+        'methods' => [
+            'banktransfer' => 'Bonifico bancario',
+            'sepa_directdebit' => 'Addebito diretto SEPA',
+            'card' => 'Carta di credito/debito',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Contanti per posta',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Contanti',
         'description' => 'È possibile anche caricare la chiave in contanti. A tal fine, è sufficiente inviarci per posta il seguente numero d\'ordine e l\'importo desiderato. Si prega di notare che il numero d\'ordine deve essere leggibile per poter essere elaborato da noi.',

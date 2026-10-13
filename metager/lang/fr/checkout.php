@@ -40,6 +40,22 @@ return [
         'cancel' => 'Retour au compte',
     ],
 
+    'suma' => [
+        'label' => 'Virement, prélèvement et plus',
+        'heading' => 'Payer',
+        'lede' => 'Sur la page suivante, vous choisissez comment payer : :methods. Rester anonyme reste possible – le nom et l’e-mail sont facultatifs, sauf pour le prélèvement.',
+        'submit' => 'Continuer vers le paiement',
+        'privacy' => 'Le paiement passe par l’espace de paiement de SUMA-EV (payments.suma-ev.de) et, selon le moyen choisi, par VR Payment ou PayPal.',
+        'methods' => [
+            'banktransfer' => 'Virement bancaire',
+            'sepa_directdebit' => 'Prélèvement SEPA',
+            'card' => 'Carte de crédit/débit',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Espèces par courrier',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Espèces',
         'description' => 'Vous pouvez également charger votre clé contre de l\'argent. Pour ce faire, il vous suffit de nous envoyer par courrier le numéro de commande suivant, accompagné du montant souhaité. Veuillez noter que le numéro de commande doit être lisible pour que nous puissions le traiter.',

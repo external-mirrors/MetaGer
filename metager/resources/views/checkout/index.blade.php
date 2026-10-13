@@ -76,7 +76,24 @@
 			<p class="checkout-consent__error" role="alert">@lang('checkout.vrpayment.error.onion')</p>
 		@endif
 
+		{{--
+			Was schon bei suma-payments liegt ($moved, ChargeController::show()),
+			steht hier als eine Kachel vorneweg; die eigene Kachel jeder dieser
+			Zahlweisen fällt weg. Micropayment geht mit der Überweisung: der
+			Vertrag ist gekündigt, die Überweisung bei suma-payments ersetzt ihn.
+		--}}
+		@php($moved = $moved ?? [])
 		<ul class="account-tiers">
+			@if($moved !== [])
+				<li>
+					<a class="account-tier account-tier--method" href="{{ route('account.checkout.suma', ['amount' => $amount]) }}">
+						<img class="account-tier__icon" src="/img/price/money.svg" alt="">
+						<span class="account-tier__label">@lang('checkout.suma.label')</span>
+						<span class="account-tier__note">{{ implode(', ', array_map(fn ($m) => __('checkout.suma.methods.' . $m), array_values(array_intersect(\App\Authentication\SumaPaymentsChargeIssuer::ALL, $moved)))) }}</span>
+					</a>
+				</li>
+			@endif
+			@unless(in_array('cash', $moved, true))
 			<li>
 				<a class="account-tier account-tier--method" href="{{ route('account.checkout.cash', ['amount' => $amount]) }}">
 					<img class="account-tier__icon account-tier__icon--invert" src="/img/price/letter.svg" alt="">
@@ -84,7 +101,8 @@
 					<span class="account-tier__note">@lang('checkout.page.speed.post') · @lang('checkout.page.methods.cash_note')</span>
 				</a>
 			</li>
-			@if($weroAvailable)
+			@endunless
+			@if($weroAvailable && !in_array('wero', $moved, true))
 				{{--
 					Über eine .onion-Adresse fehlt diese Kachel: VR Payment nimmt
 					keine .onion-Rückkehradresse an (ChargeController::weroAvailable).
@@ -99,6 +117,7 @@
 					</a>
 				</li>
 			@endif
+			@unless(in_array('banktransfer', $moved, true))
 			<li>
 				<a class="account-tier account-tier--method" href="{{ route('account.checkout.micropayment.service', ['amount' => $amount, 'service' => 'prepay']) }}">
 					<img class="account-tier__icon" src="/img/price/money.svg" alt="">
@@ -120,7 +139,8 @@
 					<span class="account-tier__note">@lang('checkout.page.speed.instant')</span>
 				</a>
 			</li>
-			@foreach (['paypal', 'card', 'p24', 'bancontact', 'blik', 'eps', 'mybank'] as $fundingSource)
+			@endunless
+			@foreach (array_filter(['paypal', 'card', 'p24', 'bancontact', 'blik', 'eps', 'mybank'], fn ($f) => !in_array($f === 'card' ? 'card' : 'paypal', $moved, true)) as $fundingSource)
 				<li class="checkout-paypal-tile" hidden>
 					<a class="account-tier account-tier--method" href="{{ route('account.checkout.paypal.service', ['amount' => $amount, 'fundingSource' => $fundingSource]) }}">
 						<img class="account-tier__icon @if($fundingSource === 'card') account-tier__icon--invert @elseif(in_array($fundingSource, ['eps', 'bancontact'], true)) account-tier__icon--plate @endif" src="/img/funding_source/{{ $fundingSource }}.svg" alt="">

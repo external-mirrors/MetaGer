@@ -40,6 +40,22 @@ return [
         'cancel' => 'Volver a la cuenta',
     ],
 
+    'suma' => [
+        'label' => 'Transferencia, domiciliación y más',
+        'heading' => 'Pagar',
+        'lede' => 'En la página siguiente elige cómo pagar: :methods. Seguir siendo anónimo sigue funcionando: el nombre y el correo electrónico son voluntarios, salvo para la domiciliación.',
+        'submit' => 'Continuar al pago',
+        'privacy' => 'El pago se realiza a través del área de pagos de SUMA-EV (payments.suma-ev.de) y, según el método, a través de VR Payment o PayPal.',
+        'methods' => [
+            'banktransfer' => 'Transferencia bancaria',
+            'sepa_directdebit' => 'Domiciliación SEPA',
+            'card' => 'Tarjeta de crédito/débito',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Efectivo por correo',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Efectivo',
         'description' => 'También puede cobrar su llave en efectivo. Para ello, sólo tiene que enviarnos por correo el siguiente número de pedido junto con la cantidad de dinero deseada. Tenga en cuenta que el número de pedido debe ser legible para que podamos procesarlo.',

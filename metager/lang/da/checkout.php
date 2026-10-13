@@ -40,6 +40,22 @@ return [
         'cancel' => 'Tilbage til kontoen',
     ],
 
+    'suma' => [
+        'label' => 'Bankoverførsel, direkte debitering og mere',
+        'heading' => 'Betal',
+        'lede' => 'På næste side vælger du, hvordan du vil betale: :methods. Du kan stadig være anonym – navn og e-mail er frivillige, undtagen ved direkte debitering.',
+        'submit' => 'Videre til betaling',
+        'privacy' => 'Betalingen foregår via SUMA-EV’s betalingsområde (payments.suma-ev.de) og, afhængigt af betalingsmåden, via VR Payment eller PayPal.',
+        'methods' => [
+            'banktransfer' => 'Bankoverførsel',
+            'sepa_directdebit' => 'SEPA direkte debitering',
+            'card' => 'Kredit-/betalingskort',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Kontanter med posten',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Kontanter',
         'description' => 'Du kan også opkræve kontanter for din nøgle. For at gøre det skal du blot sende os følgende ordrenummer via mail sammen med det ønskede beløb. Bemærk venligst, at ordrenummeret skal være læseligt for at kunne behandles af os.',

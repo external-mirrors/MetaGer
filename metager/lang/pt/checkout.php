@@ -40,6 +40,22 @@ return [
         'cancel' => 'Voltar à conta',
     ],
 
+    'suma' => [
+        'label' => 'Transferência, débito direto e mais',
+        'heading' => 'Pagar',
+        'lede' => 'Na página seguinte escolhe como pagar: :methods. Continua a ser possível ficar anónimo – nome e e-mail são voluntários, exceto para o débito direto.',
+        'submit' => 'Continuar para o pagamento',
+        'privacy' => 'O pagamento passa pela área de pagamentos da SUMA-EV (payments.suma-ev.de) e, consoante o método, pela VR Payment ou pelo PayPal.',
+        'methods' => [
+            'banktransfer' => 'Transferência bancária',
+            'sepa_directdebit' => 'Débito direto SEPA',
+            'card' => 'Cartão de crédito/débito',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Dinheiro por correio',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Dinheiro',
         'description' => 'Também pode carregar a sua chave em numerário. Para isso, basta enviar-nos por correio o seguinte número de encomenda juntamente com o montante pretendido. Tenha em atenção que o número de encomenda tem de ser legível para que possa ser processado por nós.',

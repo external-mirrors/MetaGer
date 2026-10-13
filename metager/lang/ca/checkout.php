@@ -40,6 +40,22 @@ return [
         'cancel' => 'Tornar al compte',
     ],
 
+    'suma' => [
+        'label' => 'Transferència, domiciliació i més',
+        'heading' => 'Pagar',
+        'lede' => 'A la pàgina següent trieu com pagar: :methods. Seguir sent anònim continua funcionant: el nom i el correu electrònic són voluntaris, excepte per a la domiciliació.',
+        'submit' => 'Continua cap al pagament',
+        'privacy' => 'El pagament passa per l\'àrea de pagaments de SUMA-EV (payments.suma-ev.de) i, segons el mètode, per VR Payment o PayPal.',
+        'methods' => [
+            'banktransfer' => 'Transferència bancària',
+            'sepa_directdebit' => 'Domiciliació SEPA',
+            'card' => 'Targeta de crèdit/dèbit',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Efectiu per correu',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Efectiu',
         'description' => 'També podeu recarregar la clau en efectiu. Per fer-ho, envieu-nos per correu postal el número de comanda següent juntament amb l\'import desitjat. Tingueu en compte que el número de comanda ha de ser llegible perquè el puguem tramitar.',

@@ -12,6 +12,9 @@ return [
     "keymanager" => [
         "server" => env("KEY_SERVER", config("app.url") . "/keys"),
         "access_token" => env("KEY_ACCESS_TOKEN", "no-auth"),
+        // Where suma-payments' checkout lives: the „Bezahlen“ form's 303
+        // goes there, so the page's CSP must allow it as a form-action.
+        "suma_payments_host" => env("SUMA_PAYMENTS_HOST", "https://payments.suma-ev.de"),
         /**
          * The last resort for App\Landing\KeyPrice, not a second source of
          * truth: the keymanager states the price, this is only what /preise

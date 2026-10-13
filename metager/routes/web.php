@@ -385,6 +385,14 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
     Route::get('konto/aufladen/{amount}', [ChargeController::class, 'show'])
         ->whereNumber('amount')
         ->name('account.checkout');
+    // Die Zahlungsarten, die schon bei suma-payments liegen: Zustimmung
+    // hier, die Wahl dort (App\Authentication\SumaPaymentsChargeIssuer).
+    Route::get('konto/aufladen/{amount}/bezahlen', [ChargeController::class, 'sumaShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.suma');
+    Route::post('konto/aufladen/{amount}/bezahlen', [ChargeController::class, 'sumaSubmit'])
+        ->whereNumber('amount')
+        ->name('account.checkout.suma.submit');
     Route::get('konto/aufladen/{amount}/bar', [ChargeController::class, 'cashShow'])
         ->whereNumber('amount')
         ->name('account.checkout.cash');

@@ -40,6 +40,22 @@ return [
         'cancel' => 'Powrót do konta',
     ],
 
+    'suma' => [
+        'label' => 'Przelew, polecenie zapłaty i więcej',
+        'heading' => 'Zapłać',
+        'lede' => 'Na następnej stronie wybierasz sposób płatności: :methods. Nadal można pozostać anonimowym – imię i e-mail są dobrowolne, z wyjątkiem polecenia zapłaty.',
+        'submit' => 'Przejdź do płatności',
+        'privacy' => 'Płatność odbywa się przez strefę płatności SUMA-EV (payments.suma-ev.de) i, zależnie od metody, przez VR Payment lub PayPal.',
+        'methods' => [
+            'banktransfer' => 'Przelew bankowy',
+            'sepa_directdebit' => 'Polecenie zapłaty SEPA',
+            'card' => 'Karta kredytowa/debetowa',
+            'wero' => 'Wero',
+            'paypal' => 'PayPal',
+            'cash' => 'Gotówka pocztą',
+        ],
+    ],
+
     'cash' => [
         'label' => 'Gotówka',
         'description' => 'Możesz również doładować swój klucz za gotówkę. W tym celu wystarczy przesłać nam pocztą poniższy numer zamówienia wraz z żądaną kwotą pieniędzy. Należy pamiętać, że numer zamówienia musi być czytelny, aby mógł zostać przez nas przetworzony.',

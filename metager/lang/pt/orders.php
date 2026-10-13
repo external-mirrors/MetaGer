@@ -30,6 +30,7 @@ return [
         'vat' => 'IVA (:rate %)',
         'total' => 'Montante total',
         'exchange_rate' => 'Taxa de câmbio',
+        'documents' => 'Comprovativo e fatura',
         'download_confirmation' => 'Descarregar confirmação de encomenda',
         'request_invoice' => 'Criar fatura',
         'request_refund' => 'Pedir reembolso',

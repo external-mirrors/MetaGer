@@ -25,6 +25,7 @@ return [
         'vat' => 'VAT (:rate %)',
         'total' => 'Całkowita kwota',
         'exchange_rate' => 'Kurs wymiany',
+        'documents' => 'Potwierdzenie i faktura',
         'download_confirmation' => 'Pobierz potwierdzenie zamówienia',
         'request_invoice' => 'Tworzenie faktury',
         'request_refund' => 'Poproś o zwrot pieniędzy',

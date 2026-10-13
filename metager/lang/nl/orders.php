@@ -25,6 +25,7 @@ return [
         'vat' => 'btw (:rate %)',
         'total' => 'Totaalbedrag',
         'exchange_rate' => 'Wisselkoers',
+        'documents' => 'Bewijs en factuur',
         'download_confirmation' => 'Orderbevestiging downloaden',
         'request_invoice' => 'Factuur maken',
         'request_refund' => 'Terugbetaling aanvragen',

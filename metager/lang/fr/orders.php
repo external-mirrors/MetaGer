@@ -25,6 +25,7 @@ return [
         'vat' => 'TVA (:rate %)',
         'total' => 'Montant total',
         'exchange_rate' => 'Taux de change',
+        'documents' => 'Justificatif et facture',
         'download_confirmation' => 'Télécharger la confirmation de commande',
         'request_invoice' => 'Créer une facture',
         'request_refund' => 'Demander un remboursement',

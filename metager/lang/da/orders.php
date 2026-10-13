@@ -25,6 +25,7 @@ return [
         'vat' => 'moms (:rate %)',
         'total' => 'Samlet beløb',
         'exchange_rate' => 'Valutakurs',
+        'documents' => 'Kvittering og faktura',
         'download_confirmation' => 'Download ordrebekræftelse',
         'request_invoice' => 'Opret faktura',
         'request_refund' => 'Anmod om refusion',

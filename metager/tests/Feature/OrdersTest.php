@@ -188,6 +188,23 @@ class OrdersTest extends TestCase
             ->assertHeader("Cache-Control", "no-store, private");
     }
 
+    public function testTheDetailPageLeadsToTheOrdersPageInTheCrmOnceTheKeyserverLinksIt(): void
+    {
+        $crm = "https://my.suma-ev.de/bestellung/Z1/1.60MEKpEs0PvRka04hcSrjOxF7y52S6K5";
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order(["crm_url" => $crm])),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1")
+            ->assertOk()
+            ->assertSee("Beleg und Rechnung")
+            ->assertSee($crm . "?lang=de-DE", false)
+            ->assertDontSee(route("account.orders.invoice", ["reference" => "Z1"]), false)
+            ->assertDontSee(route("account.orders.confirmation", ["reference" => "Z1"]), false)
+            ->assertSee(route("account.orders.refund", ["reference" => "Z1"]), false);
+    }
+
     public function testTheDetailPageHidesTheRefundLinkWhenNoneIsAvailable(): void
     {
         $this->keyserver([

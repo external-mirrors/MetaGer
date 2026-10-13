@@ -37,6 +37,7 @@ return [
         'vat' => 'VAT (:rate %)',
         'total' => 'Total',
         'exchange_rate' => 'Exchange rate',
+        'documents' => 'Receipt and invoice',
         'download_confirmation' => 'Download order confirmation',
         'request_invoice' => 'Create invoice',
         'request_refund' => 'Request refund',

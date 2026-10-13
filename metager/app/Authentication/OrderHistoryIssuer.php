@@ -45,6 +45,7 @@ final class OrderHistoryIssuer
      *     created_at: ?string,
      *     key: string,
      *     paid: bool,
+     *     crm_url: ?string,
      *     payments: list<array{
      *         public_id: string, net: string, vat: string, gross: string,
      *         vat_rate: float, token_count: int, converted_price: ?float,
@@ -91,6 +92,9 @@ final class OrderHistoryIssuer
             "key" => strtolower($key),
             "paid" => (bool) Arr::get($body, "paid", false),
             "payments" => $this->payments(Arr::get($body, "payments")),
+            // Die Seite der Bestellung in suma-crm (Beleg und Rechnung), vom
+            // Keymanager signiert; null, solange er keinen Link liefert.
+            "crm_url" => is_string($crm = Arr::get($body, "crm_url")) && preg_match('#^https?://#', $crm) === 1 ? $crm : null,
         ];
     }
 

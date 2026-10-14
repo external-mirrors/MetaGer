@@ -137,8 +137,7 @@ final class CampaignIssuer
     /**
      * Die Gutscheinkarten (PDF) einer Kampagne, oder null.
      *
-     * Wortgleich zu {@see OrderHistoryIssuer::confirmationPdf()} — der
-     * Keyserver rendert, hier werden nur die Bytes durchgereicht.
+     * Der Keyserver rendert, hier werden nur die Bytes durchgereicht.
      *
      * @return array{body: string, content_type: string}|null
      */

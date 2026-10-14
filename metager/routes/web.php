@@ -469,13 +469,12 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         ->name('account.orders.find');
     Route::get('konto/bestellungen/{reference}', [OrderController::class, 'show'])
         ->name('account.orders.show');
-    Route::get('konto/bestellungen/{reference}/auftragsbestaetigung.pdf', [OrderController::class, 'confirmation'])
+    // Die alten Belegadressen führen zur Seite der Bestellung im CRM.
+    Route::get('konto/bestellungen/{reference}/auftragsbestaetigung.pdf', [OrderController::class, 'documents'])
         ->name('account.orders.confirmation');
-    Route::get('konto/bestellungen/{reference}/rechnung', [OrderController::class, 'invoice'])
+    Route::match(['get', 'post'], 'konto/bestellungen/{reference}/rechnung', [OrderController::class, 'documents'])
         ->name('account.orders.invoice');
-    Route::post('konto/bestellungen/{reference}/rechnung', [OrderController::class, 'invoiceRequest'])
-        ->name('account.orders.invoice.request');
-    Route::get('konto/bestellungen/{reference}/rechnung.pdf', [OrderController::class, 'invoiceDownload'])
+    Route::get('konto/bestellungen/{reference}/rechnung.pdf', [OrderController::class, 'documents'])
         ->name('account.orders.invoice.pdf');
     Route::get('konto/bestellungen/{reference}/erstattung', [OrderController::class, 'refund'])
         ->name('account.orders.refund');

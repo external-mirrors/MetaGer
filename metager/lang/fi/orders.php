@@ -26,33 +26,9 @@ return [
         'total' => 'Kokonaismäärä',
         'exchange_rate' => 'Valuuttakurssi',
         'documents' => 'Kuitti ja lasku',
-        'download_confirmation' => 'Lataa tilausvahvistus',
-        'request_invoice' => 'Luo lasku',
         'request_refund' => 'Pyydä palautusta',
     ],
 
-    'invoice' => [
-        'heading' => 'Lasku',
-        'breadcrumb' => 'Tilaus :reference',
-        'description' => 'Jos tarvitset laskun, anna laskutustietosi alla olevalla lomakkeella.',
-        'ready' => 'Tälle tilaukselle on jo luotu lasku.',
-        'download' => 'Lataa lasku',
-        'submit' => 'Luo lasku',
-        'storage' => 'Meillä on lakisääteinen velvollisuus säilyttää kerran laaditut laskut <span class="bold">10 vuotta</span>. Koska lasku on osoitettava sinulle henkilökohtaisesti, se sisältää välttämättä henkilötietoja (nimi, osoite).',
-        'error' => [
-            'invalid' => 'Tarkista tietosi — joitakin pakollisia kenttiä puuttuu tai ne ovat liian pitkiä.',
-        ],
-        'field' => [
-            'company' => 'Yrityksen nimi (vapaaehtoinen)',
-            'first_name' => 'Etunimi',
-            'last_name' => 'Sukunimi',
-            'address1' => 'Osoite 1',
-            'address2' => 'Osoite 2 (valinnainen)',
-            'zip' => 'Postinumero',
-            'city' => 'Kaupunki',
-            'state' => 'Valtio (valinnainen)',
-        ],
-    ],
 
     'refund' => [
         'heading' => 'Palautus',

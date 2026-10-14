@@ -31,19 +31,13 @@ use Illuminate\Support\Facades\Vite;
  * ab, bevor irgendetwas davon angezeigt oder ein PDF gestreamt wird — dieselbe
  * Prüfung wie {@see ChargeController::returned()}.
  *
- * **Beleg und Rechnung kommen aus dem CRM**, sobald der Keymanager die
- * signierte Adresse der Bestellseite mitliefert (`crm_url`, suma-crm
- * docs/keymanager-migration-plan.md, Schritt 4): eine Rechnung pro Zahlung,
- * die Zahlungsbestätigung. Bis dahin — und bis Schritt 7 sie entfernt — gibt
- * es die alten Wege unten noch.
+ * **Beleg und Rechnung kommen aus dem CRM** (`crm_url`, vom Keymanager
+ * signiert, suma-crm docs/keymanager-migration-plan.md, Schritt 4): eine
+ * Rechnung pro Zahlung, die Zahlungsbestätigung. Die alten Adressen der
+ * Auftragsbestätigung und der InvoiceNinja-Rechnung leiten dorthin weiter
+ * ({@see documents()}).
  *
- * **Die Rechnung (InvoiceNinja)** ist dasselbe Reference-Scoping wie die
- * Auftragsbestätigung, nur mit einem Formular davor: {@see invoice()} zeigt
- * es und nimmt es entgegen, {@see invoiceDownload()} liefert das fertige PDF.
- * Auch hier prüft der JSON-Endpunkt die Zugehörigkeit zuerst — der Keyserver
- * kennt hier keinen Schlüssel, den wir vergleichen könnten.
- *
- * **Die Erstattung** ist wortgleich zur Rechnung aufgebaut ({@see refund()},
+ * **Die Erstattung** hat ein Formular ({@see refund()},
  * {@see refundRequest()}), bewegt aber kein Geld: der Keyserver öffnet nur
  * ein Zammad-Ticket und bucht das ungenutzte Guthaben vom Schlüssel ab; die
  * eigentliche Rückzahlung ist ein manueller Schritt des Supports über
@@ -126,15 +120,20 @@ final class OrderController extends Controller
 
         return $this->render("orders.show", $key, [
             "order" => $order,
-            "confirmationUrl" => route("account.orders.confirmation", ["reference" => $order["public_id"]]),
             // Die Seite der Bestellung im CRM (Zahlungsbestätigung, Rechnung pro
-            // Zahlung) — der Keymanager signiert den Link. Solange er keinen
-            // liefert, bleiben Auftragsbestätigung und InvoiceNinja-Rechnung.
+            // Zahlung) — der Keymanager signiert den Link.
             "documentsUrl" => $order["crm_url"] !== null ? $order["crm_url"] . "?lang=" . urlencode(app()->getLocale()) : null,
         ]);
     }
 
-    public function confirmation(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
+    /**
+     * Die alten Adressen der Belege — Auftragsbestätigung, Rechnungsformular
+     * und Rechnungs-PDF (InvoiceNinja, abgeschaltet) — führen aus
+     * Lesezeichen und Mails auf die Seite der Bestellung im CRM, das
+     * Zahlungsbestätigung und Rechnungen jetzt ausstellt; ohne CRM-Link auf
+     * die Bestellung hier.
+     */
+    public function documents(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
     {
         [, $key, $redirect] = $this->resolveKey($request, route("account.orders.show", ["reference" => $reference]));
         if ($redirect !== null) {
@@ -145,104 +144,16 @@ final class OrderController extends Controller
             abort(404);
         }
 
-        // Erst die Zugehörigkeit über den JSON-Endpunkt prüfen — der PDF-
-        // Endpunkt drüben liefert keinen Schlüssel, den wir vergleichen
-        // könnten, und ein fremdes PDF darf diese Route nie streamen.
         $order = $issuer->find($reference);
         if ($order === null || $order["key"] !== $key) {
             abort(404);
         }
 
-        $pdf = $issuer->confirmationPdf($order["public_id"], app()->getLocale());
-        if ($pdf === null) {
-            abort(404);
-        }
+        $target = $order["crm_url"] !== null
+            ? $order["crm_url"] . "?lang=" . urlencode(app()->getLocale())
+            : route("account.orders.show", ["reference" => $order["public_id"]]);
 
-        return response($pdf["body"], 200)
-            ->header("Content-Type", $pdf["content_type"])
-            ->header("Content-Disposition", 'inline; filename="' . $order["public_id"] . '.pdf"')
-            ->header("Cache-Control", "no-store, private");
-    }
-
-    /**
-     * Formular für die Rechnung (InvoiceNinja) — zeigt es, oder, wenn schon
-     * eine existiert, einen Downloadlink statt des Formulars.
-     */
-    public function invoice(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->resolveKey($request, route("account.orders.show", ["reference" => $reference]));
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!preg_match(self::REFERENCE, $reference)) {
-            abort(404);
-        }
-
-        $order = $issuer->find($reference);
-        if ($order === null || $order["key"] !== $key || count($order["payments"]) === 0) {
-            abort(404);
-        }
-
-        return $this->render("orders.invoice", $key, [
-            "order" => $order,
-            "invoiceAvailable" => $order["payments"][0]["invoice_available"],
-            "invoicePdfUrl" => route("account.orders.invoice.pdf", ["reference" => $order["public_id"]]),
-            "fields" => [
-                "company" => "", "first_name" => "", "last_name" => "",
-                "address1" => "", "address2" => "", "zip" => "", "city" => "", "state" => "",
-            ],
-            "errors" => [],
-        ]);
-    }
-
-    /** Nimmt das Rechnungsformular entgegen. */
-    public function invoiceRequest(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
-    {
-        if (!$this->sameOrigin($request)) {
-            abort(403);
-        }
-
-        [, $key, $redirect] = $this->resolveKey($request, route("account.orders.show", ["reference" => $reference]));
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!preg_match(self::REFERENCE, $reference)) {
-            abort(404);
-        }
-
-        $order = $issuer->find($reference);
-        if ($order === null || $order["key"] !== $key || count($order["payments"]) === 0) {
-            abort(404);
-        }
-
-        $fields = [
-            "company" => trim((string) $request->input("company", "")),
-            "first_name" => trim((string) $request->input("first_name", "")),
-            "last_name" => trim((string) $request->input("last_name", "")),
-            "address1" => trim((string) $request->input("address1", "")),
-            "address2" => trim((string) $request->input("address2", "")),
-            "zip" => trim((string) $request->input("zip", "")),
-            "city" => trim((string) $request->input("city", "")),
-            "state" => trim((string) $request->input("state", "")),
-        ];
-
-        $result = $issuer->requestInvoice($order["public_id"], $fields);
-
-        if ($result["ok"]) {
-            return redirect()
-                ->to(route("account.orders.invoice", ["reference" => $order["public_id"]]))
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        return $this->render("orders.invoice", $key, [
-            "order" => $order,
-            "invoiceAvailable" => $order["payments"][0]["invoice_available"],
-            "invoicePdfUrl" => route("account.orders.invoice.pdf", ["reference" => $order["public_id"]]),
-            "fields" => $fields,
-            "errors" => $result["errors"],
-        ]);
+        return redirect()->to($target, 303)->header("Cache-Control", "no-store, private");
     }
 
     /**
@@ -322,34 +233,6 @@ final class OrderController extends Controller
             "message" => $message,
             "error" => $result["error"],
         ]);
-    }
-
-    /** Die Rechnung als PDF — dasselbe Vorgehen wie {@see confirmation()}. */
-    public function invoiceDownload(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->resolveKey($request, route("account.orders.show", ["reference" => $reference]));
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!preg_match(self::REFERENCE, $reference)) {
-            abort(404);
-        }
-
-        $order = $issuer->find($reference);
-        if ($order === null || $order["key"] !== $key) {
-            abort(404);
-        }
-
-        $pdf = $issuer->invoicePdf($order["public_id"]);
-        if ($pdf === null) {
-            abort(404);
-        }
-
-        return response($pdf["body"], 200)
-            ->header("Content-Type", $pdf["content_type"])
-            ->header("Content-Disposition", 'inline; filename="' . $order["public_id"] . '-rechnung.pdf"')
-            ->header("Cache-Control", "no-store, private");
     }
 
     /**

@@ -15,8 +15,7 @@
 	$refundAvailable spiegelt payments[0].refund_available — sobald keine
 	erstattungsfähigen Token mehr auf dem Schlüssel liegen (frisch
 	erstattet, oder es waren nie welche da, weil die Zahlungsart keine
-	Erstattung unterstützt), ersetzt ein Hinweis das Formular, genau wie
-	invoice.blade.php es für eine bereits vorhandene Rechnung tut.
+	Erstattung unterstützt), ersetzt ein Hinweis das Formular.
 
 	$justRequested unterscheidet die beiden Gründe für "kein Hinweis mehr
 	nötig": ohne ihn sah eine gerade erfolgreich abgeschickte Anfrage genauso

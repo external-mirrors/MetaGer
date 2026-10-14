@@ -31,33 +31,9 @@ return [
         'total' => 'Montante total',
         'exchange_rate' => 'Taxa de câmbio',
         'documents' => 'Comprovativo e fatura',
-        'download_confirmation' => 'Descarregar confirmação de encomenda',
-        'request_invoice' => 'Criar fatura',
         'request_refund' => 'Pedir reembolso',
     ],
 
-    'invoice' => [
-        'heading' => 'Fatura',
-        'breadcrumb' => 'Encomenda :reference',
-        'description' => 'Se precisar de uma fatura, introduza os seus dados de faturação no formulário abaixo.',
-        'ready' => 'Já existe uma fatura para esta encomenda.',
-        'download' => 'Descarregar fatura',
-        'submit' => 'Criar fatura',
-        'storage' => 'Somos legalmente obrigados a conservar as faturas emitidas <span class="bold">durante 10 anos</span>. Uma vez que a fatura tem de ser emitida em seu nome, contém necessariamente dados pessoais (nome, morada).',
-        'error' => [
-            'invalid' => 'Verifique os seus dados — faltam alguns campos obrigatórios ou são demasiado longos.',
-        ],
-        'field' => [
-            'company' => 'Nome da empresa (opcional)',
-            'first_name' => 'Nome próprio',
-            'last_name' => 'Apelido',
-            'address1' => 'Morada 1',
-            'address2' => 'Morada 2 (opcional)',
-            'zip' => 'Código postal',
-            'city' => 'Cidade',
-            'state' => 'Estado (opcional)',
-        ],
-    ],
 
     'refund' => [
         'heading' => 'Reembolso',

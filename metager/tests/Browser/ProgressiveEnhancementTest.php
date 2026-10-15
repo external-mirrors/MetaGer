@@ -340,57 +340,6 @@ class ProgressiveEnhancementTest extends DuskTestCase
     }
 
     /**
-     * PayPal ist die einzige Zahlart in diesem Vorgang, die ein SDK im
-     * Browser braucht — checkout/index.blade.php bietet ihre Kachel deshalb
-     * ohne Javascript gar nicht erst an (`hidden`, aufgedeckt erst von
-     * resources/js/account.js), statt zu einer Seite zu führen, deren
-     * SDK-Bausteine nie funktionieren. Diese Prüfung hier ist der Grund,
-     * warum das `hidden`-Attribut nicht ausreicht: eine ererbte
-     * `display`-Regel könnte es überstimmen — genau das prüft ein
-     * Feature-Test nicht, nur eine echte Layout-Engine.
-     */
-    /**
-     * Sieben Kacheln, eine pro PayPal-Zahlweise (checkout/index.blade.php),
-     * nicht eine einzige mehr hinter einer eigenen Wahl-Seite — jede von
-     * ihnen muss ohne Javascript unsichtbar bleiben, nicht nur die erste.
-     * Und die anderen acht Kacheln (Bargeld, Wero, drei Micropayment-
-     * Zahlweisen, die Entwicklungs-Zahlart lokal ausgenommen) müssen
-     * trotzdem sichtbar sein — sonst zeigt "nichts hat .checkout-paypal-tile"
-     * auch dann grün, wenn versehentlich die ganze Liste verschwunden ist.
-     */
-    public function testThePaypalTilesStayHiddenWithoutJavascript(): void
-    {
-        $key = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
-
-        $this->browse(function (Browser $browser) use ($key) {
-            $browser->visit("/de-DE")
-                ->addCookie("key", $key, null, [], false)
-                ->visit("/de-DE/konto/aufladen/1000");
-
-            // This suite browses a real deployment, whose keymanager decides
-            // which methods live at suma-payments. Once all of them do, this
-            // page gives way to /bezahlen and has no tiles of its own — that
-            // case is testTheSumaPaymentsHandOffWorksWithoutJavascript().
-            if (str_ends_with((string) parse_url($browser->driver->getCurrentURL(), PHP_URL_PATH), "/bezahlen")) {
-                $this->markTestSkipped("Alle Zahlungsarten liegen bei suma-payments; MetaGers eigene Kacheln gibt es nicht mehr.");
-            }
-
-            $browser->assertVisible(".account-tier")
-                ->assertMissing(".checkout-paypal-tile");
-
-            $this->assertCount(
-                7,
-                $browser->elements(".checkout-paypal-tile"),
-                "es sollen alle sieben PayPal-Kacheln im Markup stehen, nur unsichtbar"
-            );
-
-            foreach (["/bar", "/vrpayment", "/micropayment/prepay", "/micropayment/lastschrift", "/micropayment/directbanking"] as $path) {
-                $browser->assertVisible("a.account-tier[href*=\"$path\"]");
-            }
-        });
-    }
-
-    /**
      * Die Übergabe an suma-payments ohne Javascript (Schritt 3 der
      * Zahlungsumstellung, App\Authentication\SumaPaymentsChargeIssuer): die
      * Zustimmung ist ein echtes Kontrollkästchen, das Formular schickt

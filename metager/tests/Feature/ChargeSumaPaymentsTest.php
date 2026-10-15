@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
@@ -26,14 +25,12 @@ class ChargeSumaPaymentsTest extends TestCase
         parent::setUp();
 
         RateLimiter::clear("account-logincode:" . self::A_KEY);
-        Cache::forget("keymanager:suma-payments-methods");
     }
 
-    private function keyserverKnows(array $moved, array $extraFakes = []): void
+    private function keyserverKnows(array $extraFakes = []): void
     {
         Http::preventStrayRequests();
         Http::fake(array_merge($extraFakes, [
-            "*/api/json/checkout/suma-payments/methods" => Http::response(["methods" => $moved]),
             "*/api/json/price" => Http::response([
                 "per_token" => 0.01,
                 "vat" => 7,
@@ -61,47 +58,17 @@ class ChargeSumaPaymentsTest extends TestCase
             ->post("/de-DE/konto/aufladen/1000/bezahlen", $fields);
     }
 
-    public function testNothingMovedLeavesTheMethodPageAsItWas(): void
+    public function testThePackageGoesStraightToTheConsentPage(): void
     {
-        $this->keyserverKnows([]);
-
-        $this->signedIn()->get("/de-DE/konto/aufladen/1000")->assertOk()
-            ->assertDontSee(route("account.checkout.suma", ["amount" => 1000]), false)
-            ->assertSee(route("account.checkout.cash", ["amount" => 1000]), false)
-            ->assertSee(route("account.checkout.micropayment.service", ["amount" => 1000, "service" => "prepay"]), false);
-    }
-
-    public function testNothingMovedHasNoConsentPage(): void
-    {
-        $this->keyserverKnows([]);
-
-        $this->signedIn()->get("/de-DE/konto/aufladen/1000/bezahlen")->assertRedirect(route("account") . "#charge");
-    }
-
-    public function testMovedMethodsShareOneTileAndTheirOwnTilesGo(): void
-    {
-        $this->keyserverKnows(["banktransfer", "sepa_directdebit", "cash"]);
-
-        $this->signedIn()->get("/de-DE/konto/aufladen/1000")->assertOk()
-            ->assertSee(route("account.checkout.suma", ["amount" => 1000]), false)
-            ->assertSee("Überweisung, SEPA-Lastschrift, Bargeld per Post")
-            ->assertDontSee(route("account.checkout.cash", ["amount" => 1000]), false)
-            ->assertDontSee(route("account.checkout.micropayment.service", ["amount" => 1000, "service" => "prepay"]), false)
-            ->assertSee(route("account.checkout.vrpayment", ["amount" => 1000]), false)
-            ->assertSee(route("account.checkout.paypal.service", ["amount" => 1000, "fundingSource" => "card"]), false);
-    }
-
-    public function testOnceEverythingMovedThePickerIsAllThereIs(): void
-    {
-        $this->keyserverKnows(["banktransfer", "sepa_directdebit", "card", "wero", "paypal", "cash"]);
+        $this->keyserverKnows();
 
         $this->signedIn()->get("/de-DE/konto/aufladen/1000")
             ->assertRedirect(route("account.checkout.suma", ["amount" => 1000]));
     }
 
-    public function testOnceEverythingMovedTheConsentPageHasNoWayBackToAMethodList(): void
+    public function testTheConsentPageHasTwoStepsAndNoMethodList(): void
     {
-        $this->keyserverKnows(["banktransfer", "sepa_directdebit", "card", "wero", "paypal", "cash"]);
+        $this->keyserverKnows();
 
         $this->signedIn()->get("/de-DE/konto/aufladen/1000/bezahlen")->assertOk()
             ->assertSee("Weiter zur Zahlung")
@@ -113,7 +80,7 @@ class ChargeSumaPaymentsTest extends TestCase
 
     public function testTheConsentPageAllowsTheRedirectToSumaPayments(): void
     {
-        $this->keyserverKnows(["banktransfer"]);
+        $this->keyserverKnows();
 
         $csp = $this->signedIn()->get("/de-DE/konto/aufladen/1000/bezahlen")
             ->assertOk()
@@ -125,7 +92,7 @@ class ChargeSumaPaymentsTest extends TestCase
 
     public function testWithoutConsentNothingIsOrdered(): void
     {
-        $this->keyserverKnows(["banktransfer"]);
+        $this->keyserverKnows();
 
         $this->submit([])->assertRedirect(route("account.checkout.suma", ["amount" => 1000]) . "?error=consent");
 
@@ -134,7 +101,7 @@ class ChargeSumaPaymentsTest extends TestCase
 
     public function testConsentingOpensTheOrderAndLeavesForThePicker(): void
     {
-        $this->keyserverKnows(["banktransfer"], [
+        $this->keyserverKnows([
             "*/api/json/key/*/checkout/suma-payments" => Http::response([
                 "public_id" => "Z11440472",
                 "redirect_url" => "https://payments.suma-ev.de/checkout/abc",
@@ -149,22 +116,20 @@ class ChargeSumaPaymentsTest extends TestCase
             && ($request["locale"] ?? null) !== null);
     }
 
+    public function testAnUnknownPackageGoesBackToTheAccount(): void
+    {
+        $this->keyserverKnows();
+
+        $this->signedIn()->get("/de-DE/konto/aufladen/999")->assertRedirect(route("account") . "#charge");
+    }
+
     public function testAnUnreachableKeymanagerSaysSo(): void
     {
-        $this->keyserverKnows(["banktransfer"], [
+        $this->keyserverKnows([
             "*/api/json/key/*/checkout/suma-payments" => Http::response(["code" => 502], 502),
         ]);
 
         $this->submit(["revocation" => "on"])
             ->assertRedirect(route("account.checkout.suma", ["amount" => 1000]) . "?error=unreachable");
-    }
-
-    public function testWhileSomeMethodsStayTheStepsKeepTheMethodStep(): void
-    {
-        $this->keyserverKnows(["banktransfer"]);
-
-        $this->signedIn()->get("/de-DE/konto/aufladen/1000/bezahlen")->assertOk()
-            ->assertSee("Aufladen in drei Schritten")
-            ->assertSee("Zahlungsart</span>", false);
     }
 }

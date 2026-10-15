@@ -7,10 +7,9 @@
  * Aus dem `/key/<uuid>/orders`-Bereich des Keymanagers übernommen: `lookup.*`
  * und die Zeilenbeschriftungen sind der Wortlaut von dessen `order.json`
  * (`orders.*`, `details.*`, `summary.*`), dieselbe Seite, jetzt hier
- * gerendert. `show.heading`, `show.lookup_hint` und `show.request_refund`
- * sind neu; `refund.*` ist der Wortlaut von dessen `order.json` (`refund.*`).
+ * gerendert. `show.heading` und `show.lookup_hint` sind neu. Die Erstattung
+ * wird auf der Seite der Bestellung im CRM beantragt.
  */
-
 return [
     'lookup' => [
         'heading' => 'Bestellung nachschlagen',
@@ -22,7 +21,6 @@ return [
             'not_found' => 'Zu dieser Zahlungs-ID gibt es keine Bestellung auf Ihrem Schlüssel.',
         ],
     ],
-
     'show' => [
         'heading' => 'Bestellung :reference',
         'breadcrumb' => 'Bestellungen',
@@ -37,24 +35,5 @@ return [
         'total' => 'Gesamtbetrag',
         'exchange_rate' => 'Wechselkurs',
         'documents' => 'Beleg und Rechnung',
-        'request_refund' => 'Erstattung anfragen',
-    ],
-
-
-    'refund' => [
-        'heading' => 'Erstattung',
-        'breadcrumb' => 'Auftrag :reference',
-        'unavailable' => 'Für diese Bestellung gibt es kein erstattungsfähiges Guthaben mehr — entweder wurde bereits eine Erstattung angefragt, oder die verwendete Zahlungsart unterstützt keine Erstattungsanfrage über dieses Formular.',
-        'success' => 'Ihre Anfrage wurde uns erfolgreich zugestellt. Wir bearbeiten diese so schnell wie möglich. Je nach Zahlungsmethode kann es einige Tage dauern, bis eine Erstattung in Ihren Umsätzen sichtbar wird.',
-        'description' => 'Sind Sie unzufrieden mit Ihrem Schlüssel? Das bedauern wir sehr! Selbstverständlich erstatten wir Ihnen in diesem Fall den Rechnungsbetrag. Eine Erstattung erfolgt stets auf das gleiche Konto, welches bei der ursprünglichen Zahlung verwendet wurde. Gerne nehmen wir auch Ihre Kritik entgegen.',
-        'partial_note' => 'Ein Teil Ihres gekauften Guthabens wurde bereits verbraucht. Wir können Ihnen deshalb lediglich <span class="bold">:count</span> von <span class="bold">:total</span> Suchanfragen erstatten.',
-        'message' => [
-            'label' => 'Ihre Nachricht (optional)',
-        ],
-        'submit' => ':amount € Erstattung anfragen',
-        'error' => [
-            'not_allowed' => 'Für diese Bestellung ist keine Erstattung mehr möglich.',
-            'unreachable' => 'Fehler beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut.',
-        ],
     ],
 ];

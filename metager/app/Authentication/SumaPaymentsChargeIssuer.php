@@ -3,19 +3,13 @@
 namespace App\Authentication;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
  * Token purchases through suma-payments' checkout (suma-crm
- * docs/keymanager-migration-plan.md, Step 3).
- *
- * The payment methods move there one by one; the keymanager knows which
- * (`suma_payments.methods`, read through `GET checkout/suma-payments/methods`
- * and kept a minute). MetaGer leaves out its own tile for each moved method
- * and offers them together through suma-payments' picker instead — once all
- * have moved, the picker is the only way ({@see \App\Http\Controllers\ChargeController}).
+ * docs/keymanager-migration-plan.md, Steps 3 and 7): every method is
+ * there, and its picker is the only way ({@see \App\Http\Controllers\ChargeController}).
  *
  * `create()` asks the keymanager to open the order and its checkout
  * session (`POST key/<key>/checkout/suma-payments`); the browser is sent to
@@ -23,8 +17,8 @@ use Illuminate\Support\Facades\Log;
  */
 final class SumaPaymentsChargeIssuer
 {
-    /** Everything MetaGer still offers itself — moved together, its own pages go. */
-    public const ALL = ["banktransfer", "sepa_directdebit", "card", "wero", "paypal", "cash"];
+    /** What suma-payments' picker offers, named on the consent page. */
+    public const METHODS = ["banktransfer", "sepa_directdebit", "card", "wero", "paypal", "cash"];
 
     private string $keyserver;
 
@@ -32,36 +26,6 @@ final class SumaPaymentsChargeIssuer
     {
         $keyserver = config("metager.metager.keymanager.server") ?: config("app.url") . "/keys";
         $this->keyserver = $keyserver . "/api/json";
-    }
-
-    /**
-     * The methods already at suma-payments; none while the keymanager can't
-     * be asked — then MetaGer's own pages stay, as before.
-     *
-     * @return list<string>
-     */
-    public function methods(): array
-    {
-        return Cache::remember("keymanager:suma-payments-methods", 60, function () {
-            try {
-                $response = Http::timeout(3)
-                    ->withHeaders(["Authorization" => "Bearer " . config("metager.metager.keymanager.access_token")])
-                    ->get($this->keyserver . "/checkout/suma-payments/methods");
-            } catch (\Throwable $e) {
-                Log::warning("keymanager suma-payments methods unreachable: " . $e->getMessage());
-
-                return [];
-            }
-            $methods = $response->successful() ? Arr::get($response->json() ?? [], "methods") : null;
-
-            return is_array($methods) ? array_values(array_filter($methods, "is_string")) : [];
-        });
-    }
-
-    /** Whether every method has moved, so the picker is all there is. */
-    public function allMoved(): bool
-    {
-        return array_diff(self::ALL, $this->methods()) === [];
     }
 
     /** @return array{public_id: string, redirect_url: string}|null */

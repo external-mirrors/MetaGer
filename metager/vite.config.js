@@ -98,7 +98,6 @@ const assets = laravel({
         "resources/js/key-create.js",
         "resources/js/voucher.js",
         "resources/js/account.js",
-        "resources/js/checkout-paypal.js",
         "resources/js/contact.js",
         "resources/js/widgets.js",
         "resources/js/donation/base.js",

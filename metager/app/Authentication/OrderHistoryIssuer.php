@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Eine bezahlte Bestellung nachschlagen und ihre Auftragsbestätigung,
- * Rechnung oder Erstattung anstoßen — der Unterbau von
+ * Eine bezahlte Bestellung nachschlagen — der Unterbau von
  * {@see \App\Http\Controllers\OrderController}.
  *
  * Getrennt von {@see ChargeOrderIssuer}, obwohl beide denselben Endpunkt
@@ -50,8 +49,7 @@ final class OrderHistoryIssuer
      *         public_id: string, net: string, vat: string, gross: string,
      *         vat_rate: float, token_count: int, converted_price: ?float,
      *         converted_currency: ?string, payment_processor: ?string,
-     *         created_at: ?string, invoice_available: bool,
-     *         refund_available: bool, refund_token_count: int, refund_amount: string
+     *         created_at: ?string, invoice_available: bool
      *     }>
      * }|null
      */
@@ -96,44 +94,6 @@ final class OrderHistoryIssuer
             // Keymanager signiert; null, solange er keinen Link liefert.
             "crm_url" => is_string($crm = Arr::get($body, "crm_url")) && preg_match('#^https?://#', $crm) === 1 ? $crm : null,
         ];
-    }
-
-    /**
-     * Requests a refund for a paid checkout — opens a Zammad support ticket
-     * and credits the unused token balance back onto the key. The money
-     * itself is a manual step staff take from that ticket afterwards; this
-     * only reports whether the request itself went through.
-     *
-     * Idempotent on the keymanager side: a resubmit after the balance is already
-     * discharged answers `refund_already_requested` rather than discharging
-     * twice, and this method treats that the same as success — the caller
-     * cannot tell the two apart and does not need to.
-     *
-     * @return array{ok: true}|array{ok: false, error: string}
-     */
-    public function requestRefund(string $publicId, string $message): array
-    {
-        try {
-            $response = Http::timeout(8)
-                ->withHeaders(["Authorization" => "Bearer " . config("metager.metager.keymanager.access_token")])
-                ->post($this->keyserver . "/checkout/" . urlencode($publicId) . "/refund", ["message" => $message]);
-        } catch (\Throwable $e) {
-            Log::warning("keymanager refund request unreachable: " . $e->getMessage());
-
-            return ["ok" => false, "error" => "unreachable"];
-        }
-
-        if ($response->successful() || $response->status() === 409) {
-            return ["ok" => true];
-        }
-
-        if ($response->status() === 403) {
-            return ["ok" => false, "error" => "not_allowed"];
-        }
-
-        Log::warning("keymanager refund request failed with status " . $response->status());
-
-        return ["ok" => false, "error" => "unreachable"];
     }
 
     /**
@@ -200,9 +160,6 @@ final class OrderHistoryIssuer
                     : null,
                 "created_at" => is_string(Arr::get($payment, "created_at")) ? $payment["created_at"] : null,
                 "invoice_available" => (bool) Arr::get($payment, "invoice_available", false),
-                "refund_available" => (bool) Arr::get($payment, "refund_available", false),
-                "refund_token_count" => (int) Arr::get($payment, "refund_token_count", 0),
-                "refund_amount" => (string) Arr::get($payment, "refund_amount", "0.00"),
             ];
         }
 

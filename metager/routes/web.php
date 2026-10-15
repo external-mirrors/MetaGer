@@ -365,27 +365,15 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      * nicht, so wie /konto/aufladen/aci4T87k7DmMXVLmJ auch für einen
      * type-juggling-Versuch keine Auskunft geben soll.
      *
-     * `cash`, die drei Micropayment-Zahlweisen, Wero (vrpayment), die sieben
-     * PayPal-Zahlweisen (SDK-getrieben statt eines einfachen POST-Formulars —
-     * siehe App\Authentication\PayPalChargeIssuer) und die Entwicklungs-
-     * Zahlungsart (nur unter app()->environment('local') erreichbar) laufen
-     * inzwischen alle hier; App\Landing\KeymanagerLinks::checkout() bleibt
-     * nur noch als Infrastruktur für Zahlarten stehen, die künftig
-     * dazukommen.
-     *
-     * Keine eigene Wahl-Seite mehr pro Anbieter: `show()` verlinkt direkt auf
-     * jede einzelne Zahlweise, PayPal und Micropayment eingeschlossen. Wer
-     * bezahlen will, sucht eine Zahlweise, die er kennt — "Micropayment" oder
-     * "PayPal" als Zwischenschritt sagt ihm das nicht. `account.checkout.
-     * micropayment` und `account.checkout.paypal` (ohne fundingSource/service)
-     * gibt es deshalb nicht mehr; alles, was früher dorthin zurückführte
-     * (ungültige Auswahl, nicht erreichbarer Keyserver, "zurück"), führt jetzt
-     * zu `show()` selbst.
+     * Bezahlt wird bei suma-payments: `show()` leitet zur Zustimmung
+     * (`bezahlen`), von dort geht es zur Zahlweisenwahl drüben. Die eigenen
+     * Seiten für Bar, Wero, micropayment und PayPal sind weg (suma-crm
+     * docs/keymanager-migration-plan.md, Schritt 7).
      */
     Route::get('konto/aufladen/{amount}', [ChargeController::class, 'show'])
         ->whereNumber('amount')
         ->name('account.checkout');
-    // Die Zahlungsarten, die schon bei suma-payments liegen: Zustimmung
+    // Zustimmung hier, die Wahl der Zahlungsart bei suma-payments
     // hier, die Wahl dort (App\Authentication\SumaPaymentsChargeIssuer).
     Route::get('konto/aufladen/{amount}/bezahlen', [ChargeController::class, 'sumaShow'])
         ->whereNumber('amount')
@@ -393,60 +381,9 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
     Route::post('konto/aufladen/{amount}/bezahlen', [ChargeController::class, 'sumaSubmit'])
         ->whereNumber('amount')
         ->name('account.checkout.suma.submit');
-    Route::get('konto/aufladen/{amount}/bar', [ChargeController::class, 'cashShow'])
-        ->whereNumber('amount')
-        ->name('account.checkout.cash');
-    Route::post('konto/aufladen/{amount}/bar', [ChargeController::class, 'cashSubmit'])
-        ->whereNumber('amount')
-        ->name('account.checkout.cash.submit');
-    Route::get('konto/aufladen/{amount}/bar/{reference}', [ChargeController::class, 'cashCreated'])
-        ->whereNumber('amount')
-        ->name('account.checkout.cash.created');
-    Route::get('konto/aufladen/{amount}/entwicklung', [ChargeController::class, 'manualShow'])
-        ->whereNumber('amount')
-        ->name('account.checkout.manual');
-    Route::post('konto/aufladen/{amount}/entwicklung', [ChargeController::class, 'manualSubmit'])
-        ->whereNumber('amount')
-        ->name('account.checkout.manual.submit');
-    Route::get('konto/aufladen/{amount}/micropayment/{service}', [ChargeController::class, 'micropaymentServiceShow'])
-        ->whereNumber('amount')
-        ->name('account.checkout.micropayment.service');
-    Route::post('konto/aufladen/{amount}/micropayment/{service}', [ChargeController::class, 'micropaymentSubmit'])
-        ->whereNumber('amount')
-        ->name('account.checkout.micropayment.submit');
-    Route::get('konto/aufladen/{amount}/vrpayment', [ChargeController::class, 'vrpaymentShow'])
-        ->whereNumber('amount')
-        ->name('account.checkout.vrpayment');
-    Route::post('konto/aufladen/{amount}/vrpayment', [ChargeController::class, 'vrpaymentSubmit'])
-        ->whereNumber('amount')
-        ->name('account.checkout.vrpayment.submit');
     /**
-     * PayPal — die einzige Zahlart, deren Seite vom SDK im Browser getrieben
-     * wird statt von einem einfachen POST-Formular. Sieben Zahlweisen, jede
-     * eine eigene Kachel auf `show()` statt hinter einer eigenen Wahl-Seite;
-     * App\Authentication\PayPalChargeIssuer hat die drei Schritte
-     * (Konfiguration, Anlegen, Einlösen), die resources/js/checkout-paypal.js
-     * in dieser Reihenfolge aufruft.
-     */
-    Route::get('konto/aufladen/{amount}/paypal/{fundingSource}', [ChargeController::class, 'paypalServiceShow'])
-        ->whereNumber('amount')
-        ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')
-        ->name('account.checkout.paypal.service');
-    Route::post('konto/aufladen/{amount}/paypal/{fundingSource}/order/create', [ChargeController::class, 'paypalOrderCreate'])
-        ->whereNumber('amount')
-        ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')
-        ->name('account.checkout.paypal.order.create');
-    Route::post('konto/aufladen/{amount}/paypal/{fundingSource}/order/capture', [ChargeController::class, 'paypalOrderCapture'])
-        ->whereNumber('amount')
-        ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')
-        ->name('account.checkout.paypal.order.capture');
-    /**
-     * Die Rückkehr von einer weiterleitenden Zahlungsart — bewusst ohne
-     * {amount}, die öffentliche Nummer der Ladung reicht, um sie
-     * nachzuschlagen. Micropayment und VR Payment kommen hierher zurück;
-     * PayPal braucht sie nicht — sein Rückweg bleibt im eigenen Ursprung,
-     * die "capture"-Antwort trägt dieselbe Adresse nur als JSON statt als
-     * Weiterleitung.
+     * Die Rückkehr von suma-payments — bewusst ohne {amount}, die
+     * öffentliche Nummer der Ladung reicht, um sie nachzuschlagen.
      */
     Route::get('konto/aufladen/abschluss/{reference}', [ChargeController::class, 'returned'])
         ->name('account.checkout.returned');
@@ -469,17 +406,16 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         ->name('account.orders.find');
     Route::get('konto/bestellungen/{reference}', [OrderController::class, 'show'])
         ->name('account.orders.show');
-    // Die alten Belegadressen führen zur Seite der Bestellung im CRM.
+    // Die alten Beleg- und Erstattungsadressen führen zur Seite der
+    // Bestellung im CRM, wo Belege und Erstattung jetzt liegen.
     Route::get('konto/bestellungen/{reference}/auftragsbestaetigung.pdf', [OrderController::class, 'documents'])
         ->name('account.orders.confirmation');
     Route::match(['get', 'post'], 'konto/bestellungen/{reference}/rechnung', [OrderController::class, 'documents'])
         ->name('account.orders.invoice');
     Route::get('konto/bestellungen/{reference}/rechnung.pdf', [OrderController::class, 'documents'])
         ->name('account.orders.invoice.pdf');
-    Route::get('konto/bestellungen/{reference}/erstattung', [OrderController::class, 'refund'])
+    Route::get('konto/bestellungen/{reference}/erstattung', [OrderController::class, 'documents'])
         ->name('account.orders.refund');
-    Route::post('konto/bestellungen/{reference}/erstattung', [OrderController::class, 'refundRequest'])
-        ->name('account.orders.refund.request');
 
     /**
      * Gutscheinaktionen, aus dem Keymanager (`/keys/key/<uuid>/campaigns`)

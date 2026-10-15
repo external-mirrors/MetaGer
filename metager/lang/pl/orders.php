@@ -11,7 +11,6 @@ return [
             'not_found' => 'Żadne zamówienie na Twoim kluczu nie pasuje do tego identyfikatora płatności.',
         ],
     ],
-
     'show' => [
         'heading' => 'Zamówienie :reference',
         'breadcrumb' => 'Zamówienia',
@@ -26,24 +25,5 @@ return [
         'total' => 'Całkowita kwota',
         'exchange_rate' => 'Kurs wymiany',
         'documents' => 'Potwierdzenie i faktura',
-        'request_refund' => 'Poproś o zwrot pieniędzy',
-    ],
-
-
-    'refund' => [
-        'heading' => 'Zwrot pieniędzy',
-        'breadcrumb' => 'Zamówienie :reference',
-        'unavailable' => 'Dla tego zamówienia nie pozostało już żadne saldo podlegające zwrotowi — albo zwrot pieniędzy został już zgłoszony, albo użyta metoda płatności nie obsługuje wniosku o zwrot pieniędzy za pomocą tego formularza.',
-        'success' => 'Twoje zgłoszenie zostało do nas pomyślnie wysłane. Przetworzymy je tak szybko, jak to możliwe. W zależności od metody płatności może minąć kilka dni, zanim zwrot będzie widoczny w sprzedaży.',
-        'description' => 'Jesteś niezadowolony ze swojego klucza? Bardzo nam przykro to słyszeć! Oczywiście w takim przypadku zwrócimy kwotę faktury. Zwrot jest zawsze dokonywany na to samo konto, które zostało użyte do pierwotnej płatności. Cieszymy się również z krytyki.',
-        'partial_note' => 'Uwaga: część zakupionych środków została już wykorzystana. W związku z tym możemy zwrócić tylko <span class="bold">:count</span> z <span class="bold">:total</span> wyszukiwania.',
-        'message' => [
-            'label' => 'Twoja wiadomość (opcjonalnie)',
-        ],
-        'submit' => ':amount € Żądanie zwrotu pieniędzy',
-        'error' => [
-            'not_allowed' => 'Zwrot pieniędzy dla tego zamówienia nie jest już możliwy.',
-            'unreachable' => 'Błąd wysyłania wiadomości. Spróbuj ponownie później.',
-        ],
     ],
 ];

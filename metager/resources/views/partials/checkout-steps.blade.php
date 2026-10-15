@@ -1,12 +1,13 @@
 {{--
-	Die Schrittleiste des Bezahlvorgangs: Menge → Zahlungsart → Bezahlen.
+	Die Schrittleiste des Bezahlvorgangs: Menge → Bezahlen (die Zahlungsart
+	wählt man danach bei suma-payments).
 
 	Vorher sagte keine Seite dieses Vorgangs, wo im Ablauf man steht. Die
 	Paketwahl heißt „Guthaben aufladen“ (/konto#charge), die Zahlweisenwahl
 	hieß genauso, und die Seite danach trug nur noch den Namen der Zahlweise —
 	drei Seiten, die einzeln aussahen wie der Anfang von etwas.
 
-	`$step` ist 1, 2 oder 3. **Jeder erledigte Schritt ist ein Link**, nicht
+	`$step` ist 1 oder 2. **Jeder erledigte Schritt ist ein Link**, nicht
 	nur der erste: beide liegen gleichermaßen hinter einem, und es gibt für
 	beide eine Adresse, die genau dorthin zurückführt. Dass nur „Menge“ eine
 	war und „Zahlungsart“ daneben toter Text, war keine Entscheidung, sondern
@@ -20,16 +21,11 @@
 	ankommen und nicht bloß grau sind.
 --}}
 @php
-	// Every payment method at suma-payments (SumaPaymentsChargeIssuer::allMoved()):
-	// the method is chosen on its picker, after „Bezahlen“, so there is no
-	// method step here — Menge → Bezahlen, and the pay page is step 2.
-	$withoutMethodStep = $withoutMethodStep ?? false;
-	$steps = $withoutMethodStep
-		? [1 => ['amount', $changeAmountUrl], 2 => ['pay', null]]
-		: [1 => ['amount', $changeAmountUrl], 2 => ['method', $methodsUrl], 3 => ['pay', null]];
-	$step = $withoutMethodStep && $step === 3 ? 2 : $step;
+	// The method is chosen on suma-payments' picker, after „Bezahlen“, so
+	// there is no method step here — Menge → Bezahlen.
+	$steps = [1 => ['amount', $changeAmountUrl], 2 => ['pay', null]];
 @endphp
-<nav class="checkout-steps" aria-label="@lang($withoutMethodStep ? 'checkout.page.steps.aria_two' : 'checkout.page.steps.aria')">
+<nav class="checkout-steps" aria-label="@lang('checkout.page.steps.aria_two')">
 	<ol class="checkout-steps__list">
 		@foreach ($steps as $index => [$name, $backUrl])
 			<li class="checkout-steps__step @if($index < $step) checkout-steps__step--done @elseif($index === $step) checkout-steps__step--current @endif"

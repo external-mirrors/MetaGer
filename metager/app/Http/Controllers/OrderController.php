@@ -37,11 +37,9 @@ use Illuminate\Support\Facades\Vite;
  * Auftragsbestätigung und der InvoiceNinja-Rechnung leiten dorthin weiter
  * ({@see documents()}).
  *
- * **Die Erstattung** hat ein Formular ({@see refund()},
- * {@see refundRequest()}), bewegt aber kein Geld: der Keyserver öffnet nur
- * ein Zammad-Ticket und bucht das ungenutzte Guthaben vom Schlüssel ab; die
- * eigentliche Rückzahlung ist ein manueller Schritt des Supports über
- * dieses Ticket, außerhalb dieser App.
+ * **Die Erstattung** beantragt man ebenfalls dort (suma-crm
+ * docs/keymanager-migration-plan.md, Schritt 6); die alte Adresse des
+ * Formulars hier leitet hin ({@see documents()}).
  */
 final class OrderController extends Controller
 {
@@ -128,9 +126,11 @@ final class OrderController extends Controller
 
     /**
      * Die alten Adressen der Belege — Auftragsbestätigung, Rechnungsformular
-     * und Rechnungs-PDF (InvoiceNinja, abgeschaltet) — führen aus
+     * und Rechnungs-PDF (InvoiceNinja, abgeschaltet) — und des
+     * Erstattungsformulars führen aus
      * Lesezeichen und Mails auf die Seite der Bestellung im CRM, das
-     * Zahlungsbestätigung und Rechnungen jetzt ausstellt; ohne CRM-Link auf
+     * Zahlungsbestätigung und Rechnungen jetzt ausstellt und Erstattungen
+     * annimmt; ohne CRM-Link auf
      * die Bestellung hier.
      */
     public function documents(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
@@ -154,85 +154,6 @@ final class OrderController extends Controller
             : route("account.orders.show", ["reference" => $order["public_id"]]);
 
         return redirect()->to($target, 303)->header("Cache-Control", "no-store, private");
-    }
-
-    /**
-     * Formular für die Erstattung (Zammad-Ticket + Guthaben-Rückbuchung).
-     *
-     * `?requested=1` unterscheidet "gerade erfolgreich abgeschickt" von "hier
-     * gibt es ohnehin nichts (mehr) zu erstatten" — beide Zustände sehen für
-     * refund_available identisch aus (kein erstattungsfähiges Guthaben mehr),
-     * aber der erste ist ein Erfolg, kein Fehler. Ein Query-Parameter statt
-     * Session, weil `StartSession` für `web`-Routen entfernt ist (keine
-     * Session hier, siehe {@see \App\Http\Controllers\ChargeController}s
-     * Rückkehr-Links für dasselbe Muster).
-     */
-    public function refund(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->resolveKey($request, route("account.orders.show", ["reference" => $reference]));
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!preg_match(self::REFERENCE, $reference)) {
-            abort(404);
-        }
-
-        $order = $issuer->find($reference);
-        if ($order === null || $order["key"] !== $key || count($order["payments"]) === 0) {
-            abort(404);
-        }
-
-        return $this->render("orders.refund", $key, [
-            "order" => $order,
-            "refundAvailable" => $order["payments"][0]["refund_available"],
-            "refundTokenCount" => $order["payments"][0]["refund_token_count"],
-            "refundAmount" => $order["payments"][0]["refund_amount"],
-            "justRequested" => $request->query("requested") === "1",
-            "message" => "",
-            "error" => null,
-        ]);
-    }
-
-    /** Nimmt das Erstattungsformular entgegen. */
-    public function refundRequest(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
-    {
-        if (!$this->sameOrigin($request)) {
-            abort(403);
-        }
-
-        [, $key, $redirect] = $this->resolveKey($request, route("account.orders.show", ["reference" => $reference]));
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!preg_match(self::REFERENCE, $reference)) {
-            abort(404);
-        }
-
-        $order = $issuer->find($reference);
-        if ($order === null || $order["key"] !== $key || count($order["payments"]) === 0) {
-            abort(404);
-        }
-
-        $message = trim((string) $request->input("message", ""));
-        $result = $issuer->requestRefund($order["public_id"], $message);
-
-        if ($result["ok"]) {
-            return redirect()
-                ->to(route("account.orders.refund", ["reference" => $order["public_id"], "requested" => 1]))
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        return $this->render("orders.refund", $key, [
-            "order" => $order,
-            "refundAvailable" => $order["payments"][0]["refund_available"],
-            "refundTokenCount" => $order["payments"][0]["refund_token_count"],
-            "refundAmount" => $order["payments"][0]["refund_amount"],
-            "justRequested" => false,
-            "message" => $message,
-            "error" => $result["error"],
-        ]);
     }
 
     /**

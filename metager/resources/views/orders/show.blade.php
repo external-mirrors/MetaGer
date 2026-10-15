@@ -17,9 +17,8 @@
 	sind.
 
 	darunter „Beleg und Rechnung“ — die Seite der Bestellung im CRM, wenn der
-	Keymanager ihren Link mitliefert ($documentsUrl) — und, sofern
-	refund_available zutrifft, der Link zur Erstattung
-	(App\Http\Controllers\OrderController::refund()) — payments[0].
+	Keymanager ihren Link mitliefert ($documentsUrl); dort wird auch eine
+	Erstattung beantragt.
 --}}
 <div id="account-page">
 	<header class="account-head">
@@ -79,9 +78,6 @@
 			<div class="checkout-returned__actions">
 				@if($documentsUrl)
 					<a class="account-btn account-btn--primary" href="{{ $documentsUrl }}" rel="noreferrer">@lang('orders.show.documents')</a>
-				@endif
-				@if($order['payments'][0]['refund_available'])
-					<a class="account-btn account-btn--quiet" href="{{ route('account.orders.refund', ['reference' => $order['public_id']]) }}">@lang('orders.show.request_refund')</a>
 				@endif
 			</div>
 		@endif

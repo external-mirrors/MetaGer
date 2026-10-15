@@ -4,8 +4,7 @@
 
 @section('content')
 {{--
-	Die Zahlungsarten, die schon bei suma-payments liegen
-	(App\Authentication\SumaPaymentsChargeIssuer): wie jede Zahlweisen-Seite
+	Bezahlt wird bei suma-payments (App\Authentication\SumaPaymentsChargeIssuer):
 	erst die Zustimmung zum vorzeitigen Erlöschen des Widerrufsrechts, dann
 	legt der Keyserver den Auftrag an und die Auswahl dort übernimmt.
 --}}
@@ -20,14 +19,14 @@
 
 	<section class="account-section">
 		@if($error === 'unreachable')
-			<p class="checkout-consent__error" role="alert">@lang('checkout.cash.error.unreachable')</p>
+			<p class="checkout-consent__error" role="alert">@lang('checkout.suma.error.unreachable')</p>
 		@elseif($error === 'consent')
 			<p class="checkout-consent__error" role="alert">@lang('checkout.consent.error')</p>
 		@endif
 
-		<p class="account-section__lede">@lang('checkout.suma.lede', ['methods' => implode(', ', array_map(fn ($m) => __('checkout.suma.methods.' . $m), array_values(array_intersect(\App\Authentication\SumaPaymentsChargeIssuer::ALL, $methods))))])</p>
+		<p class="account-section__lede">@lang('checkout.suma.lede', ['methods' => implode(', ', array_map(fn ($m) => __('checkout.suma.methods.' . $m), \App\Authentication\SumaPaymentsChargeIssuer::METHODS))])</p>
 
-		<form method="post" action="{{ route('account.checkout.suma.submit', ['amount' => $amount]) }}" class="checkout-micropayment">
+		<form method="post" action="{{ route('account.checkout.suma.submit', ['amount' => $amount]) }}" class="checkout-form">
 			@include('partials.checkout-consent')
 
 			<p class="checkout-notice">@lang('checkout.suma.privacy')</p>
@@ -37,9 +36,6 @@
 	</section>
 
 	<nav class="checkout-nav">
-		@if($backUrl)
-			<a class="checkout-back" href="{{ $backUrl }}">@lang('checkout.page.methods.back')</a>
-		@endif
 		<a class="checkout-back" href="{{ $cancelUrl }}">@lang('checkout.page.cancel')</a>
 	</nav>
 </div>

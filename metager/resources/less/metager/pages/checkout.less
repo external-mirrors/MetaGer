@@ -1,18 +1,17 @@
 @import "../variables.less";
 
-// /konto/aufladen — Aufladen: Zahlungsart wählen, Bar, micropayment, die
-// Entwicklungs-Zahlungsart.
+// /konto/aufladen — Aufladen: die Zustimmung, bevor es zu suma-payments geht,
+// und die Rückkehr von dort.
 //
 // Dieselbe Spalte, dieselben Karten wie pages/account.less — #checkout-page
 // spiegelt #account-page bewusst, und account.less wird auf dieser Seite
 // mitgeladen (App\Http\Controllers\ChargeController::render()), weil
 // partials/key-fingerprint.blade.php genau die Klassen von dort benutzt. Was
-// hier steht, ist nur, was auf dieser Seite neu ist: die Paketkurzfassung
-// oben, das Raster der Zahlungsarten, die geteilte Zustimmung, die
-// Barzahlung mit ihrer Auftragsnummer, und micropayments E-Mail-Feld.
+// hier steht, ist nur, was auf dieser Seite neu ist: die Schrittleiste, die
+// Paketkurzfassung oben und die Zustimmung.
 //
-// checkout/returned.blade.php — die Landeseite nach einer Weiterleitung zu
-// micropayment (und später VR Payment/PayPal) — braucht nichts von hier:
+// checkout/returned.blade.php — die Landeseite nach suma-payments — braucht
+// nichts von hier:
 // #account-page und .account-section aus account.less reichen ihr.
 
 #checkout-page {
@@ -23,7 +22,7 @@
 }
 
 // ── Die Schrittleiste ────────────────────────────────────────────────────────
-// Menge → Zahlungsart → Bezahlen. Vorher sagte keine Seite dieses Vorgangs, wo
+// Menge → Bezahlen. Vorher sagte keine Seite dieses Vorgangs, wo
 // man steht: die Paketwahl hieß „Guthaben aufladen", die Zahlweisenwahl hieß
 // genauso, und die Seite danach trug nur noch den Namen der Zahlweise.
 //
@@ -31,7 +30,7 @@
 // Strich, der die Reihenfolge zeichnet — der Strich ist ein ::after am Schritt
 // und nicht ein eigenes Element, damit das Markup eine reine <ol> bleibt.
 // Auf einem Telefon fällt nur die Beschriftung der nicht-aktiven Schritte weg,
-// nicht die Schritte selbst: „2 von 3" bleibt ablesbar, auch wenn „Zahlungsart"
+// nicht die Schritte selbst: „1 von 2" bleibt ablesbar, auch wenn „Bezahlen"
 // dafür keinen Platz hätte.
 .checkout-steps {
   .checkout-steps__list {
@@ -227,19 +226,9 @@
   }
 }
 
-// ── Zahlungsart wählen ───────────────────────────────────────────────────────
-// Dieselben Kacheln wie die Pakete auf /konto (.account-tiers/.account-tier
-// aus account.less), unverändert übernommen und mit Absicht: nur der Name der
-// Zahlungsart steht darauf, keine Beschreibung. Eine Kachel mit einem langen
-// Satz fällt neben den kurzen der anderen auf, und das wird auffälliger, je
-// mehr Zahlungsarten dazukommen — die Entscheidung, welche Zahlungsart, soll
-// hier fallen, nicht die, wie sie im Einzelnen funktioniert.
-
 // ── Zurück ───────────────────────────────────────────────────────────────────
-// Zwei Wege, die auf der ursprünglichen Kasse im Keymanager fehlten: zurück
-// zur Zahlungswahl (dieselbe Menge, andere Zahlungsart) und ganz zurück zum
-// Konto ("ich will gar nicht mehr aufladen", nicht "ich will ein anderes
-// Paket").
+// Ganz zurück zum Konto ("ich will gar nicht mehr aufladen", nicht "ich will
+// ein anderes Paket" — das ist „Menge ändern" in der Kurzfassung).
 //
 // Steht jetzt am Fuß der Seite statt zwischen Kurzfassung und Inhalt. Dort
 // schwebte es: zwei blaue Kleinlinks in der Lücke zwischen zwei Karten, ohne
@@ -265,12 +254,11 @@
 }
 
 // ── Zustimmung ───────────────────────────────────────────────────────────────
-// Geteilt von Bar, micropayment, Wero und PayPal (partials/checkout-consent):
-// alle vier legen einen Auftrag erst an, wenn das Widerrufsrecht bewusst
-// aufgegeben wurde (lang/*/checkout.php's consent.label).
+// partials/checkout-consent: ein Auftrag entsteht erst, wenn das
+// Widerrufsrecht bewusst aufgegeben wurde (lang/*/checkout.php's consent.label).
 //
 // Der Wortlaut ist rechtlich vorgegeben. Was hier steht, ist die Antwort auf
-// seine Darstellung: er stand auf allen vier Seiten in voller Länge fett, weil
+// seine Darstellung: er stand in voller Länge fett, weil
 // general/forms.less jedem `label` `font-weight: bold` gibt — vier bis sechs
 // Zeilen durchgehend fetter Kleintext direkt über dem einzigen Knopf der
 // Seite. Durchgehend fett hebt nichts hervor, es macht nur alles laut.
@@ -328,7 +316,7 @@
 }
 
 // ── „Was als Nächstes passiert" ──────────────────────────────────────────────
-// Die Weiterleitungshinweise von micropayment, Wero und PayPal. Sie standen
+// Der Hinweis, dass es zu suma-payments weitergeht. Er stand
 // als letzter Absatz *unter* dem Knopf — also hinter der Entscheidung, obwohl
 // "Sie verlassen jetzt MetaGer und bezahlen bei X" die wichtigste Auskunft
 // dieser Seiten ist. Jetzt darüber, und mit einer Kante links, die sie vom
@@ -339,13 +327,6 @@
   border-left: 3px solid @border-color;
   font-size: 0.85rem;
   color: @text-color-alpha-70;
-}
-
-// Der Ladehinweis auf der PayPal-Seite verschwindet, sobald das SDK da ist
-// (resources/js/checkout-paypal.js). Solange er steht, soll er wie ein
-// Zwischenzustand aussehen und nicht wie ein Absatz.
-.checkout-notice--loading {
-  border-left-color: @metager-orange;
 }
 
 // Der eine Knopf, der eine Seite dieses Vorgangs abschließt. .account-btn ist
@@ -359,179 +340,12 @@
   width: fit-content;
 }
 
-// ── Barzahlung ───────────────────────────────────────────────────────────────
-// Der Ablauf steht vor der Zustimmung, nicht dahinter — die Anschrift, an die
-// der Brief gehen soll, stand vorher ausschließlich auf der Seite *nach* dem
-// Anlegen des Auftrags.
-.checkout-cash {
-  // Die Anschrift. Vor dem Anlegen des Auftrags ist sie eine Auskunft, danach
-  // eine Anweisung; beide Male dieselbe Karte, damit sie wiedererkennbar
-  // bleibt.
-  .checkout-cash__address-block {
-    display: grid;
-    gap: 0.5rem;
-    justify-items: start;
-  }
-
-  .checkout-cash__address-label {
-    margin: 0;
-    // Ohne dies ist es ein <h3> in Vorgabegröße: die Fassung nach dem Anlegen
-    // trägt hier einen ganzen Satz ("Schicken Sie den Brief an folgende
-    // Adresse und notieren Sie sich …"), und der stand als 1.17em-Überschrift
-    // größer da als die Abschnittsüberschrift darüber.
-    font-size: 0.9rem;
-    font-weight: bold;
-  }
-
-  .checkout-cash__address {
-    margin: 0;
-    padding: 0.9rem 1.1rem;
-    border: 1px solid @border-color;
-    border-radius: 8px;
-    background-color: @card-background-color;
-    font-family: monospace;
-    font-size: 1rem;
-    line-height: 1.6;
-    white-space: pre-line;
-  }
-
-  // Die fünf Hinweise. Vor der Zustimmung zugeklappt: sie sind vollständig und
-  // bleiben es, aber fünf gleich gewichtete Warnungen zwischen "so geht das"
-  // und "einverstanden" sind das, was diese Seite vorher zu einer Wand gemacht
-  // hat. Nach dem Anlegen des Auftrags stehen sie offen — dann ist der Brief
-  // die nächste Handlung, nicht mehr die Entscheidung.
-  .checkout-cash__notes-details {
-    font-size: 0.9rem;
-
-    summary {
-      cursor: pointer;
-      font-weight: bold;
-      list-style: disclosure-closed;
-    }
-
-    &[open] > summary {
-      list-style: disclosure-open;
-      margin-bottom: 0.6rem;
-    }
-  }
-
-  .checkout-cash__notes-heading {
-    margin: 0 0 0.6rem;
-    font-size: 0.9rem;
-    font-weight: bold;
-  }
-
-  .checkout-cash__notes {
-    margin: 0;
-    padding-left: 1.2rem;
-    display: grid;
-    gap: 0.4rem;
-    font-size: 0.85rem;
-    color: @text-color-alpha-70;
-  }
-
-  // Die erzeugte Auftragsnummer, in einer Kachel.
-  .checkout-cash__order {
-    padding: 1.1rem 1.25rem;
-    border-radius: 10px;
-    background-color: @highlight-color-alpha-60;
-    display: grid;
-    gap: 0.75rem;
-  }
-
-  .checkout-cash__order-id {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-
-    input {
-      flex: 1 1 10rem;
-      min-width: 0;
-      padding: 0.6rem 0.7rem;
-      border: 1px solid @border-color;
-      border-radius: 6px;
-      background-color: @input-background;
-      color: @input-text;
-      font-family: monospace;
-      // Sie wird von Hand auf einen Zettel geschrieben — größer als das
-      // übrige Kleingedruckte, aus demselben Grund, aus dem der Anmeldecode
-      // auf /konto groß gesetzt ist.
-      font-size: 1.3rem;
-      font-weight: bold;
-      letter-spacing: 0.05em;
-    }
-  }
-
-  .checkout-cash__hint {
-    margin: 0;
-    font-size: 0.8rem;
-    color: @text-color-alpha-70;
-  }
-}
-
-// ── PayPal ───────────────────────────────────────────────────────────────────
-// #checkout-paypal-payment-button — Smart Buttons, gerendert von PayPal
-// selbst — bekommt dieses helle Feld, #checkout-paypal-card-container und
-// #checkout-paypal-payment-fields nicht: der Unterschied ist, wem die Farbe
-// gehört. Advanced Card Fields und PaymentFields sind eigene Eingabefelder,
-// deren Hintergrund/Textfarbe checkout-paypal.js selbst per `style` setzt
-// (themeColors() dort) — die folgen dem Thema der Seite wie jedes andere
-// Formularfeld auch. Die Buttons dagegen sind PayPals eigenes Widget: nur
-// der Haupt-"PayPal"-Knopf nimmt eine Farbe entgegen (getPaypalCheckoutData
-// setzt "black" im dunklen, "gold" im hellen Thema), die Knöpfe der übrigen
-// Zahlungsarten (z. B. SEPA-Lastschrift) bleiben grundsätzlich hell, ganz
-// gleich welches Thema die Seite hat. Ohne dieses Feld läge ein helles
-// Widget direkt auf der dunklen Karte, wie ein Darstellungsfehler und nicht
-// wie Absicht — deshalb ein eigenes, bewusst helles Feld nur darum.
-.checkout-paypal-widget {
-  // Kein border-radius: die von PayPal gerenderten Knöpfe füllen die Breite
-  // fast randlos und selbst eckig — eine gerundete Karte darum zeigt an den
-  // Ecken dann ihre eigene Rundung neben dem eckigen Knopf, zwei
-  // unabhängige Formen, die nicht zusammenpassen. Ein Rechteck vermeidet
-  // das, statt beide Rundungen aufeinander abzustimmen.
-  padding: 1rem;
-  background-color: @color-almost-white;
-}
-
-// PaymentFields rendert in ein eigenes, grenzenlos transparentes Iframe
-// (PayPal selbst setzt background-color:transparent darauf) — bis dessen
-// eigenes Dokument geladen ist und unser per `style`-Objekt gesetztes
-// Hintergrundgrau tatsächlich anwendet, zeigt sich, was hinter dem Iframe
-// liegt. Ohne eigene Hintergrundfarbe hier ist das die Standardfarbe des
-// umschließenden .account-section — im dunklen Thema also nicht dessen
-// eigene dunkle Kartenfarbe, sondern was auch immer sonst durchscheint —
-// kurz ein heller Fleck genau dort, wo gleich das Formularfeld erscheint.
-#checkout-paypal-payment-fields {
-  background-color: @card-background-color;
-}
-
-// ── Micropayment ─────────────────────────────────────────────────────────────
-// Nur das Formular drumherum — Zustimmung und Fehlermeldung teilt sich
-// micropayment mit Bar (.checkout-consent/.checkout-consent__error oben).
-.checkout-micropayment {
+// ── Das Formular der Zustimmungsseite ────────────────────────────────────────
+// Zustimmung und Fehlermeldung (.checkout-consent/.checkout-consent__error
+// oben), darunter der Knopf.
+.checkout-form {
   display: grid;
   gap: 1rem;
-
-  .checkout-micropayment__field {
-    display: grid;
-    gap: 0.3rem;
-
-    input {
-      padding: 0.5rem 0.6rem;
-      border: 1px solid @border-color;
-      border-radius: 6px;
-      background-color: @input-background;
-      color: @input-text;
-      font-size: 1rem;
-    }
-  }
-
-  .checkout-micropayment__hint {
-    margin: 0;
-    font-size: 0.8rem;
-    color: @text-color-alpha-70;
-  }
 }
 
 // Die zwei Wege von der Landeseite weg (App\Http\Controllers\ChargeController::
@@ -657,64 +471,6 @@
     color: @text-color-alpha-70;
     font-size: 0.9rem;
   }
-}
-
-// Die Formulare der Bestellung — heute nur noch die Erstattung
-// (App\Http\Controllers\OrderController::refund()). Zwei Felder pro Zeile ab
-// genug Breite, sonst gestapelt.
-.orders-invoice {
-  display: grid;
-  gap: 1rem;
-  margin-bottom: 1rem;
-
-  .orders-invoice__row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-    gap: 1rem;
-  }
-
-  .orders-invoice__field {
-    display: grid;
-    gap: 0.3rem;
-
-    label {
-      font-size: 0.9rem;
-      font-weight: bold;
-    }
-
-    &.orders-invoice__field--error label {
-      color: @form-error-color;
-    }
-
-    input,
-    textarea {
-      padding: 0.5rem 0.6rem;
-      border: 1px solid @border-color;
-      border-radius: 6px;
-      background-color: @input-background;
-      color: @input-text;
-      font-size: 1rem;
-      font-family: inherit;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 6rem;
-    }
-  }
-}
-
-.orders-invoice__storage {
-  margin: 0 0 1rem;
-  font-size: 0.8rem;
-  color: @text-color-alpha-70;
-}
-
-// Das Erstattungsformular — App\Http\Controllers\OrderController::
-// refund()/refundRequest(). Ein Feld, dieselbe Optik wie .orders-invoice__field.
-.orders-refund__note {
-  font-size: 0.9rem;
-  color: @text-color-alpha-70;
 }
 
 // ── Gutscheinaktionen (/konto/gutscheinaktionen) ────────────────────────────

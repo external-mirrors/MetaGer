@@ -7,21 +7,12 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Eine Ladung anlegen und wiederfinden — der erste Schritt des Bezahlvorgangs,
- * der hierher gezogen ist ({@see \App\Http\Controllers\ChargeController}).
+ * Eine Ladung wiederfinden — für die Rückkehr von suma-payments
+ * ({@see \App\Http\Controllers\ChargeController::returned()}). Angelegt wird
+ * sie über {@see SumaPaymentsChargeIssuer::create()}.
  *
- * Legt nichts an, was nicht ohnehin drüben landen müsste: `PaymentReference`
- * ist dort in Postgres verankert, und {@see create()} tut nichts weiter als
- * `PaymentReference.CREATE_NEW_REQUEST` von hier aus anzustoßen — es wird
- * dabei noch nicht bezahlt, nur ein Auftragsplatz reserviert und der Preis
- * festgehalten.
- *
- * {@see find()} ist der Grund, warum die Barzahlung ohne eine Sitzung
- * auskommt: die Kontrollerroute leitet nach dem Anlegen auf eine eigene, mit
- * GET erreichbare Adresse weiter (POST/redirect/GET statt der alten, erneut
- * gerenderten POST-Antwort, die ein Neuladen verdoppelt hätte), und die liest
- * die Ladung hier noch einmal nach, statt sich auf etwas zu verlassen, das nur
- * durch die Weiterleitung mitgereist wäre.
+ * Liest die Ladung beim Keyserver nach, statt sich auf etwas zu verlassen, das
+ * nur durch die Weiterleitung mitgereist wäre.
  */
 final class ChargeOrderIssuer
 {
@@ -34,42 +25,6 @@ final class ChargeOrderIssuer
     }
 
     /**
-     * Legt eine neue Ladung an, oder liefert null.
-     *
-     * Null heißt hier zweierlei, und der Aufrufer unterscheidet es nicht:
-     * entweder der Keyserver antwortet nicht, oder er lehnt ab, weil der
-     * Schlüssel schon drei offene Aufträge trägt (`Key.isChargable()`
-     * drüben). Welcher der beiden Fälle es war, weiß
-     * {@see \App\Http\Controllers\ChargeController} besser aus
-     * {@see \App\Landing\ChargeEligibility} als aus einer Zeichenkette, die
-     * über die Grenze gereist ist.
-     *
-     * @return array{public_id: string, amount: int, price: string, expires_at: string}|null
-     */
-    public function create(string $key, int $amount): ?array
-    {
-        try {
-            $response = Http::timeout(5)
-                ->withHeaders(["Authorization" => "Bearer " . config("metager.metager.keymanager.access_token")])
-                ->post($this->keyserver . "/key/" . urlencode($key) . "/checkout", [
-                    "amount" => $amount,
-                ]);
-        } catch (\Throwable $e) {
-            Log::warning("keymanager checkout create unreachable: " . $e->getMessage());
-
-            return null;
-        }
-
-        if (!$response->successful()) {
-            Log::warning("keymanager checkout create answered " . $response->status());
-
-            return null;
-        }
-
-        return $this->validated($response->json());
-    }
-
-    /**
      * Liest eine bereits angelegte Ladung anhand ihrer öffentlichen Nummer.
      *
      * Der Schlüssel im Antwortkörper wird von
@@ -78,9 +33,8 @@ final class ChargeOrderIssuer
      * ist eine kleine, fortlaufende Zahl und kein Geheimnis.
      *
      * `paid` ist kein Beleg — nur, ob drüben schon eine `Payment`-Zeile zu
-     * dieser Ladung steht. Bar kennt das Feld nicht (dort entscheidet die
-     * Existenz der Bestellung selbst), aber die Rückkehrseite eines
-     * weiterleitenden Anbieters ({@see \App\Http\Controllers\ChargeController::returned()})
+     * dieser Ladung steht. Die Rückkehrseite
+     * ({@see \App\Http\Controllers\ChargeController::returned()})
      * braucht genau diese eine Auskunft, um "danke" von "wird noch bearbeitet"
      * zu unterscheiden.
      *
@@ -121,7 +75,7 @@ final class ChargeOrderIssuer
     }
 
     /**
-     * Prüft die drei Felder, die beide Endpunkte gemeinsam haben, statt der
+     * Prüft die Felder der Ladung, statt der
      * Seite eine Antwort zu geben, die sie ungeprüft in einen Preis und ein
      * Datum verwandelt.
      *

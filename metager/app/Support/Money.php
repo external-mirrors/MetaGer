@@ -14,12 +14,9 @@ use Illuminate\Support\Number;
  * Trennzeichenkonventionen in derselben Tabelle, und die eine davon ist in
  * der anderen die Tausendertrennung.
  *
- * Zwei Methoden statt einer, weil zwei Stellen unterschiedliche Teile
- * brauchen: die Zeilentabelle setzt das Währungszeichen selbst nicht mehr
- * (`euro()` bringt es mit, in der Stellung, die die jeweilige Sprache
- * vorsieht — hinten im Deutschen, vorn im Englischen), während
- * `orders.refund.submit` das `€` schon im übersetzten Satz stehen hat und
- * nur die Zahl braucht ({@see amount()}).
+ * Die Zeilentabelle setzt das Währungszeichen selbst nicht mehr (`euro()`
+ * bringt es mit, in der Stellung, die die jeweilige Sprache vorsieht —
+ * hinten im Deutschen, vorn im Englischen).
  *
  * Der Eingabewert ist bewusst `string|float|int`: alles, was der Keyserver
  * je als Betrag geschickt hat. Ein nicht-numerischer Wert kommt unverändert
@@ -36,15 +33,5 @@ final class Money
         }
 
         return Number::currency((float) $value, "EUR", app()->getLocale());
-    }
-
-    /** Nur die Zahl — für Sätze, die das Währungszeichen schon tragen. */
-    public static function amount(string|float|int $value): string
-    {
-        if (!is_numeric($value)) {
-            return (string) $value;
-        }
-
-        return Number::format((float) $value, precision: 2, locale: app()->getLocale());
     }
 }

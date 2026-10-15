@@ -4,8 +4,7 @@
 
 @section('content')
 {{--
-	Die Landeseite für eine weiterleitende Zahlungsart — micropayment, VR
-	Payment und PayPal teilen sie sich
+	Die Landeseite nach der Zahlung bei suma-payments
 	(App\Http\Controllers\ChargeController::returned()).
 
 	Kein #checkout-page-Rahmen: dieser Vorgang ist hier zu Ende, nicht mitten

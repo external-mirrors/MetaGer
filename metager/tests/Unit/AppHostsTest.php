@@ -64,7 +64,7 @@ class AppHostsTest extends TestCase
 
     public function testCurrentOriginReturnsTheSchemeAndHostForOneOfOurs(): void
     {
-        $request = Request::create("https://metager.org/de-DE/konto/aufladen/1000/vrpayment", "POST");
+        $request = Request::create("https://metager.org/de-DE/konto/aufladen/1000/bezahlen", "POST");
 
         $this->assertSame("https://metager.org", AppHosts::currentOrigin($request));
     }
@@ -74,7 +74,7 @@ class AppHostsTest extends TestCase
         // Cannot normally happen behind TrustHosts, but currentOrigin is the
         // last guard before the value becomes a payment provider's redirect
         // target, so it refuses rather than trusts.
-        $request = Request::create("https://evil.example/de-DE/konto/aufladen/1000/vrpayment", "POST");
+        $request = Request::create("https://evil.example/de-DE/konto/aufladen/1000/bezahlen", "POST");
 
         $this->assertNull(AppHosts::currentOrigin($request));
     }

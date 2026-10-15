@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 /**
- * Aufladen, Schritt zwei: /konto/aufladen/<menge> — die Zahlungsart wählen.
+ * Aufladen, Schritt zwei: /konto/aufladen/<menge> — weiter zur Zustimmung,
+ * bevor es zu suma-payments geht.
  *
- * App\Http\Controllers\ChargeController::show() ist die neue Startseite des
- * Bezahlvorgangs, der aus dem Keymanager hierher zieht. Was hier schiefgehen
+ * App\Http\Controllers\ChargeController::show() ist die Startseite des
+ * Bezahlvorgangs. Was hier schiefgehen
  * kann, ist dasselbe wie bei /konto (AccountPageTest hat die Begründung) und
  * zusätzlich: eine Menge, die kein Paket ist, oder ein Besucher, der gerade
  * gar nicht aufladen darf, dürfen hier trotzdem nicht landen — beides prüft
@@ -55,15 +56,13 @@ class ChargePageTest extends TestCase
         return $this->withUnencryptedCookie("key", self::A_KEY);
     }
 
-    public function testThePageRenders(): void
+    public function testAPackageGoesOnToTheConsentPage(): void
     {
         $this->keyserverKnows();
 
         $this->signedIn()
             ->get("/de-DE/konto/aufladen/1000")
-            ->assertOk()
-            ->assertSeeText("1.000")
-            ->assertSee(route("account.checkout.cash", ["amount" => 1000]), false);
+            ->assertRedirect(route("account.checkout.suma", ["amount" => 1000]));
     }
 
     /**
@@ -80,7 +79,7 @@ class ChargePageTest extends TestCase
         // Teilstring enthält und den Test sonst auch ohne cancelUrl grün
         // ließe.
         $this->signedIn()
-            ->get("/de-DE/konto/aufladen/1000")
+            ->get("/de-DE/konto/aufladen/1000/bezahlen")
             ->assertSee('href="' . route("account") . '"', false);
     }
 
@@ -89,7 +88,7 @@ class ChargePageTest extends TestCase
         $this->keyserverKnows();
 
         $this->signedIn()
-            ->get("/de-DE/konto/aufladen/1000")
+            ->get("/de-DE/konto/aufladen/1000/bezahlen")
             ->assertHeader("Cache-Control", "no-store, private");
     }
 
@@ -185,101 +184,6 @@ class ChargePageTest extends TestCase
 
         $this->signedIn()
             ->get("/de-DE/konto/aufladen/1000")
-            ->assertOk()
-            ->assertSee(route("account.checkout.cash", ["amount" => 1000]), false);
-    }
-
-    /**
-     * Die Entwicklungs-Zahlungsart ist nur unter app()->environment('local')
-     * erreichbar (wie routes/checkout/manual.js's NODE_ENV-Prüfung im
-     * Keymanager) — phpunit.xml setzt APP_ENV=testing, also fehlt die Kachel
-     * standardmäßig.
-     */
-    public function testTheDevelopmentPaymentIsHiddenOutsideLocal(): void
-    {
-        $this->keyserverKnows();
-
-        $this->signedIn()
-            ->get("/de-DE/konto/aufladen/1000")
-            ->assertDontSee(route("account.checkout.manual", ["amount" => 1000]), false);
-    }
-
-    public function testTheDevelopmentPaymentAppearsInLocal(): void
-    {
-        $this->keyserverKnows();
-        $this->app["env"] = "local";
-
-        $this->signedIn()
-            ->get("/de-DE/konto/aufladen/1000")
-            ->assertSee(route("account.checkout.manual", ["amount" => 1000]), false);
-    }
-
-    /**
-     * Die sieben PayPal-Kacheln stehen `hidden` im Markup — PayPal ist der
-     * einzige Anbieter, dessen Seiten ein SDK im Browser brauchen, und eine
-     * Kachel, die zu einer ohne Javascript funktionslosen Seite führt, ist
-     * schlechter als keine Kachel. resources/js/account.js deckt sie auf; ein
-     * Feature-Test kann nur sehen, dass das `hidden`-Attribut im Quelltext
-     * steht — ob es ohne Javascript auch wirklich unsichtbar bleibt, prüft
-     * tests/Browser/ProgressiveEnhancementTest.
-     *
-     * Alle sieben, nicht nur eine: eine frühere Fassung dieser Seite hatte
-     * eine einzige PayPal-Kachel hinter einer eigenen Wahl-Seite, und ein
-     * Test, der nur diese eine prüfte, hätte nicht bemerkt, wenn von sieben
-     * flachen Kacheln nur die erste `hidden` bekäme.
-     */
-    public function testEveryPaypalTileIsPresentButHiddenInMarkup(): void
-    {
-        $this->keyserverKnows();
-
-        $response = $this->signedIn()->get("/de-DE/konto/aufladen/1000");
-        $content = $response->getContent();
-
-        foreach (["paypal", "card", "p24", "bancontact", "blik", "eps", "mybank"] as $fundingSource) {
-            $url = route("account.checkout.paypal.service", ["amount" => 1000, "fundingSource" => $fundingSource]);
-            $response->assertSee($url, false);
-
-            $tileStart = strpos($content, $url);
-            $this->assertNotFalse($tileStart, "die PayPal-Kachel für $fundingSource fehlt im Markup");
-            $this->assertStringContainsString(
-                "hidden",
-                substr($content, max(0, $tileStart - 200), 200),
-                "die PayPal-Kachel für $fundingSource steht nicht `hidden` im Markup"
-            );
-        }
-    }
-
-    /**
-     * Die Reihenfolge ist Datenschutzfreundlichkeit, nicht Einführungsdatum:
-     * Bargeld (anonym), Wero, die drei Micropayment-Zahlweisen, dann die
-     * sieben PayPal-Zahlweisen. Feedback dazu: eine frühere Fassung gruppierte
-     * erst nach Anbieter ("Micropayment", "PayPal") statt nach Zahlweise, was
-     * niemandem etwas sagte, der den Anbieter nicht kennt — seitdem ist jede
-     * Zahlweise ihre eigene, flache Kachel.
-     */
-    public function testTheMethodsAppearInOrderOfPrivacyFriendliness(): void
-    {
-        $this->keyserverKnows();
-
-        $content = $this->signedIn()->get("/de-DE/konto/aufladen/1000")->getContent();
-
-        $positions = [
-            "cash" => strpos($content, route("account.checkout.cash", ["amount" => 1000])),
-            "vrpayment" => strpos($content, route("account.checkout.vrpayment", ["amount" => 1000])),
-            "micropayment.prepay" => strpos($content, route("account.checkout.micropayment.service", ["amount" => 1000, "service" => "prepay"])),
-            "micropayment.lastschrift" => strpos($content, route("account.checkout.micropayment.service", ["amount" => 1000, "service" => "lastschrift"])),
-            "micropayment.directbanking" => strpos($content, route("account.checkout.micropayment.service", ["amount" => 1000, "service" => "directbanking"])),
-            "paypal.paypal" => strpos($content, route("account.checkout.paypal.service", ["amount" => 1000, "fundingSource" => "paypal"])),
-            "paypal.mybank" => strpos($content, route("account.checkout.paypal.service", ["amount" => 1000, "fundingSource" => "mybank"])),
-        ];
-
-        foreach ($positions as $name => $position) {
-            $this->assertNotFalse($position, "Zahlart $name fehlt im Markup");
-        }
-
-        $this->assertTrue($positions["cash"] < $positions["vrpayment"], "Bargeld muss vor Wero stehen");
-        $this->assertTrue($positions["vrpayment"] < $positions["micropayment.prepay"], "Wero muss vor Micropayment stehen");
-        $this->assertTrue($positions["micropayment.directbanking"] < $positions["paypal.paypal"], "Micropayment muss vor PayPal stehen");
-        $this->assertTrue($positions["paypal.paypal"] < $positions["paypal.mybank"], "innerhalb PayPal: Wallet/Karte vor den regionalen Zahlweisen");
+            ->assertRedirect(route("account.checkout.suma", ["amount" => 1000]));
     }
 }

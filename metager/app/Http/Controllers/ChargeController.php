@@ -4,163 +4,70 @@ namespace App\Http\Controllers;
 
 use App\Authentication\ChargeOrderIssuer;
 use App\Authentication\KeyUser;
-use App\Authentication\ManualChargeIssuer;
-use App\Authentication\MicropaymentChargeIssuer;
-use App\Authentication\PayPalChargeIssuer;
 use App\Authentication\SumaPaymentsChargeIssuer;
-use App\Authentication\VRPaymentChargeIssuer;
 use App\Http\Controllers\Concerns\HandlesKeyCheckout;
 use App\Landing\ChargeEligibility;
 use App\Landing\KeyPrice;
 use App\Support\AppHosts;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Vite;
-use Illuminate\Support\Str;
 
 /**
  * Aufladen — /konto/aufladen/<menge>, ohne Schlüssel im Pfad.
  *
- * Der zweite Schritt des Bezahlvorgangs, der aus dem Keymanager hierher
- * zieht; {@see AccountController} bleibt der erste (die Wahl des Pakets). Wie
- * bei jedem Schritt davor steht der Schlüssel in keiner Adresse — er kommt
- * aus dem Cookie, über {@see \App\Authentication\KeyAuthGuard}.
+ * Der zweite Schritt des Bezahlvorgangs; {@see AccountController} bleibt der
+ * erste (die Wahl des Pakets). Wie bei jedem Schritt davor steht der
+ * Schlüssel in keiner Adresse — er kommt aus dem Cookie, über
+ * {@see \App\Authentication\KeyAuthGuard}.
  *
- * **Jede Zahlart läuft inzwischen hier** — Bar, micropayment, VR Payment, die
- * Entwicklungs-Zahlart, und zuletzt PayPal.
+ * **Bezahlt wird bei suma-payments** (suma-crm
+ * docs/keymanager-migration-plan.md, Schritte 3 und 7): hier steht nur die
+ * Zustimmung zum vorzeitigen Erlöschen des Widerrufsrechts ({@see sumaShow()}),
+ * dann legt der Keyserver den Auftrag an und schickt den Besucher zur
+ * Zahlweisenwahl dort ({@see sumaSubmit()}). Die eigenen Seiten für Bar,
+ * Wero, micropayment und PayPal sind mit dem Umzug weg; `show()` leitet nur
+ * noch weiter.
  *
- * **`show()` verlinkt jede einzelne Zahlweise direkt, flach, keine
- * Zwischen-Wahl-Seite pro Anbieter.** Micropayment (`prepay`, `lastschrift`,
- * `directbanking`) und PayPal (sieben Zahlweisen) hatten je eine eigene
- * Wahl-Seite, auf der zuerst der Anbieter stand und erst danach die
- * eigentliche Zahlweise — Feedback dazu: wer bezahlen will, sucht eine
- * Zahlweise, die er kennt ("Kreditkarte", "Lastschrift"), keinen Anbieter,
- * den er nicht kennt ("Micropayment"). `show()` listet darum alle elf
- * Zahlweisen selbst, sortiert nach Datenschutzfreundlichkeit: Bar (anonym),
- * Wero, die drei Micropayment-Zahlweisen, dann die sieben PayPal-Zahlweisen.
- * `account.checkout.micropayment` und `account.checkout.paypal` (ohne
- * `service`/`fundingSource`) gibt es deshalb nicht mehr — jede Weiterleitung,
- * die früher dorthin zurückführte (ungültige Auswahl, nicht erreichbarer
- * Keyserver, "zurück"), führt jetzt zu `show()` selbst, mit `?error=` für den
- * Fall, dass etwas mitzuteilen ist.
- *
- * **Bar braucht zwei Seiten statt einer.** `cashShow`/`cashSubmit` legen den
- * Auftrag an; `cashCreated` zeigt ihn. Dazwischen steht eine Weiterleitung
- * (POST/redirect/GET), keine erneut gerenderte POST-Antwort — die alte
- * Kasse im Keymanager rendert nach dem Anlegen dieselbe Adresse noch einmal,
- * und ein Neuladen legt dort einen zweiten Auftrag an. Ohne Sitzung trägt die
- * Weiterleitung nichts als die öffentliche Auftragsnummer; `cashCreated`
- * fragt die Ladung darüber noch einmal beim Keyserver nach, statt etwas zu
- * glauben, das nur durch den Redirect mitgereist wäre, und prüft dabei, dass
- * die Ladung wirklich dem angemeldeten Schlüssel gehört — die Nummer ist
- * klein und fortlaufend, kein Geheimnis.
- *
- * **Micropayment verlässt MetaGer für die Zahlung selbst.** `micropayment
- * ServiceShow` rendert die Zustimmungsseite einer der drei Zahlweisen direkt
- * (wie `cashShow`); `micropaymentSubmit` legt den Auftrag an und leitet
- * direkt auf die von drüben gelieferte, bereits mit dem Anbieter-Siegel
- * versehene Zahlungsseite weiter (303, kein lokales Ziel). Der Rückweg von
- * dort landet nicht wieder bei MetaGer im laufenden Vorgang, sondern auf
- * {@see returned()} — derselben Landeseite, die VR Payment ebenfalls nutzt.
- * Kein Beleg, nur "bezahlt" oder "wird noch bearbeitet", anhand des
- * `paid`-Felds, das {@see ChargeOrderIssuer::find()} mitbringt.
- *
- * **VR Payment (Wero) verlässt MetaGer ebenso.** Nur eine Zahlart
- * ({@see vrpaymentShow()} rendert die Zustimmungsseite direkt, wie
- * `cashShow`); `vrpaymentSubmit` legt den Auftrag an und leitet genauso
- * weiter wie micropayment. Der Rückweg landet, ohne dass diese Klasse etwas
- * dafür tun muss, auf derselben {@see returned()}, die micropayment schon
- * nutzt — dafür wurde sie generisch gebaut. Die Kachel auf `show()` heißt
- * "Wero", nicht "VR Payment" — VR Payment ist der Anbieter dahinter, Wero die
- * einzige Zahlweise, die er hier anbietet, und die Zahlweise ist es, die auf
- * der Kachel stehen soll.
+ * Zurück kommt der Besucher auf {@see returned()} — kein Beleg, nur „bezahlt"
+ * oder „wird noch bearbeitet", anhand des `paid`-Felds, das
+ * {@see ChargeOrderIssuer::find()} mitbringt.
  *
  * **Wer zahlt, steht auf jeder Seite hier** — partials/key-fingerprint.blade.php,
- * dasselbe Kürzel wie auf /konto. "Zugang sichern" (partials/key-backup.blade.php)
- * dagegen bewusst nicht: dieser Vorgang ist eine Entscheidung, kein Ort zum
- * Verwalten, und die Sicherung bleibt auf /konto, wo sie hingehört.
- *
- * **PayPal ist SDK-getrieben, nicht formularbasiert.** Sieben Zahlweisen,
- * jede eine eigene Kachel auf `show()`; `paypalServiceShow` holt vor dem
- * Rendern die Konfiguration (Client-ID, ob Kartenzahlung gerade erlaubt ist)
- * drüben ab — der einzige Seitenaufruf in dieser Klasse, der selbst schon
- * zum Keyserver spricht — und setzt eine Content-Security-Policy fürs
- * PayPal-SDK. `paypalOrderCreate`/`paypalOrderCapture` sind JSON-Ziele, die
- * resources/js/checkout-paypal.js per fetch aufruft (das SDK ruft
- * `createOrder`/`onApprove` auf, nicht ein Formular-Submit) — nie mit dem
- * Bearer-Token, das diese Klasse für {@see \App\Authentication\
- * PayPalChargeIssuer} hält; das bleibt serverseitig. Ohne Javascript bietet
- * `show()` die sieben PayPal-Kacheln gar nicht erst an (dieselbe
- * `hidden`-Vorlage wie `#login-qr`), statt Seiten zu zeigen, die nichts tun.
- *
- * **Drei Wege zurück, nicht einer.** "Menge ändern" (jede Seite) und "andere
- * Zahlungsart" (jede Zahlweisen-Seite führt zurück zu `show()`) bleiben im
- * Vorgang; "Zurück zum Konto" (`cancelUrl`, jede Seite) verlässt ihn ganz —
- * bewusst ohne `#charge`-Anker, weil das hier "ich will gar nicht (mehr)
- * aufladen" heißt und nicht "ich will ein anderes Paket".
+ * dasselbe Kürzel wie auf /konto.
  */
 final class ChargeController extends Controller
 {
     use HandlesKeyCheckout;
 
-    public function show(Request $request, int $amount): Response|RedirectResponse
+    public function show(Request $request, int $amount): RedirectResponse
     {
-        [$user, $key, $redirect] = $this->requireKey($request, $amount);
+        [$user, , $redirect] = $this->requireKey($request, $amount);
         if ($redirect !== null) {
             return $redirect;
         }
 
-        $tiers = KeyPrice::tiers();
-        if (!array_key_exists($amount, $tiers)) {
+        if (!$this->knownTier($amount) || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null) {
             return redirect()->to(route("account") . "#charge");
         }
 
-        $blocked = ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders());
-        if ($blocked !== null) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        // Every method lives at suma-payments now: its picker is the only
-        // choice there is, so no second one here (Step 3).
-        $suma = app(SumaPaymentsChargeIssuer::class);
-        if ($suma->allMoved()) {
-            return redirect()->route("account.checkout.suma", ["amount" => $amount]);
-        }
-
-        // Kommt von einer Zahlweisen-Seite zurück, deren Auswahl ungültig war
-        // oder deren Keyserver nicht antwortete (micropaymentServiceShow,
-        // paypalServiceShow), oder vom SDK, wenn PayPal eine Zahlweise beim
-        // Laden als hier nicht anbietbar meldet (resources/js/checkout-
-        // paypal.js). Es gibt keine Zwischen-Wahl-Seite pro Anbieter mehr, zu
-        // der das früher zurückführte — diese Seite ist jetzt das einzige
-        // "zurück".
-        $error = $request->query("error");
-        $error = in_array($error, ["unreachable", "funding_source_not_eligible", "wero_unavailable"], true) ? $error : null;
-
-        return $this->render("checkout.index", $request, $key, $amount, [
-            "error" => $error,
-            "weroAvailable" => $this->weroAvailable($request),
-            // Moved methods: one tile for them, MetaGer's own one each gone.
-            "moved" => $suma->methods(),
-        ]);
+        return redirect()->route("account.checkout.suma", ["amount" => $amount]);
     }
 
     /**
-     * The methods already at suma-payments ({@see SumaPaymentsChargeIssuer}):
-     * the consent here, as on every method page, then suma-payments' picker.
+     * The consent here, then suma-payments' picker
+     * ({@see SumaPaymentsChargeIssuer}).
      */
-    public function sumaShow(Request $request, int $amount, SumaPaymentsChargeIssuer $issuer): Response|RedirectResponse
+    public function sumaShow(Request $request, int $amount): Response|RedirectResponse
     {
         [, $key, $redirect] = $this->requireKey($request, $amount);
         if ($redirect !== null) {
             return $redirect;
         }
 
-        if (!$this->knownTier($amount) || $issuer->methods() === []) {
+        if (!$this->knownTier($amount)) {
             return redirect()->to(route("account") . "#charge");
         }
 
@@ -168,14 +75,8 @@ final class ChargeController extends Controller
         $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
 
         return $this->render("checkout.suma-payments", $request, $key, $amount, [
-            "step" => 3,
+            "step" => 2,
             "error" => $error,
-            "methods" => $issuer->methods(),
-            // The method is chosen on suma-payments' picker then, not here
-            // (partials/checkout-steps).
-            "withoutMethodStep" => $issuer->allMoved(),
-            // Back means the method list — unless the picker is all there is.
-            "backUrl" => $issuer->allMoved() ? null : route("account.checkout", ["amount" => $amount]),
         ])->header("Content-Security-Policy", $this->redirectingProviderCsp((string) config("metager.metager.keymanager.suma_payments_host")));
     }
 
@@ -214,470 +115,6 @@ final class ChargeController extends Controller
         return redirect()
             ->away($order["redirect_url"], 303)
             ->header("Cache-Control", "no-store, private");
-    }
-
-    public function cashShow(Request $request, int $amount): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        // Die zwei Fehler, die cashSubmit hierher zurückschickt — der
-        // Keyserver hat nicht geantwortet, oder die Zustimmung fehlte. Wie
-        // bei KeyCreationController::ERRORS steht die Liste dafür extra hier,
-        // statt jede Zeichenkette aus der Query ungeprüft in eine Vorlage zu
-        // reichen.
-        if (!$this->knownTier($amount)) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        $error = $request->query("error");
-        $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
-
-        return $this->render("checkout.cash", $request, $key, $amount, [
-            "step" => 3,
-            "reference" => null,
-            "error" => $error,
-        ]);
-    }
-
-    public function cashSubmit(Request $request, int $amount, ChargeOrderIssuer $issuer): RedirectResponse
-    {
-        if (!$this->sameOrigin($request)) {
-            abort(403);
-        }
-
-        [$user, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (
-            !array_key_exists($amount, KeyPrice::tiers())
-            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
-        ) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        if (!$request->boolean("revocation")) {
-            return redirect()
-                ->to(route("account.checkout.cash", ["amount" => $amount]) . "?error=consent", 303)
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        $order = $issuer->create($key, $amount);
-
-        // 303: das Ziel ist eine Seite, die der Browser mit GET holen soll,
-        // statt den Auftrag bei einem Neuladen zu wiederholen.
-        if ($order === null) {
-            return redirect()
-                ->to(route("account.checkout.cash", ["amount" => $amount]) . "?error=unreachable", 303)
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        return redirect()
-            ->to(route("account.checkout.cash.created", [
-                "amount" => $amount,
-                "reference" => $order["public_id"],
-            ]), 303)
-            ->header("Cache-Control", "no-store, private");
-    }
-
-    public function cashCreated(Request $request, int $amount, string $reference, ChargeOrderIssuer $issuer): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!$this->knownTier($amount)) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        $order = $issuer->find($reference);
-
-        // Weder eine fremde Ladung noch eine, die es nicht gibt, ist etwas,
-        // das diese Seite anzeigen darf — die Nummer ist zwar kein Geheimnis,
-        // aber wessen Auftrag es ist, entscheidet sich hier und nicht drüben.
-        if ($order === null || $order["key"] !== $key) {
-            abort(404);
-        }
-
-        return $this->render("checkout.cash", $request, $key, $amount, [
-            "step" => 3,
-            "reference" => [
-                "public_id" => $order["public_id"],
-                "expiration" => Carbon::parse($order["expires_at"]),
-            ],
-        ]);
-    }
-
-    public function manualShow(Request $request, int $amount): Response|RedirectResponse
-    {
-        if (!app()->environment("local")) {
-            abort(404);
-        }
-
-        [, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!$this->knownTier($amount)) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        return $this->render("checkout.manual", $request, $key, $amount, [
-            "step" => 3,
-        ]);
-    }
-
-    public function manualSubmit(Request $request, int $amount, ManualChargeIssuer $issuer): RedirectResponse
-    {
-        if (!app()->environment("local")) {
-            abort(404);
-        }
-
-        if (!$this->sameOrigin($request)) {
-            abort(403);
-        }
-
-        [$user, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (
-            !array_key_exists($amount, KeyPrice::tiers())
-            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
-        ) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        $issuer->charge($key, $amount);
-
-        return redirect()
-            ->to(route("account") . "#charge")
-            ->header("Cache-Control", "no-store, private");
-    }
-
-    public function micropaymentServiceShow(Request $request, int $amount, string $service): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!in_array($service, MicropaymentChargeIssuer::SERVICES, true)) {
-            return redirect()->to(route("account.checkout", ["amount" => $amount]));
-        }
-
-        if (!$this->knownTier($amount)) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        $error = $request->query("error");
-        $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
-
-        return $this->render("checkout.micropayment", $request, $key, $amount, [
-            "step" => 3,
-            "service" => $service,
-            "error" => $error,
-            "privacyUrl" => MicropaymentChargeIssuer::PRIVACY_URLS[$service],
-        ])->header("Content-Security-Policy", $this->redirectingProviderCsp("https://*.micropayment.de https://micropayment.de"));
-    }
-
-    public function micropaymentSubmit(Request $request, int $amount, string $service, MicropaymentChargeIssuer $issuer): RedirectResponse
-    {
-        if (!$this->sameOrigin($request)) {
-            abort(403);
-        }
-
-        [$user, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!in_array($service, MicropaymentChargeIssuer::SERVICES, true)) {
-            return redirect()->to(route("account.checkout", ["amount" => $amount]));
-        }
-
-        if (
-            !array_key_exists($amount, KeyPrice::tiers())
-            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
-        ) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        if (!$request->boolean("revocation")) {
-            return redirect()
-                ->to(route("account.checkout.micropayment.service", ["amount" => $amount, "service" => $service]) . "?error=consent", 303)
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        $email = $request->input("email");
-        $order = $issuer->create(
-            $key,
-            $amount,
-            $service,
-            is_string($email) && $email !== "" ? $email : null,
-            AppHosts::currentOrigin($request),
-        );
-
-        if ($order === null) {
-            return redirect()
-                ->to(route("account.checkout.micropayment.service", ["amount" => $amount, "service" => $service]) . "?error=unreachable", 303)
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        // Ein fremder Host, kein lokales Ziel — die Zahlung selbst findet bei
-        // micropayment statt, nicht bei uns.
-        return redirect()
-            ->away($order["redirect_url"], 303)
-            ->header("Cache-Control", "no-store, private");
-    }
-
-    public function vrpaymentShow(Request $request, int $amount): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!$this->knownTier($amount)) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        // Wero über eine .onion-Adresse: VR Payment lehnt eine .onion-
-        // Rückkehradresse rundheraus ab (der Space kann nicht darauf zeigen),
-        // die Zahlung käme also nie zu Ende. Statt sie stumm scheitern zu
-        // lassen, führt jeder Weg hierher — auch ein Lesezeichen — zurück zur
-        // Zahlweisenwahl mit einer Erklärung.
-        if (!$this->weroAvailable($request)) {
-            return redirect()->to(route("account.checkout", ["amount" => $amount]) . "?error=wero_unavailable");
-        }
-
-        // "failed" kommt von VR Payment selbst zurück (failedUrl), nicht von
-        // dieser Anwendung — anders als "unreachable"/"consent" ist es nicht
-        // "wir konnten nicht", sondern "die Zahlung wurde abgelehnt".
-        $error = $request->query("error");
-        $error = in_array($error, ["unreachable", "consent", "vrpayment_failed"], true) ? $error : null;
-
-        return $this->render("checkout.vrpayment", $request, $key, $amount, [
-            "step" => 3,
-            "error" => $error,
-            "privacyUrl" => VRPaymentChargeIssuer::PRIVACY_URL,
-        ])->header("Content-Security-Policy", $this->redirectingProviderCsp("https://*.vr-payment.de https://vr-payment.de"));
-    }
-
-    public function vrpaymentSubmit(Request $request, int $amount, VRPaymentChargeIssuer $issuer): RedirectResponse
-    {
-        if (!$this->sameOrigin($request)) {
-            abort(403);
-        }
-
-        [$user, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (
-            !array_key_exists($amount, KeyPrice::tiers())
-            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
-        ) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        if (!$this->weroAvailable($request)) {
-            return redirect()
-                ->to(route("account.checkout", ["amount" => $amount]) . "?error=wero_unavailable", 303)
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        if (!$request->boolean("revocation")) {
-            return redirect()
-                ->to(route("account.checkout.vrpayment", ["amount" => $amount]) . "?error=consent", 303)
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        $order = $issuer->create($key, $amount, AppHosts::currentOrigin($request));
-
-        if ($order === null) {
-            return redirect()
-                ->to(route("account.checkout.vrpayment", ["amount" => $amount]) . "?error=unreachable", 303)
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        // Ein fremder Host, kein lokales Ziel — die Zahlung selbst findet bei
-        // VR Payment statt, nicht bei uns.
-        return redirect()
-            ->away($order["redirect_url"], 303)
-            ->header("Cache-Control", "no-store, private");
-    }
-
-    /**
-     * Rendert die Zustimmungs-/SDK-Seite für eine PayPal-Zahlweise.
-     *
-     * Anders als jede andere Seite in dieser Klasse spricht diese vorm
-     * Rendern selbst schon zum Keyserver — {@see PayPalChargeIssuer::show()}
-     * holt Client-ID und (nur für "card") ob Kartenzahlung gerade erlaubt
-     * ist samt Client-Token. Ohne Antwort landet der Besucher auf `show()`
-     * mit `?error=unreachable`, statt eine Seite zu sehen, deren
-     * SDK-Bausteine nie funktionieren.
-     */
-    public function paypalServiceShow(Request $request, int $amount, string $fundingSource): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        if (!in_array($fundingSource, PayPalChargeIssuer::FUNDING_SOURCES, true)) {
-            return redirect()->to(route("account.checkout", ["amount" => $amount]));
-        }
-
-        if (!$this->knownTier($amount)) {
-            return redirect()->to(route("account") . "#charge");
-        }
-
-        $config = (new PayPalChargeIssuer())->show($request, $key, $fundingSource);
-        if ($config === null) {
-            return redirect()
-                ->to(route("account.checkout", ["amount" => $amount]) . "?error=unreachable", 303)
-                ->header("Cache-Control", "no-store, private");
-        }
-
-        // Anders als bei VR Payment gibt es kein "die Zahlung wurde
-        // abgelehnt" über eine Weiterleitung hierher — PayPal verlässt diese
-        // Seite nie, ein abgelehnter Versuch zeigt sich als Inline-Meldung
-        // im SDK selbst (resources/js/checkout-paypal.js). Stellt das SDK
-        // beim Laden fest, dass diese Zahlweise hier gar nicht angeboten
-        // wird, geht es zurück zu show() (?error=funding_source_not_eligible
-        // dort, nicht hier).
-        $error = $request->query("error");
-        $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
-
-        $nonce = Str::random(16);
-        // script-src/img-src/form-action nach dem Vorbild von
-        // DonationController::paymentMethod() — dort mit `time()` als Nonce,
-        // was hier bewusst nicht übernommen ist. connect-src/frame-src sind
-        // gegenüber der Spende-CSP erweitert: Advanced Card Fields (die
-        // "card"-Zahlweise) braucht beides für seine eigenen Hintergrund-
-        // aufrufe und eingebetteten Iframes.
-        //
-        // c.paypal.com, www.paypalobjects.com (als script-, nicht nur
-        // img-src) und cors.api.sandbox.paypal.com/cors.api.paypal.com sind
-        // keine Vermutung — das eigentliche, von www.paypal.com/sdk/js
-        // ausgelieferte Bundle referenziert alle drei wörtlich:
-        // "https://c.paypal.com/da/r/fb.js" (Fraudnet, das PayPals eigene
-        // Betrugserkennung speist — ohne dieses Skript sieht PayPal weniger
-        // Signal für eine Transaktion, kein harter Fehler, aber ein
-        // stillschweigender Qualitätsverlust), ".../upstream/bizcomponents/
-        // js/modal.js" (ein echtes Skript, nicht nur die Logos/Icons, für
-        // die paypalobjects.com schon in img-src stand) und
-        // "cors.api.sandbox.paypal.com" (der Token-Endpunkt, den das SDK
-        // ruft, wenn die aufrufende Seite nicht selbst auf paypal.com liegt
-        // — unser Fall). cors.api.paypal.com ergänzt dieselbe Umgehung für
-        // den Produktivmodus, ungeprüft, weil ihn nur ein Produktiv-Client-
-        // ID auslöst.
-        $csp = "default-src 'self'; "
-            . "script-src 'self' 'nonce-$nonce' https://www.paypal.com https://www.paypalobjects.com https://c.paypal.com; "
-            . "script-src-elem 'self' 'nonce-$nonce' https://www.paypal.com https://www.paypalobjects.com https://c.paypal.com; "
-            . "style-src 'self' 'unsafe-inline'; "
-            . "img-src 'self' www.paypalobjects.com data:; "
-            . "font-src 'self'; "
-            . "connect-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://c.paypal.com "
-            . "https://cors.api.paypal.com https://cors.api.sandbox.paypal.com; "
-            . "frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com; "
-            . "frame-ancestors 'self'; "
-            . "form-action 'self' www.paypal.com";
-
-        return $this->render("checkout.paypal", $request, $key, $amount, [
-            "step" => 3,
-            "fundingSource" => $fundingSource,
-            "clientId" => $config["client_id"],
-            "directCardEnabled" => $config["direct_card_enabled"],
-            "clientToken" => $config["client_token"],
-            "nonce" => $nonce,
-            "error" => $error,
-            "privacyUrl" => "https://www.paypal.com/us/legalhub/privacy-full",
-            // Zusätzlich zum gemeinsamen account.js dieser Klasse — das SDK
-            // selbst lädt checkout-paypal.js, nicht umgekehrt, deshalb steht
-            // es hier und nicht im gemeinsamen render()-Rahmen, der jede
-            // Seite dieser Klasse bekommt.
-            "js" => [Vite::asset("resources/js/account.js"), Vite::asset("resources/js/checkout-paypal.js")],
-        ])->header("Content-Security-Policy", $csp);
-    }
-
-    /**
-     * JSON-Ziel für resources/js/checkout-paypal.js's `createOrder`-Callback
-     * — legt den Auftrag an und gibt die PayPal-Bestellnummer zurück, die
-     * das SDK direkt weiterreicht.
-     */
-    public function paypalOrderCreate(Request $request, int $amount, string $fundingSource, PayPalChargeIssuer $issuer): JsonResponse
-    {
-        if (!$this->sameOrigin($request)) {
-            abort(403);
-        }
-
-        [$user, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return response()->json(["error" => "unauthenticated"], 401);
-        }
-
-        if (!in_array($fundingSource, PayPalChargeIssuer::FUNDING_SOURCES, true)) {
-            return response()->json(["error" => "invalid_funding_source"], 400);
-        }
-
-        if (
-            !array_key_exists($amount, KeyPrice::tiers())
-            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
-        ) {
-            return response()->json(["error" => "not_eligible"], 409);
-        }
-
-        $order = $issuer->createOrder($request, $key, $amount, $fundingSource);
-        if ($order === null) {
-            return response()->json(["error" => "unreachable"], 502);
-        }
-
-        return response()->json([
-            "payment_reference" => $order["public_id"],
-            "paypal_order_id" => $order["paypal_order_id"],
-        ], 201);
-    }
-
-    /**
-     * JSON-Ziel für resources/js/checkout-paypal.js's `onApprove`-Callback
-     * — löst den Auftrag ein. Die Antwort wird nahezu unverändert
-     * durchgereicht: das Skript kennt PayPals eigene Fehlerform bereits
-     * (Kartenfehlercodes, die 3-D-Secure-Kennung), eine hier vereinfachte
-     * Form wäre für das Skript unbrauchbar.
-     */
-    public function paypalOrderCapture(Request $request, int $amount, string $fundingSource, PayPalChargeIssuer $issuer): JsonResponse
-    {
-        if (!$this->sameOrigin($request)) {
-            abort(403);
-        }
-
-        [, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return response()->json(["errors" => [["msg" => "unauthenticated"]]], 401);
-        }
-
-        if (!in_array($fundingSource, PayPalChargeIssuer::FUNDING_SOURCES, true)) {
-            return response()->json(["error" => "invalid_funding_source"], 400);
-        }
-
-        $paymentReference = $request->input("payment_reference");
-        if (!is_string($paymentReference) || !preg_match('/^(Z)?(\d+)$/', $paymentReference)) {
-            return response()->json(["errors" => [["msg" => "invalid_payment_reference"]]], 400);
-        }
-
-        $result = $issuer->captureOrder($request, $key, $fundingSource, $paymentReference);
-
-        return response()->json($result["body"], $result["status"]);
     }
 
     public function returned(Request $request, string $reference, ChargeOrderIssuer $issuer): Response|RedirectResponse
@@ -768,8 +205,8 @@ final class ChargeController extends Controller
     }
 
     /**
-     * Gemeinsamer Rahmen für die drei gerenderten Seiten dieses Vorgangs:
-     * Titel, Assets, wer zahlt, und der Weg zurück zur Paketwahl.
+     * Der Rahmen der Zustimmungsseite: Titel, Assets, wer zahlt, und der Weg
+     * zurück zur Paketwahl.
      *
      * @param array<string, mixed> $extra
      */
@@ -806,18 +243,9 @@ final class ChargeController extends Controller
                 // Spalte weg, nicht die ganze Kurzfassung.
                 "currentCharge" => $user->getCharge(),
                 // Wo im Vorgang diese Seite steht (partials/checkout-steps).
-                // Der Standard ist die Zahlweisenwahl; jede einzelne
-                // Zahlweisen-Seite überschreibt ihn mit 3.
                 "step" => 2,
                 "fingerprint" => $user->getKeyFingerprint(),
                 "changeAmountUrl" => route("account") . "#charge",
-                // Der zweite erledigte Schritt der Schrittleiste
-                // (partials/checkout-steps), von einer Zahlweisen-Seite aus:
-                // dieselbe Menge, zurück zur Wahl der Zahlungsart. Dieselbe
-                // Adresse, auf die auch „Andere Zahlungsart wählen" am Fuß
-                // zeigt — eine Brotkrume wiederholt den Weg, den sie
-                // beschreibt, das ist ihre Aufgabe.
-                "methodsUrl" => route("account.checkout", ["amount" => $amount]),
                 // Der Ausstieg — bewusst ohne #charge: das ist "ich will gar
                 // nicht (mehr) aufladen", nicht "ich will ein anderes Paket".
                 "cancelUrl" => route("account"),
@@ -858,25 +286,6 @@ final class ChargeController extends Controller
     }
 
     /**
-     * Ob Wero (VR Payment) für diese Anfrage angeboten werden kann.
-     *
-     * VR Payments Space nimmt keine .onion-Rückkehradresse an — die Zahlung
-     * würde starten und nie zurückfinden. Über eine .onion-Adresse ist Wero
-     * darum keine Option; jede andere Zahlweise bleibt es. {@see show()}
-     * blendet die Kachel aus, {@see vrpaymentShow()}/{@see vrpaymentSubmit()}
-     * weisen einen Direktaufruf zur Zahlweisenwahl zurück.
-     *
-     * Nur die zwei .onion-Adressen, nicht localhost/127.0.0.1: dort lässt der
-     * Keymanager (pass/app/payment_processor/VRPayment.js) die success/failed-
-     * URLs bewusst weg und die Zahlung läuft im Testmodus trotzdem durch — das
-     * ist eine Entwicklungsbequemlichkeit, kein Fall, den ein Nutzer je sieht.
-     */
-    private function weroAvailable(Request $request): bool
-    {
-        return !AppHosts::isOnion($request->getHost());
-    }
-
-    /**
      * Die Standard-CSP, die build/nginx/configuration/nginx.conf (der `map`
      * für `$csp`) jeder Seite ohne eigene Policy mitgibt — hier wörtlich
      * wiederholt, weil ein selbst gesetzter `Content-Security-Policy`-Header
@@ -889,20 +298,18 @@ final class ChargeController extends Controller
     /**
      * Die Standard-CSP mit einem um $providerHosts erweiterten `form-action`.
      *
-     * micropayment ({@see micropaymentServiceShow()}) und VR Payment
-     * ({@see vrpaymentShow()}) beantworten ihr Zustimmungs-Formular mit einer
-     * Weiterleitung (303, {@see micropaymentSubmit()}/{@see vrpaymentSubmit()})
-     * auf die eigene, gesiegelte Zahlungsseite des Anbieters. Chrome und Safari
+     * {@see sumaShow()} beantwortet sein Zustimmungs-Formular mit einer
+     * Weiterleitung (303, {@see sumaSubmit()}) auf die Zahlweisenwahl von
+     * suma-payments. Chrome und Safari
      * prüfen `form-action` gegen *jede* Weiterleitung, die einem Formular-POST
      * folgt — steht der Anbieter-Host nicht in `form-action`, blockiert der
      * Browser den Sprung, der POST endet mit 303 und der Vorgang bleibt auf der
-     * Zustimmungsseite stehen. Genau das war der Grund, aus dem SEPA-Lastschrift
-     * und Sofortüberweisung im Konto nicht funktionierten. Firefox prüft
+     * Zustimmungsseite stehen. Firefox prüft
      * `form-action` bei Weiterleitungen nicht — deshalb fiel es weder lokal noch
      * im Dusk-Lauf auf, die beide Firefox fahren.
      *
      * Ohne diesen Header gälte die nginx-Standard-CSP; deren `form-action 'self'
-     * metager.org metager.de` kennt keinen Zahlungsanbieter. Der Header hier
+     * metager.org metager.de` kennt suma-payments nicht. Der Header hier
      * ersetzt sie für diese eine Seite — nginx setzt seinen `$csp` nur, wenn die
      * Antwort keinen eigenen mitbringt (der `map` in nginx.conf hat für den
      * nicht-leeren Fall keinen Zweig und damit keinen Wert).
@@ -919,12 +326,11 @@ final class ChargeController extends Controller
     /**
      * Ob $amount eines der kaufbaren Pakete ist.
      *
-     * {@see show()} prüft das für die Übersichtsseite; die Zahlweisen-Seiten
-     * ({@see cashShow()}, {@see micropaymentServiceShow()} und die anderen)
-     * werden direkt über ihre Adresse erreicht und brauchen dieselbe Prüfung,
-     * sonst rendert `/konto/aufladen/999/bar` eine Seite für einen Betrag, den
-     * es nicht zu kaufen gibt — und {@see render()} müsste einen Preis für ihn
-     * finden.
+     * {@see show()} prüft das vor der Weiterleitung; die Zustimmungsseite
+     * wird auch direkt über ihre Adresse erreicht und braucht dieselbe
+     * Prüfung, sonst rendert `/konto/aufladen/999/bezahlen` eine Seite für
+     * einen Betrag, den es nicht zu kaufen gibt — und {@see render()} müsste
+     * einen Preis für ihn finden.
      */
     private function knownTier(int $amount): bool
     {

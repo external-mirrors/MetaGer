@@ -13,13 +13,6 @@
  *     gültig, also kann er nicht im Markup stehen — er würde bei jedem
  *     Seitenaufbau geholt, auch von jemandem, der ihn gar nicht will, und wäre
  *     abgelaufen, bevor jemand ihn abgetippt hat.
- *  3. Die PayPal-Kachel auf der Zahlungswahl (checkout/index.blade.php).
- *     PayPal ist die einzige Zahlart, deren Seite ein SDK braucht — eine
- *     Kachel, die zu einer funktionslosen Seite führt, ist schlechter als
- *     keine Kachel, deshalb steht sie `hidden` da und wird nur hier
- *     aufgedeckt. Nicht /konto/aufladen/<menge>/paypal selbst: das SDK lädt
- *     erst dort (resources/js/checkout-paypal.js), diese Kachel führt nur
- *     hin.
  *
  * Die Texte stehen in data-Attributen und in der Vorlage, nicht hier: sie sind
  * übersetzt, und die Seite wird in zwölf Sprachen ausgeliefert.
@@ -27,7 +20,6 @@
 
 enhanceCopyButtons();
 enhanceTransferDialog();
-revealPaypalTile();
 
 /**
  * Die Kopierknöpfe.
@@ -168,13 +160,4 @@ function enhanceTransferDialog() {
             dialog.close();
         }
     }
-}
-
-function revealPaypalTile() {
-    // Sieben Kacheln, eine pro Zahlweise (checkout/index.blade.php) — nicht
-    // eine gemeinsame Wahl-Seite mehr, deshalb alle mit derselben Klasse statt
-    // einer einzigen id.
-    document.querySelectorAll(".checkout-paypal-tile").forEach((tile) => {
-        tile.hidden = false;
-    });
 }

@@ -33,15 +33,6 @@ class MoneyTest extends TestCase
         $this->assertSame("€9.35", Money::euro("9.35"));
     }
 
-    public function testTheBareAmountCarriesNoSymbol(): void
-    {
-        $this->app->setLocale("de");
-
-        // orders.refund.submit trägt das € schon im übersetzten Satz.
-        $this->assertSame("10,00", Money::amount("10.00"));
-        $this->assertSame("9,35", Money::amount("9.35"));
-    }
-
     /**
      * Eine Null zu zeigen, wo eine Zahl fehlt, ist auf einer Rechnungsseite
      * die schlechtere Antwort — `(float) "unbekannt"` wäre 0.0 und stünde
@@ -52,6 +43,5 @@ class MoneyTest extends TestCase
         $this->app->setLocale("de");
 
         $this->assertSame("—", Money::euro("—"));
-        $this->assertSame("—", Money::amount("—"));
     }
 }

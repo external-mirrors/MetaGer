@@ -37,7 +37,17 @@ use Illuminate\Queue\RedisQueue;
  * thing that happens whenever a worker dies holding a job — not something this
  * subclass introduces.
  *
- * Only pop() is wrapped. deleteReserved() and deleteAndRelease() run after a
+ * pushRaw() is wrapped too, for fpm rather than the worker: it is
+ * KeyChanged's broadcast push, made on whatever page a key holder loads, over a
+ * fresh socket with this connection's 1s connect timeout. Linux retransmits a
+ * lost SYN at exactly 1s, so a single dropped packet failed it while Valkey was
+ * answering the same request's cache read on the default connection — once a
+ * day, reported through ShouldRescue's rescue() as a new GlitchTip issue for
+ * every page it happened on (METAGER-U6 and twenty siblings). A retried push
+ * whose reply was lost may enqueue the broadcast twice; that is the same
+ * duplicate delivery this queue already tolerates below.
+ *
+ * deleteReserved() and deleteAndRelease() are not wrapped. They run after a
  * job has been handled, so a failure there costs one duplicate delivery rather
  * than the worker's loop, and a duplicate is what this queue is already built
  * to tolerate: see config/broadcasting.php on why a missed broadcast costs a
@@ -57,6 +67,28 @@ class FailoverRedisQueue extends RedisQueue
      * Tests\Unit\QueueRedisConnectionTest pins.
      */
     public const RETRY_BUDGET_SECONDS = 12.0;
+
+    /**
+     * A request's budget, not the worker's: somebody is waiting on this push —
+     * the page it is made from — and RedisFailover's default is sized to clear
+     * a promotion without outlasting what that page has already promised.
+     */
+    public const PUSH_BUDGET_SECONDS = RedisFailover::BUDGET_SECONDS;
+
+    /**
+     * @param  string  $payload
+     * @param  \UnitEnum|string|null  $queue
+     * @param  array  $options
+     * @return mixed
+     */
+    public function pushRaw($payload, $queue = null, array $options = [])
+    {
+        return RedisFailover::retry(
+            fn() => parent::pushRaw($payload, $queue, $options),
+            self::PUSH_BUDGET_SECONDS,
+            $this->connection
+        );
+    }
 
     /**
      * @param  \UnitEnum|string|null  $queue

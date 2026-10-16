@@ -6,6 +6,7 @@ use App\Queue\FailoverRedisQueue;
 use Illuminate\Contracts\Redis\Factory;
 use Illuminate\Support\Facades\Redis;
 use Predis\Connection\NodeConnectionInterface;
+use Predis\Connection\Resource\Exception\StreamInitException;
 use Predis\Response\ServerException;
 use Predis\TimeoutException;
 use Tests\TestCase;
@@ -254,5 +255,77 @@ class FailoverRedisQueueTest extends TestCase
                 "the retry must pop the queue the worker asked for"
             );
         }
+    }
+
+    /**
+     * fpm's half of the queue: KeyChanged's broadcast push, on any page a key
+     * holder loads. Its connection is a fresh socket per request with a 1s
+     * connect timeout, and one lost SYN — the retransmit is due at exactly 1s
+     * — was enough to fail it while Valkey itself was fine: in METAGER-U6 and
+     * twenty sibling issues the same request had just read the key cache on
+     * the default connection. The failure was rescued and reported, once a
+     * day, as a new issue for every page it happened on.
+     */
+    public function testAPushSurvivesAFailedConnect(): void
+    {
+        $connection = $this->connectionFailing(
+            1,
+            new StreamInitException("Connection timed out [tcp://master-valkey-master:6379]")
+        );
+        $disconnects = [];
+        $this->recordDisconnectsInto($disconnects);
+
+        $this->assertSame(
+            "job-id",
+            $this->queueOver($connection)->pushRaw('{"id":"job-id"}', "broadcasts"),
+            "a push that recovered is a push that happened"
+        );
+
+        $this->assertSame(2, $connection->evals, "the push must be made again on a fresh socket");
+        $this->assertSame(
+            [self::CONNECTION],
+            $disconnects,
+            "the retry must drop the failed socket, and it must be the queue's own"
+        );
+    }
+
+    /**
+     * A push whose reply was lost may have run, so retrying it can enqueue the
+     * same broadcast twice. That is safe for the one job this connection
+     * carries — a second broadcast of the same charge changes nothing on the
+     * page — and it is what the class docblock already accepts for the
+     * worker's side.
+     */
+    public function testAPushSurvivesATimedOutRead(): void
+    {
+        $connection = $this->connectionFailing(1, $this->timeoutException());
+        $disconnects = [];
+        $this->recordDisconnectsInto($disconnects);
+
+        $this->queueOver($connection)->pushRaw('{"id":"job-id"}', "broadcasts");
+
+        $this->assertSame(2, $connection->evals);
+        $this->assertSame([self::CONNECTION], $disconnects);
+    }
+
+    /** And a caller bug on the push fails on the first attempt, as on the pop. */
+    public function testAnOrdinaryServerErrorOnAPushIsNotRetried(): void
+    {
+        $connection = $this->connectionFailing(
+            PHP_INT_MAX,
+            new ServerException("WRONGTYPE Operation against a key holding the wrong kind of value")
+        );
+        $disconnects = [];
+        $this->recordDisconnectsInto($disconnects);
+
+        try {
+            $this->queueOver($connection)->pushRaw('{"id":"job-id"}', "broadcasts");
+            $this->fail("a WRONGTYPE should have reached the caller");
+        } catch (ServerException $expected) {
+            $this->assertStringContainsString("WRONGTYPE", $expected->getMessage());
+        }
+
+        $this->assertSame(1, $connection->evals);
+        $this->assertSame([], $disconnects);
     }
 }

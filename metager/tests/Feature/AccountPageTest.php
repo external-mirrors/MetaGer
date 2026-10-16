@@ -519,4 +519,20 @@ class AccountPageTest extends TestCase
             ->assertSeeText("2,480");
     }
 
+    /**
+     * `/en-EN/` has a locale's shape, and real visitors arrive on it (METAGER-U8,
+     * every referer `metager.org/en-EN/…`), but it is no locale we serve. It used
+     * to reach `LaravelLocalization::setLocale()`, which refuses it and falls
+     * back to `app.locale` — the literal `'default'` — and `Number::format()`
+     * then threw on the balance, so the account page answered 500.
+     */
+    public function testAnUnservedRegionPrefixRendersTheBalance(): void
+    {
+        $this->keyserverKnows(charge: 2480);
+
+        $this->signedIn()
+            ->get("/en-EN/konto")
+            ->assertOk()
+            ->assertSeeText("2,480");
+    }
 }

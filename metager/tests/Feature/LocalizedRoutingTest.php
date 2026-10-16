@@ -77,4 +77,32 @@ class LocalizedRoutingTest extends TestCase
         $this->get("/en-US/about", ["Sec-Fetch-Mode" => "navigate"])
             ->assertRedirect("/about");
     }
+
+    /**
+     * A prefix with a locale's shape that names no locale we serve renders in
+     * its language's home region, not in no locale at all.
+     *
+     * `isLocaleSegment()` accepts any `xx-XX` so that such a prefix is still
+     * taken off the path and the route matches. It used to be handed on as the
+     * locale too; `LaravelLocalization::setLocale()` refused it and left
+     * `app.locale` at the literal `'default'` from `config/app.php`, which
+     * rendered on fallback translations and broke anything that hands the
+     * locale to ICU (METAGER-U8). Every link the page generated then kept the
+     * bogus prefix, so a visitor who arrived on one never left it.
+     */
+    public function testAnUnservedRegionRendersInItsLanguagesHomeRegion(): void
+    {
+        $this->get("/en-EN/about", ["Sec-Fetch-Mode" => "navigate"])
+            ->assertOk()
+            ->assertSee('<html lang="en-US"', false)
+            ->assertDontSee('href="/en-EN/', false);
+    }
+
+    /** And one whose language we do not serve either gets the default locale. */
+    public function testAnUnservedLanguageRendersInTheDefaultLocale(): void
+    {
+        $this->get("/xx-YY/about", ["Sec-Fetch-Mode" => "navigate"])
+            ->assertOk()
+            ->assertSee('<html lang="en-US"', false);
+    }
 }

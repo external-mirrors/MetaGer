@@ -133,7 +133,9 @@ final class LocaleContext
             ?? self::cookieLocale($request)
             ?? self::preferredLocale($request, $host_locale);
 
-        $locale = $stated ?? ($path_locale !== "" ? $path_locale : $default_locale);
+        $locale = $stated
+            ?? ($path_locale !== "" ? self::servedPathLocale($path_locale) : null)
+            ?? $default_locale;
 
         /**
          * Translations fall back along the locale, not along the host.
@@ -171,7 +173,9 @@ final class LocaleContext
         $default_locale = $guess_trusted ? $guess : $host_locale;
 
         if (self::isLocaleSegment($segment)) {
-            return new self($segment, $default_locale, $host_language, $segment, $request->fullUrl());
+            $locale = self::servedPathLocale($segment) ?? $default_locale;
+
+            return new self($locale, $default_locale, $host_language, $segment, $request->fullUrl());
         }
 
         return new self($default_locale, $default_locale, $host_language, "", $request->fullUrl());
@@ -247,6 +251,23 @@ final class LocaleContext
         }
 
         return self::HOME_REGION[strtolower($value)] ?? null;
+    }
+
+    /**
+     * The locale a path prefix renders in.
+     *
+     * `isLocaleSegment()` accepts any `xx-XX`, so that a prefix like `/en-EN/`
+     * is still taken off the path and the route behind it matches. That does
+     * not make it a locale we serve: handed to `LaravelLocalization::setLocale()`
+     * it is refused, `app.locale` stays the literal `'default'`, and the page
+     * renders on fallback translations, throws wherever the locale reaches ICU
+     * (METAGER-U8), and prefixes every link it generates with the same bogus
+     * segment. Such a prefix renders in its language's home region instead, and
+     * `null` — the caller's default — when not even the language is ours.
+     */
+    private static function servedPathLocale(string $segment): ?string
+    {
+        return self::normalize($segment) ?? self::normalize(self::languageOf($segment));
     }
 
     /** The language part of a locale — `en-US` becomes `en`. */

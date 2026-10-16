@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Virement, prélèvement et plus',
         'heading' => 'Payer',
-        'lede' => 'Sur la page suivante, vous choisissez comment payer : :methods. Rester anonyme reste possible – le nom et l’e-mail sont facultatifs, sauf pour le prélèvement.',
+        'lede' => 'Sur la page suivante, vous choisissez comment payer : :methods. Vous pouvez payer de manière anonyme – le nom et l’e-mail sont facultatifs, sauf pour le prélèvement.',
         'submit' => 'Continuer vers le paiement',
-        'privacy' => 'Le paiement passe par l’espace de paiement de SUMA-EV (payments.suma-ev.de) et, selon le moyen choisi, par VR Payment ou PayPal.',
+        'privacy' => 'Le paiement passe par l’espace de paiement de SUMA-EV (payments.suma-ev.de). Le virement, le prélèvement SEPA et les espèces par courrier sont traités par nous-mêmes – un prestataire de paiement externe n’intervient que pour la carte et Wero (VR Payment) ainsi que pour PayPal.',
         'methods' => [
             'banktransfer' => 'Virement bancaire',
             'sepa_directdebit' => 'Prélèvement SEPA',

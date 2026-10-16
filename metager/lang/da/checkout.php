@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Bankoverførsel, direkte debitering og mere',
         'heading' => 'Betal',
-        'lede' => 'På næste side vælger du, hvordan du vil betale: :methods. Du kan stadig være anonym – navn og e-mail er frivillige, undtagen ved direkte debitering.',
+        'lede' => 'På næste side vælger du, hvordan du vil betale: :methods. Du kan betale anonymt – navn og e-mail er frivillige, undtagen ved direkte debitering.',
         'submit' => 'Videre til betaling',
-        'privacy' => 'Betalingen foregår via SUMA-EV’s betalingsområde (payments.suma-ev.de) og, afhængigt af betalingsmåden, via VR Payment eller PayPal.',
+        'privacy' => 'Betalingen foregår via SUMA-EV’s betalingsområde (payments.suma-ev.de). Bankoverførsel, SEPA-autogiro og kontanter med posten håndterer vi selv – en ekstern betalingsudbyder er kun involveret ved kort og Wero (VR Payment) samt ved PayPal.',
         'methods' => [
             'banktransfer' => 'Bankoverførsel',
             'sepa_directdebit' => 'SEPA direkte debitering',

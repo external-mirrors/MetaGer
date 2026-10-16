@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Transferencia, domiciliación y más',
         'heading' => 'Pagar',
-        'lede' => 'En la página siguiente elige cómo pagar: :methods. Seguir siendo anónimo sigue funcionando: el nombre y el correo electrónico son voluntarios, salvo para la domiciliación.',
+        'lede' => 'En la página siguiente elige cómo pagar: :methods. Puedes pagar de forma anónima: el nombre y el correo electrónico son voluntarios, salvo para la domiciliación.',
         'submit' => 'Continuar al pago',
-        'privacy' => 'El pago se realiza a través del área de pagos de SUMA-EV (payments.suma-ev.de) y, según el método, a través de VR Payment o PayPal.',
+        'privacy' => 'El pago se realiza a través del área de pagos de SUMA-EV (payments.suma-ev.de). La transferencia bancaria, el adeudo directo SEPA y el efectivo por correo los gestionamos nosotros mismos – solo interviene un proveedor de pagos externo con tarjeta y Wero (VR Payment) y con PayPal.',
         'methods' => [
             'banktransfer' => 'Transferencia bancaria',
             'sepa_directdebit' => 'Domiciliación SEPA',

@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Przelew, polecenie zapłaty i więcej',
         'heading' => 'Zapłać',
-        'lede' => 'Na następnej stronie wybierasz sposób płatności: :methods. Nadal można pozostać anonimowym – imię i e-mail są dobrowolne, z wyjątkiem polecenia zapłaty.',
+        'lede' => 'Na następnej stronie wybierasz sposób płatności: :methods. Możesz zapłacić anonimowo – imię i e-mail są dobrowolne, z wyjątkiem polecenia zapłaty.',
         'submit' => 'Przejdź do płatności',
-        'privacy' => 'Płatność odbywa się przez strefę płatności SUMA-EV (payments.suma-ev.de) i, zależnie od metody, przez VR Payment lub PayPal.',
+        'privacy' => 'Płatność odbywa się przez strefę płatności SUMA-EV (payments.suma-ev.de). Przelew, polecenie zapłaty SEPA i gotówkę pocztą obsługujemy sami – zewnętrzny operator płatności uczestniczy tylko przy karcie i Wero (VR Payment) oraz przy PayPal.',
         'methods' => [
             'banktransfer' => 'Przelew bankowy',
             'sepa_directdebit' => 'Polecenie zapłaty SEPA',

@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Bank transfer, direct debit and more',
         'heading' => 'Pay',
-        'lede' => 'On the next page you choose how to pay: :methods. Staying anonymous still works – name and email are voluntary, except for direct debit.',
+        'lede' => 'On the next page you choose how to pay: :methods. You can pay anonymously – name and email are optional, except for direct debit.',
         'submit' => 'Continue to payment',
-        'privacy' => 'The payment runs through SUMA-EV\'s payment area (payments.suma-ev.de) and, depending on the method, through VR Payment or PayPal.',
+        'privacy' => 'The payment runs through SUMA-EV\'s payment area (payments.suma-ev.de). We handle bank transfer, SEPA direct debit and cash by post ourselves – an external payment provider is only involved for card and Wero (VR Payment) and for PayPal.',
         'methods' => [
             'banktransfer' => 'Bank transfer',
             'sepa_directdebit' => 'SEPA direct debit',

@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Transferência, débito direto e mais',
         'heading' => 'Pagar',
-        'lede' => 'Na página seguinte escolhe como pagar: :methods. Continua a ser possível ficar anónimo – nome e e-mail são voluntários, exceto para o débito direto.',
+        'lede' => 'Na página seguinte escolhe como pagar: :methods. Pode pagar de forma anónima – nome e e-mail são voluntários, exceto para o débito direto.',
         'submit' => 'Continuar para o pagamento',
-        'privacy' => 'O pagamento passa pela área de pagamentos da SUMA-EV (payments.suma-ev.de) e, consoante o método, pela VR Payment ou pelo PayPal.',
+        'privacy' => 'O pagamento passa pela área de pagamentos da SUMA-EV (payments.suma-ev.de). A transferência bancária, o débito direto SEPA e o dinheiro por correio são tratados por nós – um prestador de pagamentos externo só intervém com cartão e Wero (VR Payment) e com PayPal.',
         'methods' => [
             'banktransfer' => 'Transferência bancária',
             'sepa_directdebit' => 'Débito direto SEPA',

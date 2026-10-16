@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Bonifico, addebito diretto e altro',
         'heading' => 'Paga',
-        'lede' => 'Nella pagina successiva scegli come pagare: :methods. Restare anonimi è ancora possibile – nome ed e-mail sono facoltativi, tranne per l’addebito diretto.',
+        'lede' => 'Nella pagina successiva scegli come pagare: :methods. Puoi pagare in forma anonima – nome ed e-mail sono facoltativi, tranne per l’addebito diretto.',
         'submit' => 'Continua al pagamento',
-        'privacy' => 'Il pagamento passa per l’area pagamenti di SUMA-EV (payments.suma-ev.de) e, a seconda del metodo, per VR Payment o PayPal.',
+        'privacy' => 'Il pagamento passa per l’area pagamenti di SUMA-EV (payments.suma-ev.de). Bonifico, addebito diretto SEPA e contanti per posta li gestiamo direttamente noi – un fornitore di pagamenti esterno interviene solo con carta e Wero (VR Payment) e con PayPal.',
         'methods' => [
             'banktransfer' => 'Bonifico bancario',
             'sepa_directdebit' => 'Addebito diretto SEPA',

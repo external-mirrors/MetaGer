@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Overschrijving, incasso en meer',
         'heading' => 'Betalen',
-        'lede' => 'Op de volgende pagina kiest u hoe u betaalt: :methods. Anoniem blijven kan nog steeds – naam en e-mail zijn vrijwillig, behalve bij incasso.',
+        'lede' => 'Op de volgende pagina kiest u hoe u betaalt: :methods. U kunt anoniem betalen – naam en e-mail zijn vrijwillig, behalve bij incasso.',
         'submit' => 'Verder naar betaling',
-        'privacy' => 'De betaling loopt via het betaalgedeelte van SUMA-EV (payments.suma-ev.de) en, afhankelijk van de betaalmethode, via VR Payment of PayPal.',
+        'privacy' => 'De betaling loopt via het betaalgedeelte van SUMA-EV (payments.suma-ev.de). Overschrijving, SEPA-incasso en contant geld per post handelen wij zelf af – een externe betaaldienst is alleen betrokken bij kaart en Wero (VR Payment) en bij PayPal.',
         'methods' => [
             'banktransfer' => 'Bankoverschrijving',
             'sepa_directdebit' => 'SEPA-incasso',

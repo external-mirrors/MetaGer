@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Tilisiirto, suoraveloitus ja muuta',
         'heading' => 'Maksa',
-        'lede' => 'Seuraavalla sivulla valitset, miten maksat: :methods. Voit edelleen pysyä nimettömänä – nimi ja sähköposti ovat vapaaehtoisia, paitsi suoraveloituksessa.',
+        'lede' => 'Seuraavalla sivulla valitset, miten maksat: :methods. Voit maksaa nimettömänä – nimi ja sähköposti ovat vapaaehtoisia, paitsi suoraveloituksessa.',
         'submit' => 'Jatka maksamaan',
-        'privacy' => 'Maksu kulkee SUMA-EV:n maksualueen (payments.suma-ev.de) kautta ja maksutavasta riippuen VR Paymentin tai PayPalin kautta.',
+        'privacy' => 'Maksu kulkee SUMA-EV:n maksualueen (payments.suma-ev.de) kautta. Tilisiirron, SEPA-suoraveloituksen ja käteisen postitse käsittelemme itse – ulkopuolinen maksupalvelu on mukana vain kortti- ja Wero-maksuissa (VR Payment) sekä PayPalissa.',
         'methods' => [
             'banktransfer' => 'Tilisiirto',
             'sepa_directdebit' => 'SEPA-suoraveloitus',

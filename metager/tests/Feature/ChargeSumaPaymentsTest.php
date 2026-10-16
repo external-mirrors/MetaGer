@@ -78,6 +78,43 @@ class ChargeSumaPaymentsTest extends TestCase
             ->assertDontSee("Zahlungsart</span>", false);
     }
 
+    /**
+     * The notice used to read "…und, je nach Zahlungsart, über VR Payment oder
+     * PayPal", which suggests every payment goes through one of the two. Bank
+     * transfer, direct debit and cash are handled by SUMA-EV itself — for a
+     * privacy-minded buyer that is the deciding fact, so the notice says it.
+     */
+    public function testThePrivacyNoticeSaysWhichMethodsInvolveNoThirdParty(): void
+    {
+        $this->keyserverKnows();
+
+        $this->signedIn()->get("/de-DE/konto/aufladen/1000/bezahlen")->assertOk()
+            ->assertSee("Überweisung, SEPA-Lastschrift und Bargeld per Post wickeln wir selbst ab")
+            ->assertSee("nur bei Karte und Wero (VR Payment) sowie bei PayPal");
+    }
+
+    /**
+     * The lede used to say "Anonym geht weiterhin" — "still", relative to the
+     * checkout pages suma-payments replaced. A first-time buyer has nothing to
+     * compare against, so it reads as a reference to something they missed.
+     */
+    public function testTheLedeDoesNotCompareWithThePreviousCheckout(): void
+    {
+        $this->keyserverKnows();
+
+        $this->signedIn()->get("/de-DE/konto/aufladen/1000/bezahlen")->assertOk()
+            ->assertSee("Sie können anonym bezahlen")
+            ->assertDontSee("weiterhin");
+    }
+
+    public function testTheEnglishPrivacyNoticeSaysItToo(): void
+    {
+        $this->keyserverKnows();
+
+        $this->signedIn()->get("/en-GB/konto/aufladen/1000/bezahlen")->assertOk()
+            ->assertSee("We handle bank transfer, SEPA direct debit and cash by post ourselves");
+    }
+
     public function testTheConsentPageAllowsTheRedirectToSumaPayments(): void
     {
         $this->keyserverKnows();

@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Banköverföring, autogiro och mer',
         'heading' => 'Betala',
-        'lede' => 'På nästa sida väljer du hur du betalar: :methods. Du kan fortfarande vara anonym – namn och e-post är frivilliga, utom vid autogiro.',
+        'lede' => 'På nästa sida väljer du hur du betalar: :methods. Du kan betala anonymt – namn och e-post är frivilliga, utom vid autogiro.',
         'submit' => 'Vidare till betalning',
-        'privacy' => 'Betalningen går via SUMA-EV:s betalningsområde (payments.suma-ev.de) och, beroende på betalsätt, via VR Payment eller PayPal.',
+        'privacy' => 'Betalningen går via SUMA-EV:s betalningsområde (payments.suma-ev.de). Banköverföring, SEPA-autogiro och kontanter per post hanterar vi själva – en extern betaltjänst är bara inblandad vid kort och Wero (VR Payment) samt vid PayPal.',
         'methods' => [
             'banktransfer' => 'Banköverföring',
             'sepa_directdebit' => 'SEPA-autogiro',

@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Überweisung, Lastschrift und mehr',
         'heading' => 'Bezahlen',
-        'lede' => 'Auf der nächsten Seite wählen Sie, wie Sie bezahlen: :methods. Anonym geht weiterhin – Name und E-Mail sind freiwillig, außer bei der Lastschrift.',
+        'lede' => 'Auf der nächsten Seite wählen Sie, wie Sie bezahlen: :methods. Sie können anonym bezahlen – Name und E-Mail sind freiwillig, außer bei der Lastschrift.',
         'submit' => 'Weiter zur Zahlung',
-        'privacy' => 'Die Zahlung läuft über den Zahlungsbereich des SUMA-EV (payments.suma-ev.de) und, je nach Zahlungsart, über VR Payment oder PayPal.',
+        'privacy' => 'Die Zahlung läuft über den Zahlungsbereich des SUMA-EV (payments.suma-ev.de). Überweisung, SEPA-Lastschrift und Bargeld per Post wickeln wir selbst ab – ein externer Zahlungsanbieter ist nur bei Karte und Wero (VR Payment) sowie bei PayPal beteiligt.',
         'methods' => [
             'banktransfer' => 'Überweisung',
             'sepa_directdebit' => 'SEPA-Lastschrift',

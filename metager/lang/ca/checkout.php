@@ -32,9 +32,9 @@ return [
     'suma' => [
         'label' => 'Transferència, domiciliació i més',
         'heading' => 'Pagar',
-        'lede' => 'A la pàgina següent trieu com pagar: :methods. Seguir sent anònim continua funcionant: el nom i el correu electrònic són voluntaris, excepte per a la domiciliació.',
+        'lede' => 'A la pàgina següent trieu com pagar: :methods. Podeu pagar de manera anònima: el nom i el correu electrònic són voluntaris, excepte per a la domiciliació.',
         'submit' => 'Continua cap al pagament',
-        'privacy' => 'El pagament passa per l\'àrea de pagaments de SUMA-EV (payments.suma-ev.de) i, segons el mètode, per VR Payment o PayPal.',
+        'privacy' => 'El pagament passa per l\'àrea de pagaments de SUMA-EV (payments.suma-ev.de). La transferència bancària, la domiciliació SEPA i l\'efectiu per correu els gestionem nosaltres mateixos – només hi intervé un proveïdor de pagaments extern amb targeta i Wero (VR Payment) i amb PayPal.',
         'methods' => [
             'banktransfer' => 'Transferència bancària',
             'sepa_directdebit' => 'Domiciliació SEPA',

@@ -346,9 +346,6 @@ class ProgressiveEnhancementTest extends DuskTestCase
      * ohne Skript an MetaGer selbst ab, und von dort geht es per 303 zur
      * Auswahl bei suma-payments. Was hinter dem Abschicken liegt (der
      * Keymanager, suma-payments), ist nicht Sache dieser Suite.
-     *
-     * Liegt beim Keymanager der getesteten Umgebung noch keine Zahlungsart bei
-     * suma-payments, gibt es diese Seite nicht — dann wird übersprungen.
      */
     public function testTheSumaPaymentsHandOffWorksWithoutJavascript(): void
     {
@@ -357,17 +354,12 @@ class ProgressiveEnhancementTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($key) {
             $browser->visit("/de-DE")
                 ->addCookie("key", $key, null, [], false)
-                ->visit("/de-DE/konto/aufladen/1000/bezahlen");
-
-            if (!str_ends_with((string) parse_url($browser->driver->getCurrentURL(), PHP_URL_PATH), "/bezahlen")) {
-                $this->markTestSkipped("Beim Keymanager dieser Umgebung liegt noch keine Zahlungsart bei suma-payments.");
-            }
-
-            $browser->assertVisible("#checkout-revocation")
+                ->visit("/de-DE/konto/aufladen/1000/bezahlen")
+                ->assertVisible("#checkout-revocation")
                 ->assertVisible("button.checkout-submit");
             $this->assertStringEndsWith(
                 "/konto/aufladen/1000/bezahlen",
-                (string) $browser->attribute("form.checkout-micropayment", "action")
+                (string) $browser->attribute("form.checkout-form", "action")
             );
         });
     }

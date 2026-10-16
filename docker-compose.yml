@@ -250,7 +250,7 @@ services:
   # and there is no reason to make everyone edit it. .env.example names the new
   # one for fresh checkouts.
   valkey:
-    image: valkey/valkey:9.1.0-alpine
+    image: valkey/valkey:9.1.2-alpine
     restart: unless-stopped
     user: "valkey:valkey"
     networks:

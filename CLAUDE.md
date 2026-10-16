@@ -56,6 +56,46 @@ docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node test
 **The feature suite needs a build.** `Vite::asset()` throws without `public/build/manifest.json`,
 so every page-rendering test 500s on a fresh checkout until `npm run build` has run once.
 
+### A fresh checkout
+
+A clone has none of the gitignored state a working tree has collected, and every missing piece
+fails the suite wholesale rather than one test at a time. Before the first `artisan test`:
+
+```bash
+cp metager/.env.example metager/.env
+cp metager/config/sumas.json.example metager/config/sumas.json
+mkdir -p metager/database/databases metager/storage/metager
+touch metager/database/databases/database.sqlite
+docker compose build fpm
+docker compose run --rm --entrypoint /usr/bin/composer composer install
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node install
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node run build
+docker compose run --rm -T --entrypoint /usr/local/bin/php fpm artisan key:generate
+docker compose run --rm -T --entrypoint /usr/local/bin/php fpm artisan migrate --force
+```
+
+What each one's absence looks like, so a red run can be read:
+
+- **No `metager/.env`**: `MissingAppKeyException` everywhere, and `REDIS_HOST` falls back to
+  `127.0.0.1`, so every request that touches Redis waits out a connection timeout before failing
+  with `StreamInitException`. The 20-second suite then takes minutes to go red.
+- **No sqlite file or no migrations**: `SQLiteDatabaseDoesNotExistException`, then
+  `QueryException` on missing tables. `build/fpm/entrypoint/validate_laravel.sh` creates the file
+  when the container starts normally, but every command here overrides the entrypoint, so nothing
+  does it for you, and nothing ever migrates.
+- **No `vendor/`**: `Failed opening required '…/vendor/autoload.php'` from `artisan`.
+
+**A second checkout is not isolated from the first.** The network is pinned as `metager_net`
+(metager-keymanager and SafeBrowse join it on fixed addresses), so every checkout's stack joins the
+same one, and `valkey` resolves to every checkout's valkey at once. The Redis failover tests
+(`ResultPageTailSurvivesFailoverTest`, `RequestFetcherFailoverTest` and their neighbours) drop the
+connection on purpose and reconnect, and the reconnect lands on whichever valkey answers, so
+they fail in any second checkout while the dev stack is up, and pass in CI. `metager:latest` is
+shared the same way: `docker compose build fpm` in a second checkout re-tags the image the dev
+stack runs. For a second checkout, give it its own network, image names and no published ports
+through a `docker-compose.override.yml` listed in `.git/info/exclude` (update_renovate writes one
+into every clone it makes), or run the suite with the dev stack down.
+
 **Tooling services sit behind compose profiles**, so `docker compose up` starts the application
 and nothing else. `selenium_standalone_firefox` is in the `test` profile, `composer` and `node` in
 `tools`. Neither `docker compose run` nor naming the service explicitly on `up` needs the profile

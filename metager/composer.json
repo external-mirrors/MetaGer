@@ -11,7 +11,7 @@
         "php": "^8.4",
         "composer/class-map-generator": "^1.6",
         "endroid/qr-code": "^5.0",
-        "globalcitizen/php-iban": "^4.2.3",
+        "globalcitizen/php-iban": "^5.0.0",
         "invoiceninja/sdk-php": "^1.4",
         "laravel/framework": "^13.0",
         "laravel/reverb": "^1.6",

@@ -27,6 +27,7 @@ RUN apt update && apt install --no-install-recommends -y \
     libpq-dev \
     libmagickwand-dev \
     liblz4-dev \
+    liblzf-dev \
     libyaml-dev
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
@@ -51,21 +52,33 @@ RUN docker-php-ext-install zip gd pcntl pdo_mysql pdo_pgsql intl
 # the Pecl parser when the extension is present and falls back to the bundled
 # one when it is not, so a build without this still works, just slowly.
 #
-# Each pecl install is enabled in the same RUN. `pecl install a b c` exits 0 as
-# long as one package installs, so when pecl.php.net answered 500 for xdebug and
-# imagick the layer was committed without them — and CI builds on a shared,
-# long-lived dind daemon, so every retry reused that cached layer and failed one
-# step later on `'imagick' does not exist`. docker-php-ext-enable fails when the
-# .so is missing, which keeps a partial install from ever becoming a layer.
-RUN yes 'y' | pecl install xdebug-3.5.3 imagick-3.8.1 yaml && \
-    docker-php-ext-enable imagick yaml && \
+# Extensions go through installextension rather than `pecl install`, which
+# falls back to the same tag on GitHub when pecl.php.net is down — and it has
+# been, for hours, answering 500 and 504 for some packages while serving
+# others. `pecl install a b c` also exits 0 as long as one package installs, so
+# a partial install used to be committed as a layer, cached on CI's shared,
+# long-lived dind daemon, and reused by every retry. installextension fails
+# unless the .so is there, so that cannot happen. Every version is pinned
+# because the fallback needs a tag to fetch.
+ADD build/fpm/installextension.sh /usr/bin/installextension
+RUN installextension xdebug 3.5.3 xdebug/xdebug && \
+    installextension imagick 3.8.1 Imagick/imagick && \
+    installextension yaml 2.3.0 php/pecl-file_formats-yaml && \
+    # phpredis is configured explicitly. It used to be installed with every
+    # prompt answered `y`, which included the igbinary and msgpack serializers,
+    # and those now have no headers to build against. The compression backends
+    # stay on — libzstd-dev, liblz4-dev and liblzf-dev are installed above for
+    # them. lzf is linked against the system library rather than the copy
+    # phpredis bundles, because that copy is a git submodule and GitHub's tag
+    # tarballs leave submodules out.
+    installextension redis 6.3.0 phpredis/phpredis \
+        --enable-redis-igbinary=no --enable-redis-msgpack=no \
+        --enable-redis-lzf=yes --with-liblzf=yes \
+        --enable-redis-zstd=yes \
+        --enable-redis-lz4=yes --with-liblz4=yes && \
+    rm /usr/bin/installextension && \
+    docker-php-ext-enable redis imagick yaml && \
     docker-php-ext-enable --ini-name=xdebug.ini xdebug
-# phpredis is configured explicitly rather than through `yes 'y'`: that answered
-# every prompt affirmatively, including the igbinary and msgpack serializers,
-# which now have no headers to build against. The compression backends stay on —
-# libzstd-dev and liblz4-dev are installed above for them.
-RUN pecl install --configureoptions 'enable-redis-igbinary="no" enable-redis-msgpack="no" enable-redis-lzf="yes" enable-redis-zstd="yes" enable-redis-lz4="yes" with-liblz4="yes"' redis-6.3.0 && \
-    docker-php-ext-enable redis
 
 # Add working dir for the code base
 RUN mkdir -p /metager/metager_app && \

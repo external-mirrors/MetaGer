@@ -182,7 +182,7 @@ browsertest:
   # `extends` replaces list values rather than merging them, so redis has to be repeated
   # here — leaving it out would silently take it away from this job alone.
   services:
-    - name: selenium/standalone-firefox:153.0
+    - name: selenium/standalone-firefox:158.0
       alias: selenium-standalone-firefox
     - name: valkey/valkey:9.1.2-alpine
       alias: redis

@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Queue\FailoverRedisQueue;
 use Illuminate\Contracts\Redis\Factory;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Predis\Connection\NodeConnectionInterface;
 use Predis\Connection\Resource\Exception\StreamInitException;
@@ -75,6 +76,29 @@ class FailoverRedisQueueTest extends TestCase
 
                 // Empty reply: nothing to migrate, no job to reserve.
                 return null;
+            }
+
+            /** The only call deleteReserved() makes. Counted with the evals. */
+            public function zrem(...$arguments): int
+            {
+                $this->evals++;
+
+                if ($this->evals <= $this->failures) {
+                    throw $this->failure;
+                }
+
+                return 1;
+            }
+        };
+    }
+
+    /** What deleteReserved() reads off a RedisJob, and nothing else. */
+    private function handledJob(): object
+    {
+        return new class {
+            public function getReservedJob(): string
+            {
+                return '{"id":"job-id","attempts":1}';
             }
         };
     }
@@ -321,6 +345,73 @@ class FailoverRedisQueueTest extends TestCase
         try {
             $this->queueOver($connection)->pushRaw('{"id":"job-id"}', "broadcasts");
             $this->fail("a WRONGTYPE should have reached the caller");
+        } catch (ServerException $expected) {
+            $this->assertStringContainsString("WRONGTYPE", $expected->getMessage());
+        }
+
+        $this->assertSame(1, $connection->evals);
+        $this->assertSame([], $disconnects);
+    }
+
+    /**
+     * A planned failover, which no retry outlasts: every Valkey rollout pauses
+     * writes on the master for up to 22s before Sentinel hands over, and the
+     * push is a write. On 2026-10-16 and 2026-10-21 each page a key holder
+     * loaded during that pause reported a TimeoutException through rescue()
+     * (METAGER-193 to 19E, 19H, 19I) — for a broadcast whose loss costs a
+     * refresh. The push gives up with a log line, not an exception.
+     *
+     * The stub fails instantly, so this runs the retry to its 3s budget
+     * through the backoffs alone: about 1.5s.
+     */
+    public function testAPushThatCannotOutlastAFailoverIsDroppedNotReported(): void
+    {
+        $connection = $this->connectionFailing(PHP_INT_MAX, $this->timeoutException());
+        $disconnects = [];
+        $this->recordDisconnectsInto($disconnects);
+        Log::spy();
+
+        $this->assertNull(
+            $this->queueOver($connection)->pushRaw('{"id":"job-id"}', "broadcasts"),
+            "a broadcast lost to a failover is dropped, not thrown at the page that sent it"
+        );
+
+        $this->assertGreaterThan(1, $connection->evals, "it is dropped only after the retry gave up");
+        Log::shouldHaveReceived("warning")->once();
+    }
+
+    /**
+     * The worker's half of the same pause (METAGER-19D): the broadcast has
+     * been delivered and only removing it from `:reserved` failed. Left
+     * there, it comes back after retry_after and --tries=1 fails it as
+     * MaxAttemptsExceededException (METAGER-19F). ZREM is idempotent, so the
+     * delete is retried on a fresh socket like a pop.
+     */
+    public function testDeletingAHandledJobSurvivesATimedOutRead(): void
+    {
+        $connection = $this->connectionFailing(1, $this->timeoutException());
+        $disconnects = [];
+        $this->recordDisconnectsInto($disconnects);
+
+        $this->queueOver($connection)->deleteReserved("broadcasts", $this->handledJob());
+
+        $this->assertSame(2, $connection->evals, "the delete must be made again on a fresh socket");
+        $this->assertSame([self::CONNECTION], $disconnects);
+    }
+
+    /** Dropping is for failovers only; a caller bug still reaches the worker. */
+    public function testAnOrdinaryServerErrorOnADeleteIsNotRetriedOrDropped(): void
+    {
+        $connection = $this->connectionFailing(
+            PHP_INT_MAX,
+            new ServerException("WRONGTYPE Operation against a key holding the wrong kind of value")
+        );
+        $disconnects = [];
+        $this->recordDisconnectsInto($disconnects);
+
+        try {
+            $this->queueOver($connection)->deleteReserved("broadcasts", $this->handledJob());
+            $this->fail("a WRONGTYPE should have reached the worker");
         } catch (ServerException $expected) {
             $this->assertStringContainsString("WRONGTYPE", $expected->getMessage());
         }

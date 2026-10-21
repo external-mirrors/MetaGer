@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\TrustProxies;
+use Illuminate\Queue\MaxAttemptsExceededException;
 use Predis\PredisException;
 use Prometheus\Exception\StorageException;
 use Sentry\Laravel\Integration;
@@ -160,6 +161,25 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->renderable(function (PredisException|StorageException|RedisException $e) {
             throw new ServiceUnavailableHttpException(5, $e->getMessage(), $e);
         });
+
+        /**
+         * A broadcast that came back after its one attempt.
+         *
+         * The broadcast worker runs --tries=1 because a balance update is
+         * worth delivering now or not at all (chart/templates/
+         * deployment-queue.yaml). A job only comes back to it when its first
+         * run did not finish clearing it — App\Queue\FailoverRedisQueue could
+         * not delete it from `:reserved` across a Valkey failover, or the
+         * worker was killed holding it — and the worker then fails it with
+         * this exception instead of running it again. That *is* the policy
+         * working, and the broadcast was usually already delivered; reporting
+         * it made every Valkey rollout file one more issue (METAGER-19F, 90s
+         * after the failed delete in METAGER-19D). Any other job that runs out
+         * of attempts is still reported.
+         */
+        $exceptions->dontReportWhen(fn(Throwable $e) => $e instanceof MaxAttemptsExceededException
+            && $e->job?->getConnectionName() === config('broadcasting.queue_connection')
+            && $e->job?->getQueue() === config('broadcasting.queue'));
 
         /**
          * /callback without a login in progress: the admin login's OIDC

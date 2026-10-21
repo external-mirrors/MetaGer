@@ -4,6 +4,8 @@ namespace App\Queue;
 
 use App\Support\RedisFailover;
 use Illuminate\Queue\RedisQueue;
+use Illuminate\Support\Facades\Log;
+use Predis\PredisException;
 
 /**
  * The Redis queue, minus the part where a failover ends the worker.
@@ -47,12 +49,32 @@ use Illuminate\Queue\RedisQueue;
  * whose reply was lost may enqueue the broadcast twice; that is the same
  * duplicate delivery this queue already tolerates below.
  *
- * deleteReserved() and deleteAndRelease() are not wrapped. They run after a
- * job has been handled, so a failure there costs one duplicate delivery rather
- * than the worker's loop, and a duplicate is what this queue is already built
- * to tolerate: see config/broadcasting.php on why a missed broadcast costs a
- * refresh. Retrying deleteAndRelease would not even be safe — its script
- * removes and re-pushes, so a lost reply would double-release.
+ * Neither retry clears a *planned* failover, and that is the common one. Every
+ * Valkey rollout — each subchart bump renovate merges — restarts the master
+ * pod, whose preStop hook holds `CLIENT PAUSE 22000 WRITE` before Sentinel
+ * hands over (see App\Support\RedisFailover). The push is a write, so it
+ * waits out this connection's 3s read timeout, which spends the push budget in
+ * one go, and the reconnected socket would only join the same pause. On
+ * 2026-10-16 and 2026-10-21 that was a burst of Predis\TimeoutException from
+ * every page a key holder loaded during the rollout, each reported through
+ * rescue() (METAGER-193 to 19E, 19H, 19I). So once the retry has given up on a
+ * failover, the push is dropped with a log line instead of an exception: this
+ * connection carries nothing but broadcasts (config/queue.php), and a lost
+ * broadcast costs a refresh — the trade config/broadcasting.php and the
+ * worker's --tries=1 are both built on. Anything else still throws.
+ *
+ * deleteReserved() is wrapped the same way, for the worker. It runs after the
+ * broadcast has been delivered, and the same pause fails it (METAGER-19D). A
+ * reserved entry that is not removed comes back after `retry_after` and, with
+ * --tries=1, is failed as MaxAttemptsExceededException (METAGER-19F) — not
+ * delivered twice — so the cost is a report and a failed_jobs row, not a
+ * duplicate. ZREM is idempotent, so retrying it is safe; when even the retry
+ * cannot get through, bootstrap/app.php keeps that resurfaced job from being
+ * reported as well.
+ *
+ * deleteAndRelease() is not wrapped: retrying it would not be safe — its
+ * script removes and re-pushes, so a lost reply would double-release — and
+ * with --tries=1 the worker never releases a job anyway.
  *
  * @see \App\Console\Commands\RequestFetcher  the same fix, for the fetch loop
  */
@@ -83,11 +105,55 @@ class FailoverRedisQueue extends RedisQueue
      */
     public function pushRaw($payload, $queue = null, array $options = [])
     {
-        return RedisFailover::retry(
-            fn() => parent::pushRaw($payload, $queue, $options),
-            self::PUSH_BUDGET_SECONDS,
-            $this->connection
+        return $this->dropOnFailover(
+            "push",
+            fn() => RedisFailover::retry(
+                fn() => parent::pushRaw($payload, $queue, $options),
+                self::PUSH_BUDGET_SECONDS,
+                $this->connection
+            )
         );
+    }
+
+    /**
+     * @param  string  $queue
+     * @param  \Illuminate\Queue\Jobs\RedisJob  $job
+     * @return void
+     */
+    public function deleteReserved($queue, $job)
+    {
+        $this->dropOnFailover(
+            "delete of a handled job",
+            fn() => RedisFailover::retry(
+                fn() => parent::deleteReserved($queue, $job),
+                self::RETRY_BUDGET_SECONDS,
+                $this->connection
+            )
+        );
+    }
+
+    /**
+     * Run $operation, and give up quietly if it failed on a failover the retry
+     * inside it could not outlast. See the class docblock for why that is a
+     * log line on this queue and not a report.
+     *
+     * @template T
+     * @param callable():T $operation
+     * @return T|null
+     */
+    private function dropOnFailover(string $what, callable $operation)
+    {
+        try {
+            return $operation();
+        } catch (PredisException $e) {
+            if (!RedisFailover::isFailover($e)) {
+                throw $e;
+            }
+
+            Log::warning("broadcast queue {$what} dropped during a Valkey failover: " . $e->getMessage());
+
+            return null;
+        }
     }
 
     /**

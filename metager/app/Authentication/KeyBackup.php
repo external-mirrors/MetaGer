@@ -69,12 +69,13 @@ final class KeyBackup
      */
     public static function qrDataUri(string $key): string
     {
-        return Builder::create()
-            ->data(route("loadSettings", ["key" => $key]))
+        return (new Builder(
+            data: route("loadSettings", ["key" => $key]),
             // Hoch, wie beim Spenden-QR: dieses Bild wird abfotografiert,
             // ausgedruckt und in Ordnern aufbewahrt, und was es trägt, ist der
             // einzige Weg zurück in ein Konto.
-            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            errorCorrectionLevel: ErrorCorrectionLevel::High,
+        ))
             ->build()
             ->getDataUri();
     }

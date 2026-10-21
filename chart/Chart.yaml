@@ -29,4 +29,4 @@ dependencies:
   # CROSSSLOT error under cluster mode, so HA here has to be sentinel-based.
   - name: valkey
     repository: oci://registry-1.docker.io/cloudpirates
-    version: 0.25.13
+    version: 0.25.15

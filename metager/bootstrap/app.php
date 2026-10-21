@@ -11,7 +11,9 @@ use Illuminate\Http\Middleware\TrustProxies;
 use Predis\PredisException;
 use Prometheus\Exception\StorageException;
 use Sentry\Laravel\Integration;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Vizir\KeycloakWebGuard\Exceptions\KeycloakCallbackException;
 
 return Application::configure(basePath: dirname(__DIR__))
     /**
@@ -157,5 +159,27 @@ return Application::configure(basePath: dirname(__DIR__))
          */
         $exceptions->renderable(function (PredisException|StorageException|RedisException $e) {
             throw new ServiceUnavailableHttpException(5, $e->getMessage(), $e);
+        });
+
+        /**
+         * /callback without a login in progress: the admin login's OIDC
+         * callback found no `state` matching the one /login put in the
+         * session. Every event of METAGER-19G was an SSRF scanner probing
+         * `/callback?url=http://169.254.169.254/…` with no cookie, and a stale
+         * or bookmarked callback looks the same. Neither is a fault of ours, so
+         * it is a 403 and not a 500, and not reported.
+         *
+         * Matched on the message because the package throws one class for
+         * both cases: an `?error=` handed back by Keycloak — which can mean a
+         * misconfigured client — still reports and still 500s.
+         * Tests\Feature\KeycloakCallbackWithoutLoginTest pins both.
+         */
+        $isStrayCallback = fn(Throwable $e) => $e instanceof KeycloakCallbackException
+            && $e->getMessage() === '[Keycloak Error] Invalid state';
+        $exceptions->dontReportWhen($isStrayCallback);
+        $exceptions->renderable(function (KeycloakCallbackException $e) use ($isStrayCallback) {
+            if ($isStrayCallback($e)) {
+                throw new AccessDeniedHttpException("No login in progress.", $e);
+            }
         });
     })->create();

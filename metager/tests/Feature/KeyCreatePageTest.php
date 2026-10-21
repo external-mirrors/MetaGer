@@ -182,9 +182,10 @@ class KeyCreatePageTest extends TestCase
     {
         $this->keyserverIssues();
 
-        $expected = Builder::create()
-            ->data(config("app.url") . "/de-DE/meta/settings/load-settings?key=" . self::A_KEY)
-            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+        $expected = (new Builder(
+            data: config("app.url") . "/de-DE/meta/settings/load-settings?key=" . self::A_KEY,
+            errorCorrectionLevel: ErrorCorrectionLevel::High,
+        ))
             ->build()
             ->getDataUri();
 

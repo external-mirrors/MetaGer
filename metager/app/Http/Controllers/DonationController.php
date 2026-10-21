@@ -30,9 +30,10 @@ class DonationController extends Controller
             ->setBic("GENODEM1GLS")
             ->setCurrency("EUR")
             ->setRemittanceText(__('spende.execute-payment.banktransfer.qr-remittance', ["date" => now()->format("d.m.Y")]));
-        $qr_uri = Builder::create()
-            ->data($payment_data)
-            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+        $qr_uri = (new Builder(
+            data: $payment_data,
+            errorCorrectionLevel: ErrorCorrectionLevel::High,
+        ))
             ->build()
             ->getDataUri();
 
@@ -55,10 +56,10 @@ class DonationController extends Controller
             ->setCurrency("EUR")
             ->setRemittanceText(__('spende.execute-payment.banktransfer.qr-remittance', ["date" => now()->format("d.m.Y")]))
             ->setAmount(10);
-        $qr = Builder::create()
-            ->data($payment_data)
-            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
-            ->build();
+        $qr = (new Builder(
+            data: $payment_data,
+            errorCorrectionLevel: ErrorCorrectionLevel::High,
+        ))->build();
 
         return response($qr->getString(), 200, ["Content-Type" => $qr->getMimeType(), "Content-Disposition" => "attachment; filename=suma_donation.png"]);
     }

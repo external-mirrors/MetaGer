@@ -16,6 +16,9 @@ chart:
   needs: []
   script:
     - cd chart
+    # render.sh's own tests, with helm stubbed: whether it fetches the subchart is
+    # what decides if the golden check below can run at all. See tests/render_test.sh.
+    - ./tests/render_test.sh
     # Golden-file check. `helm template` output is compared against tests/golden.yaml,
     # so a chart change has to state what it changes in the manifests. See tests/render.sh.
     #

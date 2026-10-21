@@ -49,10 +49,22 @@ check_helm_version() {
 }
 
 # chart/charts/ is gitignored, so on a fresh checkout there is no subchart to
-# render and `helm template` fails. Fetch it when it is missing — and only then,
-# because the fetch reaches over the network and the snapshot check should not.
+# render and `helm template` fails. Fetch it when it is not in place — and only
+# then, because the fetch reaches over the network and the snapshot check should
+# not. "Not in place" is any status but "ok": a tarball left over from an older
+# Chart.yaml reports "wrong version", and rendering that would snapshot the wrong
+# subchart without a word.
 ensure_dependencies() {
-    if ! helm dependency list . 2>/dev/null | grep -q "missing"; then
+    # Captured rather than piped into `grep -q`. helm writes the table and its
+    # trailing blank line as two separate writes; grep -q exits as soon as the
+    # first one matches, helm's second write then dies of SIGPIPE, pipefail makes
+    # the whole check false, and the fetch was skipped on a checkout that had no
+    # subchart at all. That is a race, so it failed one CI run in several.
+    # tests/render_test.sh holds it open on purpose.
+    local status
+    status="$(helm dependency list .)"
+
+    if ! awk 'NR > 1 && NF && $NF != "ok" { found = 1 } END { exit !found }' <<<"$status"; then
         return
     fi
 

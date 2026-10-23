@@ -2,10 +2,12 @@
 # should not cost a full image build to discover.
 chart:
   stage: build_dependency_images
-  # Not DEPLOY_KUBERNETES_IMAGE. That image carries helm 3.18, and the golden
-  # snapshot is byte-compared: helm 3 and 4 render these manifests identically
-  # except for a blank line before every `---`, which turns the check into a
-  # 119-line whitespace diff. Pin the version that generates the snapshot instead.
+  # Not DEPLOY_KUBERNETES_IMAGE, which carries helm 3.18. The golden snapshot no
+  # longer depends on that (render.sh drops the blank lines around `---` that were
+  # the only difference between helm 3 and 4), but a pinned helm keeps any other
+  # change a helm release makes showing up as one reviewable Renovate bump.
+  # tests/render.sh reads this tag as the helm the snapshot is meant for, so it is
+  # the one place the version lives.
   # The deploy jobs keep their own image — swapping the helm that performs real
   # upgrades is a separate decision from the one that renders a test.
   image:

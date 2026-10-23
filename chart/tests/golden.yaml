@@ -17,7 +17,6 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: golden
       app.kubernetes.io/name: valkey
-
 ---
 # Source: chart/templates/pdb.yaml
 apiVersion: policy/v1
@@ -50,7 +49,6 @@ metadata:
     app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
-
 ---
 # Source: chart/charts/valkey/templates/secret.yaml
 apiVersion: v1
@@ -115,7 +113,6 @@ data:
     repl-timeout 120
     repl-backlog-size 512mb
     shutdown-timeout 10
-
 ---
 # Source: chart/charts/valkey/templates/prestop-configmap.yaml
 apiVersion: v1
@@ -338,7 +335,6 @@ data:
 
     echo "Valkey Sentinel preStop hook completed"
     exit 0
-
 ---
 # Source: chart/charts/valkey/templates/sentinel-master-proxy-service.yaml
 apiVersion: v1
@@ -365,7 +361,6 @@ spec:
   selector:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/name: valkey
-
 ---
 # Source: chart/charts/valkey/templates/sentinel-service.yaml
 apiVersion: v1
@@ -390,7 +385,6 @@ spec:
   selector:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/name: valkey
-
 ---
 # Source: chart/charts/valkey/templates/service-metrics.yaml
 apiVersion: v1
@@ -415,7 +409,6 @@ spec:
   selector:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/name: valkey
-
 ---
 # Source: chart/charts/valkey/templates/service.yaml
 apiVersion: v1
@@ -439,7 +432,6 @@ spec:
   selector:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/name: valkey
-
 ---
 # Source: chart/charts/valkey/templates/service.yaml
 apiVersion: v1
@@ -492,7 +484,6 @@ spec:
   selector:
     app.kubernetes.io/name: golden-reverb
     app.kubernetes.io/instance: golden
-
 ---
 # Source: chart/templates/service.yaml
 apiVersion: v1
@@ -516,7 +507,6 @@ spec:
   selector:
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-
 ---
 # Source: chart/templates/deployment-queue.yaml
 apiVersion: apps/v1
@@ -882,7 +872,6 @@ spec:
           key: node-role
           operator: Equal
           value: web
-
 ---
 # Source: chart/templates/deployment-reverb.yaml
 apiVersion: apps/v1
@@ -1051,7 +1040,6 @@ spec:
           key: node-role
           operator: Equal
           value: web
-
 ---
 # Source: chart/templates/deployment-scheduler.yaml
 apiVersion: apps/v1
@@ -1286,7 +1274,6 @@ spec:
           key: node-role
           operator: Equal
           value: web
-
 ---
 # Source: chart/templates/deployment-worker.yaml
 apiVersion: apps/v1
@@ -1473,7 +1460,6 @@ spec:
           key: node-role
           operator: Equal
           value: web
-
 ---
 # Source: chart/templates/deployment.yaml
 apiVersion: apps/v1
@@ -1698,7 +1684,6 @@ spec:
         value: 100
       selectPolicy: Max
       stabilizationWindowSeconds: 30
-
 ---
 # Source: chart/charts/valkey/templates/statefulset.yaml
 apiVersion: apps/v1
@@ -2252,7 +2237,6 @@ spec:
               topologyKey: kubernetes.io/hostname
             weight: 100
       terminationGracePeriodSeconds: 60
-
 ---
 # Source: chart/templates/ingress-reverb.yaml
 apiVersion: networking.k8s.io/v1
@@ -2292,7 +2276,6 @@ spec:
                 name: golden-reverb
                 port:
                   number: 8081
-
 ---
 # Source: chart/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -2381,7 +2364,6 @@ spec:
                 name: wsb
                 port:
                   number: 80
-
 ---
 # Source: chart/templates/httproute-redirect.yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -2415,7 +2397,6 @@ spec:
           requestRedirect:
             hostname: metager.de
             statusCode: 301
-
 ---
 # Source: chart/templates/httproute-redirect.yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -2452,8 +2433,6 @@ spec:
             path:
               type: ReplacePrefixMatch
               replacePrefixMatch: /es-ES/
-
-
 ---
 # Source: chart/templates/httproute.yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -2556,4 +2535,3 @@ spec:
       command: ['wget']
       args: ['golden:80']
   restartPolicy: Never
-

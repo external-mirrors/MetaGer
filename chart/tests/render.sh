@@ -15,35 +15,40 @@
 # from the Helm registry named in Chart.yaml — so a fresh checkout has to fetch it
 # before anything can be rendered. Hence the dependency step below.
 #
-# Helm's own version is part of the snapshot. Different helm versions render these
-# manifests identically apart from blank lines around document separators — nothing
-# Kubernetes can tell apart, but enough to bury a real diff. HELM_VERSION is the
-# version CI uses (see .gitlab/ci/chart.yml); run this through the same container
-# and the comparison is exact:
+# Which helm renders the snapshot is decided by the chart job's image in
+# .gitlab/ci/chart.yml, and read from there: Renovate bumps that image, and a copy
+# of its version here went stale the first time it did. Helm versions have so far
+# differed only in blank lines around document separators, which normalize() below
+# drops. Anything else a new helm changes shows up as a diff, as it should. To render
+# with exactly what CI uses, from chart/ — the whole repository is mounted so that
+# render.sh can read the CI file:
 #
-#   docker run --rm -v "$PWD:/chart" -w /chart --entrypoint bash \
-#       alpine/helm:4.2.4 tests/render.sh
+#   docker run --rm -v "$PWD/..:/repo" -w /repo/chart --entrypoint bash \
+#       alpine/helm:<version in .gitlab/ci/chart.yml> tests/render.sh
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
 SNAPSHOT="tests/golden.yaml"
 VALUES="tests/golden-values.yaml"
-HELM_VERSION="v4.2.4"
+CI_CONFIG="../.gitlab/ci/chart.yml"
 
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
 check_helm_version() {
-    local actual
+    local expected actual
+    expected="$(sed -n 's|^[[:space:]]*name:[[:space:]]*alpine/helm:\([^[:space:]]*\).*|\1|p' "$CI_CONFIG" 2>/dev/null | head -n 1 || true)"
     actual="$(helm version --short)"
 
-    if [[ "$actual" != "$HELM_VERSION"* ]]; then
-        echo "warning: $SNAPSHOT was generated with helm $HELM_VERSION, this is $actual." >&2
-        echo "         Blank lines around document separators differ between helm 3 and 4," >&2
-        echo "         so expect a whitespace-only diff. To match CI exactly:" >&2
-        echo "         docker run --rm -v \"\$PWD:/chart\" -w /chart --entrypoint bash \\" >&2
-        echo "             alpine/helm:4.2.4 tests/render.sh" >&2
+    if [[ -z "$expected" ]]; then
+        echo "warning: no alpine/helm image found in $CI_CONFIG, so cannot tell which helm CI uses." >&2
+        echo >&2
+    elif [[ "$actual" != "v$expected"* ]]; then
+        echo "warning: CI renders $SNAPSHOT with helm v$expected, this is $actual." >&2
+        echo "         To match CI exactly:" >&2
+        echo "         docker run --rm -v \"\$PWD/..:/repo\" -w /repo/chart --entrypoint bash \\" >&2
+        echo "             alpine/helm:$expected tests/render.sh" >&2
         echo >&2
     fi
 }
@@ -98,8 +103,16 @@ ensure_dependencies() {
 #
 # Only images pinned by digest are masked. Ours are rendered with the tag from
 # golden-values.yaml and no digest, so a change to how they are built still shows.
+#
+# Blank lines next to a `---`, or at the very end, are dropped for the same reason:
+# helm 3 and 4 render the same manifests with and without them, and upgrading helm
+# is a Renovate bump too. The awk holds blank lines back until it sees what follows.
 normalize() {
-    sed -E \
+    awk '
+        /^[[:space:]]*$/ { blank = blank $0 "\n"; next }
+        /^---/           { blank = ""; print; after_sep = 1; next }
+        { if (!after_sep) printf "%s", blank; blank = ""; after_sep = 0; print }
+    ' | sed -E \
         -e 's/^([[:space:]]*helm\.sh\/chart: [^[:space:]]+)-[0-9]+\.[0-9]+\.[0-9]+[^[:space:]]*$/\1-<version>/' \
         -e 's/^([[:space:]]*app\.kubernetes\.io\/version: ).+$/\1<version>/' \
         -e 's/^([[:space:]]*(- )?image: "?[^"@[:space:]]+):[^:@"\/[:space:]]+@sha256:[0-9a-f]{64}("?)$/\1:<tag>@sha256:<digest>\3/'

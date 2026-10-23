@@ -201,6 +201,56 @@ fi
 rm -rf "$WORK"
 
 echo
+echo "render.sh across helm versions"
+
+# helm 3 puts a blank line before every `---`, helm 4 does not; same manifests.
+tests=$((tests + 1))
+scenario
+printf -- '---\nkind: A\n---\nkind: B\n' >"$WORK/helm4.yaml"
+STUB_DEP_STATUS="ok" STUB_RENDERED="$WORK/helm4.yaml" run_render --update
+printf -- '---\n\nkind: A\n\n---\nkind: B\n\n' >"$WORK/helm3.yaml"
+STUB_DEP_STATUS="ok" STUB_RENDERED="$WORK/helm3.yaml" run_render
+if [[ $STATUS -eq 0 ]]; then
+    pass "blank lines around document separators do not count"
+else
+    fail "blank lines around document separators do not count" "exit $STATUS" "$OUTPUT"
+fi
+rm -rf "$WORK"
+
+tests=$((tests + 1))
+scenario
+printf -- '---\ndata: |\n  one\n  two\n' >"$WORK/before.yaml"
+STUB_DEP_STATUS="ok" STUB_RENDERED="$WORK/before.yaml" run_render --update
+printf -- '---\ndata: |\n  one\n\n  two\n' >"$WORK/after.yaml"
+STUB_DEP_STATUS="ok" STUB_RENDERED="$WORK/after.yaml" run_render
+if [[ $STATUS -ne 0 ]]; then
+    pass "a blank line anywhere else still counts"
+else
+    fail "a blank line anywhere else still counts" "exit $STATUS" "$OUTPUT"
+fi
+rm -rf "$WORK"
+
+# The helm CI renders with comes from the chart job's image, which Renovate bumps.
+# A copy of that version in render.sh went stale the first time it did.
+expect_version_warning() {
+    local ci_image="$1" want="$2" name="$3"
+    tests=$((tests + 1))
+    scenario
+    mkdir -p "$WORK/.gitlab/ci"
+    printf 'chart:\n  image:\n    name: %s\n' "$ci_image" >"$WORK/.gitlab/ci/chart.yml"
+    STUB_DEP_STATUS="ok" run_render
+    if [[ $STATUS -eq 0 ]] && { [[ -z "$want" && "$OUTPUT" != *warning* ]] || [[ -n "$want" && "$OUTPUT" == *"$want"* ]]; }; then
+        pass "$name"
+    else
+        fail "$name" "exit $STATUS" "$OUTPUT"
+    fi
+    rm -rf "$WORK"
+}
+expect_version_warning "alpine/helm:4.2.4" "" "no warning when helm matches the chart job's image"
+expect_version_warning "alpine/helm:4.3.1" "alpine/helm:4.3.1 tests/render.sh" \
+    "warns with the chart job's version when helm differs"
+
+echo
 if [[ $failures -gt 0 ]]; then
     echo "$failures of $tests failed." >&2
     exit 1

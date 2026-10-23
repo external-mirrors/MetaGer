@@ -9,8 +9,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
 spec:
   minAvailable: 2
   selector:
@@ -25,10 +25,10 @@ kind: PodDisruptionBudget
 metadata:
   name: golden
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
 spec:
@@ -44,10 +44,10 @@ kind: ServiceAccount
 metadata:
   name: golden
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
 
@@ -62,8 +62,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
 type: Opaque
 data:
   password: "Z29sZGVuLXZhbGtleS1wYXNzd29yZA=="
@@ -78,8 +78,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
 data:
   valkey.conf: |
     # Valkey configuration file
@@ -127,8 +127,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
 data:
   prestop.sh: |
     #!/bin/sh
@@ -350,8 +350,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
     app.kubernetes.io/component: master-proxy
 spec:
   # Selects every StatefulSet pod: the HAProxy sidecar runs in each one and forwards
@@ -377,8 +377,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
     app.kubernetes.io/component: sentinel
 spec:
   type: ClusterIP
@@ -402,8 +402,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
     app.kubernetes.io/component: metrics
 spec:
   type: ClusterIP
@@ -427,8 +427,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
 spec:
   type: ClusterIP
   ports:
@@ -451,8 +451,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
 spec:
   type: ClusterIP
   clusterIP: None
@@ -475,10 +475,10 @@ kind: Service
 metadata:
   name: golden-reverb
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-reverb
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
     app.kubernetes.io/component: reverb
@@ -500,10 +500,10 @@ kind: Service
 metadata:
   name: golden
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
 spec:
@@ -524,10 +524,10 @@ kind: Deployment
 metadata:
   name: golden-queue
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-queue
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
     app.kubernetes.io/component: queue
@@ -542,10 +542,10 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
       labels:
-        helm.sh/chart: chart-0.1.0
+        helm.sh/chart: chart-<version>
         app.kubernetes.io/name: golden-queue
         app.kubernetes.io/instance: golden
-        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/version: <version>
         app.kubernetes.io/managed-by: Helm
         app: golden
         app.kubernetes.io/component: queue
@@ -890,10 +890,10 @@ kind: Deployment
 metadata:
   name: golden-reverb
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-reverb
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
     app.kubernetes.io/component: reverb
@@ -908,10 +908,10 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
       labels:
-        helm.sh/chart: chart-0.1.0
+        helm.sh/chart: chart-<version>
         app.kubernetes.io/name: golden-reverb
         app.kubernetes.io/instance: golden
-        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/version: <version>
         app.kubernetes.io/managed-by: Helm
         app: golden
         app.kubernetes.io/component: reverb
@@ -1059,10 +1059,10 @@ kind: Deployment
 metadata:
   name: golden-scheduler
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-scheduler
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
     app.kubernetes.io/component: scheduler
@@ -1079,10 +1079,10 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
       labels:
-        helm.sh/chart: chart-0.1.0
+        helm.sh/chart: chart-<version>
         app.kubernetes.io/name: golden-scheduler
         app.kubernetes.io/instance: golden
-        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/version: <version>
         app.kubernetes.io/managed-by: Helm
         app: golden
         app.kubernetes.io/component: scheduler
@@ -1294,10 +1294,10 @@ kind: Deployment
 metadata:
   name: golden-worker
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-worker
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
 spec:
@@ -1310,10 +1310,10 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
       labels:
-        helm.sh/chart: chart-0.1.0
+        helm.sh/chart: chart-<version>
         app.kubernetes.io/name: golden-worker
         app.kubernetes.io/instance: golden
-        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/version: <version>
         app.kubernetes.io/managed-by: Helm
         app: golden
     spec:
@@ -1481,10 +1481,10 @@ kind: Deployment
 metadata:
   name: golden-app
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
 spec:
@@ -1497,10 +1497,10 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
       labels:
-        helm.sh/chart: chart-0.1.0
+        helm.sh/chart: chart-<version>
         app.kubernetes.io/name: golden-app
         app.kubernetes.io/instance: golden
-        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/version: <version>
         app.kubernetes.io/managed-by: Helm
         app: golden
     spec:
@@ -1661,10 +1661,10 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: golden
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
 spec:
@@ -1710,8 +1710,8 @@ metadata:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
-    app.kubernetes.io/version: 9.1.0
-    helm.sh/chart: valkey-0.25.15
+    app.kubernetes.io/version: <version>
+    helm.sh/chart: valkey-<version>
 spec:
   replicas: 3
   revisionHistoryLimit: 10
@@ -1731,7 +1731,7 @@ spec:
       serviceAccountName: default
       initContainers:
         - name: valkey-init
-          image: docker.io/valkey/valkey:9.1.0-alpine3.23@sha256:c9b77919daeba2c02ad954d0c844cc4e7142069d177b89c5fd771f405daf9e02
+          image: docker.io/valkey/valkey:<tag>@sha256:<digest>
           securityContext: 
             allowPrivilegeEscalation: false
             capabilities:
@@ -1867,7 +1867,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 999
-          image: docker.io/valkey/valkey:9.1.0-alpine3.23@sha256:c9b77919daeba2c02ad954d0c844cc4e7142069d177b89c5fd771f405daf9e02
+          image: docker.io/valkey/valkey:<tag>@sha256:<digest>
           imagePullPolicy: Always
           command:
             - /bin/sh
@@ -1941,7 +1941,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 999
-          image: docker.io/valkey/valkey:9.1.0-alpine3.23@sha256:c9b77919daeba2c02ad954d0c844cc4e7142069d177b89c5fd771f405daf9e02
+          image: docker.io/valkey/valkey:<tag>@sha256:<digest>
           imagePullPolicy: Always
           volumeMounts:
             - name: sentinel-config
@@ -2085,7 +2085,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 999
-          image: docker.io/haproxy:3.4-alpine@sha256:251da69821897ec8c4819f12b1babbc4b71f562943addc9b9eb14bb6ece40dc6
+          image: docker.io/haproxy:<tag>@sha256:<digest>
           imagePullPolicy: IfNotPresent
           env:
             - name: VALKEY_PASSWORD
@@ -2191,7 +2191,7 @@ spec:
           resources:
             {}
         - name: metrics
-          image: "docker.io/oliver006/redis_exporter:v1.94.0-alpine@sha256:2f5c00216f2142f23e6d13de341325101c31f93b8f6c3e72fe33087136bf43ec"
+          image: "docker.io/oliver006/redis_exporter:<tag>@sha256:<digest>"
           imagePullPolicy: Always
           securityContext: 
             allowPrivilegeEscalation: false
@@ -2260,10 +2260,10 @@ kind: Ingress
 metadata:
   name: golden-ws
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-reverb
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
     app.kubernetes.io/component: reverb
@@ -2300,10 +2300,10 @@ kind: Ingress
 metadata:
   name: golden
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
   annotations:
@@ -2389,10 +2389,10 @@ kind: HTTPRoute
 metadata:
   name: golden-www-metager-de-redirect
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
 spec:
@@ -2423,10 +2423,10 @@ kind: HTTPRoute
 metadata:
   name: golden-metager-es-redirect
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
 spec:
@@ -2461,10 +2461,10 @@ kind: HTTPRoute
 metadata:
   name: golden-metager-de
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
 spec:
@@ -2541,10 +2541,10 @@ kind: Pod
 metadata:
   name: "golden-test-connection"
   labels:
-    helm.sh/chart: chart-0.1.0
+    helm.sh/chart: chart-<version>
     app.kubernetes.io/name: golden-app
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/version: <version>
     app.kubernetes.io/managed-by: Helm
     app: golden
   annotations:

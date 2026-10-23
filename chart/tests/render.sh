@@ -87,15 +87,34 @@ ensure_dependencies() {
     helm dependency build . >&2
 }
 
+# Version stamps are masked, in the snapshot and in what it is compared against.
+# Every Renovate bump of the subchart changed exactly these and nothing else — the
+# `helm.sh/chart: valkey-x.y.z` label on every object, the digest-pinned images the
+# subchart ships, and the app version label when the server moved — and each one
+# failed this check until someone ran --update by hand. Those numbers are what the
+# Renovate MR itself is about; what this snapshot guards is the shape of the
+# manifests, and a release that changes that (an env var, a probe, a new object)
+# still fails here as it should.
+#
+# Only images pinned by digest are masked. Ours are rendered with the tag from
+# golden-values.yaml and no digest, so a change to how they are built still shows.
+normalize() {
+    sed -E \
+        -e 's/^([[:space:]]*helm\.sh\/chart: [^[:space:]]+)-[0-9]+\.[0-9]+\.[0-9]+[^[:space:]]*$/\1-<version>/' \
+        -e 's/^([[:space:]]*app\.kubernetes\.io\/version: ).+$/\1<version>/' \
+        -e 's/^([[:space:]]*(- )?image: "?[^"@[:space:]]+):[^:@"\/[:space:]]+@sha256:[0-9a-f]{64}("?)$/\1:<tag>@sha256:<digest>\3/'
+}
+
 render() {
     # Deliberately not `diff <(helm template …)`: a process substitution discards
     # the exit status, so a chart that fails to render used to come out as an empty
     # document and get reported as "1698 lines removed" rather than as an error.
-    if ! helm template golden . --namespace metager -f "$VALUES" >"$WORK/rendered.yaml"; then
+    if ! helm template golden . --namespace metager -f "$VALUES" >"$WORK/raw.yaml"; then
         echo >&2
         echo "helm template failed — see the error above. Snapshot left untouched." >&2
         exit 1
     fi
+    normalize <"$WORK/raw.yaml" >"$WORK/rendered.yaml"
 }
 
 check_helm_version

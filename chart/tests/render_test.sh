@@ -59,7 +59,7 @@ case "\$1 \${2:-}" in
         sleep 0.3
         printf '\n'
         ;;
-    "template "*) echo "\$*" >>"$CALLS"; cat tests/golden.yaml ;;
+    "template "*) echo "\$*" >>"$CALLS"; cat "\${STUB_RENDERED:-tests/golden.yaml}" ;;
     *) echo "\$*" >>"$CALLS" ;;
 esac
 EOF
@@ -67,7 +67,7 @@ EOF
 }
 
 run_render() {
-    OUTPUT="$(PATH="$WORK/bin:$PATH" "$WORK/chart/tests/render.sh" 2>&1)"
+    OUTPUT="$(PATH="$WORK/bin:$PATH" "$WORK/chart/tests/render.sh" "$@" 2>&1)"
     STATUS=$?
 }
 
@@ -117,6 +117,86 @@ if [[ $STATUS -ne 0 ]] && ! grep -q "^template " "$CALLS"; then
 else
     fail "fails before rendering when helm dependency list fails" \
         "exit $STATUS, helm calls: $(tr '\n' ';' <"$CALLS")" "$OUTPUT"
+fi
+rm -rf "$WORK"
+
+echo
+echo "render.sh version masking"
+
+# What `helm template` printed for the subchart at one version, and the same
+# manifests after a Renovate bump: the chart label, the app version label and the
+# digest-pinned images moved, nothing else did. Every valkey bump looked like this
+# and failed the golden check until someone regenerated it by hand.
+manifest() {
+    local chart="$1" app="$2" tag="$3" digest="$4" extra="${5:-}"
+    printf '%s\n' \
+        "metadata:" \
+        "  labels:" \
+        "    helm.sh/chart: valkey-$chart" \
+        "    app.kubernetes.io/version: $app" \
+        "spec:" \
+        "  containers:" \
+        "    - name: valkey" \
+        "      image: docker.io/valkey/valkey:$tag@sha256:$digest" \
+        "    - name: metrics" \
+        "      image: \"docker.io/oliver006/redis_exporter:v$app-alpine@sha256:$digest\"" \
+        "    - name: fpm" \
+        "      image: \"registry.metager.de/open-source/metager/fpm:golden\"" \
+        "$extra"
+}
+OLD_DIGEST="$(printf 'a%.0s' {1..64})"
+NEW_DIGEST="$(printf 'b%.0s' {1..64})"
+
+# A snapshot taken at the old version through --update, the way the repo's is.
+snapshot_old_version() {
+    scenario
+    manifest 0.25.15 9.1.0 9.1.0-alpine3.23 "$OLD_DIGEST" >"$WORK/old.yaml"
+    STUB_DEP_STATUS="ok" STUB_RENDERED="$WORK/old.yaml" run_render --update
+}
+
+tests=$((tests + 1))
+snapshot_old_version
+if [[ $STATUS -eq 0 ]] && ! grep -qE '0\.25\.15|9\.1\.0|aaaa' "$WORK/chart/tests/golden.yaml" \
+    && grep -q 'fpm:golden"$' "$WORK/chart/tests/golden.yaml"; then
+    pass "--update writes the snapshot without version stamps, our own image left alone"
+else
+    fail "--update writes the snapshot without version stamps, our own image left alone" \
+        "exit $STATUS" "$(cat "$WORK/chart/tests/golden.yaml")"
+fi
+rm -rf "$WORK"
+
+tests=$((tests + 1))
+snapshot_old_version
+manifest 0.25.16 9.2.0 9.2.0-alpine3.24 "$NEW_DIGEST" >"$WORK/new.yaml"
+STUB_DEP_STATUS="ok" STUB_RENDERED="$WORK/new.yaml" run_render
+if [[ $STATUS -eq 0 ]]; then
+    pass "a subchart bump that only moves versions and pinned images passes"
+else
+    fail "a subchart bump that only moves versions and pinned images passes" "exit $STATUS" "$OUTPUT"
+fi
+rm -rf "$WORK"
+
+# The masking must not swallow what the snapshot is for.
+tests=$((tests + 1))
+snapshot_old_version
+manifest 0.25.16 9.2.0 9.2.0-alpine3.24 "$NEW_DIGEST" "      env: [{name: NEW, value: x}]" >"$WORK/new.yaml"
+STUB_DEP_STATUS="ok" STUB_RENDERED="$WORK/new.yaml" run_render
+if [[ $STATUS -ne 0 ]] && grep -q '^+.*name: NEW' <<<"$OUTPUT"; then
+    pass "a subchart bump that also changes the manifests still fails, and shows the change"
+else
+    fail "a subchart bump that also changes the manifests still fails, and shows the change" \
+        "exit $STATUS" "$OUTPUT"
+fi
+rm -rf "$WORK"
+
+tests=$((tests + 1))
+snapshot_old_version
+manifest 0.25.15 9.1.0 9.1.0-alpine3.23 "$OLD_DIGEST" | sed 's/fpm:golden/fpm:other/' >"$WORK/new.yaml"
+STUB_DEP_STATUS="ok" STUB_RENDERED="$WORK/new.yaml" run_render
+if [[ $STATUS -ne 0 ]] && grep -q '^+.*fpm:other' <<<"$OUTPUT"; then
+    pass "an image without a digest pin is compared in full"
+else
+    fail "an image without a digest pin is compared in full" "exit $STATUS" "$OUTPUT"
 fi
 rm -rf "$WORK"
 

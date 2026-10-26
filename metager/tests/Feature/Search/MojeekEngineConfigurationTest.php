@@ -66,6 +66,10 @@ class MojeekEngineConfigurationTest extends TestCase
             "en-GB" => ["en-GB", "EN", "GB"],
             "en-US" => ["en-US", "EN", "US"],
             "de-AT" => ["de-AT", "DE", "AT"],
+            // At the default boost, rbb=10, the preference is mild: Mojeek's
+            // index holds few Irish pages, and a stronger boost mostly demoted
+            // UK sites rather than promoting Irish ones.
+            "en-IE" => ["en-IE", "EN", "IE"],
             // The two that a single country code cannot express: the language
             // is not the one the country's code would suggest.
             "fr-CA" => ["fr-CA", "FR", "CA"],

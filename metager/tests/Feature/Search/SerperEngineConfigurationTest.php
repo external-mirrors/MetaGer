@@ -89,6 +89,42 @@ class SerperEngineConfigurationTest extends TestCase
     }
 
     /**
+     * The JSON body $engine would post for a search in $locale, or null if the
+     * search never asked it — which is what a market missing from the region map
+     * looks like (`SearchengineConfiguration::applyLocale()` disables it).
+     */
+    private function requestBodyFor(string $locale, string $fokus, string $engine): ?array
+    {
+        $this->actingAsSearchUser();
+        $fetcher = $this->fakeEngineResponses([]);
+
+        $this->get("/$locale/meta/meta.ger3?eingabe=kaffee&focus=$fokus");
+
+        foreach ($fetcher->missions() as $mission) {
+            if ($mission["name"] === $engine) {
+                return json_decode($mission["curlopts"][CURLOPT_POSTFIELDS], true);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Google serves Malaysia as `gl=my`. The market filter already offered
+     * `en_MY`, but the region map did not, so an `en-MY` user had every Serper
+     * endpoint disabled.
+     */
+    #[DataProvider("endpoints")]
+    public function testEveryEndpointSearchesTheMalaysianMarket(string $fokus, string $engine, string $property, string $parser): void
+    {
+        $body = $this->requestBodyFor("en-MY", $fokus, $engine);
+
+        $this->assertNotNull($body, "$engine queued no request for a Malaysian search, so en_MY is missing from its region map.");
+        $this->assertSame("my", $body["gl"]);
+        $this->assertSame("en", $body["hl"]);
+    }
+
+    /**
      * The second page of a Serper search is parsed by the same class as the
      * first. `new static` is what guarantees it; before the shared base each
      * class named a class by hand and three named the wrong one.

@@ -99,11 +99,12 @@ whichever language it renders in, and a `ca-ES` phone searches Catalonia even wh
 translation exists. A client may fall back to its interface language when the platform will not name
 a locale at all, which is a real case on Android (a Hermes build without `Intl`) and the only one.
 
-"Can actually search it" is a real exclusion, not a hypothetical: `en_MY` is offered as a market but
-appears in no parser's `regions` map, so a search in it disables every engine and returns nothing.
-It is pinned in `MarketFilterTest::UNSEARCHABLE_LOCALES` with that reason. A client that sent the
-device's region blindly would break search for exactly the users whose device is set to Malaysian
-English.
+"Can actually search it" is a real exclusion, not a hypothetical: a locale that appears in no
+parser's `regions` map disables every engine and returns nothing, and a client that sent the
+device's region blindly would break search for exactly the users whose device is set to it. Such a
+locale is pinned in `MarketFilterTest::UNSEARCHABLE_LOCALES` with its reason, and
+`testEveryInterfaceLocaleHasAWebEngineToQuery` fails for any that is not. The list is empty today;
+`en-MY` was on it until Brave and Serper were given `en_MY`.
 
 ## 6. The fixture
 

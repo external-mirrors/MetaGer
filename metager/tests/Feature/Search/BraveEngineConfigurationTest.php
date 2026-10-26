@@ -87,6 +87,23 @@ class BraveEngineConfigurationTest extends TestCase
     }
 
     /**
+     * Malaysia is in Brave's `country` enum (`MY`) and its `ui_lang` list
+     * (`en-MY`), yet `en-MY` was a MetaGer locale no engine could search: the
+     * market filter in `config/filters.json` already mapped `en_MY`, the region
+     * map did not, and the region map is what decides.
+     */
+    #[DataProvider("endpoints")]
+    public function testEveryBraveEndpointSearchesTheMalaysianMarket(string $fokus, string $engine): void
+    {
+        $url = $this->requestUrlFor("en-MY", $fokus, $engine);
+
+        $this->assertNotNull($url, "$engine queued no request for a Malaysian search, so en_MY is missing from its region map.");
+        $this->assertStringContainsString("search_lang=en", $url);
+        $this->assertStringContainsString("country=MY", $url);
+        $this->assertStringContainsString("ui_lang=en-MY", $url);
+    }
+
+    /**
      * Brave defines a fixed list of `ui_lang` values and `ca-ES` is not on it.
      * Leaving the parameter off lets Brave choose; sending an undefined value is
      * an error. This is the regression the split between the three classes hid.

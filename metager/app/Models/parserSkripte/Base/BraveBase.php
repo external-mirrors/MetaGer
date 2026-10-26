@@ -69,6 +69,7 @@ abstract class BraveBase extends Searchengine
         "en_US" => "en_US",
         "en_GB" => "en_GB",
         "en_AU" => "en_AU",
+        "en_MY" => "en_MY",
         "es_ES" => "es_ES",
         "es_MX" => "es_MX",
         "da_DK" => "da_DK",

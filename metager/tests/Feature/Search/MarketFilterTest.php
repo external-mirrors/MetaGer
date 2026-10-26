@@ -34,17 +34,17 @@ class MarketFilterTest extends TestCase
     /**
      * Locales whose result page cannot be reached, and why.
      *
-     * `en-MY` is a supported interface locale that no search engine can serve:
-     * `en_MY` appears in `filters.json` as a market, but in **no** parser's
+     * Empty, and meant to stay that way. A locale goes in here only when it
+     * is supported as an interface language but appears in **no** parser's
      * `regions` map, so `SearchengineConfiguration::applyLocale()` disables
-     * every engine and the search redirects to the settings page. That is a
-     * real defect and a separate one — the fix is a decision about what to send
-     * Brave and Serper for Malaysia, not about which markets to offer — so it
-     * is recorded here rather than silently passed over.
+     * every engine and the search redirects to the settings page. `en-MY` was
+     * in that state until Brave and Serper were given `en_MY`. Clients read
+     * this list too (`docs/locale-contract.md` §5): a device region pinned here
+     * is not sent as a market.
+     *
+     * @var array<string, string> locale => why it cannot be searched
      */
-    private const UNSEARCHABLE_LOCALES = [
-        "en-MY" => "no parser's regions map contains en_MY, so every engine is disabled",
-    ];
+    private const UNSEARCHABLE_LOCALES = [];
 
     protected function tearDown(): void
     {

@@ -672,11 +672,11 @@
           }
         },
         "mojeek": {
-          "get-parameter": "lr",
+          "get-parameter": "rb",
           "values": {
-            "de_DE": "DE",
-            "en_GB": "GB",
-            "fr_FR": "FR"
+            "de_DE": "de_DE",
+            "en_GB": "en_GB",
+            "fr_FR": "fr_FR"
           }
         },
         "pixabay": {

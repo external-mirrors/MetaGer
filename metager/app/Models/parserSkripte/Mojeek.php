@@ -2,7 +2,6 @@
 
 namespace app\Models\parserSkripte;
 
-use App\Localization;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
 use Log;
@@ -20,30 +19,32 @@ class Mojeek extends Searchengine
             'get-parameter' => [
                 'fmt' => 'json',
             ],
+            // Mojeek takes the market as two preferences, `lb` (a language)
+            // and `rb` (a region). The map names the whole market and
+            // applySettings() splits it, so the market filter can move both.
             'lang' => [
-                'parameter' => 'lb',
+                'parameter' => 'rb',
                 'languages' => [],
                 'regions' => [
-                    'ca_ES' => 'ca',
-                    'de_CH' => 'ch',
-                    'de_DE' => 'de',
-                    'de_AT' => 'at',
-                    'en_US' => 'us',
-                    'en_GB' => 'gb',
-                    'en_AU' => 'au',
-                    'es_ES' => 'es',
-                    'es_MX' => 'mx',
-                    'da_DK' => 'dk',
-                    'at_AT' => 'at',
-                    'fi_FI' => 'fi',
-                    'it_IT' => 'it',
-                    'nl_NL' => 'nl',
-                    'sv_SE' => 'se',
-                    'fr_FR' => 'fr',
-                    'fr_CA' => 'ca',
-                    'pl_PL' => 'pl',
-                    'pt_PT' => 'pt-pt_PT',
-                    'pt_BR' => 'pt-br_BR',
+                    'ca_ES' => 'ca_ES',
+                    'de_CH' => 'de_CH',
+                    'de_DE' => 'de_DE',
+                    'de_AT' => 'de_AT',
+                    'en_US' => 'en_US',
+                    'en_GB' => 'en_GB',
+                    'en_AU' => 'en_AU',
+                    'es_ES' => 'es_ES',
+                    'es_MX' => 'es_MX',
+                    'da_DK' => 'da_DK',
+                    'fi_FI' => 'fi_FI',
+                    'it_IT' => 'it_IT',
+                    'nl_NL' => 'nl_NL',
+                    'sv_SE' => 'sv_SE',
+                    'fr_FR' => 'fr_FR',
+                    'fr_CA' => 'fr_CA',
+                    'pl_PL' => 'pl_PL',
+                    'pt_PT' => 'pt_PT',
+                    'pt_BR' => 'pt_BR',
                 ],
             ],
             'engine-boost' => 1.2,
@@ -68,14 +69,29 @@ class Mojeek extends Searchengine
     {
         parent::__construct($name, $configuration);
 
-        $lang = strtoupper(Localization::getLanguage());
-        $this->configuration->getParameter->lb = $lang;
         $this->configuration->getParameter->lbb = 100;
-        $region = Localization::getRegion();
-        $this->configuration->getParameter->rb = $region;
         $this->configuration->getParameter->rbb = 10;
 
         $this->configuration->disabledByDefault = true;
+    }
+
+    /**
+     * Split the configured market, `en_GB`, into Mojeek's language and region
+     * preferences, `lb=EN` and `rb=GB`.
+     *
+     * Mojeek ignores a value it does not know rather than rejecting it, so a
+     * country sent as a language does not fail, it just stops steering. That is
+     * how every locale but de-DE came to send its country code as `lb`.
+     */
+    public function applySettings()
+    {
+        parent::applySettings();
+
+        $parameters = $this->configuration->getParameter;
+        if (property_exists($parameters, "rb") && preg_match("/^([^_]+)_([^_]+)$/", $parameters->rb, $market)) {
+            $parameters->lb = strtoupper($market[1]);
+            $parameters->rb = strtoupper($market[2]);
+        }
     }
 
     public function loadResults($resultstring)

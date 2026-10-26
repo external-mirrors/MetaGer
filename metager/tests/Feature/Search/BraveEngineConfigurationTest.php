@@ -104,6 +104,27 @@ class BraveEngineConfigurationTest extends TestCase
     }
 
     /**
+     * Brave cannot search Ireland, and is left out rather than pointed elsewhere.
+     *
+     * `country=IE` is rejected with a 422 — Brave's enum has `GB` and `ALL` but
+     * no `IE` — so `en_IE` is deliberately absent from BraveBase::REGIONS. The
+     * alternatives were both wrong for an Irish user: `GB` answers with the UK
+     * market, `ALL` with no market at all. Serper serves `gl=ie`, and the web
+     * fokus falls back to waiting on whatever is enabled when its main engine
+     * is not.
+     *
+     * If Brave adds Ireland, this fails, and that is the moment to map it.
+     */
+    #[DataProvider("endpoints")]
+    public function testNoBraveEndpointSearchesTheIrishMarket(string $fokus, string $engine): void
+    {
+        $this->assertNull(
+            $this->requestUrlFor("en-IE", $fokus, $engine),
+            "$engine was asked for an Irish search, which Brave has no market for.",
+        );
+    }
+
+    /**
      * Brave defines a fixed list of `ui_lang` values and `ca-ES` is not on it.
      * Leaving the parameter off lets Brave choose; sending an undefined value is
      * an error. This is the regression the split between the three classes hid.

@@ -125,6 +125,21 @@ class SerperEngineConfigurationTest extends TestCase
     }
 
     /**
+     * Ireland is served by Serper alone: Brave's `country` enum has no `IE`
+     * (see BraveEngineConfigurationTest), so for an `en-IE` user these
+     * endpoints are the only ones searching the Irish market.
+     */
+    #[DataProvider("endpoints")]
+    public function testEveryEndpointSearchesTheIrishMarket(string $fokus, string $engine, string $property, string $parser): void
+    {
+        $body = $this->requestBodyFor("en-IE", $fokus, $engine);
+
+        $this->assertNotNull($body, "$engine queued no request for an Irish search, so en_IE is missing from its region map.");
+        $this->assertSame("ie", $body["gl"]);
+        $this->assertSame("en", $body["hl"]);
+    }
+
+    /**
      * The second page of a Serper search is parsed by the same class as the
      * first. `new static` is what guarantees it; before the shared base each
      * class named a class by hand and three named the wrong one.

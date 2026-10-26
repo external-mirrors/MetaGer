@@ -54,6 +54,7 @@ abstract class SerperBase extends Searchengine
         "en_US" => "us",
         "en_GB" => "gb",
         "en_AU" => "au",
+        "en_IE" => "ie",
         "en_MY" => "my",
         "es_ES" => "es",
         "es_MX" => "mx",

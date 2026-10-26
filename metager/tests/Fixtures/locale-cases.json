@@ -104,6 +104,16 @@
       "expect": "ca-ES"
     },
     {
+      "name": "an Irish browser gets Ireland, not the English home region",
+      "why": "en-IE is a supported locale. A project whose locale list predates it reads en-IE as a bare en and sends the user to en-US, searching the American market.",
+      "host": "metager.org",
+      "path": "/",
+      "query": {},
+      "cookies": {},
+      "headers": { "accept-language": "en-IE,en;q=0.9" },
+      "expect": "en-IE"
+    },
+    {
       "name": "a Catalan path prefix resolves to Catalan",
       "why": "Every supported locale is reachable by URL, whether or not the implementation ships a translation for it.",
       "host": "metager.de",

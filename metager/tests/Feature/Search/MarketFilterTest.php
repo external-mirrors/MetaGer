@@ -118,6 +118,34 @@ class MarketFilterTest extends TestCase
     }
 
     /**
+     * That a search in every interface locale reaches at least one engine.
+     *
+     * Each engine's `regions` map is the only thing deciding whether it serves a
+     * market, and a locale missing from all of them does not fail loudly: every
+     * engine is disabled with `INCOMPATIBLE_LOCALE`, `MetaGerSearch` redirects to
+     * the settings page, and the locale looks supported everywhere else. Adding a
+     * locale to `laravellocalization.php` without an engine that can search it
+     * fails here, unless it is pinned in [UNSEARCHABLE_LOCALES] with a reason.
+     */
+    #[DataProvider("supportedLocales")]
+    public function testEveryInterfaceLocaleHasAWebEngineToQuery(string $locale, string $regional): void
+    {
+        if (array_key_exists($locale, self::UNSEARCHABLE_LOCALES)) {
+            $this->markTestSkipped("$locale cannot search at all: " . self::UNSEARCHABLE_LOCALES[$locale]);
+        }
+
+        $this->actingAsSearchUser();
+        $fetcher = $this->fakeEngineResponses([]);
+
+        $this->followingRedirects()->get("/$locale/meta/meta.ger3?eingabe=cafe");
+
+        $this->assertNotEmpty(
+            $fetcher->queuedEngines(),
+            "A web search in $locale queried no engine. No parser's regions map serves $regional.",
+        );
+    }
+
+    /**
      * The same assertion for the settings screen, which renders the same filter
      * through a different blade and so can drift from the result page.
      */

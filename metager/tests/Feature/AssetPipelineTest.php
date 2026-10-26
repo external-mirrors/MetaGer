@@ -190,7 +190,7 @@ class AssetPipelineTest extends TestCase
             foreach ($tags[0] as $tag) {
                 // Vite::asset() covers the direct references; $js/$jsFile the
                 // layouts' loops, which pages fill from Vite::asset() too. An
-                // external src (the PayPal SDK) is nobody's module.
+                // external src is nobody's module.
                 if (!preg_match('/Vite::asset|\$js/', $tag)) {
                     continue;
                 }

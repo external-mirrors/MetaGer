@@ -674,10 +674,27 @@
         "mojeek": {
           "get-parameter": "rb",
           "values": {
+            "de_AT": "de_AT",
             "de_DE": "de_DE",
-            "en_GB": "en_GB",
+            "de_CH": "de_CH",
+            "en_AU": "en_AU",
             "en_IE": "en_IE",
-            "fr_FR": "fr_FR"
+            "en_MY": "en_MY",
+            "en_GB": "en_GB",
+            "en_US": "en_US",
+            "es_MX": "es_MX",
+            "es_ES": "es_ES",
+            "ca_ES": "ca_ES",
+            "fr_CA": "fr_CA",
+            "fr_FR": "fr_FR",
+            "it_IT": "it_IT",
+            "nl_NL": "nl_NL",
+            "pl_PL": "pl_PL",
+            "pt_BR": "pt_BR",
+            "pt_PT": "pt_PT",
+            "da_DK": "da_DK",
+            "fi_FI": "fi_FI",
+            "sv_SE": "sv_SE"
           }
         },
         "pixabay": {

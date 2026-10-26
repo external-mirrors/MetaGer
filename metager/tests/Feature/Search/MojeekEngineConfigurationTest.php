@@ -70,6 +70,7 @@ class MojeekEngineConfigurationTest extends TestCase
             // index holds few Irish pages, and a stronger boost mostly demoted
             // UK sites rather than promoting Irish ones.
             "en-IE" => ["en-IE", "EN", "IE"],
+            "en-MY" => ["en-MY", "EN", "MY"],
             // The two that a single country code cannot express: the language
             // is not the one the country's code would suggest.
             "fr-CA" => ["fr-CA", "FR", "CA"],
@@ -125,5 +126,28 @@ class MojeekEngineConfigurationTest extends TestCase
         $this->assertSame("EN", $mojeek->next->configuration->getParameter->lb);
         $this->assertSame("GB", $mojeek->next->configuration->getParameter->rb);
         $this->assertSame(11, $mojeek->next->configuration->getParameter->s);
+    }
+
+    /**
+     * Every market Mojeek searches by locale, it also searches when chosen.
+     *
+     * The two lists are separate — the region map on the parser, the market
+     * filter in `config/filters.json` — and a market missing from the filter
+     * disables Mojeek with `INCOMPATIBLE_FILTER` for anyone who picks it. The
+     * filter offered Mojeek three markets out of the twenty its region map had.
+     */
+    public function testTheMarketFilterOffersEveryMarketTheRegionMapHas(): void
+    {
+        $regions = array_keys(\app\Models\parserSkripte\Mojeek::CONFIG_OVERLOAD["mojeek"]["lang"]["regions"]);
+        $filter = json_decode(file_get_contents(config_path("filters.json")), true)
+            ["parameter-filter"]["language"]["sumas"]["mojeek"]["values"];
+
+        foreach ($regions as $market) {
+            $this->assertSame(
+                $market,
+                $filter[$market] ?? null,
+                "Choosing the $market market disables Mojeek, though Mojeek searches $market by locale.",
+            );
+        }
     }
 }

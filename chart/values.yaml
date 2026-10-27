@@ -328,4 +328,4 @@ valkey:
     image:
       registry: docker.io
       repository: oliver006/redis_exporter
-      tag: "v1.95.0-alpine"
+      tag: "v1.96.0-alpine"

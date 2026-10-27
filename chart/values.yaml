@@ -196,6 +196,19 @@ env: {}
 # is why persistence and both on-disk formats stay off. Everything the app keeps
 # in it — engine results, the loader_* object graphs, quicktips — is re-fetchable.
 valkey:
+  # Pinned here rather than left to the subchart, which ships its own pin and
+  # only moves it on its own schedule: cloudpirates/valkey 0.25.16 still ran
+  # 9.1.0 when 9.1.3 (a security release) was out and already in
+  # docker-compose.yml and CI. A tag in our own values is one Renovate's
+  # helm-values manager bumps, in the same MR as those two. Keep the tag
+  # string identical to theirs so they stay grouped; sentinel.image below
+  # has to move with it. The subchart's other images (HAProxy master proxy,
+  # redis_exporter) are pinned below for the same reason.
+  image:
+    registry: docker.io
+    repository: valkey/valkey
+    tag: "9.1.3-alpine"
+
   # Sentinel needs a quorum, so three. Anything less cannot fail over.
   architecture: replication
   replicaCount: 3
@@ -249,6 +262,11 @@ valkey:
 
   sentinel:
     enabled: true
+    # Same image as the data pods (image above), so Renovate bumps both together.
+    image:
+      registry: docker.io
+      repository: valkey/valkey
+      tag: "9.1.3-alpine"
     # 2 of 3. Left at the chart default, stated here because it has to move with
     # replicaCount if that ever changes.
     quorum: 2
@@ -272,6 +290,13 @@ valkey:
       # (rpush/brpop/lpush/expire in MetaGer, Searchengine, Suggestions) are all
       # writes.
       enabled: true
+      # Pinned for the same reason as image above. The subchart's own pin is the
+      # floating 3.4-alpine (behind a digest) with pullPolicy IfNotPresent, so
+      # an exact tag is also the only way to know which patch a node runs.
+      image:
+        registry: docker.io
+        repository: haproxy
+        tag: "3.4.7-alpine"
 
   auth:
     enabled: true
@@ -299,3 +324,8 @@ valkey:
   # The retired chart ran a redis_exporter sidecar by default. Keep the metrics.
   metrics:
     enabled: true
+    # Pinned for the same reason as image above.
+    image:
+      registry: docker.io
+      repository: oliver006/redis_exporter
+      tag: "v1.95.0-alpine"

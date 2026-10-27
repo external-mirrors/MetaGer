@@ -1716,7 +1716,7 @@ spec:
       serviceAccountName: default
       initContainers:
         - name: valkey-init
-          image: docker.io/valkey/valkey:<tag>@sha256:<digest>
+          image: docker.io/valkey/valkey:golden
           securityContext: 
             allowPrivilegeEscalation: false
             capabilities:
@@ -1852,7 +1852,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 999
-          image: docker.io/valkey/valkey:<tag>@sha256:<digest>
+          image: docker.io/valkey/valkey:golden
           imagePullPolicy: Always
           command:
             - /bin/sh
@@ -1926,7 +1926,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 999
-          image: docker.io/valkey/valkey:<tag>@sha256:<digest>
+          image: docker.io/valkey/valkey:golden
           imagePullPolicy: Always
           volumeMounts:
             - name: sentinel-config
@@ -2070,7 +2070,7 @@ spec:
             runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 999
-          image: docker.io/haproxy:<tag>@sha256:<digest>
+          image: docker.io/haproxy:golden
           imagePullPolicy: IfNotPresent
           env:
             - name: VALKEY_PASSWORD
@@ -2176,7 +2176,7 @@ spec:
           resources:
             {}
         - name: metrics
-          image: "docker.io/oliver006/redis_exporter:<tag>@sha256:<digest>"
+          image: "docker.io/oliver006/redis_exporter:golden"
           imagePullPolicy: Always
           securityContext: 
             allowPrivilegeEscalation: false

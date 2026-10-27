@@ -102,3 +102,17 @@ valkey:
   fullnameOverride: golden-valkey
   auth:
     password: golden-valkey-password
+  # chart/values.yaml pins the subchart's images, and Renovate bumps those
+  # tags. Fixed tags here, as for our own images above, keep each bump from
+  # failing the snapshot; render.sh only masks images pinned by digest.
+  image:
+    tag: "golden"
+  sentinel:
+    image:
+      tag: "golden"
+    masterProxy:
+      image:
+        tag: "golden"
+  metrics:
+    image:
+      tag: "golden"

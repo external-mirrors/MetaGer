@@ -67,6 +67,25 @@ class SettingsCarryTest extends TestCase
     }
 
     /**
+     * Regression for METAGER-19L: a query nested two levels deep
+     * (`?a[][]=x`) left an array after taking the first element, which
+     * reached the string-typed `isValidSetting()` as a TypeError — and since
+     * every generated URL boots this class, even the 404 page for a
+     * WordPress scanner's `/wp-admin/admin-ajax.php` rendered as a 500.
+     */
+    public function testANestedArrayParameterIsIgnored(): void
+    {
+        $carry = $this->asRequest(Request::create("/?dark_mode[][]=dark&new_tab=on"));
+
+        $this->assertSame(["new_tab" => "on"], $carry->all());
+    }
+
+    public function testANestedArrayParameterStillGetsAPlain404(): void
+    {
+        $this->get("/wp-admin/admin-ajax.php?action[][]=x")->assertNotFound();
+    }
+
+    /**
      * `key` is itself one of SettingsSchema::globalSettingKeys(), so
      * isValidSetting() would otherwise accept it — it has its own, separate
      * carrying mechanism (CookieSupport::keyMissingCookie()) and must not be

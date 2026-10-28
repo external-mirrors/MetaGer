@@ -115,6 +115,11 @@ class SettingsCarry
             // A bare `?name` with no `=value` (also `?name=`, which query()
             // already normalises to '') comes through as null.
             $value ??= '';
+            // Nested deeper than one level (`?a[][]=x`): no setting has that
+            // shape, and isValidSetting() only takes a string.
+            if (!is_string($value)) {
+                continue;
+            }
             // `key` is one of SettingsSchema::globalSettingKeys(), so
             // isValidSetting() would otherwise accept it too — it has its
             // own, separate carrying mechanism (CookieSupport::keyMissingCookie()),

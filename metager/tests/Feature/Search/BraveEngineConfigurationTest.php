@@ -104,24 +104,53 @@ class BraveEngineConfigurationTest extends TestCase
     }
 
     /**
-     * Brave cannot search Ireland, and is left out rather than pointed elsewhere.
+     * Brave cannot search Ireland, so an Irish search gets English with no country.
      *
      * `country=IE` is rejected with a 422 — Brave's enum has `GB` and `ALL` but
-     * no `IE` — so `en_IE` is deliberately absent from BraveBase::REGIONS. The
-     * alternatives were both wrong for an Irish user: `GB` answers with the UK
-     * market, `ALL` with no market at all. Serper serves `gl=ie`, and the web
-     * fokus falls back to waiting on whatever is enabled when its main engine
-     * is not.
+     * no `IE`. `GB` would answer with the UK market; `ALL` with `search_lang=en`
+     * is English results without a country preference, which is the honest
+     * reading of "Ireland" for an engine that has no Ireland. Leaving Brave out
+     * instead cost the en-IE user the web fokus's main engine. Serper still
+     * carries the actual Irish market with `gl=ie`.
      *
-     * If Brave adds Ireland, this fails, and that is the moment to map it.
+     * `en-IE` is not in Brave's `ui_lang` list either, and the language fallback
+     * would pick `en-AU`, the first `en` entry; UK English is the closer one.
+     *
+     * If Brave adds Ireland, map `en_IE` to it and change this test.
      */
     #[DataProvider("endpoints")]
-    public function testNoBraveEndpointSearchesTheIrishMarket(string $fokus, string $engine): void
+    public function testEveryBraveEndpointSearchesIrelandAsGlobalEnglish(string $fokus, string $engine): void
     {
-        $this->assertNull(
-            $this->requestUrlFor("en-IE", $fokus, $engine),
-            "$engine was asked for an Irish search, which Brave has no market for.",
-        );
+        $url = $this->requestUrlFor("en-IE", $fokus, $engine);
+
+        $this->assertNotNull($url, "$engine queued no request for an Irish search, so en_IE is missing from its region map.");
+        $this->assertStringContainsString("search_lang=en", $url);
+        $this->assertStringContainsString("country=ALL", $url);
+        $this->assertStringContainsString("ui_lang=en-GB", $url);
+    }
+
+    /**
+     * The market filter has to agree with the region map: choosing "Ireland" in
+     * the market filter on another locale must not disable Brave either.
+     */
+    #[DataProvider("endpoints")]
+    public function testChoosingTheIrishMarketKeepsEveryBraveEndpoint(string $fokus, string $engine): void
+    {
+        $this->actingAsSearchUser();
+        $fetcher = $this->fakeEngineResponses([]);
+
+        $this->get("/de-DE/meta/meta.ger3?eingabe=cafe&focus=$fokus&m=en_IE");
+
+        $url = null;
+        foreach ($fetcher->missions() as $mission) {
+            if ($mission["name"] === $engine) {
+                $url = $mission["url"];
+            }
+        }
+
+        $this->assertNotNull($url, "$engine was disabled by choosing the Irish market.");
+        $this->assertStringContainsString("search_lang=en", $url);
+        $this->assertStringContainsString("country=ALL", $url);
     }
 
     /**

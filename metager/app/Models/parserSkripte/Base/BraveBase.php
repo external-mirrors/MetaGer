@@ -52,11 +52,22 @@ abstract class BraveBase extends Searchengine
     protected const SUPPORTED_UI_LANGUAGES = ["es-AR", "en-AU", "de-AT", "nl-BE", "fr-BE", "pt-BR", "en-CA", "fr-CA", "es-CL", "da-DK", "fi-FI", "fr-FR", "de-DE", "el-GR", "zh-HK", "en-IN", "en-ID", "it-IT", "ja-JP", "ko-KR", "en-MY", "es-MX", "nl-NL", "en-NZ", "no-NO", "zh-CN", "pl-PL", "en-PH", "ru-RU", "en-ZA", "es-ES", "sv-SE", "fr-CH", "de-CH", "zh-TW", "tr-TR", "en-GB", "en-US", "es-US"];
 
     /**
+     * Unlisted locales with a closer neighbour than the first entry of their
+     * language, which is what the fallback in [applyInterfaceLanguage] would
+     * otherwise take — `en-AU` for every unlisted English.
+     */
+    protected const UI_LANGUAGE_NEIGHBOURS = [
+        "en-IE" => "en-GB",
+    ];
+
+    /**
      * MetaGer market -> the value Brave's `country` parameter takes for it.
      *
      * Mostly an identity map; Portuguese is the exception, because Brave
      * distinguishes the two variants by language rather than by country and
-     * [applySettings] splits this value on the underscore.
+     * [applySettings] splits this value on the underscore. Ireland is the
+     * other: Brave has no `IE` (it answers 422), so an Irish search is English
+     * with `country=ALL` rather than the UK market.
      *
      * A market absent from here disables the engine for that market rather than
      * searching the wrong one — `SearchengineConfiguration::applyLocale()`
@@ -68,6 +79,7 @@ abstract class BraveBase extends Searchengine
         "de_AT" => "de_AT",
         "en_US" => "en_US",
         "en_GB" => "en_GB",
+        "en_IE" => "en_ALL",
         "en_AU" => "en_AU",
         "en_MY" => "en_MY",
         "es_ES" => "es_ES",
@@ -149,6 +161,11 @@ abstract class BraveBase extends Searchengine
 
         if (in_array($locale, static::SUPPORTED_UI_LANGUAGES, true)) {
             $this->configuration->getParameter->ui_lang = $locale;
+            return;
+        }
+
+        if (array_key_exists($locale, static::UI_LANGUAGE_NEIGHBOURS)) {
+            $this->configuration->getParameter->ui_lang = static::UI_LANGUAGE_NEIGHBOURS[$locale];
             return;
         }
 

@@ -12,7 +12,7 @@
 	<meta name="robots" content="index,follow" />
 	<meta name="revisit-after" content="7 days" />
 	<meta name="audience" content="all" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="statistics-enabled" content="{{ config("metager.matomo.enabled") }}">
 
 	@if(!in_array(app(\App\SearchSettings::class)->suggestion_provider, [null, "off"]))

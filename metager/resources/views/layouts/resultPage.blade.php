@@ -46,7 +46,7 @@
     @endif
 
     <title>{{ $eingabe }} - MetaGer</title>
-    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta name="p" content="{{ getmypid() }}" />
     <meta name="q" content="{{ $eingabe }}" />
     <meta name="l" content="{{ App\Localization::getLanguage() }}" />

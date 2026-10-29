@@ -2,6 +2,7 @@ import { initializeSuggestions } from "./suggest";
 import updateProxyLinks from "./resultpage/proxy";
 import { renderRelativeDates } from "./relative-time";
 import { initAccountBreadcrumb } from "./accountBreadcrumb";
+import { setMenuOpen } from "./sidebar/menu-toggle";
 
 let bootEvent = new Event("boot");
 let resultLoaderEvent = new Event("resultsChanged");
@@ -230,7 +231,7 @@ function initialize() {
       if (e.key == "Escape") {
         // Disable sidebar if opened
         if (sidebar_toggle && sidebar_toggle.checked) {
-          sidebar_toggle.checked = false;
+          setMenuOpen(sidebar_toggle, false);
         }
         if (skip_links.contains(document.activeElement)) {
           document.activeElement.blur();

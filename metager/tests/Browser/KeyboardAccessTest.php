@@ -158,6 +158,76 @@ class KeyboardAccessTest extends DuskTestCase
     }
 
     /**
+     * "Zur Navigation springen", followed with Enter, puts focus in the menu.
+     *
+     * It used to land on the menu's checkbox, closed: Enter does nothing on a
+     * checkbox, and Tab from there skips the closed menu entirely, so a
+     * colleague trying it reached "Navigationsleiste öffnen/schließen" and could
+     * get no further. Only Space opened it, and nothing on screen said so.
+     */
+    public static function pagesWithASkipLinkToTheMenu(): array
+    {
+        return [
+            "startpage" => ["/de-DE?zitate=off"],
+            "a static page" => ["/de-DE/about"],
+            "the result page" => [null],
+        ];
+    }
+
+    #[DataProvider("pagesWithASkipLinkToTheMenu")]
+    public function testTheSkipLinkToTheMenuLandsInTheOpenMenu(?string $url): void
+    {
+        $html = $url === null ? $this->renderResultPage("light") : null;
+
+        $this->browse(function (Browser $browser) use ($url, $html) {
+            if ($html !== null) {
+                $this->openRenderedPage($browser, $html);
+            } else {
+                $browser->visit($url)->assertPresent("#sidebarToggle");
+            }
+
+            $this->tabTo($browser, ".skiplinks a[href='#sidebarToggle']");
+            $browser->driver->getKeyboard()->sendKeys(WebDriverKeys::ENTER);
+
+            $browser->waitUntil("getComputedStyle(document.querySelector('.sidebar')).visibility === 'visible'");
+            $this->assertSame(
+                $browser->driver->executeScript("return document.querySelector('.sidebar a[href]').outerHTML;"),
+                $browser->driver->executeScript("return document.activeElement.outerHTML;"),
+                "Following the skip link did not put focus on the menu's first link."
+            );
+        });
+    }
+
+    /**
+     * The menu toggle answers Enter as well as Space, says whether the menu is
+     * open, and Tab from it goes into the menu it opened.
+     */
+    public function testTheMenuToggleWorksLikeAButton(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/de-DE?zitate=off")->assertPresent("#sidebarToggle");
+
+            $this->tabTo($browser, "#sidebarToggle");
+            $this->assertSame("false", $browser->attribute("#sidebarToggle", "aria-expanded"));
+
+            $browser->driver->getKeyboard()->sendKeys(WebDriverKeys::ENTER);
+            $browser->waitUntil("getComputedStyle(document.querySelector('.sidebar')).visibility === 'visible'");
+            $this->assertSame("true", $browser->attribute("#sidebarToggle", "aria-expanded"));
+
+            $browser->driver->getKeyboard()->sendKeys(WebDriverKeys::TAB);
+            $this->assertTrue(
+                $browser->driver->executeScript("return document.activeElement.closest('.sidebar') !== null;"),
+                "Tab from the opened menu toggle did not go into the menu."
+            );
+
+            $browser->driver->getKeyboard()->sendKeys([WebDriverKeys::SHIFT, WebDriverKeys::TAB]);
+            $browser->driver->getKeyboard()->sendKeys(WebDriverKeys::ENTER);
+            $browser->waitUntil("getComputedStyle(document.querySelector('.sidebar')).visibility === 'hidden'");
+            $this->assertSame("false", $browser->attribute("#sidebarToggle", "aria-expanded"));
+        });
+    }
+
+    /**
      * Press Tab until the element matching this selector has focus.
      */
     private function tabTo(Browser $browser, string $selector): void

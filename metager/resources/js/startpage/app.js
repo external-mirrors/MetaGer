@@ -1,6 +1,7 @@
 import "./tiles";
 import { initializeSuggestions } from "../suggest";
 import { initAccountBreadcrumb } from "../accountBreadcrumb";
+import { setMenuOpen } from "../sidebar/menu-toggle";
 import { initStaleLoginCheck } from "./staleLoginCheck";
 
 initAccountBreadcrumb();
@@ -15,7 +16,7 @@ initStaleLoginCheck();
     if (e.key == "Escape") {
       // Disable sidebar if opened
       if (sidebar_toggle && sidebar_toggle.checked) {
-        sidebar_toggle.checked = false;
+        setMenuOpen(sidebar_toggle, false);
       }
       if (skip_links_container.contains(document.activeElement)) {
         document.activeElement.blur();

@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import { statistics } from "./statistics";
+import { enhanceMenuToggle, setMenuOpen } from "./sidebar/menu-toggle";
 
 document.addEventListener("DOMContentLoaded", (event) => {
   document
@@ -95,11 +96,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
   });
 
   let sidebarToggle = document.getElementById("sidebarToggle");
-  if (sidebarToggle) {
+  let sidebar = document.querySelector("nav.sidebar");
+  if (sidebarToggle && sidebar) {
+    enhanceMenuToggle(sidebarToggle, sidebar);
     document.querySelectorAll("label[for=sidebarToggle]").forEach((label) => {
       label.addEventListener("click", (e) => {
         e.preventDefault();
-        sidebarToggle.checked = !sidebarToggle.checked;
+        setMenuOpen(sidebarToggle, !sidebarToggle.checked);
       });
     });
   }

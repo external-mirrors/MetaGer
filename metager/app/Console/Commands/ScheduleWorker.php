@@ -66,6 +66,10 @@ class ScheduleWorker extends Command
             // releaseIdleConnections().
             $this->releaseIdleConnections();
             $this->releaseStickyReads();
+            // Only with -v. Nothing else marks the moment schedule:run has
+            // returned and this worker's own handlers are back in place, and
+            // tests/Feature/ScheduleWorkerSignalTest has to signal after it.
+            $this->line("Sleeping until the next run", verbosity: "v");
             sleep(seconds: 60 - now()->second + 1);
             // sleep() being interrupted by a signal does not reliably run the
             // registered handler on its own — confirmed empirically: with

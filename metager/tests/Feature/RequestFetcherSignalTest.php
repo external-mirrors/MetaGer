@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Console\Commands\RequestFetcher;
+use Illuminate\Support\Facades\Redis;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -44,7 +46,11 @@ class RequestFetcherSignalTest extends TestCase
         // class docblock. A prior manual `fpm:graceful-stop` run (or a prior,
         // unfixed run of this very test) can leave it set forever, which would
         // make this test pass whether or not the real fix is in place.
-        \Illuminate\Support\Facades\Redis::del('fpm_stopped');
+        Redis::del('fpm_stopped');
+        // Cleared so a stamp left by an earlier fetcher cannot pass for this
+        // one being ready — see the wait below.
+        $fetcherRedis = Redis::connection(RequestFetcher::REDIS_CONNECTION);
+        $fetcherRedis->del(RequestFetcher::HEALTHCHECK_KEY);
 
         $process = proc_open(
             [PHP_BINARY, base_path('artisan'), 'requests:fetcher'],
@@ -56,14 +62,28 @@ class RequestFetcherSignalTest extends TestCase
         stream_set_blocking($pipes[1], false);
 
         try {
-            // Give it time to get past the initial Redis-availability retry
-            // loop and into the fetch loop proper.
-            usleep(500_000);
+            // The healthcheck key is first written right after the handlers
+            // are installed, so its appearance is the earliest moment a signal
+            // can be handled. A fixed 500ms used to stand in for this and
+            // flaked in CI: on a loaded runner artisan had not finished booting,
+            // and SIGTERM hit PHP's default disposition instead.
+            stream_set_blocking($pipes[2], false);
+            $bootDeadline = microtime(true) + 20;
+            $output = '';
+            while ($fetcherRedis->get(RequestFetcher::HEALTHCHECK_KEY) === null) {
+                $output .= stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]);
+                if (microtime(true) > $bootDeadline) {
+                    $this->fail(
+                        'The fetcher never wrote its healthcheck within 20 seconds. Running: '
+                            . var_export(proc_get_status($process)['running'], true) . ". Output: {$output}"
+                    );
+                }
+                usleep(50_000);
+            }
 
             proc_terminate($process, $signal);
 
             $deadline = microtime(true) + 5;
-            $output = '';
             do {
                 $output .= stream_get_contents($pipes[1]);
                 $status = proc_get_status($process);

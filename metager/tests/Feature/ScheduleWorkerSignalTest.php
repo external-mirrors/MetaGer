@@ -46,7 +46,7 @@ class ScheduleWorkerSignalTest extends TestCase
     public function testTheWorkerExitsGracefullyOnSignal(int $signal): void
     {
         $process = proc_open(
-            [PHP_BINARY, base_path('artisan'), 'schedule:work-mg'],
+            [PHP_BINARY, base_path('artisan'), 'schedule:work-mg', '-v'],
             [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
             $pipes,
             base_path()
@@ -56,31 +56,25 @@ class ScheduleWorkerSignalTest extends TestCase
 
         try {
             // How long the first schedule:run() takes varies with which tasks
-            // are due this minute (routes/console.php) — a fixed delay landed
-            // mid-run and flaked whenever more than the usual couple of tasks
-            // were due. Wait for its output to go quiet instead: half a second
-            // with nothing new most likely means it has returned and the
-            // worker is now asleep, which is where this test wants the signal
-            // to land — see the residual race noted in the class docblock.
-            $bootDeadline = microtime(true) + 20;
-            $lastOutputAt = microtime(true);
-            $sawOutput = false;
-            while (microtime(true) < $bootDeadline) {
-                $chunk = stream_get_contents($pipes[1]);
-                if ($chunk !== '' && $chunk !== false) {
-                    $sawOutput = true;
-                    $lastOutputAt = microtime(true);
+            // are due this minute (routes/console.php) and with how loaded the
+            // machine is. Waiting for its output to go quiet for half a second
+            // still flaked in CI: a task that is slow says nothing while it
+            // runs, the signal landed mid-task and hit Event's own handler
+            // (exit 1). Wait for the worker to say it is asleep instead — see
+            // the residual race noted in the class docblock.
+            $bootDeadline = microtime(true) + 30;
+            $output = '';
+            while (!str_contains($output, 'Sleeping until the next run')) {
+                if (microtime(true) > $bootDeadline) {
+                    $this->fail("The scheduler never reached its sleep within 30 seconds. Output so far: {$output}");
                 }
-                if ($sawOutput && microtime(true) - $lastOutputAt > 0.5) {
-                    break;
-                }
+                $output .= stream_get_contents($pipes[1]);
                 usleep(50_000);
             }
 
             proc_terminate($process, $signal);
 
             $deadline = microtime(true) + 5;
-            $output = '';
             do {
                 $output .= stream_get_contents($pipes[1]);
                 $status = proc_get_status($process);

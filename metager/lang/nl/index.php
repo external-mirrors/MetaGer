@@ -21,14 +21,15 @@ return [
     ],
     'placeholder' => 'MetaGer: Beschermd zoeken en vinden',
     'searchbutton' => 'MetaGer zoeken starten',
+    'searchlabel' => 'Zoekopdracht',
     'adfree' => 'Gebruik MetaGer reclamevrij',
     'skip' => [
-        'search' => 'Doorgaan naar invoer zoekopdracht',
         'content' => 'Naar de inhoud',
+        'search' => 'Doorgaan naar invoer zoekopdracht',
         'navigation' => 'Ga naar navigatie',
         'fokus' => 'Doorgaan naar selectie van zoekfocus',
     ],
-    'lang' => 'Witch-taal',
+    'lang' => 'Taal wijzigen',
     'searchreset' => 'invoer zoekopdracht verwijderen',
     'searchbar-replacement' => [
         'tagline' => 'Open source. Advertentievrij. Anoniem.',

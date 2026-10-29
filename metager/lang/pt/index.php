@@ -47,8 +47,9 @@ return [
     'placeholder' => 'MetaGer: Pesquisa e localização protegidas pela privacidade',
     'adfree' => 'MetaGer sem anúncios',
     'searchbutton' => 'Iniciar MetaGer-Search',
+    'searchlabel' => 'Pesquisa',
     'plugin' => 'Instalar o MetaGer',
-    'lang' => 'linguagem wwitch',
+    'lang' => 'Mudar idioma',
     // The landing page shown to a visitor without a key: hero, "how it works",
     // and the five benefit cards. It came from the keymanager's own root page
     // (pass/views/index.ejs, pass/lang/*/index.json), which /keys used to serve

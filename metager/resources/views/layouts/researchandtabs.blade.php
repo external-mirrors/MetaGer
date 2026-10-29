@@ -13,7 +13,7 @@
                     <h1><img src="/img/svg-icons/metager-lock-orange.svg" alt="MetaGer" /></h1>
                 </a>
                 <a class="lang" href="{{ route('lang-selector') }}">
-                    <span>{{ App\Localization::getRegion() }}</span>
+                    <span>{{ App\Localization::getRegion() }}</span><span class="visually-hidden">@lang('index.lang')</span>
                 </a>
             </div>
             <div id="header-searchbar">

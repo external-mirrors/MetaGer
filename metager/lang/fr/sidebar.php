@@ -32,6 +32,7 @@ return [
     ],
     'plugin' => 'Plugin MetaGer',
     'close' => 'Bouton d\'accès à la barre de navigation',
+    'landmark' => 'Menu principal',
     'toggle' => 'ouvrir/fermer la barre de navigation',
     'opener' => 'Ouvrir la barre de navigation',
     'opener_close' => 'Fermer la barre de navigation',

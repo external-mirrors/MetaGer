@@ -6,7 +6,7 @@ return [
         'navigation' => 'Ves a la navegació',
         'fokus' => 'Ves a la selecció del focus de cerca',
     ],
-    'lang' => 'canvia la llengua',
+    'lang' => 'Canvia la llengua',
     'plugin' => 'Instal·la MetaGer',
     'plugin-title' => 'Afegeix MetaGer al teu navegador',
     'key' => [
@@ -20,6 +20,7 @@ return [
     ],
     'placeholder' => 'MetaGer: cerca i troba amb la privadesa protegida',
     'searchbutton' => 'Inicia la cerca amb MetaGer',
+    'searchlabel' => 'Consulta de cerca',
     'searchreset' => 'esborra el text de cerca',
     'foki' => [
         'web' => 'Web',

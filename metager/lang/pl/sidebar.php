@@ -32,6 +32,7 @@ return [
     'nav2' => 'Darowizna',
     'nav3' => 'Prywatność',
     'close' => 'Przycisk przełączania do paska nawigacji',
+    'landmark' => 'Menu główne',
     'toggle' => 'Otwórz/zamknij pasek nawigacji',
     'opener' => 'Otwórz pasek nawigacji',
     'opener_close' => 'Zamknij pasek nawigacji',

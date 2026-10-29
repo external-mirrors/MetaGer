@@ -6,7 +6,7 @@ return [
         'navigation' => 'Skip to navigation',
         'fokus' => 'Skip to search focus selection',
     ],
-    'lang' => 'wwitch language',
+    'lang' => 'Switch language',
     'plugin' => 'Install MetaGer',
     'plugin-title' => 'Add MetaGer to your browser',
     'key' => [
@@ -20,6 +20,7 @@ return [
     ],
     'placeholder' => 'MetaGer: Privacy Protected Search & Find',
     'searchbutton' => 'Start MetaGer-Search',
+    'searchlabel' => 'Search query',
     'searchreset' => 'delete search query input',
     'foki' => [
         'web' => 'Web',

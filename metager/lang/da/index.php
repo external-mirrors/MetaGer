@@ -13,6 +13,7 @@ return [
     ],
     'placeholder' => 'MetaGer: Privatlivsbeskyttet søgning og find',
     'searchbutton' => 'Start MetaGer-søgning',
+    'searchlabel' => 'Søgeforespørgsel',
     'foki' => [
         'web' => 'Web',
         'bilder' => 'Billeder',
@@ -23,12 +24,12 @@ return [
     ],
     'adfree' => 'Brug MetaGer uden reklamer',
     'skip' => [
-        'search' => 'Spring til indtastning af søgeforespørgsel',
         'content' => 'Spring til indhold',
+        'search' => 'Spring til indtastning af søgeforespørgsel',
         'navigation' => 'Spring til navigation',
         'fokus' => 'Spring til valg af søgefokus',
     ],
-    'lang' => 'wwitch-sprog',
+    'lang' => 'Skift sprog',
     'searchreset' => 'Slet input til søgeforespørgsel',
     'searchbar-replacement' => [
         'tagline' => 'Open source. Reklamefri. Anonym.',

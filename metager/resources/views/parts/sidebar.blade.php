@@ -13,7 +13,11 @@
      sidebar, at every width — including below 920px, where the result page's
      cluster is display:none and could not have carried it. --}}
 <label aria-label="@lang('sidebar.opener_close')" class="sidebar-opener close navigation-element" for="sidebarToggle">×</label>
-<div class="sidebar">
+{{-- A navigation landmark, so a screen reader can jump to the menu by kind, and
+     real lists inside it: they were role="presentation", which threw away the
+     item counts, to keep the <hr>s between the groups from making the list
+     invalid. The rules are list items of their own now, hidden from the tree. --}}
+<nav class="sidebar" aria-label="@lang('sidebar.landmark')">
   <a class="sidebar-logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
     <span>
       <img src="/img/metager.svg" alt="MetaGer">
@@ -117,14 +121,14 @@
       </div>
     @endif
   </div>
-  <ul class="sidebar-list" role="presentation">
+  <ul class="sidebar-list">
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}"  id="navigationSuche" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/icon-lupe.svg" alt="" aria-hidden="true" id="sidebar-img-lupe">
         <span>{{ trans('sidebar.nav1') }}</span>
       </a>
     </li>
-    <hr>
+    <li class="sidebar-separator" aria-hidden="true"><hr></li>
     {{-- Die eine Frage, die ein abgemeldeter Besucher hat und die die
          Startseite nicht beantwortet. Erste Ebene, kein Untermenü: in der
          Navigation des Keymanagers stand „Preis“ ebenfalls ganz oben, und die
@@ -153,7 +157,7 @@
           <img src="/img/svg-icons/icon-more-information.svg" alt="" aria-hidden="true" id="sidebar-img-info"> 
           <span>{{ trans('sidebar.nav31') }}</span><span class="caret" aria-hidden="true"></span>
         </summary>
-        <ul role="presentation">
+        <ul>
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/transparency/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav29') }}</a>
           </li>
@@ -175,7 +179,7 @@
         </ul>
       </details>
     </li>
-    <hr>
+    <li class="sidebar-separator" aria-hidden="true"><hr></li>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/spende/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/svg-icons/donate-icon.svg" alt="" aria-hidden="true" id="sidebar-img-donate"> 
@@ -192,7 +196,7 @@
       </a>
     </li>
     @endif
-    <hr>
+    <li class="sidebar-separator" aria-hidden="true"><hr></li>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/svg-icons/app-icon.svg" alt="" aria-hidden="true" id="sidebar-img-app"> 
@@ -205,14 +209,14 @@
         <span>{{ trans('sidebar.nav27') }}</span> 
       </a>
     </li>
-    <hr>
+    <li class="sidebar-separator" aria-hidden="true"><hr></li>
     <li>
       <details>
         <summary aria-label="@lang('sidebar.nav18')" id="navigationKontakt">
           <img src="/img/svg-icons/icon-contact.svg" alt="" aria-hidden="true" id="sidebar-img-contact"> 
           <span>{{ trans('sidebar.nav18') }}</span><span class="caret" aria-hidden="true"></span>
         </summary>
-        <ul role="presentation">
+        <ul>
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/kontakt/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav5') }}</a>
           </li>
@@ -237,7 +241,7 @@
           <img src="/img/svg-icons/icon-services.svg" alt="" aria-hidden="true" id="sidebar-img-services"> 
           <span>{{ trans('sidebar.nav15') }}</span><span class="caret" aria-hidden="true"></span>
         </summary>
-        <ul role="presentation">
+        <ul>
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.plugin') }}</a>
           </li>
@@ -268,7 +272,7 @@
         <span>{{ trans('sidebar.nav28') }}</span>
       </a>
     </li>
-    <hr>
+    <li class="sidebar-separator" aria-hidden="true"><hr></li>
     <li>
       <a href="{{ route('lang-selector') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/svg-icons/icon-language.svg" alt="" aria-hidden="true" id="sidebar-img-language"> 
@@ -277,4 +281,4 @@
     </li>
   </ul>
   <a id="skip-to-nav-toggle" href="#sidebarToggle">@lang('sidebar.close')</a>
-</div>
+</nav>

@@ -7,6 +7,7 @@ return [
         ],
     ],
     'weiter' => 'meer',
+    'pager' => 'Meer resultaten',
     'zurueck' => 'terug',
     'backtotop' => 'terug naar boven',
     'results' => [

@@ -13,6 +13,7 @@ return [
     ],
     'placeholder' => 'MetaGer: Etsi ja löydä yksityisyyden suojaa',
     'searchbutton' => 'Aloita MetaGer-haku',
+    'searchlabel' => 'Hakukysely',
     'foki' => [
         'web' => 'Web',
         'bilder' => 'Kuvat',
@@ -23,12 +24,12 @@ return [
     ],
     'adfree' => 'Käytä MetaGeria mainosvapaasti',
     'skip' => [
-        'search' => 'Siirry hakukyselyn syöttöön',
         'content' => 'Siirry sisältöön',
+        'search' => 'Siirry hakukyselyn syöttöön',
         'navigation' => 'Siirry navigointiin',
         'fokus' => 'Siirry hakutarkennuksen valintaan',
     ],
-    'lang' => 'wwitch kieli',
+    'lang' => 'Vaihda kieli',
     'searchreset' => 'poista hakukyselyn syöttö',
     'searchbar-replacement' => [
         'tagline' => 'Avoin lähdekoodi. Mainokseton. Anonyymi.',

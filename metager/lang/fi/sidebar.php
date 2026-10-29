@@ -32,6 +32,7 @@ return [
     'nav16' => 'Tue meitä',
     'nav17' => 'Osto affiliate-kaupoista',
     'close' => 'Siirry navigointipalkin vaihtopainike',
+    'landmark' => 'Päävalikko',
     'toggle' => 'avaa/sulje navigointipalkki',
     'opener' => 'Avaa navigointipalkki',
     'opener_close' => 'Sulje navigointipalkki',

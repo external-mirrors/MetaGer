@@ -12,4 +12,5 @@ return [
     'backtotop' => 'voltar ao topo',
     'zurueck' => 'voltar',
     'weiter' => 'mais',
+    'pager' => 'Mais resultados',
 ];

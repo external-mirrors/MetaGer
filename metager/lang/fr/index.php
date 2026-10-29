@@ -11,6 +11,7 @@ return [
     ],
     'placeholder' => 'MetaGer : Rechercher et trouver avec protection de la vie privée',
     'searchbutton' => 'Démarrer MetaGer-Search',
+    'searchlabel' => 'Requête de recherche',
     'foki' => [
         'web' => 'Web',
         'bilder' => 'Images',
@@ -23,12 +24,12 @@ return [
     'plugin-title' => 'Ajouter MetaGer à votre navigateur',
     'adfree' => 'Utiliser MetaGer sans publicité',
     'skip' => [
-        'search' => 'Passer à la saisie de la requête de recherche',
         'content' => 'Aller au contenu',
+        'search' => 'Passer à la saisie de la requête de recherche',
         'navigation' => 'Passer à la navigation',
         'fokus' => 'Passer à la sélection de l\'axe de recherche',
     ],
-    'lang' => 'quelle langue',
+    'lang' => 'Changer de langue',
     'searchreset' => 'supprimer la recherche',
     'searchbar-replacement' => [
         'tagline' => 'Open-source. Sans publicité. Anonyme.',

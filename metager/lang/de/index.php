@@ -13,6 +13,7 @@ return [
     ],
     'placeholder' => 'MetaGer – Mehr als eine Suchmaschine',
     'searchbutton' => 'MetaGer-Suche starten',
+    'searchlabel' => 'Suchanfrage',
     'foki' => [
         'web' => 'Web',
         'bilder' => 'Bilder',
@@ -24,11 +25,11 @@ return [
     'adfree' => 'MetaGer werbefrei nutzen',
     'skip' => [
         'search' => 'Weiter zur Eingabe der Suchanfrage',
-        'navigation' => 'Zur Navigation springen',
         'content' => 'Zum Inhalt springen',
+        'navigation' => 'Zur Navigation springen',
         'fokus' => 'Zur Auswahl des Suchfokus springen',
     ],
-    'lang' => 'Hexensprache',
+    'lang' => 'Sprache wechseln',
     'searchreset' => 'Eingabe der Suchanfrage löschen',
     'searchbar-replacement' => [
         'tagline' => 'Open-Source. Werbefrei. Anonym.',

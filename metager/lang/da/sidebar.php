@@ -32,6 +32,7 @@ return [
     'nav27' => 'MetaGer-kort',
     'nav28' => 'Indstillinger',
     'close' => 'Spring til navigationsbjælkens skifteknap',
+    'landmark' => 'Hovedmenu',
     'toggle' => 'Åbn/luk navigationslinjen',
     'opener' => 'Åbn navigationslinjen',
     'opener_close' => 'Luk navigationslinjen',

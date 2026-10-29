@@ -1,6 +1,7 @@
 <?php
 return [
     'weiter' => 'więcej',
+    'pager' => 'Więcej wyników',
     'zurueck' => 'z powrotem',
     'backtotop' => 'powrót do góry',
     'query' => [

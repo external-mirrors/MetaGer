@@ -157,6 +157,23 @@ p a:not(.btn) {
   text-underline-offset: 0.15em;
 }
 
+// Text for screen readers only: an accessible name that adds to what is on
+// screen rather than replacing it. aria-label replaces it, which breaks voice
+// control — "click DE" stops working on a link whose name is "Sprache
+// wechseln". !important because it is applied to elements that components
+// already style (`a.lang > span` sets display: block).
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 // One focus ring for the whole site, drawn only for the keyboard
 // (:focus-visible), in the accent colour that clears 3:1 on every surface.
 // A component that draws focus its own way overrides this with a more specific
@@ -271,12 +288,16 @@ i.fa {
   }
 
   a.lang {
-    display: block;
-    height: min-content;
+    // 24×24 at the least (WCAG 2.5.8): the two letters alone made an 18×20
+    // target squeezed against the logo link.
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-width: 24px;
+    min-height: 24px;
     align-self: flex-end;
     position: relative;
     bottom: -9px;
-    left: -4px;
     color: @accent-text-color;
     font-weight: bold;
 

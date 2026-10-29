@@ -1,6 +1,7 @@
 <?php
 return [
     'weiter' => 'mere',
+    'pager' => 'Flere resultater',
     'zurueck' => 'tilbage',
     'backtotop' => 'tilbage til toppen',
     'query' => [

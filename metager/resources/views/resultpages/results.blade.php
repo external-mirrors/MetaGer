@@ -1,4 +1,10 @@
-<div id="results" role="list"
+{{-- A labelled region, not a list. It was role="list", but the news and video
+     rows, the alteration notice, the blacklist alerts and the pager all live in
+     here between and after the results, and a list may only hold list items —
+     screen readers announced a list whose item count was wrong and skipped the
+     rest. They cannot move out: scriptResultPage.js reaches the results as
+     `#results > .result`. Each result is still found by its h2. --}}
+<div id="results" role="region"
     aria-label="@lang('results.results.summary', ['resultcount' => sizeof($metager->getResults()), 'totalresults' => $metager->getTotalResultCount()])">
     @include('parts.alteration')
     @foreach ($metager->getResults() as $index => $result)

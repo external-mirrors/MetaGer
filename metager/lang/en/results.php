@@ -2,6 +2,7 @@
 return [
     'weiter' => 'more',
     'zurueck' => 'back',
+    'pager' => 'More results',
     'backtotop' => 'back to top',
     'query' => [
         'alteration' => [

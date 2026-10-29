@@ -13,6 +13,7 @@ return [
     ],
     'placeholder' => 'MetaGer: Integritetsskyddad sökning och sökning',
     'searchbutton' => 'Starta MetaGer-sökning',
+    'searchlabel' => 'Sökfråga',
     'foki' => [
         'web' => 'Webb',
         'bilder' => 'Bilder',
@@ -23,12 +24,12 @@ return [
     ],
     'adfree' => 'Använd MetaGer annonsfritt',
     'skip' => [
-        'search' => 'Hoppa till inmatning av sökfråga',
         'content' => 'Hoppa till innehållet',
+        'search' => 'Hoppa till inmatning av sökfråga',
         'navigation' => 'Hoppa till navigering',
         'fokus' => 'Hoppa till val av sökfokus',
     ],
-    'lang' => 'wwitch språk',
+    'lang' => 'Byt språk',
     'searchreset' => 'radera sökfråga inmatning',
     'searchbar-replacement' => [
         'tagline' => 'Open source. Annonsfri. Anonym.',

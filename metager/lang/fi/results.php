@@ -1,6 +1,7 @@
 <?php
 return [
     'weiter' => 'lisää',
+    'pager' => 'Lisää tuloksia',
     'zurueck' => 'takaisin',
     'backtotop' => 'takaisin alkuun',
     'query' => [

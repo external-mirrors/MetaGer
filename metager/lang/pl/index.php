@@ -13,6 +13,7 @@ return [
     ],
     'placeholder' => 'MetaGer: Wyszukiwanie i znajdowanie chronione prywatnością',
     'searchbutton' => 'Uruchom MetaGer-Search',
+    'searchlabel' => 'Zapytanie wyszukiwania',
     'foki' => [
         'web' => 'Sieć',
         'bilder' => 'Obrazy',
@@ -23,12 +24,12 @@ return [
     ],
     'adfree' => 'Korzystaj z MetaGer bez reklam',
     'skip' => [
-        'search' => 'Przejdź do wprowadzania zapytania wyszukiwania',
         'content' => 'Przejdź do treści',
+        'search' => 'Przejdź do wprowadzania zapytania wyszukiwania',
         'navigation' => 'Przejdź do nawigacji',
         'fokus' => 'Przejdź do wyboru fokusu wyszukiwania',
     ],
-    'lang' => 'język przełącznika',
+    'lang' => 'Zmień język',
     'searchreset' => 'usuń wprowadzone zapytanie wyszukiwania',
     'searchbar-replacement' => [
         'tagline' => 'Open source. Bez reklam. Anonimowo.',

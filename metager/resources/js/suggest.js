@@ -1,4 +1,5 @@
 import { getToken, putToken } from "./messaging";
+import { markAsCombobox, reflectActive, reflectExpanded } from "./suggest/combobox";
 
 /**
  * MetaGers basic suggestion module
@@ -36,6 +37,7 @@ export function initializeSuggestions() {
   if (!search_input) {
     return;
   }
+  markAsCombobox(search_input, suggestions_container);
 
   // Update cost for suggestion requests.
   // Suggestions are a nicety; if the cost lookup fails we keep the last known
@@ -83,6 +85,7 @@ export function initializeSuggestions() {
     setTimeout(() => {
       if (document.activeElement != search_input) {
         searchbar_container.dataset.suggest = "inactive";
+        reflectExpanded(search_input, false);
       }
     }, 250);
   });
@@ -323,6 +326,7 @@ export function initializeSuggestions() {
     } else {
       searchbar_container.dataset.suggest = "inactive";
     }
+    reflectExpanded(search_input, suggestions.length > 0);
 
     // Add all Suggestions
     let eingabe_container = document.querySelector("input[name=eingabe]");
@@ -369,6 +373,7 @@ export function initializeSuggestions() {
         if (element.classList.contains("active"))
           element.classList.remove("active");
       });
+      reflectActive(search_input, null);
       return;
     }
     let down = key == "ArrowDown";
@@ -395,10 +400,12 @@ export function initializeSuggestions() {
     }
     if (focus_number == -1) {
       search_input.value = query;
+      reflectActive(search_input, null);
     } else {
       let element = suggestions_container.querySelector(".suggestion.filled:nth-child(" + (focus_number + 1) + ")");
       element.classList.add("active");
       search_input.value = element.querySelector("span").textContent;
+      reflectActive(search_input, element);
     }
   }
 }

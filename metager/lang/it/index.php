@@ -13,6 +13,7 @@ return [
     ],
     'placeholder' => 'MetaGer: Ricerca e ricerca protetta dalla privacy',
     'searchbutton' => 'Avviare la ricerca MetaGer',
+    'searchlabel' => 'Query di ricerca',
     'foki' => [
         'web' => 'Web',
         'bilder' => 'Immagini',
@@ -23,12 +24,12 @@ return [
     ],
     'adfree' => 'Utilizzare MetaGer senza pubblicità',
     'skip' => [
-        'search' => 'Passa all\'inserimento della query di ricerca',
         'content' => 'Vai al contenuto',
+        'search' => 'Passa all\'inserimento della query di ricerca',
         'navigation' => 'Vai alla navigazione',
         'fokus' => 'Passa alla selezione del focus di ricerca',
     ],
-    'lang' => 'linguaggio wwitch',
+    'lang' => 'Cambia lingua',
     'searchreset' => 'eliminare l\'input della query di ricerca',
     'searchbar-replacement' => [
         'tagline' => 'Open source. Senza pubblicità. Anonimo.',

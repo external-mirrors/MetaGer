@@ -2,10 +2,13 @@
 	<form id="searchForm" method={{ $request }} @if(!empty($metager) && $metager->isFramed())target="_top" @endif action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/meta.ger3") }}" accept-charset="UTF-8">
 		<div class="searchbar {{$class ?? ''}}">
 			<div class="search-input-submit">
-				<div id="suggest-exit">&larr;</div>
+				{{-- Touch only: it closes the suggestions on a phone, where they cover the
+				     page. A keyboard closes them with Escape, so it stays out of the
+				     accessibility tree rather than becoming a button nobody needs. --}}
+				<div id="suggest-exit" aria-hidden="true">&larr;</div>
 				<div class="search-input @if(!\Request::is('/')) search-delete-js-only @endif">
-					<input type="search" id="eingabe" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}">
-					<button id="search-delete-btn" name="delete-search-input" type="reset" title="@lang('index.searchreset')">
+					<input type="search" id="eingabe" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}" aria-label="@lang('index.searchlabel')">
+					<button id="search-delete-btn" name="delete-search-input" type="reset" title="@lang('index.searchreset')" aria-label="@lang('index.searchreset')">
 						&#xd7;
 					</button>
 				</div>

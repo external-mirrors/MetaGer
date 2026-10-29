@@ -1,4 +1,4 @@
-<div class="result" data-count="{{ $result->hash }}" data-index="{{ $index }}" role="listitem">
+<div class="result" data-count="{{ $result->hash }}" data-index="{{ $index }}">
     <div class="result-header">
         <div class="result-headline">
             <h2 class="result-title" title="{{ $result->titel }}">
@@ -88,7 +88,7 @@
         </div>
         @if (isset($result->logo))
             <div class="result-logo" aria-hidden="true">
-                <a href="{{ $result->link }}" @if ($metager->isFramed()) target="_top" @endif>
+                <a href="{{ $result->link }}" tabindex="-1" @if ($metager->isFramed()) target="_top" @endif>
                     <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->logo) }}" alt=""
                         loading="lazy" />
                 </a>
@@ -96,7 +96,7 @@
         @endif
         @if ($result->image !== '')
             <div class="result-image" aria-hidden="true">
-                <a href="{{ $result->link }}" @if ($metager->isFramed()) target="_top" @endif>
+                <a href="{{ $result->link }}" tabindex="-1" @if ($metager->isFramed()) target="_top" @endif>
                     <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->image) }}" alt=""
                         loading="lazy" />
                 </a>

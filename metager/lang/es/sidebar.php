@@ -32,6 +32,7 @@ return [
     'nav31' => 'Más información',
     'navFactcheck' => 'Comprobación de hechos',
     'close' => 'Botón de salto a la barra de navegación',
+    'landmark' => 'Menú principal',
     'toggle' => 'abrir/cerrar la barra de navegación',
     'opener' => 'Abrir la barra de navegación',
     'opener_close' => 'Cerrar la barra de navegación',

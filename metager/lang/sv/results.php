@@ -1,6 +1,7 @@
 <?php
 return [
     'weiter' => 'mer',
+    'pager' => 'Fler resultat',
     'zurueck' => 'tillbaka',
     'backtotop' => 'Tillbaka till toppen',
     'query' => [

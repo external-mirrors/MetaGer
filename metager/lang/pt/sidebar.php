@@ -2,6 +2,7 @@
 return [
     'nav24' => 'Código fonte do MetaGer',
     'close' => 'Botão de alternância para saltar para a barra de navegação',
+    'landmark' => 'Menu principal',
     'nav23' => 'Tornar-se membro',
     'nav20' => 'Ajuda',
     'nav31' => 'Mais informações',

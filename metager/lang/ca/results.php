@@ -1,6 +1,7 @@
 <?php
 return [
     'weiter' => 'més',
+    'pager' => 'Més resultats',
     'zurueck' => 'enrere',
     'backtotop' => 'torna a dalt',
     'query' => [

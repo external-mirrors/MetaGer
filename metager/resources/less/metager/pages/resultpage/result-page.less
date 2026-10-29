@@ -1061,6 +1061,27 @@ a {
     display: none;
   }
 
+  // The filter toggle is the exception, and has to be: with display: none it
+  // cannot take focus, and its <label> — which used to carry tabindex="0" in
+  // its place — takes focus but ignores Enter and Space, so the filters could
+  // not be opened from a keyboard at all. Hidden from sight, then, but not from
+  // the tab order, the way .result-toggle is; the label shows its focus.
+  >input#options-toggle {
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    opacity: 0;
+  }
+
+  &:has(> input#options-toggle:focus-visible) .option-toggle label {
+    outline: 2px solid @focus-ring-color;
+    outline-offset: 2px;
+  }
+
   input[type="checkbox"]:not(:checked)+.scrollbox {
     display: none;
   }

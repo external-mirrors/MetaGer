@@ -25,6 +25,7 @@ return [
     'skip' => [
         'search' => 'Weiter zur Eingabe der Suchanfrage',
         'navigation' => 'Zur Navigation springen',
+        'content' => 'Zum Inhalt springen',
         'fokus' => 'Zur Auswahl des Suchfokus springen',
     ],
     'lang' => 'Hexensprache',

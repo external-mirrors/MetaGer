@@ -1,6 +1,7 @@
 <?php
 return [
     'skip' => [
+        'content' => 'Salta al contingut',
         'search' => 'Ves al camp de cerca',
         'navigation' => 'Ves a la navegació',
         'fokus' => 'Ves a la selecció del focus de cerca',

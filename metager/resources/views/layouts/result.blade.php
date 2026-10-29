@@ -72,7 +72,7 @@
         @endif
     </div>
     <div class="result-body {{ !empty($result->logo) || !empty($result->image) ? 'with-image' : '' }}">
-        <div class="result-description" tabindex="0">
+        <div class="result-description">
             @if (array_key_exists('date', $result->additionalInformation))
             <span class="date" data-timestamp="{{ $result->getDate()->unix() }}">
                 @if ($result->getDate()->isToday())

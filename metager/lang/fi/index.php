@@ -24,6 +24,7 @@ return [
     'adfree' => 'Käytä MetaGeria mainosvapaasti',
     'skip' => [
         'search' => 'Siirry hakukyselyn syöttöön',
+        'content' => 'Siirry sisältöön',
         'navigation' => 'Siirry navigointiin',
         'fokus' => 'Siirry hakutarkennuksen valintaan',
     ],

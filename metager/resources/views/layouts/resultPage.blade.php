@@ -90,6 +90,10 @@
             {!! @trans('resultPage.metager3') !!}
         </div>
     @endif
+    {{-- Ahead of the page, for the reason layouts/staticPages.blade.php gives:
+         the source order is the tab order, and these are the top-right corner. --}}
+    @include('parts.sidebar', ['id' => 'resultPageSideBar'])
+    @include('parts.navigation-cluster', ['density' => 'compact', 'class' => 'navigation-cluster--wide-only'])
     @if (!isset($suspendheader))
         @include('layouts.researchandtabs')
     @else
@@ -106,8 +110,6 @@
         </div>
         @include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])
     @endif
-    @include('parts.sidebar', ['id' => 'resultPageSideBar'])
-    @include('parts.navigation-cluster', ['density' => 'compact', 'class' => 'navigation-cluster--wide-only'])
 </body>
 
 </html>

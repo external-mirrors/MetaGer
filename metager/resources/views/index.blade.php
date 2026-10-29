@@ -1,6 +1,24 @@
 @extends('layouts.staticPages', ['page' => 'startpage'])
 @section('title', $title)
 
+{{-- Yielded by layouts.staticPages ahead of the menu, so the skip links are the
+     first thing Tab reaches. $signedIn is worked out here and again in the
+     content section, so neither depends on the order the two are written in. --}}
+@section('skiplinks')
+@php($signedIn = Auth::guard("key")->user() !== null || app(App\Models\Authorization\Authorization::class)->loggedIn)
+<div class="skiplinks">
+  <div>@lang('resultPage.skiplinks.heading')</div>
+  @if($signedIn)
+  <a href="#eingabe" id="skipto-search" class="skip-link">@lang('index.skip.search')</a>
+@endif
+  <a href="#sidebarToggle" id="skipto-navigation" class="skip-link">@lang('index.skip.navigation')</a>
+  @if($signedIn)
+  <a href="#foki-switcher" id="skipto-fokus" class="skip-link">@lang('index.skip.fokus')</a>
+@endif
+  <div class="escape">@lang('resultPage.skiplinks.return')</div>
+</div>
+@endsection
+
 @section('content')
 {{--
   The startpage, in two states.
@@ -22,17 +40,6 @@
   cards instead, and #story-plugin is the closing band.
 --}}
 @php($signedIn = Auth::guard("key")->user() !== null || app(App\Models\Authorization\Authorization::class)->loggedIn)
-<div class="skiplinks">
-  <div>@lang('resultPage.skiplinks.heading')</div>
-  @if($signedIn)
-  <a href="#eingabe" id="skipto-search" class="skip-link">@lang('index.skip.search')</a>
-@endif
-  <a href="#sidebarToggle" id="skipto-navigation" class="skip-link">@lang('index.skip.navigation')</a>
-  @if($signedIn)
-  <a href="#foki-switcher" id="skipto-fokus" class="skip-link">@lang('index.skip.fokus')</a>
-@endif
-  <div class="escape">@lang('resultPage.skiplinks.return')</div>
-</div>
 
 @if(!$signedIn)
   @include('parts.landing.hero')

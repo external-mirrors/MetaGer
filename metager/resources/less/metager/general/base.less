@@ -157,6 +157,17 @@ p a:not(.btn) {
   text-underline-offset: 0.15em;
 }
 
+// One focus ring for the whole site, drawn only for the keyboard
+// (:focus-visible), in the accent colour that clears 3:1 on every surface.
+// A component that draws focus its own way overrides this with a more specific
+// rule; nothing may switch it off without putting something in its place —
+// tests/Browser/KeyboardAccessTest walks every tab stop and fails on one that
+// does not change when it gains focus.
+:focus-visible {
+  outline: 2px solid @focus-ring-color;
+  outline-offset: 2px;
+}
+
 i.fa {
   background-color: transparent;
 }
@@ -307,10 +318,6 @@ summary {
 
   &::-webkit-details-marker {
     display: none;
-  }
-
-  &:focus {
-    outline: none;
   }
 }
 

@@ -24,6 +24,7 @@ return [
     'adfree' => 'Använd MetaGer annonsfritt',
     'skip' => [
         'search' => 'Hoppa till inmatning av sökfråga',
+        'content' => 'Hoppa till innehållet',
         'navigation' => 'Hoppa till navigering',
         'fokus' => 'Hoppa till val av sökfokus',
     ],

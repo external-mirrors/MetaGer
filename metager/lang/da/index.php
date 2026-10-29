@@ -24,6 +24,7 @@ return [
     'adfree' => 'Brug MetaGer uden reklamer',
     'skip' => [
         'search' => 'Spring til indtastning af søgeforespørgsel',
+        'content' => 'Spring til indhold',
         'navigation' => 'Spring til navigation',
         'fokus' => 'Spring til valg af søgefokus',
     ],

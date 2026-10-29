@@ -24,6 +24,7 @@ return [
     'adfree' => 'Utiliza MetaGer sin publicidad',
     'skip' => [
         'search' => 'Saltar a la consulta de búsqueda',
+        'content' => 'Saltar al contenido',
         'navigation' => 'Saltar a la navegación',
         'fokus' => 'Saltar a la selección del foco de búsqueda',
     ],

@@ -2,6 +2,7 @@
 return [
     'skip' => [
         'search' => 'Skip to search query input',
+        'content' => 'Skip to content',
         'navigation' => 'Skip to navigation',
         'fokus' => 'Skip to search focus selection',
     ],

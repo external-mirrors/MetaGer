@@ -82,6 +82,29 @@
 			{!! @trans('resultPage.metager3') !!}
 		</div>
 	@endif
+	{{-- Skip links first, then the menu and the account pill, then the page.
+
+	     The source order is the tab order, and the menu and the pill are the
+	     top-right corner of every page. They used to come after the footer, so a
+	     keyboard user reached the corner of the screen they started at only after
+	     tabbing through everything else. They are position: fixed, with explicit
+	     z-indexes and sibling combinators only among themselves, so where they sit
+	     in the source changes nothing on screen.
+
+	     A page with nothing more specific to jump to gets the two skip links every
+	     page can honour. The Escape hint is left out of those: only the startpage
+	     and the result page load the script that makes Escape return here. --}}
+	@hasSection('skiplinks')
+		@yield('skiplinks')
+	@else
+		<div class="skiplinks">
+			<div>@lang('resultPage.skiplinks.heading')</div>
+			<a href="#main-content" class="skip-link">@lang('index.skip.content')</a>
+			<a href="#sidebarToggle" class="skip-link">@lang('index.skip.navigation')</a>
+		</div>
+	@endif
+	@include('parts.sidebar', ['id' => 'staticPagesSideBar'])
+	@include('parts.navigation-cluster', ['density' => 'full'])
 	<header>
 		@yield('homeIcon')
 	</header>
@@ -107,8 +130,6 @@
 			@yield('content')
 		</main>
 	</div>
-	@include('parts.sidebar', ['id' => 'staticPagesSideBar'])
-	@include('parts.navigation-cluster', ['density' => 'full'])
 	@if (isset($page) && $page === 'startpage')
 		@include('parts.footer', ['type' => 'startpage', 'id' => 'startPageFooter'])
 	@else

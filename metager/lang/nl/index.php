@@ -24,6 +24,7 @@ return [
     'adfree' => 'Gebruik MetaGer reclamevrij',
     'skip' => [
         'search' => 'Doorgaan naar invoer zoekopdracht',
+        'content' => 'Naar de inhoud',
         'navigation' => 'Ga naar navigatie',
         'fokus' => 'Doorgaan naar selectie van zoekfocus',
     ],

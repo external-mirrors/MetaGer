@@ -26,6 +26,14 @@
   .search-input-submit {
     background-color: @searchbar-background-color;
     flex-grow: 1;
+
+    // The field itself is borderless inside the bar, and an outline on it would
+    // draw a box within a box. The bar carries the ring instead — but only for
+    // the field: the clear and submit buttons inside it draw their own.
+    &:has(input:focus-visible) {
+      outline: 2px solid @focus-ring-color;
+      outline-offset: 2px;
+    }
     display: flex;
     align-items: center;
     padding: 0.7rem 1rem;

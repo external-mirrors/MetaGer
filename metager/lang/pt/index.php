@@ -38,6 +38,7 @@ return [
         'maps' => 'Mapas',
     ],
     'skip' => [
+        'content' => 'Saltar para o conteúdo',
         'fokus' => 'Saltar para a seleção do foco de pesquisa',
         'navigation' => 'Saltar para a navegação',
         'search' => 'Saltar para a introdução da consulta de pesquisa',

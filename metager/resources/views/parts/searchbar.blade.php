@@ -16,44 +16,44 @@
 				</div>
 			</div>
 			<div class="suggestions" data-suggestions="{{ route('suggest') }}">
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
-					<div class="suggestion" tabindex="0">
-						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
+					<div class="suggestion">
+						<a href=""><img src="/img/icon-lupe.svg" alt=""></a>
 						<span></span>
 					</div>
 				</div>

@@ -220,6 +220,7 @@ return [
             'title' => 'Jakie dane nie są generowane',
             'description' => 'Twój adres IP jest usuwany, zanim zostanie przesłany do serwisu GlitchTip, i nigdy nie trafia do systemu. Nie łączymy zgłoszeń błędów z żadną osobą ani kontem użytkownika – nawet w przypadku zalogowanych użytkowników. Nie gromadzimy również haseł, danych dotyczących płatności ani treści formularzy lub wiadomości przesyłanych za pośrednictwem naszych usług.',
         ],
+        'extension' => 'Rozszerzenie MetaGer zgłasza błędy w ten sam sposób. W przeglądarce Firefox można to wyłączyć w uprawnieniach dodatku; rozszerzenie nigdy nie wysyła wyszukiwanych haseł ani klucza użytkownika.',
         'retention' => 'Raporty o błędach przechowujemy przez 30 dni; następnie są one automatycznie usuwane.',
         'base' => 'Podstawą prawną tego przetwarzania danych jest nasz uzasadniony interes polegający na niezawodnym i bezpiecznym świadczeniu naszych usług (art. 6 ust. 1 lit. f) RODO).',
         'title' => 'Śledzenie błędów i monitorowanie aplikacji',

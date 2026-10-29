@@ -222,6 +222,7 @@ return [
             'title' => 'Vilka uppgifter genereras inte',
             'description' => 'Din IP-adress raderas innan den överförs till GlitchTip och når därför aldrig systemet. Vi kopplar inte felrapporter till någon enskild person eller något användarkonto – inte ens för inloggade användare. Vi samlar inte heller in lösenord, betalningsuppgifter eller innehållet i formulär eller meddelanden som du skickar via våra tjänster.',
         ],
+        'extension' => 'MetaGers webbtillägg rapporterar fel på samma sätt. I Firefox kan du stänga av det under tilläggets behörigheter; tillägget skickar aldrig sökord eller din nyckel.',
         'retention' => 'Vi lagrar felrapporter i 30 dagar; därefter raderas de automatiskt.',
         'base' => 'Den rättsliga grunden för denna behandling är vårt berättigade intresse av att driva våra tjänster på ett tillförlitligt och säkert sätt (artikel 6.1 f i GDPR).',
     ],

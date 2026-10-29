@@ -114,6 +114,7 @@ return [
             'title' => 'What data is not generated',
             'description' => 'Your IP address is removed before it is ever transmitted to GlitchTip and never reaches the system. We do not associate error reports with any individual or user account – not even for logged-in users. We also do not collect passwords, payment details, or the content of any forms or messages you submit through our services.',
         ],
+        'extension' => 'The MetaGer web extension reports errors the same way. In Firefox you can switch this off in the add-on\'s permissions; the extension never sends search terms or your key.',
         'retention' => 'We store error reports for 30 days; they are then automatically deleted.',
         'base' => 'The legal basis for this processing is our legitimate interest in operating our services reliably and securely (Art. 6 (1) (f) GDPR).',
     ],

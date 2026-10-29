@@ -222,6 +222,7 @@ return [
             'title' => '¿Qué datos no se generan?',
             'description' => 'Tu dirección IP se elimina antes de que se transmita a GlitchTip y nunca llega al sistema. No asociamos los informes de errores con ninguna persona ni cuenta de usuario, ni siquiera en el caso de los usuarios que han iniciado sesión. Tampoco recopilamos contraseñas, datos de pago ni el contenido de ningún formulario o mensaje que envíes a través de nuestros servicios.',
         ],
+        'extension' => 'La extensión web de MetaGer informa de los errores de la misma manera. En Firefox puedes desactivarlo en los permisos del complemento; la extensión nunca envía términos de búsqueda ni tu clave.',
         'retention' => 'Almacenamos los informes de errores durante 30 días; después se eliminan automáticamente.',
         'base' => 'La base jurídica de este tratamiento es nuestro interés legítimo en prestar nuestros servicios de forma fiable y segura (art. 6, apartado 1, letra f) del RGPD).',
     ],

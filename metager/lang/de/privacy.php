@@ -113,6 +113,7 @@ return [
             'title' => 'Welche Daten nicht anfallen',
             'description' => 'Ihre IP-Adresse wird bereits vor der Übermittlung an GlitchTip entfernt und erreicht das System zu keinem Zeitpunkt. Wir ordnen Fehlerberichte keiner Person oder keinem Nutzerkonto zu – auch nicht bei angemeldeten Nutzern. Ebenfalls nicht erfasst werden Passwörter, Zahlungsdaten oder die Inhalte von Formularen und Nachrichten, die Sie über unsere Dienste übermitteln.',
         ],
+        'extension' => 'Die MetaGer-Web-Erweiterung meldet Fehler auf dieselbe Weise. In Firefox können Sie das in den Berechtigungen des Add-ons abschalten; Suchbegriffe oder Ihren Schlüssel sendet die Erweiterung nie.',
         'retention' => 'Fehlerberichte speichern wir für 30 Tage; anschließend werden sie automatisch gelöscht.',
         'base' => 'Rechtsgrundlage für diese Verarbeitung ist unser berechtigtes Interesse an einem zuverlässigen und sicheren Betrieb unserer Dienste (Art. 6 Abs. 1 lit. f DSGVO).',
     ],

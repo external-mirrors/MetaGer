@@ -222,6 +222,7 @@ return [
             'title' => 'Hvilke data genereres ikke?',
             'description' => 'Din IP-adresse fjernes, inden den overhovedet sendes til GlitchTip, og den når aldrig frem til systemet. Vi knytter ikke fejlrapporter til nogen bestemt person eller brugerkonto – heller ikke for brugere, der er logget ind. Vi indsamler heller ikke adgangskoder, betalingsoplysninger eller indholdet af formularer eller beskeder, som du indsender via vores tjenester.',
         ],
+        'extension' => 'MetaGer-webudvidelsen rapporterer fejl på samme måde. I Firefox kan du slå det fra under tilføjelsens tilladelser; udvidelsen sender aldrig søgeord eller din nøgle.',
         'retention' => 'Vi gemmer fejlrapporter i 30 dage; derefter slettes de automatisk.',
         'base' => 'Retsgrundlaget for denne databehandling er vores berettigede interesse i at drive vores tjenester på en pålidelig og sikker måde (art. 6, stk. 1, litra f), i GDPR).',
     ],

@@ -188,6 +188,7 @@
             </ol>
             <h2>@lang('privacy.monitoring.not_collected.title')</h2>
             <div>@lang('privacy.monitoring.not_collected.description')</div>
+            <div>@lang('privacy.monitoring.extension')</div>
             <div>@lang('privacy.monitoring.retention')</div>
             <div>@lang('privacy.monitoring.base')</div>
         </div>

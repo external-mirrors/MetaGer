@@ -221,6 +221,7 @@ return [
             'title' => 'Quelles sont les données qui ne sont pas générées ?',
             'description' => 'Votre adresse IP est supprimée avant même d\'être transmise à GlitchTip et n\'atteint donc jamais le système. Nous n\'associons pas les rapports d\'erreur à une personne ou à un compte utilisateur en particulier, même pas pour les utilisateurs connectés. Nous ne collectons pas non plus les mots de passe, les informations de paiement ni le contenu des formulaires ou des messages que vous envoyez via nos services.',
         ],
+        'extension' => 'L\'extension web MetaGer signale les erreurs de la même manière. Dans Firefox, vous pouvez désactiver cela dans les permissions du module ; l\'extension n\'envoie jamais de termes de recherche ni votre clé.',
         'retention' => 'Nous conservons les rapports d\'erreur pendant 30 jours ; ils sont ensuite automatiquement supprimés.',
         'base' => 'La base juridique de ce traitement est notre intérêt légitime à assurer un fonctionnement fiable et sécurisé de nos services (art. 6, paragraphe 1, point f) du RGPD).',
         'title' => 'Suivi des erreurs et surveillance des applications',

@@ -114,6 +114,7 @@ return [
             'title' => 'Quines dades no es generen',
             'description' => 'La vostra adreça IP s\'elimina abans de transmetre res a GlitchTip i mai no arriba al sistema. No associem els informes d\'error a cap persona ni compte d\'usuari, ni tan sols per als usuaris amb la sessió iniciada. Tampoc no recollim contrasenyes, dades de pagament ni el contingut de cap formulari o missatge que envieu mitjançant els nostres serveis.',
         ],
+        'extension' => 'L\'extensió web de MetaGer informa dels errors de la mateixa manera. Al Firefox podeu desactivar-ho als permisos del complement; l\'extensió no envia mai termes de cerca ni la vostra clau.',
         'retention' => 'Desem els informes d\'error durant 30 dies; després s\'eliminen automàticament.',
         'base' => 'La base jurídica d\'aquest tractament és el nostre interès legítim a operar els nostres serveis de manera fiable i segura (art. 6.1.f del RGPD).',
     ],

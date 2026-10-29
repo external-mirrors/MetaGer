@@ -222,6 +222,7 @@ return [
             'title' => 'Mitä tietoja ei tuoteta',
             'description' => 'IP-osoitteesi poistetaan ennen kuin se lähetetään GlitchTipille, eikä se pääse järjestelmään lainkaan. Emme yhdistä virheraportteja mihinkään henkilöön tai käyttäjätiliin – emme edes kirjautuneiden käyttäjien osalta. Emme myöskään kerää salasanoja, maksutietoja tai lomakkeiden tai viestien sisältöä, joita lähetät palveluidemme kautta.',
         ],
+        'extension' => 'MetaGer-selainlaajennus raportoi virheet samalla tavalla. Firefoxissa voit poistaa tämän käytöstä lisäosan käyttöoikeuksista; laajennus ei koskaan lähetä hakusanoja tai avaintasi.',
         'retention' => 'Säilytämme virheraportteja 30 päivän ajan, minkä jälkeen ne poistetaan automaattisesti.',
         'base' => 'Tämän käsittelyn oikeusperusteena on oikeutettu etumme tarjota palveluitamme luotettavasti ja turvallisesti (GDPR:n 6 artiklan 1 kohdan f alakohta).',
     ],

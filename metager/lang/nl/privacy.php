@@ -222,6 +222,7 @@ return [
             'title' => 'Welke gegevens worden niet gegenereerd',
             'description' => 'Je IP-adres wordt verwijderd voordat het naar GlitchTip wordt verzonden en komt dus nooit in het systeem terecht. We koppelen foutrapporten niet aan een specifieke persoon of gebruikersaccount – zelfs niet voor ingelogde gebruikers. Ook verzamelen we geen wachtwoorden, betalingsgegevens of de inhoud van formulieren of berichten die je via onze diensten verstuurt.',
         ],
+        'extension' => 'De MetaGer-webextensie meldt fouten op dezelfde manier. In Firefox kunt u dit uitschakelen in de machtigingen van de add-on; de extensie verstuurt nooit zoektermen of uw sleutel.',
         'retention' => 'We bewaren foutrapporten 30 dagen; daarna worden ze automatisch verwijderd.',
         'base' => 'De rechtsgrondslag voor deze verwerking is ons gerechtvaardigd belang bij het betrouwbaar en veilig aanbieden van onze diensten (art. 6, lid 1, onder f), AVG).',
     ],

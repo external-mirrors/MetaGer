@@ -1300,7 +1300,6 @@ footer.resultPageFooter {
 
 .metager3-unstable-warning {
   text-align: center;
-  position: fixed;
   width: 100%;
   padding: 8px;
 
@@ -1311,6 +1310,7 @@ footer.resultPageFooter {
 
 .metager3-unstable-warning-static-pages {
   .metager3-unstable-warning;
+  position: fixed;
   top: 3.5rem;
   padding-right: 50px;
   background-color: inherit;
@@ -1321,10 +1321,15 @@ footer.resultPageFooter {
   }
 }
 
+// In the flow, at the top of the page. It used to be fixed to the bottom of the
+// viewport, on top of whatever scrolled underneath — the result page's footer
+// links included, which keyboard focus then reached without them ever coming
+// into view (tests/Browser/KeyboardAccessTest, run against metager3.de on
+// development, which is the only host that renders this).
 .metager3-unstable-warning-resultpage {
   .metager3-unstable-warning;
-  bottom: 0;
   margin-bottom: 0px;
+  border-radius: 0;
   background-color: inherit;
 }
 

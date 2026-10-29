@@ -92,6 +92,11 @@
   --form-error-color: #a94442;
   --form-error-background: #fdf0f0;
 
+  // Bootstraps .alert-info: #31708f, 5.5:1 auf Weiß. Im Dunkelmodus sind das
+  // 3,2:1 auf dem Seitengrund — das Banner auf metager3.de war damit der einzige
+  // Text, den tests/Browser/AccessibilityTest dort noch beanstandete.
+  --alert-info-color: #31708f;
+
   --searchbar-background-color: white;
   --input-background: #fff;
   --input-text: #000;
@@ -170,6 +175,9 @@
   --form-error-color: #ff9f9a;
   --form-error-background: #3a2422;
 
+  // 9,4:1 auf dem Seitengrund, 5,5:1 auf den Karten.
+  --alert-info-color: #8ec5e0;
+
   --searchbar-background-color: @color-almost-black;
   --input-background: @color-almost-black;
   --input-text: @color-almost-white;
@@ -247,6 +255,7 @@
 @payment-tile-text: var(--payment-tile-text);
 @form-error-color: var(--form-error-color);
 @form-error-background: var(--form-error-background);
+@alert-info-color: var(--alert-info-color);
 @input-background: var(--input-background);
 @input-text: var(--input-text);
 @blacklist-entries-odd: var(--blacklist-entries-odd);

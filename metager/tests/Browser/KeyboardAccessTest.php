@@ -123,7 +123,7 @@ class KeyboardAccessTest extends DuskTestCase
             $browser->visit("/de-DE?dark_mode={$theme}&zitate=off")
                 ->assertPresent("#sidebarToggle");
 
-            $this->tabTo($browser, "sidebarToggle");
+            $this->tabTo($browser, "#sidebarToggle");
             $browser->driver->getKeyboard()->sendKeys(WebDriverKeys::SPACE);
             $browser->waitUntil("getComputedStyle(document.querySelector('.sidebar')).visibility === 'visible'");
 
@@ -146,7 +146,7 @@ class KeyboardAccessTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($html) {
             $this->openRenderedPage($browser, $html);
 
-            $this->tabTo($browser, "options-toggle");
+            $this->tabTo($browser, "#options-toggle");
             $browser->driver->getKeyboard()->sendKeys(WebDriverKeys::SPACE);
 
             $browser->waitUntil("getComputedStyle(document.querySelector('#options .scrollbox')).display !== 'none'");
@@ -158,18 +158,42 @@ class KeyboardAccessTest extends DuskTestCase
     }
 
     /**
-     * Press Tab until the element with this id has focus.
+     * Press Tab until the element matching this selector has focus.
      */
-    private function tabTo(Browser $browser, string $id): void
+    private function tabTo(Browser $browser, string $selector): void
     {
-        $browser->driver->executeScript("document.activeElement && document.activeElement.blur(); window.scrollTo(0, 0);");
+        $this->startFromTheTop($browser);
         for ($i = 0; $i < self::MAX_STOPS; $i++) {
             $browser->driver->getKeyboard()->sendKeys(WebDriverKeys::TAB);
-            if ($browser->driver->executeScript("return document.activeElement && document.activeElement.id;") === $id) {
+            if ($browser->driver->executeScript("return document.activeElement !== null && document.activeElement.matches(arguments[0]);", [$selector])) {
                 return;
             }
         }
-        $this->fail("Tab never reached #{$id}.");
+        $this->fail("Tab never reached {$selector}.");
+    }
+
+    /**
+     * Put the start of sequential focus navigation above the first stop.
+     *
+     * blur() is not enough: Firefox keeps navigating from where the blurred
+     * element was, so on a page that autofocuses the search field the walk began
+     * after it, and the skip links came last or not at all. Focusing an element
+     * at the very top of the body moves the starting point there; tabindex -1
+     * keeps the marker itself out of the tab order.
+     */
+    private function startFromTheTop(Browser $browser): void
+    {
+        $browser->driver->executeScript(<<<'JS'
+            let marker = document.getElementById('keyboard-walk-start');
+            if (!marker) {
+                marker = document.createElement('span');
+                marker.id = 'keyboard-walk-start';
+                marker.tabIndex = -1;
+                document.body.prepend(marker);
+            }
+            window.scrollTo(0, 0);
+            marker.focus({preventScroll: true});
+        JS);
     }
 
     /**
@@ -208,9 +232,9 @@ class KeyboardAccessTest extends DuskTestCase
     private function walkTabOrder(Browser $browser, ?string $within = null): array
     {
         // Start from the top of the document, not from wherever autofocus put us.
+        $this->startFromTheTop($browser);
         $browser->driver->executeScript(
-            "document.activeElement && document.activeElement.blur(); window.scrollTo(0, 0);"
-                . "window.__stops = []; window.__previous = null; window.__first = null;"
+            "window.__stops = []; window.__previous = null; window.__first = null;"
                 . "window.__within = arguments[0];"
                 // Transitions off, so every stop is read in its final state: the
                 // skip links slide in over 0.25s, and a stop measured mid-slide is
@@ -270,9 +294,14 @@ class KeyboardAccessTest extends DuskTestCase
                 const p = window.__previous;
                 window.__stops[window.__stops.length - 1].indicated = p.surfaces.length > 0 && look(p.surfaces) !== p.look;
             }
-            if (!el || el === document.body || el === document.documentElement) {
-                window.__previous = null;
-                return null;
+            // Past the last stop focus leaves the page for the browser's own
+            // toolbar, and that is the end of the walk. It used to come back
+            // round to the first stop, and the walk ended there — Firefox 158
+            // does not give the page focus back: Tab still moves activeElement
+            // through it, but nothing matches :focus any more, and every stop of
+            // the second lap read as "nothing changes when it gains focus".
+            if (!el || el === document.body || el === document.documentElement || !document.hasFocus()) {
+                return window.__first ? 'wrapped' : null;
             }
             // Round again: the walk is over.
             if (window.__first === el) {
@@ -331,9 +360,18 @@ class KeyboardAccessTest extends DuskTestCase
             ->getContent();
     }
 
+    /**
+     * Written over a same-origin text file, not over a page of the site.
+     *
+     * document.open() keeps the window, and a window evaluates a module once:
+     * written over the impressum, the result page got scriptResultPage.js but
+     * never utility.js, which the impressum had already run — on the impressum.
+     * A text file has run nothing, so every module the result page names runs
+     * for the result page.
+     */
     private function openRenderedPage(Browser $browser, string $html): void
     {
-        $browser->visit("/de-DE/impressum");
+        $browser->visit("/metager_maps/version.txt");
         $browser->driver->executeScript("document.open(); document.write(arguments[0]); document.close();", [$html]);
         $browser->waitUntil("document.readyState === 'complete'")
             ->assertPresent("#results");

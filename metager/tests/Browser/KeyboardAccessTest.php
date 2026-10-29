@@ -38,6 +38,10 @@ class KeyboardAccessTest extends DuskTestCase
     protected function tearDown(): void
     {
         $this->forgetSearchUserClaims();
+        // Every search here queues a discharge for test-key that nothing settles,
+        // and the queue is shared by the whole suite: left behind, it is the first
+        // charge the next test to settle sees (AnonymousTokenKeyDischargeTest).
+        $this->forgetQueuedDischarges();
         parent::tearDown();
     }
 

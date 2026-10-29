@@ -210,6 +210,10 @@ class AnonymousTokenKeyDischargeTest extends TestCase
             Cache::put("keyserver:key:" . $key, ["key" => $key, "charge" => 1000.0], now()->addMinutes(10));
         }
         $this->fakeEngineResponses(["brave" => $this->engineFixture("brave-web.json")]);
+        // $charged[0] below is the first charge the settler finds, so the queue
+        // has to start empty: anything an earlier test left on it would be
+        // settled first and read as the key this search charged.
+        $this->forgetQueuedDischarges();
 
         $this->withUnencryptedCookie('key', $cookieKey)
             ->withHeader('Anonymous-Token-Key', $anonymousKey)

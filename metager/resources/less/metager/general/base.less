@@ -148,6 +148,15 @@ a {
   }
 }
 
+// A link in running text is told apart from the words around it by its
+// underline, not its colour alone: #06c against the body grey is 1.5:1, and
+// WCAG 1.4.1 asks for 3:1 or a second cue. Buttons are links styled as
+// something else and keep their own look.
+p a:not(.btn) {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 i.fa {
   background-color: transparent;
 }
@@ -155,7 +164,7 @@ i.fa {
 /* Logo */
 
 .logo {
-  color: @metager-orange;
+  color: @accent-text-color;
   font-family: @metager-font;
   font-style: italic;
   font-weight: bold;
@@ -257,7 +266,7 @@ i.fa {
     position: relative;
     bottom: -9px;
     left: -4px;
-    color: @metager-orange;
+    color: @accent-text-color;
     font-weight: bold;
 
     &>span {

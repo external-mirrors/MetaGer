@@ -139,13 +139,13 @@
 .voucher-submit {
   width: 100%;
   padding: 0.7rem 1rem;
-  border: 1px solid @metager-orange;
+  border: 1px solid @accent-fill-color;
   border-radius: 6px;
-  background-color: @metager-orange;
+  background-color: @accent-fill-color;
   // Nicht @text-color: der Grund ist in beiden Paletten orange, also muss die
   // Schrift darauf in beiden dieselbe sein. Dasselbe Argument wie bei den
   // Preiskacheln in pages/price.less.
-  color: @color-white;
+  color: @on-accent-color;
   font-family: inherit;
   font-size: 1rem;
   font-weight: bold;
@@ -405,15 +405,15 @@
   }
 
   .voucher-actions__primary {
-    border-color: @metager-orange;
-    background-color: @metager-orange;
-    color: @color-white;
+    border-color: @accent-fill-color;
+    background-color: @accent-fill-color;
+    color: @on-accent-color;
 
     &:hover,
     &:focus-visible,
     &:visited {
-      background-color: @metager-orange-alpha-80-darker;
-      color: @color-white;
+      background-color: @accent-fill-color;
+      color: @on-accent-color;
       text-decoration: none;
     }
   }

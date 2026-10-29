@@ -37,6 +37,15 @@
   @link: #06c;
 
   --metager-orange: @orange;
+  // The brand orange is too light to carry anything that has to be read: white
+  // on #ff8000 is 2.5:1, and #ff8000 as text on white is the same. It stays the
+  // colour of borders, rules and the logo; text and solid buttons use these,
+  // which keep the hue and clear WCAG AA's 4.5:1 on every surface they sit on —
+  // the page, the cards and the alert ground (tests/Browser/AccessibilityTest).
+  --accent-text-color: #a85000;
+  --accent-fill-color: #a85000;
+  --on-accent-color: @color-white;
+  --focus-ring-color: #a85000;
   --background-color: @color-white;
   --background-color-mobile: #fafafa;
   --text-color: @text;
@@ -116,9 +125,18 @@
   @orange: darken(#ff8000, 10%);
   @text: @color-almost-white;
   @highlight: #333;
-  @link: @orange;
+  // Links were the dark brand orange, #cc6600, and that is 2.7:1 on the
+  // strong-grey cards. This one is lighter, the same hue, and clears 4.5:1 on
+  // the darkest and the lightest dark surface alike.
+  @link: #ff9933;
 
   --metager-orange: @orange;
+  // Turned round for dark: a light orange, and dark text on the solid buttons
+  // rather than white on a muddy one.
+  --accent-text-color: #ff9933;
+  --accent-fill-color: #ff9933;
+  --on-accent-color: #1a1a1a;
+  --focus-ring-color: #ff9933;
   --background-color: @color-almost-black;
   --background-color-mobile: @color-almost-black;
   --text-color: @text;
@@ -207,6 +225,10 @@
 @text-color: var(--text-color);
 @highlight-color: var(--highlight-color);
 @link-color: var(--link-color);
+@accent-text-color: var(--accent-text-color);
+@accent-fill-color: var(--accent-fill-color);
+@on-accent-color: var(--on-accent-color);
+@focus-ring-color: var(--focus-ring-color);
 @sidebar-list-hover-color: var(--sidebar-list-hover-color);
 @card-background-color: var(--card-background-color);
 @border-color: var(--border-color);

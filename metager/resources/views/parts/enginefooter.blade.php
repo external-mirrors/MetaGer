@@ -6,7 +6,10 @@
     @if (sizeof($searchengines->getEnabledSearchengines()) > 0)
         <div class="enabled-engines">
             <h3>@lang('resultPage.engines.queried')</h3>
-            <div class="engines disabled">
+            {{-- No `.disabled`: that utility forces #aaa (2.3:1) over the muted colour
+                 pages/resultpage/result-page.less gives .engine, and these are names to
+                 read, not controls switched off. --}}
+            <div class="engines">
                 @foreach (app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengines() as $sumaName => $suma)
                     <div class="engine">{{ $suma->configuration->infos->displayName }}
                         {{ $suma->configuration->cost > 0 ? '(' . $suma->configuration->cost . ' Token)' : '' }}
@@ -42,7 +45,10 @@
         <div class="payment-required-engines">
             <h3>@lang('resultPage.engines.payment_required', ['link' => app(\App\Models\Authorization\Authorization::class)->getAdfreeLink()])
             </h3>
-            <div class="engines disabled">
+            {{-- No `.disabled`: that utility forces #aaa (2.3:1) over the muted colour
+                 pages/resultpage/result-page.less gives .engine, and these are names to
+                 read, not controls switched off. --}}
+            <div class="engines">
                 @foreach ($searchengines->sumas as $sumaName => $suma)
                         @if (
                                 $suma->configuration->disabled &&

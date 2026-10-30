@@ -34,7 +34,10 @@ class TokenAuthorization extends Authorization
             $tokenJson = [];
         } else {
             foreach ($tokenJson as $token) {
-                $this->token_payment->addJSONToken($token);
+                // Client-supplied: an element that is not an object is not a token
+                if (is_object($token)) {
+                    $this->token_payment->addJSONToken($token);
+                }
             }
             $this->availableTokens = $this->token_payment->getAvailableTokenCount();
         }
@@ -42,7 +45,9 @@ class TokenAuthorization extends Authorization
         $decitokenJson = json_decode($decitokenString);
         if (is_array($decitokenJson)) {
             foreach ($decitokenJson as $token) {
-                $this->token_payment->addJSONDeciToken($token);
+                if (is_object($token)) {
+                    $this->token_payment->addJSONDeciToken($token);
+                }
             }
             $this->availableTokens = $this->token_payment->getAvailableTokenCount();
         }

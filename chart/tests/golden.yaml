@@ -968,7 +968,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["sleep", "10"]
+                command: ["sleep", "5"]
           imagePullPolicy: IfNotPresent
           env:
           - name: APP_ENV

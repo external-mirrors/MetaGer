@@ -289,4 +289,34 @@ class SettingsPostRedirectTest extends TestCase
         $this->assertTrue($this->isForgotten($response, "tips"));
         $this->assertFalse($this->isForgotten($response, "key"));
     }
+
+    public static function settingsThatArriveAsSomethingOtherThanAString(): array
+    {
+        $fields = ["suggestion_provider", "suggestion_delay", "suggestion_addressbar", "tips", "tiles_startpage", "zitate", "dark_mode", "new_tab"];
+        $cases = [];
+        foreach ($fields as $field) {
+            // ConvertEmptyStringsToNull turns a submitted-but-empty field into null,
+            // and the input() default only applies to a field that is absent.
+            $cases["$field empty"] = [$field, ""];
+            $cases["$field as an array"] = [$field, ["on"]];
+        }
+        return $cases;
+    }
+
+    /**
+     * `enableSetting` passed `$request->input($name, '')` straight to the
+     * string-typed `PROCESS_GLOBAL_SETTING_CHANGE`, so a field that was sent
+     * empty (null after ConvertEmptyStringsToNull) or as an array was a
+     * TypeError and a 500 (GlitchTip METAGER-1A0). Such a value is no setting,
+     * so the request is answered as if the field had not been sent.
+     */
+    #[Test]
+    #[\PHPUnit\Framework\Attributes\DataProvider('settingsThatArriveAsSomethingOtherThanAString')]
+    public function a_global_setting_that_is_not_a_string_is_treated_as_absent(string $name, string|array $value): void
+    {
+        $absent = $this->post("/meta/settings/es", ["focus" => "web"]);
+        $response = $this->post("/meta/settings/es", ["focus" => "web", $name => $value]);
+
+        $response->assertRedirect($absent->headers->get("Location"));
+    }
 }

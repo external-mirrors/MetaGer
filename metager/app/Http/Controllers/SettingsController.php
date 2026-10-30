@@ -333,11 +333,11 @@ class SettingsController extends Controller
         $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
 
-        if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_provider", $request->input('suggestion_provider', ''))) {
+        if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_provider", self::SETTING_INPUT($request, 'suggestion_provider'))) {
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#suggest-settings";
-        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_delay", $request->input('suggestion_delay', ''))) {
+        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_delay", self::SETTING_INPUT($request, 'suggestion_delay'))) {
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#suggest-settings";
-        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_addressbar", $request->input('suggestion_addressbar', ''))) {
+        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_addressbar", self::SETTING_INPUT($request, 'suggestion_addressbar'))) {
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#suggest-settings";
         } else {
             // All Settings behind "More Settings"
@@ -348,11 +348,11 @@ class SettingsController extends Controller
             // carry whatever value was current before this request changed
             // it — silently undoing the change for a cookie-blind visitor
             // the moment they followed their own redirect.
-            self::PROCESS_GLOBAL_SETTING_CHANGE("tips", $request->input('tips', ''));
-            self::PROCESS_GLOBAL_SETTING_CHANGE("tiles_startpage", $request->input('tiles_startpage', ''));
-            self::PROCESS_GLOBAL_SETTING_CHANGE("zitate", $request->input('zitate', ''));
-            self::PROCESS_GLOBAL_SETTING_CHANGE("dark_mode", $request->input('dark_mode', ''));
-            self::PROCESS_GLOBAL_SETTING_CHANGE("new_tab", $request->input('new_tab', ''));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("tips", self::SETTING_INPUT($request, 'tips'));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("tiles_startpage", self::SETTING_INPUT($request, 'tiles_startpage'));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("zitate", self::SETTING_INPUT($request, 'zitate'));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("dark_mode", self::SETTING_INPUT($request, 'dark_mode'));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("new_tab", self::SETTING_INPUT($request, 'new_tab'));
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#more-settings";
         }
 
@@ -365,6 +365,17 @@ class SettingsController extends Controller
         } else {
             return redirect($redirect_url, 302, $headers);
         }
+    }
+
+    /**
+     * A setting's submitted value, or "" when there is none to use: absent,
+     * submitted empty (ConvertEmptyStringsToNull makes that null, so input()'s
+     * default never applies) or not a string at all, like `tips[]=on`.
+     */
+    private static function SETTING_INPUT(Request $request, string $name): string
+    {
+        $value = $request->input($name);
+        return is_string($value) ? $value : "";
     }
 
     /**

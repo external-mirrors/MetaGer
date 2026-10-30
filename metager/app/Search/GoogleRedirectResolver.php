@@ -54,6 +54,16 @@ class GoogleRedirectResolver
     }
 
     /**
+     * Whether $url is any page on Google itself, redirect or not.
+     */
+    public static function pointsAtGoogle(string $url): bool
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+
+        return is_string($host) && self::isGoogleHost($host);
+    }
+
+    /**
      * The address behind each redirect in $urls, keyed by the redirect.
      *
      * Null for every redirect that could not be resolved to an http(s) URL

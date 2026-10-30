@@ -1,0 +1,32 @@
+{
+  "searchParameters": {
+    "q": "kaffeemaschine",
+    "gl": "de",
+    "hl": "de",
+    "type": "shopping",
+    "engine": "google"
+  },
+  "shopping": [
+    {
+      "title": "Braun KF1100WH",
+      "source": "Lidl.de",
+      "link": "https://www.google.com/search?ibp=oshop&q=kaffeemaschine&prds=localAnnotatedOfferId:1,catalogid:15556087658626272066,gpcid:17955273209149442404,pvo:2,pvt:hg&gl=de&udm=28&pvorigin=2",
+      "price": "24,99 €",
+      "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSkvSF8HDzz75RRNHZ",
+      "rating": 4.2,
+      "ratingCount": 297,
+      "productId": "15556087658626272066",
+      "position": 1
+    },
+    {
+      "title": "Filterkaffeemaschine direkt beim Händler",
+      "source": "serper-example.net",
+      "link": "https://serper-example.net/filterkaffeemaschine",
+      "price": "39,99 €",
+      "imageUrl": "https://serper-example.net/filterkaffeemaschine.jpg",
+      "productId": "1",
+      "position": 2
+    }
+  ],
+  "credits": 2
+}

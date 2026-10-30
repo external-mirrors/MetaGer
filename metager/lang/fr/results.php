@@ -12,5 +12,6 @@ return [
     ],
     'results' => [
         'summary' => 'Affichage de :resultcount d\'environ :totalresults résultats de recherche',
+        'folded' => '{1} 1 résultat d\'un site qui apparaît déjà deux fois est replié en dessous.|[2,*] :count résultats de sites qui apparaissent déjà deux fois sont repliés en dessous.',
     ],
 ];

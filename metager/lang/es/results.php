@@ -12,5 +12,6 @@ return [
     ],
     'results' => [
         'summary' => 'Mostrando :resultcount de alrededor de :totalresults resultados de búsqueda',
+        'folded' => '{1} 1 resultado de un sitio que ya aparece dos veces está plegado debajo.|[2,*] :count resultados de sitios que ya aparecen dos veces están plegados debajo.',
     ],
 ];

@@ -12,5 +12,6 @@ return [
     ],
     'results' => [
         'summary' => 'Viser :resultcount af omkring :totalresults søgeresultater',
+        'folded' => '{1} 1 resultat fra et websted, der allerede vises to gange, er foldet sammen under det.|[2,*] :count resultater fra websteder, der allerede vises to gange, er foldet sammen under dem.',
     ],
 ];

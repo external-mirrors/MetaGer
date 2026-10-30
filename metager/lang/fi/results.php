@@ -12,5 +12,6 @@ return [
     ],
     'results' => [
         'summary' => 'Näytetään :resultcount noin :totalresults hakutuloksesta :resultcount hakutulokset',
+        'folded' => '{1} 1 tulos sivustolta, joka näkyy jo kahdesti, on piilotettu sen alle.|[2,*] :count tulosta sivustoilta, jotka näkyvät jo kahdesti, on piilotettu niiden alle.',
     ],
 ];

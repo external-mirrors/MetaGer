@@ -12,5 +12,6 @@ return [
     ],
     'results' => [
         'summary' => 'Mostra :resultcount di circa :totalresults risultati della ricerca',
+        'folded' => '{1} 1 risultato di un sito che compare già due volte è raggruppato sotto di esso.|[2,*] :count risultati di siti che compaiono già due volte sono raggruppati sotto di essi.',
     ],
 ];

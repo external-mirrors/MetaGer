@@ -12,5 +12,6 @@ return [
     ],
     'results' => [
         'summary' => 'Visar :resultcount av cirka :totalresults sökresultat',
+        'folded' => '{1} 1 resultat från en webbplats som redan visas två gånger är hopfällt under den.|[2,*] :count resultat från webbplatser som redan visas två gånger är hopfällda under dem.',
     ],
 ];

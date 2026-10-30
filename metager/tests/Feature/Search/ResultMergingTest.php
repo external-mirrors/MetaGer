@@ -116,11 +116,8 @@ class ResultMergingTest extends TestCase
             "serper_web" => $this->engineFixture("serper-web-duplicates.json"),
         ]);
 
-        // Both copies are on example.org, after example.org/kaffee, so the
-        // second is the host's third result and HostCrowding folds it under
-        // the first. Still two results, which is what this is about.
         $espresso = array_values(array_filter(
-            array_merge($results, ...array_column($results, "moreFromHost")),
+            $results,
             fn(array $r) => str_contains($r["link"], "example.org/espresso")
         ));
 

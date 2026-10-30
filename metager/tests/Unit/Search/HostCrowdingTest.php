@@ -10,6 +10,9 @@ use Tests\TestCase;
  * HostCrowding in isolation: at most two results per host stay in the list, in
  * the place they ranked, and the rest are folded under the second.
  *
+ * Most tests here switch the page minimum off (`$minimumVisible = 0`), so a
+ * handful of links is enough to show a rule; the minimum has tests of its own.
+ *
  * The end-to-end version, on a fixture shaped like the search that prompted
  * this, is tests/Feature/Search/HostCrowdingTest.
  *
@@ -36,9 +39,9 @@ class HostCrowdingTest extends TestCase
      * @param string[] $links
      * @return Result[]
      */
-    private function crowd(array $links, string $fokus = "web", bool $siteSearch = false): array
+    private function crowd(array $links, string $fokus = "web", bool $siteSearch = false, int $minimumVisible = 0): array
     {
-        return (new HostCrowding())->limit(array_map(fn(string $link) => $this->hit($link), $links), $fokus, $siteSearch);
+        return (new HostCrowding($minimumVisible))->limit(array_map(fn(string $link) => $this->hit($link), $links), $fokus, $siteSearch);
     }
 
     /**
@@ -189,5 +192,80 @@ class HostCrowdingTest extends TestCase
         $results = $this->crowd(["https://a.example/1", "https://a.example/2", "https://a.example/3"], "web", true);
 
         $this->assertCount(3, $results);
+    }
+
+    /**
+     * The page minimum is a production default, not something each test sets:
+     * a page of five results, three of them from one host, folds nothing.
+     */
+    public function testByDefaultAShortPageFoldsNothing(): void
+    {
+        $results = (new HostCrowding())->limit(array_map(fn(string $link) => $this->hit($link), [
+            "https://a.example/1",
+            "https://a.example/2",
+            "https://a.example/3",
+            "https://b.example/1",
+            "https://c.example/1",
+        ]), "web");
+
+        $this->assertCount(5, $results);
+    }
+
+    /**
+     * A page dominated by a few hosts must not shrink to a handful of visible
+     * results. The best-ranked folded results go back into the list, in the
+     * place they ranked, until the minimum is met; the rest stay folded.
+     */
+    public function testTheBestRankedFoldedResultsReturnUntilThePageHasItsMinimum(): void
+    {
+        $results = $this->crowd([
+            "https://a.example/1",
+            "https://a.example/2",
+            "https://b.example/1",
+            "https://b.example/2",
+            "https://a.example/3",
+            "https://b.example/3",
+            "https://a.example/4",
+            "https://b.example/4",
+        ], minimumVisible: 6);
+
+        $this->assertSame([
+            "https://a.example/1",
+            "https://a.example/2",
+            "https://b.example/1",
+            "https://b.example/2",
+            "https://a.example/3",
+            "https://b.example/3",
+        ], $this->links($results));
+        $this->assertSame(["https://a.example/4"], $this->links($results[4]->moreFromHost));
+        $this->assertSame(["https://b.example/4"], $this->links($results[5]->moreFromHost));
+    }
+
+    /**
+     * Released in rank order across the page, not a fair share per host: a's
+     * third result outranks b's third, so a gets a third place and b does not.
+     * a's fold then hangs under that third place, its last visible result.
+     */
+    public function testReleasedResultsAreChosenByRankAcrossHosts(): void
+    {
+        $results = $this->crowd([
+            "https://a.example/1",
+            "https://a.example/2",
+            "https://a.example/3",
+            "https://b.example/1",
+            "https://b.example/2",
+            "https://b.example/3",
+            "https://a.example/4",
+        ], minimumVisible: 5);
+
+        $this->assertSame([
+            "https://a.example/1",
+            "https://a.example/2",
+            "https://a.example/3",
+            "https://b.example/1",
+            "https://b.example/2",
+        ], $this->links($results));
+        $this->assertSame(["https://a.example/4"], $this->links($results[2]->moreFromHost));
+        $this->assertSame(["https://b.example/3"], $this->links($results[4]->moreFromHost));
     }
 }

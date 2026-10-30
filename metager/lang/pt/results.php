@@ -8,6 +8,7 @@ return [
     ],
     'results' => [
         'summary' => 'Mostrar :resultcount de cerca de :totalresults resultados da pesquisa',
+        'folded' => '{1} 1 resultado de um site que já aparece duas vezes está recolhido abaixo dele.|[2,*] :count resultados de sites que já aparecem duas vezes estão recolhidos abaixo deles.',
     ],
     'backtotop' => 'voltar ao topo',
     'zurueck' => 'voltar',

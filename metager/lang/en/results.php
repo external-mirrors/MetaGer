@@ -11,6 +11,7 @@ return [
         ],
     ],
     'results' => [
-        'summary' => 'Showing :resultcount of around :totalresults search results'
+        'summary' => 'Showing :resultcount of around :totalresults search results',
+        'folded' => '{1} 1 result from a site that already appears twice is folded under it.|[2,*] :count results from sites that already appear twice are folded under them.',
     ],
 ];

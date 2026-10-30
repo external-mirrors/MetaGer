@@ -11,6 +11,7 @@ return [
         ],
     ],
     'results' => [
-        'summary' => 'Es mostren :resultcount de prop de :totalresults resultats de cerca'
+        'summary' => 'Es mostren :resultcount de prop de :totalresults resultats de cerca',
+        'folded' => '{1} 1 resultat d\'un lloc que ja apareix dues vegades està plegat a sota.|[2,*] :count resultats de llocs que ja apareixen dues vegades estan plegats a sota.',
     ],
 ];

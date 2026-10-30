@@ -40,15 +40,31 @@ use App\Models\Result;
  * Per page, not per search: page two of the same search starts counting again.
  * Carrying the counts across pages would need state that MetaGer does not keep
  * between them.
+ *
+ * ## Never down to a handful
+ *
+ * A page dominated by two or three hosts would otherwise shrink to six or seven
+ * visible results, with everything else behind folds. Diversity is only worth
+ * having while there is something to diversify with, so the page keeps at least
+ * {@see MINIMUM_VISIBLE} results (or all of them, if it has fewer): the folded
+ * results that ranked best go back into the list, in their own place, until it
+ * does. They are released in rank order, so each host's fold is still the tail
+ * of that host's results and hangs under its last visible one.
  */
 class HostCrowding
 {
     public const VISIBLE_PER_HOST = 2;
+    public const MINIMUM_VISIBLE = 10;
+
+    public function __construct(private int $minimumVisible = self::MINIMUM_VISIBLE)
+    {
+    }
 
     /**
      * @param Result[] $results in ranked order, already deduplicated
      * @param bool $siteSearch whether the query restricts itself to one or more hosts with `site:`
-     * @return Result[] at most VISIBLE_PER_HOST per host; the rest are on the host's last kept result
+     * @return Result[] at most VISIBLE_PER_HOST per host unless that would leave fewer than
+     *                  the minimum; the rest are on the host's last kept result
      */
     public function limit(array $results, string $fokus, bool $siteSearch = false): array
     {
@@ -64,21 +80,30 @@ class HostCrowding
             return $results;
         }
 
+        // Which places would fold, in rank order.
         $shown = [];
-        $lastShown = [];
-        $kept = [];
-
-        foreach ($results as $result) {
+        $folded = [];
+        foreach ($results as $index => $result) {
             $host = strtolower($result->strippedHost);
             $shown[$host] = ($shown[$host] ?? 0) + 1;
+            if ($shown[$host] > self::VISIBLE_PER_HOST) {
+                $folded[] = $index;
+            }
+        }
 
-            if ($shown[$host] <= self::VISIBLE_PER_HOST) {
-                $lastShown[$host] = $result;
-                $kept[] = $result;
+        $release = max(0, $this->minimumVisible - (count($results) - count($folded)));
+        $folded = array_flip(array_slice($folded, $release));
+
+        $lastShown = [];
+        $kept = [];
+        foreach ($results as $index => $result) {
+            $host = strtolower($result->strippedHost);
+            if (isset($folded[$index])) {
+                $lastShown[$host]->moreFromHost[] = $result;
                 continue;
             }
-
-            $lastShown[$host]->moreFromHost[] = $result;
+            $lastShown[$host] = $result;
+            $kept[] = $result;
         }
 
         return $kept;

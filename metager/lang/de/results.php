@@ -12,6 +12,5 @@ return [
     ],
     'results' => [
         'summary' => 'Anzeige von :resultcount von rund :totalresults Suchergebnissen',
-        'folded' => '{1} 1 Ergebnis einer Website, die schon zweimal vorkommt, ist unter ihr eingeklappt.|[2,*] :count Ergebnisse von Websites, die schon zweimal vorkommen, sind unter ihnen eingeklappt.',
     ],
 ];

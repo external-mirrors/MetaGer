@@ -12,6 +12,5 @@ return [
     ],
     'results' => [
         'summary' => 'Wyświetlanie :resultcount z około :totalresults wyników wyszukiwania',
-        'folded' => 'Wyniki ze stron, które pojawiają się już dwa razy, zwinięto pod nimi (:count).',
     ],
 ];

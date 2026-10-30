@@ -32,10 +32,10 @@ class HostCrowdingTest extends TestCase
         parent::tearDown();
     }
 
-    private function search(string $path, string $out = "", string $query = "gebrauchte waschmaschine", string $fixture = "brave-web-same-host.json"): \Illuminate\Testing\TestResponse
+    private function search(string $path, string $out = "", string $query = "gebrauchte waschmaschine"): \Illuminate\Testing\TestResponse
     {
         $this->actingAsSearchUser();
-        $this->fakeEngineResponses(["brave" => $this->engineFixture($fixture)]);
+        $this->fakeEngineResponses(["brave" => $this->engineFixture("brave-web-same-host.json")]);
 
         $response = $this->get($path . "?eingabe=" . urlencode($query) . "&focus=web" . ($out !== "" ? "&out=" . $out : ""));
         $response->assertOk();
@@ -173,31 +173,5 @@ class HostCrowdingTest extends TestCase
 
         $anzeigen = array_filter(array_column($results, "host"), fn(string $host) => $host === "anzeigen.example");
         $this->assertCount(11, $anzeigen);
-    }
-
-    /**
-     * Ten results where the engine sent twenty would surprise someone who did
-     * not notice the folds, so the page says up front how many there are —
-     * all of them, across every host.
-     */
-    public function testThePageSaysHowManyResultsAreFolded(): void
-    {
-        $html = $this->search("/de-DE/meta/meta.ger3")->getContent();
-
-        $this->assertMatchesRegularExpression(
-            '~<p class="more-from-host-notice">10 Ergebnisse von Websites, die schon zweimal vorkommen, sind unter ihnen eingeklappt\.</p>~',
-            $html
-        );
-    }
-
-    /**
-     * And says nothing when nothing is folded. brave-web.json has no host
-     * more than twice.
-     */
-    public function testAPageWithoutFoldsHasNoNotice(): void
-    {
-        $html = $this->search("/de-DE/meta/meta.ger3", fixture: "brave-web.json")->getContent();
-
-        $this->assertStringNotContainsString("more-from-host-notice", $html);
     }
 }

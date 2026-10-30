@@ -7,10 +7,6 @@
 <div id="results" role="region"
     aria-label="@lang('results.results.summary', ['resultcount' => sizeof($metager->getResults()), 'totalresults' => $metager->getTotalResultCount()])">
     @include('parts.alteration')
-    {{-- Up front, so a page that looks short says why before anyone counts. --}}
-    @if ($metager->getFoldedResultCount() > 0)
-        <p class="more-from-host-notice">{{ trans_choice('results.results.folded', $metager->getFoldedResultCount()) }}</p>
-    @endif
     @foreach ($metager->getResults() as $index => $result)
         @if ($index === 2)
             @include('layouts.resultpage.news', ['news' => $metager->news])

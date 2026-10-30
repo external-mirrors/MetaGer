@@ -12,6 +12,5 @@ return [
     'backtotop' => 'terug naar boven',
     'results' => [
         'summary' => 'Het tonen van :resultcount van rond :totalresults zoekresultaten',
-        'folded' => '{1} 1 resultaat van een website die al twee keer voorkomt, is eronder ingeklapt.|[2,*] :count resultaten van websites die al twee keer voorkomen, zijn eronder ingeklapt.',
     ],
 ];

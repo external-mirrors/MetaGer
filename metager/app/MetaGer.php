@@ -804,15 +804,6 @@ class MetaGer
         return $this->results;
     }
 
-    /**
-     * How many results of this page Search\HostCrowding folded under another
-     * result of their host rather than giving them a place of their own.
-     */
-    public function getFoldedResultCount(): int
-    {
-        return array_sum(array_map(fn(Result $result) => count($result->moreFromHost), $this->results));
-    }
-
     public function getFokus()
     {
         return app(SearchSettings::class)->fokus;

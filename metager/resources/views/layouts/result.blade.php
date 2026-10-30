@@ -188,7 +188,7 @@
          by Search\HostCrowding. A closed <details>, so it opens without JS, and
          not `.result` rows: scriptResultPage.js counts those. --}}
     @if (sizeof($result->moreFromHost) > 0)
-        <details class="result-more-from-host">
+        <details class="result-more-from-host" data-host="{{ $result->strippedHost }}">
             <summary>
                 {{ trans_choice('result.more-from-host.summary', sizeof($result->moreFromHost), ['host' => $result->strippedHost]) }}
             </summary>

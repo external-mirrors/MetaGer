@@ -3,6 +3,7 @@ import updateProxyLinks from "./resultpage/proxy";
 import { renderRelativeDates } from "./relative-time";
 import { initAccountBreadcrumb } from "./accountBreadcrumb";
 import { setMenuOpen } from "./sidebar/menu-toggle";
+import { replaceKeepingFoldsOpen } from "./resultpage/folds";
 
 let bootEvent = new Event("boot");
 let resultLoaderEvent = new Event("resultsChanged");
@@ -104,7 +105,7 @@ function initialize() {
               let container = document.createElement("div");
               container.innerHTML = data.results;
               let new_source = container.querySelector("#results").innerHTML;
-              document.querySelector("#results").innerHTML = new_source;
+              replaceKeepingFoldsOpen(document.querySelector("#results"), new_source);
               document.dispatchEvent(resultLoaderEvent);
 
               // Remove no results error if results got loaded after the fact by Javascript

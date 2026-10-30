@@ -104,7 +104,7 @@ class HostCrowdingTest extends TestCase
         $html = $this->search("/de-DE/meta/meta.ger3")->getContent();
 
         $this->assertMatchesRegularExpression(
-            '~<details class="result-more-from-host">\s*<summary>\s*9 weitere Ergebnisse von anzeigen\.example\s*</summary>~',
+            '~<details class="result-more-from-host" data-host="anzeigen\.example">\s*<summary>\s*9 weitere Ergebnisse von anzeigen\.example\s*</summary>~',
             $html
         );
         $this->assertMatchesRegularExpression(
@@ -115,7 +115,7 @@ class HostCrowdingTest extends TestCase
         // Read inside the fold only: every result's options menu already
         // carries a site: link, so the whole page would prove nothing.
         $this->assertSame(1, preg_match(
-            '~<details class="result-more-from-host">\s*<summary>\s*9 weitere.*?</details>~s',
+            '~<details class="result-more-from-host"[^>]*>\s*<summary>\s*9 weitere.*?</details>~s',
             $html,
             $fold
         ));
@@ -192,7 +192,7 @@ class HostCrowdingTest extends TestCase
             ->json("results");
 
         $this->assertSame(10, substr_count($html, '<div class="result" data-count='));
-        $this->assertSame(2, substr_count($html, '<details class="result-more-from-host">'));
+        $this->assertSame(2, substr_count($html, '<details class="result-more-from-host" data-host='));
         $this->assertStringContainsString('href="https://www.anzeigen.example/seite-20"', $html);
     }
 }

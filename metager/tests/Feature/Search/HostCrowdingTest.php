@@ -174,4 +174,25 @@ class HostCrowdingTest extends TestCase
         $anzeigen = array_filter(array_column($results, "host"), fn(string $host) => $host === "anzeigen.example");
         $this->assertCount(11, $anzeigen);
     }
+
+    /**
+     * Results that arrive after the page was sent reach the browser through
+     * /meta/loadMore, which rebuilds the list and re-renders it whole. That
+     * list is crowded too: scriptResultPage.js replaces #results with it, so
+     * an uncrowded one would undo the fold on the page a second after load.
+     */
+    public function testResultsLoadedLaterAreCrowdedToo(): void
+    {
+        $page = $this->search("/meta/meta.ger3")->getContent();
+        preg_match('/name="searchkey" content="([^"]+)"/', $page, $match);
+
+        $query = "eingabe=" . urlencode("gebrauchte waschmaschine") . "&focus=web";
+        $html = $this->get("/meta/loadMore?" . $query . "&loadMore=loader_" . $match[1] . "&script=yes")
+            ->assertOk()
+            ->json("results");
+
+        $this->assertSame(10, substr_count($html, '<div class="result" data-count='));
+        $this->assertSame(2, substr_count($html, '<details class="result-more-from-host">'));
+        $this->assertStringContainsString('href="https://www.anzeigen.example/seite-20"', $html);
+    }
 }

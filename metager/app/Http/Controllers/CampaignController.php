@@ -67,11 +67,11 @@ final class CampaignController extends Controller
         }
 
         $fields = [
-            "name" => trim((string) $request->input("name", "")),
-            "tokens_per_key" => trim((string) $request->input("tokens_per_key", "")),
-            "total_volume" => trim((string) $request->input("total_volume", "")),
+            "name" => $this->field($request, "name"),
+            "tokens_per_key" => $this->field($request, "tokens_per_key"),
+            "total_volume" => $this->field($request, "total_volume"),
         ];
-        $voucherCount = trim((string) $request->input("voucher_count", ""));
+        $voucherCount = $this->field($request, "voucher_count");
         $payload = $voucherCount === "" ? $fields : array_merge($fields, ["voucher_count" => $voucherCount]);
 
         $result = $issuer->create($key, $payload);
@@ -145,6 +145,16 @@ final class CampaignController extends Controller
             ->header("Content-Type", $pdf["content_type"])
             ->header("Content-Disposition", 'inline; filename="campaign-' . $id . '-cards.pdf"')
             ->header("Cache-Control", "no-store, private");
+    }
+
+    /**
+     * A form field, trimmed; "" for one that is absent or not a string. A
+     * `total_volume[]=` array cast with (string) was an ErrorException.
+     */
+    private function field(Request $request, string $name): string
+    {
+        $value = $request->input($name, "");
+        return is_string($value) ? trim($value) : "";
     }
 
     /** @return array<string, string> */

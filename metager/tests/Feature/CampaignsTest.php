@@ -273,6 +273,42 @@ class CampaignsTest extends TestCase
             ->assertSee(trans("campaigns.create.error.over_budget"));
     }
 
+    /**
+     * Each field was read as `(string) $request->input(...)`, and casting an
+     * array to string is a warning that Laravel turns into an ErrorException:
+     * `total_volume[]=1` was a 500 (GlitchTip METAGER-19V). A field that is not
+     * a string carries no value, so it is sent on as empty, the same as an
+     * absent one, and the keyserver's validation answers it.
+     */
+    public function testAFieldSentAsAnArrayIsSentOnAsEmpty(): void
+    {
+        $this->keyserver([
+            "*/api/json/key/*/campaigns" => function ($request) {
+                if ($request->method() === "POST") {
+                    return Http::response(["code" => 422, "error" => "invalid_input"], 422);
+                }
+
+                return Http::response(["campaigns" => [], "max_campaign_volume" => 248]);
+            },
+        ]);
+
+        $this->signedIn()
+            ->withHeader("Origin", config("app.url"))
+            ->post("/de-DE/konto/gutscheinaktionen", [
+                "name" => ["Freundeskreis"],
+                "tokens_per_key" => "10",
+                "total_volume" => ["100"],
+                "voucher_count" => ["5"],
+            ])
+            ->assertOk();
+
+        Http::assertSent(fn ($request) => $request->method() === "POST"
+            && $request["name"] === ""
+            && $request["tokens_per_key"] === "10"
+            && $request["total_volume"] === ""
+            && !isset($request["voucher_count"]));
+    }
+
     public function testCreatingACampaignWithAForeignOriginIsRejected(): void
     {
         $this->keyserver();

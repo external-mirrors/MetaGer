@@ -5,6 +5,7 @@ namespace App\Models\parserSkripte\Base;
 use App\Localization;
 use App\MetaGer;
 use App\Models\Searchengine;
+use App\Search\GoogleRedirectResolver;
 use Log;
 
 /**
@@ -150,6 +151,117 @@ abstract class SerperBase extends Searchengine
         $parameters->hl = Localization::getLanguage();
         $parameters->gl = strtolower(Localization::getRegion());
     }
+
+    /**
+     * Parse the answer once Google's click-tracking redirects are out of it.
+     *
+     * Done on the raw body rather than on the results, because a Result works
+     * out its host, its deduplication key and its proxy link from the URL it is
+     * constructed with — every field would have to be recomputed afterwards.
+     * Rewriting the body first means every link field the subclasses read
+     * (organic results, their sitelinks, top stories) is covered without any of
+     * them having to know. See [GoogleRedirectResolver] for why an unresolvable
+     * redirect drops its entry instead of being shown.
+     */
+    public function loadResponse(MetaGer $metager, ?string $body): bool
+    {
+        if ($body !== null && !$this->loaded) {
+            $body = self::withoutGoogleRedirects($body);
+        }
+
+        return parent::loadResponse($metager, $body);
+    }
+
+    /**
+     * $body with every Google redirect replaced by its target, and every list
+     * entry whose redirect could not be resolved removed from its list.
+     *
+     * Untouched — byte for byte — when it contains no redirect at all, which
+     * is the common case, so most answers pay one substring check.
+     */
+    public static function withoutGoogleRedirects(string $body, ?GoogleRedirectResolver $resolver = null): string
+    {
+        if (!str_contains($body, "google.")) {
+            return $body;
+        }
+
+        $decoded = json_decode($body);
+        if (!is_object($decoded) && !is_array($decoded)) {
+            return $body;
+        }
+
+        $redirects = self::collectRedirects($decoded);
+        if (empty($redirects)) {
+            return $body;
+        }
+
+        $resolved = ($resolver ?? new GoogleRedirectResolver())->resolve($redirects);
+
+        return json_encode(
+            self::replaceRedirects($decoded, $resolved),
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        );
+    }
+
+    /** @return string[] every string anywhere in $node that is a Google redirect */
+    private static function collectRedirects(mixed $node): array
+    {
+        if (is_string($node)) {
+            return GoogleRedirectResolver::isRedirect($node) ? [$node] : [];
+        }
+        if (is_object($node)) {
+            $node = get_object_vars($node);
+        }
+        if (!is_array($node)) {
+            return [];
+        }
+
+        return array_merge([], ...array_map(self::collectRedirects(...), array_values($node)));
+    }
+
+    /**
+     * @param array<string, ?string> $resolved
+     * @return mixed $node rewritten, or [DROP] if it is an object holding a
+     *               redirect that could not be resolved
+     */
+    private static function replaceRedirects(mixed $node, array $resolved): mixed
+    {
+        if (is_string($node)) {
+            return array_key_exists($node, $resolved) ? ($resolved[$node] ?? self::DROP) : $node;
+        }
+
+        if (is_array($node)) {
+            $kept = [];
+            foreach ($node as $key => $child) {
+                $child = self::replaceRedirects($child, $resolved);
+                if ($child !== self::DROP) {
+                    $kept[$key] = $child;
+                }
+            }
+            return array_is_list($node) ? array_values($kept) : $kept;
+        }
+
+        if (is_object($node)) {
+            foreach (get_object_vars($node) as $property => $child) {
+                $child = self::replaceRedirects($child, $resolved);
+                if ($child === self::DROP) {
+                    // A link that may not be shown makes the whole entry
+                    // unshowable; the list holding it drops it.
+                    if (is_string($node->$property)) {
+                        return self::DROP;
+                    }
+                    unset($node->$property);
+                    continue;
+                }
+                $node->$property = $child;
+            }
+        }
+
+        return $node;
+    }
+
+    /** Sentinel for "remove this entry"; no Serper answer contains it. */
+    private const DROP = "\0metager:drop-unresolved-google-redirect\0";
 
     /**
      * The next page is the same engine one page further on — asked for only

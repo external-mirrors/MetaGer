@@ -1,0 +1,34 @@
+{
+  "organic": [
+    {
+      "title": "Is art anti-capitalist?",
+      "link": "https://www.google.com/goto?url=CAESggEB-resolvable",
+      "snippet": "Ein Ergebnis, das Serper nur als Google-Weiterleitung liefert.",
+      "sitelinks": [
+        {
+          "title": "Archiv",
+          "link": "https://www.google.com/goto?url=CAESggEB-sitelink"
+        },
+        {
+          "title": "Kaputt",
+          "link": "https://www.google.com/goto?url=CAESggEB-unresolvable-sitelink"
+        }
+      ]
+    },
+    {
+      "title": "Von Google nicht aufgelöst",
+      "link": "https://www.google.com/goto?url=CAESggEB-unresolvable",
+      "snippet": "Google antwortet hier nicht mit einer Weiterleitung."
+    },
+    {
+      "title": "Alte Schreibweise",
+      "link": "https://www.google.de/url?q=https://serper-example.net/klartext&sa=U",
+      "snippet": "Das Ziel steht im Klartext in der URL."
+    },
+    {
+      "title": "Kaffee bei Serper",
+      "link": "https://serper-example.net/kaffee",
+      "snippet": "Ein gewöhnliches Ergebnis."
+    }
+  ]
+}

@@ -953,6 +953,22 @@ spec:
           # comes back from a server dry-run with the field stripped. Silently.
           command: ["/usr/local/bin/php-daemon"]
           args: ["artisan", "reverb:start", "--port=8081"]
+          # Keep listening while the pod leaves the routing. The broadcast queue
+          # worker POSTs to REVERB_HOST, the public host, so broadcasts cross the
+          # edge proxy, and its endpoint list drops a deleted pod some seconds
+          # after the deletion. Signalled at once, Reverb closed its listener
+          # inside that window, and the proxy answered "upstream connect error
+          # ... Connection refused" for a broadcast it was still sending there:
+          # a lost live balance update, once per rollout (GlitchTip METAGER-UD).
+          # The kubelet sends the stop signal only after this returns, and the
+          # sleep counts against terminationGracePeriodSeconds.
+          #
+          # An exec rather than `lifecycle.preStop.sleep`, for the reason given
+          # for stopSignal above: a gated field can be stripped without a word.
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "10"]
           imagePullPolicy: IfNotPresent
           env:
           - name: APP_ENV

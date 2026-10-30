@@ -465,6 +465,42 @@ else
     pass "no probe pgreps the fetcher process"
 fi
 
+# ---------------------------------------------------------------------------
+# A terminating Reverb pod keeps listening until it is out of the routing.
+# ---------------------------------------------------------------------------
+#
+# The broadcast queue worker POSTs to REVERB_HOST, the public host, so every
+# broadcast crosses the edge proxy. A pod's endpoint is removed asynchronously
+# once it is marked for deletion; without a preStop the SIGTERM arrives at the
+# same moment, Reverb closes its listener, and for those seconds the proxy is
+# still sending to a closed port: "upstream connect error ... Connection
+# refused", a lost live balance update, once per rollout (GlitchTip
+# METAGER-UD, 2026-10-08, 10-14 twice and 10-29, each minutes after a master
+# rollout).
+
+echo
+echo "Reverb drains before it stops listening:"
+
+reverb_doc="$(capture awk 'BEGIN { RS = "\n---\n" }
+    /\nkind: Deployment\n/ && /\n  name: golden-reverb\n/ { print }' "$WORK/rendered.yaml")"
+reverb_sleep="$(capture grep -A6 'preStop:' <<<"$reverb_doc" | capture grep -oE '"sleep", "[0-9]+"' |
+    grep -oE '[0-9]+' || true)"
+reverb_grace="$(capture grep -oE 'terminationGracePeriodSeconds: [0-9]+' <<<"$reverb_doc" | grep -oE '[0-9]+' || true)"
+
+if [[ -n "$reverb_sleep" && "$reverb_sleep" -ge 5 ]]; then
+    pass "reverb sleeps ${reverb_sleep}s in preStop before it is signalled"
+else
+    fail "reverb has no preStop sleep of at least 5s" \
+        "a terminating pod closes its listener while the edge proxy still routes broadcasts to it"
+fi
+
+if [[ -n "$reverb_sleep" && -n "$reverb_grace" && "$reverb_grace" -gt "$reverb_sleep" ]]; then
+    pass "terminationGracePeriodSeconds (${reverb_grace}s) outlasts the preStop sleep"
+else
+    fail "terminationGracePeriodSeconds does not outlast the preStop sleep" \
+        "the grace period includes the hook, so Reverb would be SIGKILLed without draining"
+fi
+
 echo
 if [[ $failures -eq 0 ]]; then
     echo "All chart assertions passed."

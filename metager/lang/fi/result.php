@@ -18,6 +18,10 @@ return [
     'proxytext' => 'Tuloslinkki avataan nimettömänä. Tietojasi ei siirretä kohdepalvelimille. Jotkin verkkosivut eivät ehkä toimi tavalliseen tapaan.',
     'news' => 'Asiaankuuluvat uutiset',
     'videos' => 'Videot',
+    'more-from-host' => [
+        'summary' => '{1} :count tulos lisää sivustolta :host|[2,*] :count tulosta lisää sivustolta :host',
+        'search' => 'Hae vain sivustolta :host',
+    ],
     'adblocker' => 'Mainostenestimesi poisti täältä <a href=":resultlink">hakutuloksen</a> osoitteesta <code>:host</code>. <a href=":infolink">Lue lisää</a>',
     'image' => [
         'download' => 'Lataa kuva',

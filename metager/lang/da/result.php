@@ -18,6 +18,10 @@ return [
     'proxytext' => 'Resultatlinket åbnes anonymt. Dine data vil ikke blive overført til destinationsservere. Nogle websider fungerer muligvis ikke som normalt.',
     'news' => 'Relevante nyheder',
     'videos' => 'Videoer',
+    'more-from-host' => [
+        'summary' => '{1} :count resultat mere fra :host|[2,*] :count resultater mere fra :host',
+        'search' => 'Søg kun på :host',
+    ],
     'adblocker' => 'Et <a href=":resultlink">søgeresultat</a> fra <code>:host</code> blev fjernet her af din ad blocker. <a href=":infolink">Læs mere</a>',
     'image' => [
         'download' => 'Download billede',

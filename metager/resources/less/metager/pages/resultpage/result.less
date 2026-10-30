@@ -428,6 +428,41 @@
     }
   }
 
+  // Layout only: every colour here is inherited, so the fold reads like the
+  // rest of the result in both themes without a palette entry of its own.
+  > .result-more-from-host {
+    font-size: 0.9rem;
+    padding: 0 1rem;
+
+    // base.less hides every <summary>'s disclosure marker, and without one
+    // this line reads as text rather than as something that opens. Drawn
+    // here instead, with empty alt text so a screen reader, which already
+    // announces the summary as expandable, does not read the arrow too.
+    > summary {
+      cursor: pointer;
+      width: fit-content;
+
+      &::before {
+        content: "▸ ";
+        content: "▸ " / "";
+      }
+    }
+
+    &[open] > summary::before {
+      content: "▾ ";
+      content: "▾ " / "";
+    }
+
+    > ul {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      list-style: none;
+      margin: 0.5rem 0;
+      padding: 0;
+    }
+  }
+
   .result-footer {
     width: 100%;
     display: flex;

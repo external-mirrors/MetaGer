@@ -18,6 +18,10 @@ return [
     'proxytext' => 'Resultatlänken öppnas anonymt. Dina uppgifter kommer inte att överföras till destinationsservrar. Vissa webbsidor kanske inte fungerar som vanligt.',
     'news' => 'Relevanta nyheter',
     'videos' => 'Videor',
+    'more-from-host' => [
+        'summary' => '{1} :count resultat till från :host|[2,*] :count resultat till från :host',
+        'search' => 'Sök bara på :host',
+    ],
     'adblocker' => 'Ett <a href=":resultlink">sökresultat</a> från <code>:host</code> togs bort här av din annonsblockerare. <a href=":infolink">Läs mer</a>',
     'image' => [
         'download' => 'Ladda ner bild',

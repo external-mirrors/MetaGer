@@ -19,6 +19,10 @@ return [
     'news' => 'Relevante Nachrichten',
     'more-news' => 'mehr',
     'videos' => "Videos",
+    'more-from-host' => [
+        'summary' => '{1} :count weiteres Ergebnis von :host|[2,*] :count weitere Ergebnisse von :host',
+        'search' => 'Nur auf :host suchen',
+    ],
     'adblocker' => 'Ein <a href=":resultlink">Suchergebnis</a> von <code>:host</code> wurde hier durch Ihren Werbeblocker entfernt. <a href=":infolink">Mehr erfahren</a>',
     'image' => [
         'download' => 'Bild herunterladen',

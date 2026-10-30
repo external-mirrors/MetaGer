@@ -19,6 +19,10 @@ return [
     'news' => 'Notícies rellevants',
     'more-news' => 'més',
     'videos' => 'Vídeos',
+    'more-from-host' => [
+        'summary' => '{1} :count resultat més de :host|[2,*] :count resultats més de :host',
+        'search' => 'Cerca només a :host',
+    ],
     'adblocker' => 'El vostre bloquejador de publicitat ha eliminat aquí un <a href=":resultlink">resultat de cerca</a> de <code>:host</code>. <a href=":infolink">Més informació</a>',
     'image' => [
         'download' => 'Baixa la imatge',

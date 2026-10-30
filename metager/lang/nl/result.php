@@ -18,6 +18,10 @@ return [
         'direct' => 'Direct Open',
         'togglelabel' => 'resultatenopties omschakelen',
     ],
+    'more-from-host' => [
+        'summary' => '{1} :count extra resultaat van :host|[2,*] :count extra resultaten van :host',
+        'search' => 'Alleen zoeken op :host',
+    ],
     'adblocker' => 'Een <a href=":resultlink">zoekresultaat</a> van <code>:host</code> werd hier verwijderd door uw advertentieblokker. <a href=":infolink">Lees meer</a>',
     'image' => [
         'download' => 'Afbeelding downloaden',

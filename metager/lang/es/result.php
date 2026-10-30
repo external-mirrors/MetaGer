@@ -18,6 +18,10 @@ return [
     'providers' => 'Proveedores',
     'news' => 'Noticias de interés',
     'videos' => 'Vídeos',
+    'more-from-host' => [
+        'summary' => '{1} :count resultado más de :host|[2,*] :count resultados más de :host',
+        'search' => 'Buscar solo en :host',
+    ],
     'adblocker' => 'Un <a href=":resultlink">resultado de búsqueda</a> de <code>:host</code> fue eliminado aquí por su bloqueador de anuncios. <a href=":infolink">Más información</a>',
     'image' => [
         'download' => 'Descargar imagen',

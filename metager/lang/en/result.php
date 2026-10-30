@@ -19,6 +19,10 @@ return [
     'news' => 'Relevant news',
     'more-news' => 'more',
     'videos' => 'Videos',
+    'more-from-host' => [
+        'summary' => '{1} :count more result from :host|[2,*] :count more results from :host',
+        'search' => 'Search only on :host',
+    ],
     'adblocker' => 'A <a href=":resultlink">search result</a> from <code>:host</code> was removed here by your ad blocker. <a href=":infolink">Learn more</a>',
     'image' => [
         'download' => 'Download Image',

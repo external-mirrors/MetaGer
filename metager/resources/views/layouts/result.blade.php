@@ -184,5 +184,29 @@
             @endforeach
         </div>
     @endif
+    {{-- Results of this host that ranked below this one, taken out of the list
+         by Search\HostCrowding. A closed <details>, so it opens without JS, and
+         not `.result` rows: scriptResultPage.js counts those. --}}
+    @if (sizeof($result->moreFromHost) > 0)
+        <details class="result-more-from-host">
+            <summary>
+                {{ trans_choice('result.more-from-host.summary', sizeof($result->moreFromHost), ['host' => $result->strippedHost]) }}
+            </summary>
+            <ul>
+                @foreach ($result->moreFromHost as $moreResult)
+                    <li>
+                        <a href="{{ $moreResult->link }}" title="{{ $moreResult->link }}"
+                            @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
+                            target="{{ $metager->getNewtab() }}">{!! $moreResult->titel !!}</a>
+                        <div class="more-from-host-description">{{ $moreResult->descr }}</div>
+                    </li>
+                @endforeach
+            </ul>
+            <a class="more-from-host-search" href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}"
+                @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
+                {{ trans('result.more-from-host.search', ['host' => $result->strippedHost]) }}
+            </a>
+        </details>
+    @endif
 </div>
 <div class="ab-hint result" data-target="{{ $index }}">@lang('result.adblocker', ['resultlink' => $result->originalLink, 'infolink' => route('adblocker'), 'host' => $result->host])</div>

@@ -113,6 +113,7 @@ class OutputFormatsTest extends TestCase
             "price",
             "sitelinks",
             "cluster",
+            "moreFromHost",
         ], array_keys($payload["results"][0]), "A field of the out=json result schema changed. Raise MetaGer::API_SCHEMA_VERSION if it is deliberate.");
     }
 

@@ -41,6 +41,13 @@ class Result
     public $changed = false;
     /** @var Result[] */
     public $inheritedResults = [];
+    /**
+     * Results of the same host that ranked below this one and were taken out
+     * of the list by Search\HostCrowding, in rank order.
+     *
+     * @var Result[]
+     */
+    public $moreFromHost = [];
 
     public $deepResults = [
         "buttons" => [],
@@ -557,6 +564,13 @@ class Result
             "price" => empty($this->price) ? null : ($this->price_text ?? null),
             "sitelinks" => $this->sitelinksToApiArray(),
             "cluster" => $includeCluster ? $this->clusterToApiArray() : [],
+            # Weitere Treffer desselben Hosts, die unter diesem einsortiert
+            # wurden statt eigene Plätze zu bekommen (Search\HostCrowding).
+            # Ohne das Feld sähe ein Client zehn Treffer, wo es zwanzig gab.
+            "moreFromHost" => $includeCluster ? array_map(
+                fn(Result $member) => $member->toApiArray(false),
+                $this->moreFromHost
+            ) : [],
         ];
     }
 

@@ -18,6 +18,10 @@ return [
     'proxytext' => 'Link do wyniku jest otwierany anonimowo. Dane użytkownika nie zostaną przesłane na serwery docelowe. Niektóre strony internetowe mogą nie działać jak zwykle.',
     'news' => 'Istotne wiadomości',
     'videos' => 'Filmy',
+    'more-from-host' => [
+        'summary' => 'Więcej wyników z :host (:count)',
+        'search' => 'Szukaj tylko w :host',
+    ],
     'adblocker' => '<a href=":resultlink">Wynik wyszukiwania</a> z <code>:host</code> został tutaj usunięty przez blokadę reklam. <a href=":infolink">Dowiedz się więcej</a>',
     'image' => [
         'download' => 'Pobierz obraz',

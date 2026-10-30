@@ -5,6 +5,7 @@ namespace App;
 use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
 use App\Models\Result;
+use App\Search\HostCrowding;
 use App\Search\LinkBuilder;
 use App\Search\QueryParser;
 use App\Search\ResponseFactory;
@@ -232,7 +233,8 @@ class MetaGer
      * Order matters and is not obvious, so it is spelled out here: results are
      * ranked before they are filtered so that ranking sees every engine's view
      * of a page, and filtered before they are deduplicated so that a blacklisted
-     * copy cannot become the surviving one.
+     * copy cannot become the surviving one. Hosts are capped last, so a page
+     * two engines both found counts once against its host.
      */
     public function prepareResults()
     {
@@ -246,6 +248,16 @@ class MetaGer
 
         $this->results = app(ResultDeduplicator::class)
             ->deduplicate($this->results, app(SearchSettings::class)->fokus);
+
+        // `site:` never reaches the query: config/filters.json lifts it out
+        // into a query filter, `sitesearch` for one host and `multisite` for
+        // `(site:a OR site:b)`.
+        $settings = app(SearchSettings::class);
+        $this->results = app(HostCrowding::class)->limit(
+            $this->results,
+            $settings->fokus,
+            !empty($settings->queryFilter["sitesearch"]) || !empty($settings->queryFilter["multisite"])
+        );
 
         if (count($this->results) <= 0) {
             if (strlen($this->site) > 0) {

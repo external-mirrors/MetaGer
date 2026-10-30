@@ -1,0 +1,191 @@
+{
+  "query": {
+    "original": "gebrauchte waschmaschine",
+    "more_results_available": true
+  },
+  "web": {
+    "type": "search",
+    "results": [
+      {
+        "title": "Treffer 1",
+        "url": "https://waschmaschinen-laden.example/seite-1",
+        "description": "Beschreibung von Treffer 1, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "waschmaschinen-laden.example",
+          "path": "/seite-1"
+        }
+      },
+      {
+        "title": "Treffer 2",
+        "url": "https://www.anzeigen.example/seite-2",
+        "description": "Beschreibung von Treffer 2, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-2"
+        }
+      },
+      {
+        "title": "Treffer 3",
+        "url": "https://anzeigen.example/seite-3",
+        "description": "Beschreibung von Treffer 3, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-3"
+        }
+      },
+      {
+        "title": "Treffer 4",
+        "url": "https://waschmaschinen-laden.example/seite-4",
+        "description": "Beschreibung von Treffer 4, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "waschmaschinen-laden.example",
+          "path": "/seite-4"
+        }
+      },
+      {
+        "title": "Treffer 5",
+        "url": "https://waschmaschinen-laden.example/seite-5",
+        "description": "Beschreibung von Treffer 5, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "waschmaschinen-laden.example",
+          "path": "/seite-5"
+        }
+      },
+      {
+        "title": "Treffer 6",
+        "url": "https://seite6.example/seite-6",
+        "description": "Beschreibung von Treffer 6, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "seite6.example",
+          "path": "/seite-6"
+        }
+      },
+      {
+        "title": "Treffer 7",
+        "url": "https://www.anzeigen.example/seite-7",
+        "description": "Beschreibung von Treffer 7, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-7"
+        }
+      },
+      {
+        "title": "Treffer 8",
+        "url": "https://seite8.example/seite-8",
+        "description": "Beschreibung von Treffer 8, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "seite8.example",
+          "path": "/seite-8"
+        }
+      },
+      {
+        "title": "Treffer 9",
+        "url": "https://www.anzeigen.example/seite-9",
+        "description": "Beschreibung von Treffer 9, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-9"
+        }
+      },
+      {
+        "title": "Treffer 10",
+        "url": "https://seite10.example/seite-10",
+        "description": "Beschreibung von Treffer 10, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "seite10.example",
+          "path": "/seite-10"
+        }
+      },
+      {
+        "title": "Treffer 11",
+        "url": "https://www.anzeigen.example/seite-11",
+        "description": "Beschreibung von Treffer 11, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-11"
+        }
+      },
+      {
+        "title": "Treffer 12",
+        "url": "https://www.anzeigen.example/seite-12",
+        "description": "Beschreibung von Treffer 12, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-12"
+        }
+      },
+      {
+        "title": "Treffer 13",
+        "url": "https://www.anzeigen.example/seite-13",
+        "description": "Beschreibung von Treffer 13, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-13"
+        }
+      },
+      {
+        "title": "Treffer 14",
+        "url": "https://www.anzeigen.example/seite-14",
+        "description": "Beschreibung von Treffer 14, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-14"
+        }
+      },
+      {
+        "title": "Treffer 15",
+        "url": "https://www.anzeigen.example/seite-15",
+        "description": "Beschreibung von Treffer 15, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-15"
+        }
+      },
+      {
+        "title": "Treffer 16",
+        "url": "https://seite16.example/seite-16",
+        "description": "Beschreibung von Treffer 16, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "seite16.example",
+          "path": "/seite-16"
+        }
+      },
+      {
+        "title": "Treffer 17",
+        "url": "https://www.anzeigen.example/seite-17",
+        "description": "Beschreibung von Treffer 17, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-17"
+        }
+      },
+      {
+        "title": "Treffer 18",
+        "url": "https://seite18.example/seite-18",
+        "description": "Beschreibung von Treffer 18, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "seite18.example",
+          "path": "/seite-18"
+        }
+      },
+      {
+        "title": "Treffer 19",
+        "url": "https://seite19.example/seite-19",
+        "description": "Beschreibung von Treffer 19, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "seite19.example",
+          "path": "/seite-19"
+        }
+      },
+      {
+        "title": "Treffer 20",
+        "url": "https://www.anzeigen.example/seite-20",
+        "description": "Beschreibung von Treffer 20, lang genug, um nicht gekürzt zu werden.",
+        "meta_url": {
+          "netloc": "anzeigen.example",
+          "path": "/seite-20"
+        }
+      }
+    ]
+  }
+}

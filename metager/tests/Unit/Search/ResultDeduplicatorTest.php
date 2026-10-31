@@ -208,4 +208,61 @@ class ResultDeduplicatorTest extends TestCase
     {
         $this->assertSame([], $this->deduplicate([]));
     }
+
+    /**
+     * Google cuts titles at about sixty characters and Serper passes that on
+     * with a trailing " ...". When another engine found the same page with
+     * the whole title, the kept result used to show the cut one anyway,
+     * because the first copy seen wins — on a page with room for two lines.
+     *
+     * @return array<string, array{0: string}>
+     */
+    public static function cutTitles(): array
+    {
+        return [
+            "three dots" => ["95 Jahre Tempo – Die Taschentuch-Ikone feiert seine ..."],
+            "ellipsis character" => ["95 Jahre Tempo – Die Taschentuch-Ikone feiert seine …"],
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider("cutTitles")]
+    public function testAWholeTitleFromAnotherEngineReplacesACutOne(string $cut): void
+    {
+        $first = $this->hit("https://essity.example/tempo-95", "serper");
+        $first->titel = $cut;
+        $second = $this->hit("https://essity.example/tempo-95", "brave");
+        $second->titel = "95 Jahre Tempo – Die Taschentuch-Ikone feiert seine Geschichte";
+
+        [$kept] = $this->deduplicate([$first, $second]);
+
+        $this->assertSame("95 Jahre Tempo – Die Taschentuch-Ikone feiert seine Geschichte", $kept->titel);
+    }
+
+    public function testATitleThatIsNotCutIsKept(): void
+    {
+        $first = $this->hit("https://essity.example/tempo-95", "brave");
+        $first->titel = "95 Jahre Tempo";
+        $second = $this->hit("https://essity.example/tempo-95", "serper");
+        $second->titel = "95 Jahre Tempo – Die Taschentuch-Ikone feiert seine Geschichte";
+
+        [$kept] = $this->deduplicate([$first, $second]);
+
+        $this->assertSame("95 Jahre Tempo", $kept->titel);
+    }
+
+    /**
+     * Only the rest of the same title fills in a cut one: another engine's
+     * different wording of the page is no more right than the first.
+     */
+    public function testACutTitleIsNotSwappedForADifferentOne(): void
+    {
+        $first = $this->hit("https://essity.example/tempo-95", "serper");
+        $first->titel = "95 Jahre Tempo – Die Taschentuch-Ikone feiert seine ...";
+        $second = $this->hit("https://essity.example/tempo-95", "brave");
+        $second->titel = "Tempo wird 95 | Essity";
+
+        [$kept] = $this->deduplicate([$first, $second]);
+
+        $this->assertSame("95 Jahre Tempo – Die Taschentuch-Ikone feiert seine ...", $kept->titel);
+    }
 }

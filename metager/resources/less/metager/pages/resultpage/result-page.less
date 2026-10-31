@@ -1148,8 +1148,10 @@ a {
     gap: 0.5rem;
   }
 
+  // Room for the filters once they wrap: image search has six, three rows
+  // of them on a phone. The cap is only there to animate to.
   input[type="checkbox"]:checked+div.scrollbox {
-    max-height: 200px;
+    max-height: 30rem;
     transform: scaleY(1);
   }
 
@@ -1194,24 +1196,23 @@ a {
 
   #options-box {
     width: 100%;
-    display: flex;
-    justify-content: left;
-    overflow: hidden;
-    overflow-x: auto;
     padding-bottom: 8px;
     border-bottom: 1px solid @border-color;
 
+    // The filters wrap rather than scroll sideways: in one scrolling row the
+    // last of them ran off a phone's edge with nothing to say there was more.
     #options-items {
-      display: -ms-flexbox;
       display: flex;
-      align-items: center;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: @space-3 @space-4;
 
       .option-selector {
         display: flex;
         flex-direction: column;
-        margin: 0 8px;
-        justify-content: center;
-        align-items: center;
+        align-items: flex-start;
+        gap: 2px;
+        max-width: 100%;
         font-size: 0.9em;
 
         label {
@@ -1222,7 +1223,10 @@ a {
         // The palette's field colours, as every other select gets them
         // (general/forms.less). This one used to set white of its own and kept
         // the palette's text, which in the dark theme is near-white too.
+        // A select is as wide as its longest option, and a language can be
+        // "Englisch (Vereinigtes Königreich)": capped at the line.
         select {
+          max-width: 100%;
           background-color: @input-background;
           color: @input-text;
           border: 1px solid @border-color;
@@ -1248,11 +1252,9 @@ a {
 
         #custom-date:checked+select+#bing-from-to {
           display: flex;
+          flex-wrap: wrap;
+          align-items: center;
         }
-      }
-
-      .option-selector:nth-child(1) {
-        margin-left: 0;
       }
     }
   }

@@ -9,9 +9,14 @@
 // part is allowed to be:
 //
 //   1. the title          — the one strong element: it is how a result is opened
-//   2. address, description — to judge the result by; muted and secondary text
+//   2. address, description — to judge the result by
 //   3. sitelinks          — plain links into the result, after its description
 //   4. actions, engines   — always in the same place, quiet until pointed at
+//
+// One accent colour, with one meaning: where a result leads. The address, the
+// sitelinks and the grouped and folded results carry it — as the Android app's
+// display link does — and nothing else in a result does, so each result has
+// one touch of colour, always in the same place.
 //
 // Spacing comes from the @space-* scale in variables.less and nowhere else.
 
@@ -126,7 +131,7 @@ a.result-open-proxy {
     font-size: 14px;
     font-weight: 600;
     line-height: 24px;
-    color: @link-color;
+    color: @accent-text-color;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -253,7 +258,7 @@ a.result-open-proxy {
         &:hover,
         &:focus,
         &:visited {
-          color: @muted-text-color;
+          color: @accent-text-color;
           font-size: 13px;
           text-decoration: none;
         }
@@ -379,7 +384,7 @@ a.result-open-proxy {
         list-style: none;
 
         > a {
-          color: @link-color;
+          color: @accent-text-color;
           white-space: nowrap;
           text-decoration: none;
 
@@ -431,47 +436,54 @@ a.result-open-proxy {
       color: #777;
     }
 
+    // What ⋯ opens: a menu, framed like one, at every width — rows of the
+    // card's secondary text that light up when pointed at, 44px on a phone.
     & > .result-options {
       display: none;
       margin-top: @space-2;
 
       ul {
         display: flex;
-        flex-wrap: wrap;
-        gap: 0 @space-4;
+        flex-direction: column;
+        width: max-content;
+        max-width: 100%;
+        min-width: 240px;
+        box-sizing: border-box;
         margin: 0;
-        padding: 0;
+        padding: @space-1 0;
+        border: 1px solid @border-color;
+        border-radius: 8px;
         font-size: 13px;
-        line-height: 24px;
 
         li {
           list-style: none;
         }
 
         li > a {
-          color: @link-color;
-          white-space: nowrap;
+          display: flex;
+          align-items: center;
+          min-height: 32px;
+          padding: 0 @space-3;
+          color: @secondary-text-color;
+          text-decoration: none;
+
+          &:hover {
+            color: @text-color;
+            background-color: @highlight-color;
+          }
         }
 
         @media (max-width: @screen-mobile) {
+          width: 100%;
+          font-size: 15px;
+
           li.result-saver {
             display: none;
           }
 
-          // On a phone a list of touch-sized rows in a frame.
-          flex-direction: column;
-          padding: @space-1 0;
-          border: 1px solid @border-color;
-          border-radius: 8px;
-          font-size: 15px;
-
           li > a {
-            display: flex;
-            align-items: center;
             min-height: 44px;
             padding: 0 @space-4;
-            color: @text-color;
-            white-space: normal;
           }
         }
       }
@@ -630,7 +642,7 @@ a.result-open-proxy {
     > .more-from-host-search {
       display: inline-block;
       margin-bottom: @space-2;
-      color: @link-color;
+      color: @accent-text-color;
     }
   }
 

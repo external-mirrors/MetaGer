@@ -1219,9 +1219,13 @@ a {
           font-weight: normal;
         }
 
+        // The palette's field colours, as every other select gets them
+        // (general/forms.less). This one used to set white of its own and kept
+        // the palette's text, which in the dark theme is near-white too.
         select {
-          background-color: white;
-          border: 1px solid #77777780;
+          background-color: @input-background;
+          color: @input-text;
+          border: 1px solid @border-color;
           padding: 3px;
           border-radius: 5px;
         }

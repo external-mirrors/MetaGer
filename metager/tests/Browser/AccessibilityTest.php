@@ -123,6 +123,37 @@ class AccessibilityTest extends DuskTestCase
         });
     }
 
+    /**
+     * The filter box is closed until a filter is set, and axe skips what is not
+     * displayed, so the run above never saw its dropdowns. They had a white
+     * background of their own and the dark palette's near-white text.
+     */
+    #[DataProvider("themes")]
+    public function testTheResultPageWithTheFiltersOpen(string $theme): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses([
+            "brave" => $this->engineFixture("brave-web.json"),
+        ]);
+
+        $html = $this->get("/de-DE/meta/meta.ger3?eingabe=kaffee&focus=web&dark_mode={$theme}")
+            ->assertOk()
+            ->getContent();
+
+        $this->browse(function (Browser $browser) use ($theme, $html) {
+            $browser->visit("/de-DE/impressum");
+            $browser->driver->executeScript("document.open(); document.write(arguments[0]); document.close();", [$html]);
+            $browser->waitUntil("document.readyState === 'complete'")
+                ->assertPresent("#options-toggle");
+
+            $browser->script("document.querySelector('#options-toggle').checked = true;");
+            // The box unfolds over half a second.
+            $browser->pause(700)->assertVisible("#options-items select");
+
+            $this->assertNoViolations($browser, "resultpage-filters-{$theme}");
+        });
+    }
+
     private function assertNoViolations(Browser $browser, string $label): void
     {
         $browser->script(file_get_contents(base_path("node_modules/axe-core/axe.min.js")));

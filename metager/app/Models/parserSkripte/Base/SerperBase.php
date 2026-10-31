@@ -153,6 +153,34 @@ abstract class SerperBase extends Searchengine
     }
 
     /**
+     * How long after its missions are queued a goto link is still worth
+     * waiting for. Serper's `/resolve` answers a single link in well under a
+     * second for the first few links of a search, then makes one of them wait
+     * about 25 seconds, after which the rest are instant; measured against the
+     * live API, the last link of a search came back 39 s after the search.
+     * Also the missions' curl timeout, so nothing outlives the window.
+     */
+    public const RESOLVE_WINDOW_SECONDS = 45;
+
+    /** The engine name resolve missions carry, which is what the fetcher's metrics are labelled by. */
+    public const RESOLVE_MISSION_NAME = "serper_resolve";
+
+    /**
+     * Everything late resolution needs, and null for an answer that has no
+     * goto link to resolve — which keeps it out of the loader cache entry for
+     * every other search (see LoaderCacheTest's size budget).
+     *
+     *   - `answer`: the body as Serper sent it, goto links and all, so it can be
+     *     parsed again once some of them are resolved
+     *   - `resolved`: goto link => the page it leads to, as /resolve reported it
+     *   - `unresolvable`: goto link => true, for answers without a usable target
+     *   - `since`: when the resolve missions were queued; null until they are
+     *
+     * @var array{answer: string, resolved: array<string, string>, unresolvable: array<string, true>, since: ?int}|null
+     */
+    private ?array $late = null;
+
+    /**
      * Parse the answer once Google's click-tracking redirects are out of it.
      *
      * Done on the raw body rather than on the results, because a Result works
@@ -162,10 +190,17 @@ abstract class SerperBase extends Searchengine
      * (organic results, their sitelinks, top stories) is covered without any of
      * them having to know. See [GoogleRedirectResolver] for why an unresolvable
      * redirect drops its entry instead of being shown.
+     *
+     * The original answer is kept when it carries goto links, so that
+     * [applyResolvedAnswers] can bring the dropped entries back.
      */
     public function loadResponse(MetaGer $metager, ?string $body): bool
     {
         if ($body !== null && !$this->loaded) {
+            $this->late = ["answer" => $body, "resolved" => [], "unresolvable" => [], "since" => null];
+            if (empty($this->lateLinks())) {
+                $this->late = null;
+            }
             $body = self::withoutGoogleRedirects($body);
         }
 
@@ -173,13 +208,163 @@ abstract class SerperBase extends Searchengine
     }
 
     /**
+     * The goto links in this engine's answer that only Serper's `/resolve`
+     * can still turn into a result: neither resolved nor given up on yet.
+     *
+     * In the order they appear in the answer, which for organic results is
+     * rank order — the order Google lets them be opened in.
+     *
+     * @return string[]
+     */
+    public function lateLinks(): array
+    {
+        if ($this->late === null) {
+            return [];
+        }
+
+        $decoded = json_decode($this->late["answer"]);
+        if (!is_object($decoded) && !is_array($decoded)) {
+            return [];
+        }
+
+        $redirects = array_values(array_unique(self::collectRedirects($decoded)));
+        $local = (new GoogleRedirectResolver())->resolve($redirects);
+
+        return array_values(array_filter(
+            $redirects,
+            fn(string $link) => $local[$link] === null
+                && !isset($this->late["resolved"][$link])
+                && !isset($this->late["unresolvable"][$link])
+        ));
+    }
+
+    /**
+     * Whether a later load-more may still bring results back: there are late
+     * links, and either their missions are not queued yet or the window for
+     * them has not closed.
+     */
+    public function isResolving(): bool
+    {
+        if (empty($this->lateLinks())) {
+            return false;
+        }
+
+        return $this->late["since"] === null
+            || now()->getTimestamp() - $this->late["since"] < self::RESOLVE_WINDOW_SECONDS;
+    }
+
+    /**
+     * One `/resolve` mission per late link, the first time this is asked and
+     * never again.
+     *
+     * One link per mission because that is what `/resolve` answers quickly:
+     * a request carrying several links waits the full ~25 s for all of them,
+     * where single links come back one by one. Queued all at once rather than
+     * chained, since Serper already serialises them — three sent in parallel
+     * came back after 0.6, 4.9 and 6.5 seconds.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function resolveMissions(): array
+    {
+        $links = $this->lateLinks();
+        if (empty($links) || $this->late["since"] !== null) {
+            return [];
+        }
+        $this->late["since"] = now()->getTimestamp();
+
+        $headers = (array) $this->configuration->requestHeader;
+        $headers["Content-Type"] = "application/json";
+
+        return array_map(fn(string $link) => [
+            "resulthash" => $this->resolveHash($link),
+            "url" => "https://" . $this->configuration->host . "/resolve",
+            "useragent" => $this->useragent,
+            "username" => null,
+            "password" => null,
+            "headers" => $headers,
+            "cacheDuration" => 0,
+            "name" => self::RESOLVE_MISSION_NAME,
+            "curlopts" => [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode(["organic" => [["link" => $link]]], JSON_UNESCAPED_SLASHES),
+                // The fetcher's defaults give up after ten seconds, and on a
+                // transfer slower than 50 kB/s; this one is a tiny answer that
+                // can legitimately take 25 seconds to start.
+                CURLOPT_TIMEOUT => self::RESOLVE_WINDOW_SECONDS,
+                CURLOPT_LOW_SPEED_LIMIT => 0,
+            ],
+        ], $links);
+    }
+
+    /** Where the fetcher puts the answer for $link's resolve mission. */
+    public function resolveHash(string $link): string
+    {
+        return md5("serper-resolve:" . $link);
+    }
+
+    /**
+     * Take in what `/resolve` answered and, if that brought any result back,
+     * parse the original answer again.
+     *
+     * A link whose answer arrived but names no usable page is given up on, so
+     * it stops counting as late; one whose answer has not arrived is left
+     * alone.
+     *
+     * @param array<string, ?string> $answers late link => the response body, or null if none arrived yet
+     * @return bool whether this engine's results changed
+     */
+    public function applyResolvedAnswers(array $answers): bool
+    {
+        if ($this->late === null) {
+            return false;
+        }
+
+        $resolvedAny = false;
+        foreach ($answers as $link => $body) {
+            if ($body === null) {
+                continue;
+            }
+
+            $decoded = json_decode($body);
+            $target = GoogleRedirectResolver::acceptableTarget($decoded->organic[0]->link ?? null);
+            if ($target === null) {
+                $this->late["unresolvable"][$link] = true;
+                continue;
+            }
+
+            $this->late["resolved"][$link] = $target;
+            $resolvedAny = true;
+        }
+
+        if (!$resolvedAny) {
+            return false;
+        }
+
+        $this->results = [];
+        $this->news = [];
+        $this->videos = [];
+        $this->products = [];
+        $this->counter = 0;
+        $this->loadResults(self::withoutGoogleRedirects($this->late["answer"], $this->late["resolved"]));
+        $this->markNew();
+
+        return true;
+    }
+
+    /**
      * $body with every Google redirect replaced by its target, and every list
      * entry whose redirect could not be unwrapped removed from its list.
      *
+     * $resolved supplies targets learned elsewhere — from Serper's `/resolve`
+     * — for redirects that cannot be unwrapped locally.
+     *
      * Untouched — byte for byte — when it contains no redirect at all, which
      * is the common case, so most answers pay one substring check.
+     *
+     * @param array<string, string> $resolved
      */
-    public static function withoutGoogleRedirects(string $body): string
+    public static function withoutGoogleRedirects(string $body, array $resolved = []): string
     {
         if (!str_contains($body, "google.")) {
             return $body;
@@ -195,10 +380,13 @@ abstract class SerperBase extends Searchengine
             return $body;
         }
 
-        $resolved = (new GoogleRedirectResolver())->resolve($redirects);
+        $targets = (new GoogleRedirectResolver())->resolve($redirects);
+        foreach ($targets as $link => $target) {
+            $targets[$link] = $target ?? $resolved[$link] ?? null;
+        }
 
         return json_encode(
-            self::replaceRedirects($decoded, $resolved),
+            self::replaceRedirects($decoded, $targets),
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
         );
     }

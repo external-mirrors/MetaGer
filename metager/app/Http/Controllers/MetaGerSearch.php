@@ -11,6 +11,7 @@ use App\Models\Quicktips\Quicktips;
 use App\PrometheusExporter;
 use App\QueryTimer;
 use App\Search\EngineOrchestrator;
+use App\Search\LateRedirectResolution;
 use App\Search\ResultRanker;
 use App\SearchSettings;
 use Auth;
@@ -322,6 +323,12 @@ class MetaGerSearch extends Controller
         $orchestrator->loadFromCache($metager);
         $orchestrator->collectResults($metager);
 
+        # Results Serper could only return as Google redirects come back here,
+        # a few seconds or half a minute after the page.
+        $lateRedirects = app(LateRedirectResolution::class);
+        $redirectsResolved = $lateRedirects->advance();
+        $resolving = $lateRedirects->pending();
+
         app(ResultRanker::class)->rankEngineResults();
         $metager->prepareResults();
 
@@ -363,13 +370,18 @@ class MetaGerSearch extends Controller
             }
         }
 
-        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && !array_key_exists("quicktips", $result)) {
+        if ($resolving) {
+            $finished = false;
+        }
+
+        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && !$redirectsResolved && !array_key_exists("quicktips", $result)) {
             // Nothing changed but we are not finished yet either
             return response("", 304);
         }
 
         $result["finished"] = $finished;
         $result["engines"] = $enginesLoaded;
+        $result["resolving"] = $resolving;
 
         if ($newResults > 0) {
             PrometheusExporter::ResultsReturned($newResults);
@@ -416,6 +428,12 @@ class MetaGerSearch extends Controller
                 # Engine-Name => hat geantwortet. Damit kann ein Client
                 # anzeigen, worauf er noch wartet.
                 "engines" => $enginesLoaded,
+                # true heißt: alle Engines haben geantwortet, aber Treffer, die
+                # Serper nur als Google-Weiterleitung geliefert hat, werden
+                # noch aufgelöst. `finished` bleibt so lange false; das kann
+                # bis zu SerperBase::RESOLVE_WINDOW_SECONDS nach dem ersten
+                # Nachladen dauern, deutlich länger als das Warten auf Engines.
+                "resolving" => $resolving,
             ]), 200, [
                 "Cache-Control" => $cacheControl,
                 "Last-Modified" => gmdate("D, d M Y H:i:s T"),

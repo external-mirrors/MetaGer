@@ -28,8 +28,9 @@ namespace App\Search;
  * exactly one did. That was one result per search bought with up to 1.5 s of
  * latency and six or seven requests to Google that it mostly turned away.
  *
- * Serper offers a `/resolve` endpoint for the rest, but it takes about thirty
- * seconds, which no result page can wait for.
+ * The rest are resolved through Serper's `/resolve` endpoint instead, after
+ * the page is out: see SerperBase::resolveMissions and
+ * Search\LateRedirectResolution.
  *
  * ## A redirect that cannot be read is dropped, not shown
  *
@@ -106,7 +107,7 @@ class GoogleRedirectResolver
      * A target worth showing: absolute http(s), and neither another redirect
      * nor Google's "unusual traffic" page.
      */
-    private static function acceptableTarget(?string $target): ?string
+    public static function acceptableTarget(?string $target): ?string
     {
         if (empty($target)) {
             return null;

@@ -35,7 +35,13 @@ class FakeFetcher
     /**
      * Raw upstream response bodies, keyed by engine name (`brave`, `mojeek`, …).
      *
-     * @var array<string, string>
+     * A closure instead of a string is handed the mission and answers for it,
+     * which is how a test gives different missions under one name different
+     * answers — Serper's `/resolve` missions are one per link. A closure that
+     * returns null leaves the mission unanswered, as a fetch still in flight
+     * would; {@see deliver} answers it later.
+     *
+     * @var array<string, string|\Closure(array<string, mixed>): ?string>
      */
     private array $bodies;
 
@@ -64,7 +70,7 @@ class FakeFetcher
 
     /**
      * @param object $inner the real redis manager, which everything else passes through to
-     * @param array<string, string> $bodies
+     * @param array<string, string|\Closure(array<string, mixed>): ?string> $bodies
      */
     public function __construct(private object $inner, array $bodies)
     {
@@ -126,14 +132,14 @@ class FakeFetcher
             // engine name is a typo; this way the engine reports no results,
             // which is what a real failing engine does.
             $body = $this->bodies[$mission["name"]] ?? "no-result";
+            if ($body instanceof \Closure) {
+                $body = $body($mission);
+                if ($body === null) {
+                    continue;
+                }
+            }
 
-            // Byte-for-byte the shape RequestFetcher writes: a JSON envelope with
-            // the curl info alongside the body, then a 60 second expiry.
-            $this->inner->lpush(
-                $mission["resulthash"],
-                json_encode(["info" => ["http_code" => 200], "body" => $body])
-            );
-            $this->inner->expire($mission["resulthash"], 60);
+            $this->deliver($mission, $body);
 
             // And the second thing the worker does with an answer, which this
             // used to skip: engines that declare a cacheDuration have their body
@@ -148,6 +154,23 @@ class FakeFetcher
         $this->pushes[] = $push;
 
         return count($values);
+    }
+
+    /**
+     * Answer $mission the way the worker would, whenever the test says so.
+     *
+     * Byte-for-byte the shape RequestFetcher writes: a JSON envelope with the
+     * curl info alongside the body, then a 60 second expiry.
+     *
+     * @param array<string, mixed> $mission
+     */
+    public function deliver(array $mission, string $body): void
+    {
+        $this->inner->lpush(
+            $mission["resulthash"],
+            json_encode(["info" => ["http_code" => 200], "body" => $body])
+        );
+        $this->inner->expire($mission["resulthash"], 60);
     }
 
     /**

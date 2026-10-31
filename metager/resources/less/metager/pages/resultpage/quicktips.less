@@ -143,6 +143,12 @@
     filter: @invert-state;
   }
 
+  // In the column, alone with no answers above them: the first line level
+  // with the first result's title beside it.
+  &#quicktips > .quicktip-extras:first-child > .quicktip:first-child {
+    margin-top: @space-5;
+  }
+
   .mg-icon-rot180 {
     transition: transform 0.5s;
   }
@@ -152,46 +158,70 @@
   }
 
   // Quicktips that do not answer the query (Quicktip::EXTRA_TYPES): shown, but
-  // after the answers and quieter than them — no frame, just a rule above.
+  // after the answers and quieter than them. Nothing here is filled like a
+  // result card: the saying is a pull quote, the tip an outlined note.
   .quicktip-extras {
     display: flex;
     flex-direction: column;
-    gap: @space-4;
+    gap: @space-5;
 
     > .quicktip {
-      padding: @space-4 0 0;
-      border: 0;
-      border-top: 1px solid @border-color;
-      border-radius: 0;
+      border-radius: 10px;
       background-color: transparent;
     }
 
-    // Alone, with no answers above them: no rule to separate them from, and
-    // the first line level with the first result's title beside it.
-    &:first-child > .quicktip:first-child {
-      padding-top: @space-5;
-      border-top: 0;
-    }
 
-    > .quicktip[type="spruch"] .quicktip-summary {
-      p {
-        margin: 0;
-        font-size: 15px;
-        font-style: italic;
-        color: @text-color;
-        quotes: "„" "“";
+    > .quicktip[type="spruch"] {
+      padding: @space-1 0 @space-1 @space-4;
+      border: 0;
+      border-left: 3px solid @border-color;
+      border-radius: 0;
 
-        &::before {
-          content: open-quote;
-        }
-
-        &::after {
-          content: close-quote;
-        }
+      .quicktip-headline {
+        display: none;
       }
 
-      .author::before {
-        content: "— ";
+      .quicktip-summary {
+        p {
+          margin: 0;
+          font-size: 15px;
+          font-style: italic;
+          line-height: 1.5;
+          color: @text-color;
+          quotes: "„" "“";
+
+          &::before {
+            content: open-quote;
+          }
+
+          &::after {
+            content: close-quote;
+          }
+        }
+
+        .author {
+          margin-top: @space-2;
+          font-size: 13px;
+
+          &::before {
+            content: "— ";
+          }
+        }
+      }
+    }
+
+    > .quicktip[type="tip"] {
+      padding: @space-4;
+
+      .quicktip-summary {
+        .quicktip-title,
+        .quicktip-title a {
+          font-size: 14px;
+        }
+
+        p {
+          margin-top: @space-1;
+        }
       }
     }
   }

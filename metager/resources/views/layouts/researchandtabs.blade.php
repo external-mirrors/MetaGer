@@ -40,7 +40,7 @@
         @include('parts.warnings')
         @yield('results')
         @include('parts.enginefooter')
-        <div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
+        <div id="backtotop"><a href="#top"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5M6 11l6-6 6 6"/></svg>@lang('results.backtotop')</a></div>
     </div>
     @include('parts.quicktips', ['quicktips' => $quicktips])
 

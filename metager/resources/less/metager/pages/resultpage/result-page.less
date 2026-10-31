@@ -732,6 +732,11 @@ a {
         }
       }
 
+      // The saying and the tip close the list, set apart from the pager.
+      > .quicktips-inline-extras {
+        margin-top: @space-4;
+      }
+
       @supports not (selector(:first-child)) {
         gap: 0;
 
@@ -773,47 +778,81 @@ a {
     }
 
     #backtotop {
+      margin: @space-6 0 @space-4;
       text-align: center;
-      margin: 1em 0;
+
+      a {
+        display: inline-flex;
+        align-items: center;
+        gap: @space-1;
+        font-size: 13px;
+        color: @secondary-text-color;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
 
+    // Which engines answered and which could: small print after the results,
+    // a label and its engines on a line, left-aligned with the cards above.
     #engine-footer {
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: space-around;
+      flex-direction: column;
+      gap: @space-3;
+      margin-top: @space-6;
+      padding-top: @space-5;
+      border-top: 1px solid @border-color;
 
       >div {
-        border-radius: 3px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: @space-2;
 
         >h3 {
-          font-size: 0.9rem;
-          margin: 0;
-          color: @text-color-alpha-70;
-          border-bottom: 1px dotted @metager-orange;
+          margin: 0 @space-1 0 0;
+          font-size: 12px;
+          font-weight: 600;
+          line-height: 1.4;
+          color: @muted-text-color;
 
           >a {
             color: @accent-text-color;
           }
-
-          text-align: center;
         }
 
         >.engines {
           display: flex;
-          gap: 0.5rem;
-          justify-content: center;
-          padding: 0.5rem 1rem;
           flex-wrap: wrap;
+          gap: @space-2;
 
           >.engine {
-            color: @text-color-alpha-70;
-            font-size: 0.8rem;
-            border-radius: 10px;
+            padding: 2px 10px;
+            border: 1px solid @border-color;
+            border-radius: 999px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: @secondary-text-color;
             white-space: nowrap;
 
+            // One to add: a link that searches again with it.
             &.disabled-by-configuration {
               cursor: copy;
+
+              >a {
+                color: @accent-text-color;
+                text-decoration: none;
+
+                &::before {
+                  content: "+ ";
+                }
+              }
+
+              &:hover {
+                background-color: @highlight-color;
+              }
             }
 
             >a {

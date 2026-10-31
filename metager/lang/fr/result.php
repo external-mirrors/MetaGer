@@ -14,6 +14,8 @@ return [
     ],
     'news' => 'Actualités pertinentes',
     'videos' => 'Vidéos',
+    'scroll-back' => 'Précédents',
+    'scroll-forward' => 'Suivants',
     'gefVon' => 'par',
     'advertisement' => 'Annonce',
     'providers' => 'fournisseurs',

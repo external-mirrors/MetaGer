@@ -18,6 +18,8 @@ return [
     'providers' => 'Proveedores',
     'news' => 'Noticias de interés',
     'videos' => 'Vídeos',
+    'scroll-back' => 'Desplazar atrás',
+    'scroll-forward' => 'Desplazar adelante',
     'more-from-host' => [
         'summary' => '{1} :count resultado más de :host|[2,*] :count resultados más de :host',
         'search' => 'Buscar solo en :host',

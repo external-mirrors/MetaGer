@@ -7,11 +7,15 @@ import { patchResults, rememberServerMarkup } from "./resultpage/patch";
 import { nextPollDelay } from "./resultpage/loader";
 import { watchBrokenImages } from "./resultpage/images";
 import { enableResultMenus } from "./resultpage/menu";
+import { enableInlineScrollers } from "./resultpage/scroller";
 
 // Not on "boot": a picture can fail before it, and the listeners cover what
 // load-more brings in later as well.
 watchBrokenImages(document);
 enableResultMenus(document);
+// Again after load-more: a row it replaced comes back without its buttons.
+enableInlineScrollers(document);
+document.addEventListener("resultsChanged", () => enableInlineScrollers(document));
 
 let bootEvent = new Event("boot");
 let resultLoaderEvent = new Event("resultsChanged");

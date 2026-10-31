@@ -24,6 +24,8 @@ return [
     'news' => 'Relevante Nachrichten',
     'more-news' => 'mehr',
     'videos' => "Videos",
+    'scroll-back' => 'Zurückblättern',
+    'scroll-forward' => 'Weiterblättern',
     'more-from-host' => [
         'summary' => '{1} :count weiteres Ergebnis von :host|[2,*] :count weitere Ergebnisse von :host',
         'search' => 'Nur auf :host suchen',

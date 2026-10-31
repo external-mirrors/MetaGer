@@ -18,6 +18,8 @@ return [
     'proxytext' => 'Il link al risultato viene aperto in forma anonima. I vostri dati non saranno trasferiti ai server di destinazione. Alcune pagine web potrebbero non funzionare come di consueto.',
     'news' => 'Notizie rilevanti',
     'videos' => 'Video',
+    'scroll-back' => 'Scorri indietro',
+    'scroll-forward' => 'Scorri avanti',
     'more-from-host' => [
         'summary' => '{1} :count altro risultato da :host|[2,*] :count altri risultati da :host',
         'search' => 'Cerca solo su :host',

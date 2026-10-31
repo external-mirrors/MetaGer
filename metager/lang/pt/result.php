@@ -25,6 +25,8 @@ return [
         'download' => 'Descarregar imagem',
     ],
     'videos' => 'Vídeos',
+    'scroll-back' => 'Recuar',
+    'scroll-forward' => 'Avançar',
     'advertisement' => 'Anúncio',
     'proxytext' => 'A ligação de resultados é aberta de forma anónima. Os seus dados não serão transferidos para os servidores de destino. Algumas páginas web podem não funcionar como habitualmente.',
     'gefVon' => 'por',

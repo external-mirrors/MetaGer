@@ -911,8 +911,10 @@ a {
       grid-area: research-searchbar;
 
       .resultpage-searchbar {
+        // The bar's own colour: a field with the page background inside the
+        // card-coloured bar drew a black box with square corners in dark mode.
         .search-input-submit {
-          background-color: @background-color;
+          background-color: transparent;
 
           .search-input {
             border-bottom: 1px solid @border-color;

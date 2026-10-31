@@ -40,19 +40,6 @@
                 </a>
             @endif
         </div>
-        @if (sizeof($result->deepResults['buttons']) > 0)
-            <ul class="result-deep-buttons">
-                @foreach ($result->deepResults['buttons'] as $button)
-                    <li>
-                        <a href="{{ $button->link }}" title="{{ $button->link }}"
-                            @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
-                            target="{{ $metager->getNewtab() }}">
-                            {{ $button->title }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        @endif
     </div>
     <div class="result-body {{ !empty($result->logo) || !empty($result->image) ? 'with-image' : '' }}">
         <div class="result-description">
@@ -84,6 +71,20 @@
                         loading="lazy" />
                 </a>
             </div>
+        @endif
+        {{-- Sitelinks: navigation into the result, read after its description. --}}
+        @if (sizeof($result->deepResults['buttons']) > 0)
+            <ul class="result-deep-buttons">
+                @foreach ($result->deepResults['buttons'] as $button)
+                    <li>
+                        <a href="{{ $button->link }}" title="{{ $button->link }}"
+                            @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
+                            target="{{ $metager->getNewtab() }}">
+                            {{ $button->title }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
         @endif
         <div class="result-footer">
             @include('parts.result-proxy-link', ['result' => $result])

@@ -36,7 +36,6 @@ return [
     ],
     'quicktips' => [
         'heading' => 'Quicktips',
-        'extras' => 'Spruch und Tipp des Tages',
     ],
     'alt' => [
         'more' => 'Mehr',

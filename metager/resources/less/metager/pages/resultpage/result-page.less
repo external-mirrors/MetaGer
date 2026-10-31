@@ -24,6 +24,9 @@
 @research-bar-phone-breakpoint: 480px;
 // Quicktip background color
 @quicktip-background-color: @result-card-color;
+// The quicktip column beside the results. Fixed, so it does not change width
+// with whatever quicktips a search happens to bring.
+@quicktip-column-width: 360px;
 // Color of the Spruch author
 @spruch-author-color: @color-strong-grey;
 /* Styles */
@@ -573,19 +576,29 @@ a {
   }
 }
 
+// "Mehr": a secondary button, the same frame as a card.
 .mg-pager {
   display: flex;
   justify-content: center;
-  padding: 1rem 0;
+  padding: @space-2 0;
 
   &>div {
-    border: #aaa solid 1px;
-    border-radius: 10px;
-    padding: 5px;
-    margin-left: 10px;
+    border: 1px solid @border-color;
+    border-radius: 8px;
+    margin-left: @space-2;
     background-color: @result-card-color;
-    box-shadow: 0px 1px 1.5px 0px rgba(0, 0, 0, 0.12),
-      1px 0px 1px 0px rgba(0, 0, 0, 0.24);
+
+    >a {
+      display: block;
+      padding: 10px @space-6;
+      font-size: 14px;
+      color: @text-color;
+      text-decoration: none;
+    }
+
+    &:hover {
+      background-color: @highlight-color;
+    }
 
     &:first-child {
       margin-left: 0px;
@@ -663,12 +676,12 @@ a {
   padding: 0 0.5rem;
   margin-top: 0;
   display: grid;
-  grid-template-columns: @results-width-max max-content;
+  grid-template-columns: @results-width-max @quicktip-column-width;
   grid-template-areas: "searchbar ." "foki ." "options ." "results additions" "footer .";
   grid-row-gap: @padding-small-default;
   justify-items: stretch;
   align-items: stretch;
-  column-gap: 1rem;
+  column-gap: @space-6;
   row-gap: 0.5rem;
   /**/
   background-color: @resultpage-background-color;
@@ -695,7 +708,8 @@ a {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding-top: 1rem;
+    // The quicktip column beside it starts at the same height.
+    padding-top: @space-4;
 
     >span[name="top"] {
       display: none;
@@ -704,7 +718,7 @@ a {
     #results {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: @space-4;
       scroll-margin-top: 80px;
 
       // The in-list copy of the quicktips (parts/quicktips-inline), for widths
@@ -811,20 +825,17 @@ a {
 
   #additions-container {
     grid-area: additions;
-    /**/
-    //min-width: @additions-width-min;
-    max-width: @additions-width-max;
     width: 100%;
     height: max-content;
+    // Level with the first result: #results-container's padding-top.
+    padding-top: @space-4;
 
     #search-settings {
       display: none;
     }
 
     #quicktips {
-      height: 100%;
       width: 100%;
-      min-height: 500px;
 
       iframe {
         height: 100%;
@@ -839,7 +850,7 @@ a {
 
   @media (min-width: 1350px) {
     @supports (display: grid) {
-      grid-template-columns: @results-width-max max-content;
+      grid-template-columns: @results-width-max @quicktip-column-width;
       grid-template-areas: "searchbar ." "foki ." "options ." "results additions" "footer .";
     }
   }

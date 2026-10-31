@@ -5,6 +5,16 @@
 @result-description-color: @text-color;
 @result-image-border-color: @color-almost-white;
 
+// What a result shows, in order of how much it matters, and how loud each
+// part is allowed to be:
+//
+//   1. the title          — the one strong element: it is how a result is opened
+//   2. address, description — to judge the result by; muted and secondary text
+//   3. sitelinks          — plain links into the result, after its description
+//   4. actions, engines   — always in the same place, quiet until pointed at
+//
+// Spacing comes from the @space-* scale in variables.less and nowhere else.
+
 // A control drawn smaller than it can be tapped: the visible part stays at
 // the size the row looks right at, and an invisible margin around it makes the
 // 44px a finger needs. Only on a phone, where nothing is pointed at precisely.
@@ -18,25 +28,25 @@
       position: absolute;
       top: ((@visible - 44px) / 2);
       bottom: ((@visible - 44px) / 2);
-      // Half the 8px gap between neighbouring controls, so two never overlap.
-      left: -4px;
-      right: -4px;
+      // Half the gap between neighbouring controls, so two never overlap.
+      left: -(@space-1 / 2);
+      right: -(@space-1 / 2);
     }
   }
 }
 
 // An action on a result: a quiet text button with an icon. All of them look
 // alike — "Anonym öffnen" is how some people open every result and others never
-// use, so it is not drawn as the one main action. The padding sits outside the
-// text, so a row starting with one lines up with the card's text by pulling it
-// back (see .result-footer).
+// use, so it is not drawn as the one main action. Muted until pointed at. The
+// padding sits outside the text; a row that starts with one pulls it back so
+// the text lines up with the title.
 .result-action() {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   box-sizing: border-box;
   min-height: 28px;
-  padding: 0 8px;
+  padding: 0 @space-2;
   border-radius: 6px;
   font-size: 13px;
   line-height: 1;
@@ -44,23 +54,24 @@
 
   &,
   &:active,
-  &:hover,
   &:focus,
   &:visited {
-    color: @accent-text-color;
+    color: @muted-text-color;
     text-decoration: none;
   }
 
   &:hover {
+    color: @link-color;
     background-color: @highlight-color;
+    text-decoration: none;
   }
 
   > svg {
     flex: 0 0 auto;
   }
 
-  // Long label on wider screens, short one on a phone, so every action of
-  // the row fits on one line at 390px.
+  // Long label on wider screens, short one on a phone, so every action of a
+  // row fits on one line at 390px.
   > .action-label-short {
     display: none;
   }
@@ -85,52 +96,79 @@ a.result-open-proxy {
 
   &.result-open-proxy--icon {
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    min-height: 24px;
+    height: 24px;
     padding: 0;
-    border-radius: 999px;
+  }
+}
 
+// A grouped or folded result: title and description on the left, its shield
+// beside the title.
+.sub-result() {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: @space-2;
+  align-items: start;
+  font-size: 13px;
+
+  > :not(.result-open-proxy) {
+    grid-column: 1;
+  }
+
+  > .result-open-proxy {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  > a:not(.result-open-proxy) {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 24px;
+    color: @link-color;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > div {
+    color: @secondary-text-color;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
   }
 }
 
 .result {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-
-  @supports not (selector(:first-child)) {
-    gap: 0;
-
-    > *:not(:nth-child(1)) {
-      padding: 0.125rem 0;
-    }
-  }
-
   box-sizing: border-box;
   width: 100%;
-  padding: 16px;
+  padding: @space-5;
   border: 1px solid @border-color;
   border-radius: 10px;
   background-color: @result-card-color;
 
   @media (max-width: @screen-mobile) {
-    padding: 12px;
+    padding: @space-4;
   }
 
+  // 1. Title, and 2. the address under it
   .result-header {
     max-width: 100%;
     overflow: hidden;
 
     .result-headline {
       width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
 
       .result-title {
+        margin: 0;
         font-size: 18px;
         font-weight: 600;
-        margin: 0px;
         line-height: 1.3;
         overflow: hidden;
         display: -webkit-box;
@@ -143,7 +181,7 @@ a.result-open-proxy {
         }
 
         .result-price {
-          padding: 0px 10px;
+          padding: 0 @space-2;
           color: white;
           background-color: #666699;
           border-radius: 3px;
@@ -156,25 +194,21 @@ a.result-open-proxy {
             color: @text-color;
             text-decoration: none;
           }
+
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
-
     }
 
     .result-subheadline {
       width: 100%;
       display: flex;
       align-items: center;
-      line-height: 1.3;
-      gap: 0 8px;
-
-      @supports not (selector(:first-child)) {
-        gap: 0;
-
-        > *:not(:nth-child(1)) {
-          padding: 0 4px;
-        }
-      }
+      gap: 0 @space-2;
+      margin-top: 2px;
+      line-height: 1.4;
 
       figure.content-warning {
         display: none;
@@ -185,8 +219,6 @@ a.result-open-proxy {
           width: 20px;
           height: 20px;
           background: url("/img/svg-icons/icon-content-warning.svg");
-          background-repeat: repeat;
-          background-size: auto;
           background-size: contain;
           background-repeat: no-repeat;
         }
@@ -199,7 +231,7 @@ a.result-open-proxy {
           background-color: @background-color;
           border: 1px solid @border-color;
           white-space: nowrap;
-          padding: 8px;
+          padding: @space-2;
           top: -2.2rem;
           left: 1rem;
         }
@@ -213,7 +245,6 @@ a.result-open-proxy {
       .result-link {
         .overflow-ellipsis;
         display: block;
-        font-size: 0.95em;
         width: fit-content;
         max-width: 100%;
 
@@ -222,13 +253,9 @@ a.result-open-proxy {
         &:hover,
         &:focus,
         &:visited {
-          color: @accent-text-color;
+          color: @muted-text-color;
           font-size: 13px;
           text-decoration: none;
-        }
-
-        &:visited {
-          color: #8091a2;
         }
 
         img {
@@ -248,172 +275,128 @@ a.result-open-proxy {
         top: 1px;
       }
     }
-
-    // Sitelinks, as chips: one row that scrolls sideways rather than wraps,
-    // since how many there are is the engine's choice.
-    > .result-deep-buttons {
-      display: flex;
-      overflow-x: auto;
-      gap: 8px;
-      margin: 4px 0 0;
-      padding: 0;
-      list-style: none;
-      font-size: 13px;
-
-      > li {
-        flex: 0 0 auto;
-        list-style: none;
-
-        > a {
-          display: inline-flex;
-          align-items: center;
-          box-sizing: border-box;
-          min-height: 30px;
-          padding: 0 12px;
-          border: 1px solid @border-color;
-          border-radius: 999px;
-          white-space: nowrap;
-          color: @accent-text-color;
-          text-decoration: none;
-          .touch-target(30px);
-        }
-      }
-    }
   }
 
   .result-body {
     max-width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    margin-top: @space-2;
 
-    @supports not (selector(:first-child)) {
-      gap: 0;
-
-      > *:not(:nth-child(1)) {
-        padding: 0.25rem 0;
-      }
-    }
-
+    // A picture sits beside the description, one fixed size whatever shape
+    // the engine sent, so every result with one looks the same.
     &.with-image {
       display: grid;
-      // The text column gives way, the picture does not: with `auto auto` a
-      // long description took the room and the picture was drawn over it.
       grid-template-columns: minmax(0, 1fr) auto;
-      grid-template-rows: auto auto auto;
-      grid-template-areas: "description image" "footer image" "options options";
-      column-gap: 12px;
-      // Not a row gap: the options row is in the template whether or not it
-      // shows, and a gap before it would sit empty at the bottom of the card.
-      row-gap: 0;
+      grid-template-areas: "description image" "sitelinks sitelinks" "footer footer" "options options";
+      column-gap: @space-4;
 
       .result-description {
         grid-area: description;
       }
 
+      .result-deep-buttons {
+        grid-area: sitelinks;
+      }
+
       .result-image,
       .result-logo {
         grid-area: image;
-        align-self: start;
-        justify-self: end;
-        border-radius: 8px;
-        overflow: hidden;
       }
 
       .result-footer {
         grid-area: footer;
-        margin-top: 8px;
       }
 
       .result-options {
         grid-area: options;
-        margin-top: 8px;
-      }
-
-      @media (max-width: 535px) {
-        grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-rows: repeat(3, auto);
-        grid-template-areas: "description image" "footer footer" "options options";
-
-        > .result-image img,
-        > .result-logo img {
-          max-width: 72px;
-          max-height: 72px;
-        }
       }
     }
 
     .result-image,
     .result-logo {
-      max-width: 160px;
+      align-self: start;
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: @highlight-color;
 
       > a {
         display: block;
+        width: 100%;
+        height: 100%;
 
         > img {
           display: block;
-          max-width: 160px;
-          max-height: 100px;
-          width: auto;
-          height: auto;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
       }
     }
 
+    // 2. The description: three lines at most
     .result-description {
-      color: @muted-text-color;
+      color: @secondary-text-color;
+      // A `font-size: 1` used to stand in this rule — a length without a unit,
+      // which is invalid CSS, so every browser dropped it. lightningcss reads it
+      // as 1px instead and emits that, which rendered every description
+      // invisible. An explicit px size here is the safe form.
       font-size: 14px;
-      // No font-size here on purpose: the description inherits the result's.
-      // A `font-size: 1` used to stand in this spot — a length without a unit,
-      // which is invalid CSS, so every browser dropped the declaration and the
-      // size inherited anyway. lightningcss reads it as 1px instead and emits
-      // that, which rendered every description invisible.
-      line-height: 1.45;
-      max-height: 4.35em; // three lines
-      clear: both;
+      line-height: 1.5;
       overflow: hidden;
-      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
 
       .date {
-        font-weight: bold;
+        font-weight: 600;
       }
 
       p {
-        margin: 0;
-        margin-bottom: 4px;
-      }
-
-      img {
-        margin: 5px;
-        margin-left: 0px;
-        margin-right: 15px;
-        height: auto;
-        width: auto;
-        max-width: 120px;
-        max-height: 200px;
-        border: solid 1px @result-image-border-color;
+        margin: 0 0 @space-1;
       }
     }
 
-    /* CSS Rules for the result options */
+    // 3. Sitelinks: plain links, wrapping, after the description
+    .result-deep-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 @space-4;
+      margin: @space-2 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 13px;
+      line-height: 24px;
+
+      @media (max-width: @screen-mobile) {
+        line-height: 32px;
+      }
+
+      > li {
+        list-style: none;
+
+        > a {
+          color: @link-color;
+          white-space: nowrap;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    /* The options menu: a checkbox, so it opens without JavaScript */
     .result-toggle {
       position: absolute;
       left: -300%;
 
       &:checked ~ .result-options {
         display: block;
-
-        > .options {
-          max-height: 150px;
-          overflow: initial;
-          overflow-x: auto;
-          opacity: 1;
-          display: block;
-
-          @media (max-width: @screen-mobile) {
-            max-height: none;
-          }
-        }
       }
 
       // For keyboard users, who cannot see which of the hidden checkboxes
@@ -429,7 +412,6 @@ a.result-open-proxy {
       margin: 0 auto;
       outline: 1px auto;
     }
-
 
     &.ad .ad-hoster {
       &,
@@ -451,42 +433,19 @@ a.result-open-proxy {
 
     & > .result-options {
       display: none;
-      max-width: 100%;
-      overflow-x: auto;
-
-      & > .options {
-        width: 100%;
-        text-align: right;
-        overflow: hidden;
-        display: none;
-        max-height: 0px;
-        transition: all 1s;
-        -webkit-transition: all 1s;
-        opacity: 0;
-      }
+      margin-top: @space-2;
 
       ul {
         display: flex;
-        margin-bottom: 0;
-        gap: 1rem;
-
-        @supports not (selector(:first-child)) {
-          gap: 0;
-
-          > *:not(:nth-child(1)) {
-            padding: 0 0.5rem 0;
-          }
-        }
+        flex-wrap: wrap;
+        gap: 0 @space-4;
+        margin: 0;
+        padding: 0;
+        font-size: 13px;
+        line-height: 24px;
 
         li {
-          font-size: 0.85em;
-          padding-bottom: 0.25rem;
-        }
-
-        @media (max-width: @screen-mobile) {
-          li.result-saver {
-            display: none;
-          }
+          list-style: none;
         }
 
         li > a {
@@ -494,26 +453,23 @@ a.result-open-proxy {
           white-space: nowrap;
         }
 
-        // On a phone a list of touch-sized rows in a frame, not one line of
-        // small links that scrolls sideways.
         @media (max-width: @screen-mobile) {
+          li.result-saver {
+            display: none;
+          }
+
+          // On a phone a list of touch-sized rows in a frame.
           flex-direction: column;
-          gap: 0;
-          margin-top: 8px;
-          padding: 4px 0;
+          padding: @space-1 0;
           border: 1px solid @border-color;
           border-radius: 8px;
-
-          li {
-            padding: 0;
-            font-size: 15px;
-          }
+          font-size: 15px;
 
           li > a {
             display: flex;
             align-items: center;
             min-height: 44px;
-            padding: 0 14px;
+            padding: 0 @space-4;
             color: @text-color;
             white-space: normal;
           }
@@ -522,119 +478,22 @@ a.result-open-proxy {
     }
   }
 
-  > .result-inherited-results {
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 0.9rem;
-    gap: 8px;
-    margin-top: 8px;
-    padding: 0 0 0 12px;
-    border-left: 2px solid @border-color;
-
-    > .inherited-result {
-      .sub-result-with-proxy();
-    }
-
-    @media (min-width: 500px) {
-      > .inherited-result {
-        max-width: calc(50% - 0.5rem);
-      }
-    }
-  }
-
-  // Layout only: every colour here is inherited, so the fold reads like the
-  // rest of the result in both themes without a palette entry of its own.
-  > .result-more-from-host {
-    font-size: 0.9rem;
-    margin-top: 8px;
-    border-top: 1px solid @border-color;
-
-    // base.less hides every <summary>'s disclosure marker, and without one
-    // this line reads as text rather than as something that opens. Drawn
-    // here instead, with empty alt text so a screen reader, which already
-    // announces the summary as expandable, does not read the arrow too.
-    // The vertical padding parts it from the result's action row above and
-    // makes it a tap target of its own on a phone.
-    > summary {
-      cursor: pointer;
-      width: fit-content;
-      padding: 8px 0;
-
-      &::before {
-        content: "▸ ";
-        content: "▸ " / "";
-      }
-    }
-
-    &[open] > summary::before {
-      content: "▾ ";
-      content: "▾ " / "";
-    }
-
-    > ul {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      list-style: none;
-      margin: 0 0 8px;
-      padding: 0;
-
-      // One line of title and two of description: these are the host's
-      // lesser results, and nine of them at full length push the rest of
-      // the page a screen further down.
-      > li {
-        .sub-result-with-proxy();
-      }
-
-      > li > a:not(.result-open-proxy) {
-        display: block;
-        margin-bottom: 0.125rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .more-from-host-description {
-        line-height: 1.3;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        overflow: hidden;
-      }
-    }
-
-    > .more-from-host-search {
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-  }
-
+  // 4. Actions and engines
   .result-footer {
-    width: 100%;
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-
-    @supports not (selector(:first-child)) {
-      gap: 0;
-
-      > *:not(:nth-child(1)) {
-        padding: 0 0.5rem;
-      }
-    }
-
-    gap: 4px;
     align-items: center;
-    align-self: end;
-    // The actions' own height is mostly air; pull the row into the card's
-    // padding so the space below it matches the space above.
-    margin-bottom: -4px;
+    gap: @space-1;
+    width: 100%;
+    margin-top: @space-2;
+    // The actions are 28px for 13px of text; let that air overlap the card's
+    // padding so the space below the row matches the space above the title.
+    margin-bottom: -@space-2;
 
     // Actions carry their padding outside their text; without this the row
-    // would start 8px to the right of the title above it.
+    // would start to the right of the title above it.
     > :first-child {
-      margin-left: -8px;
+      margin-left: -@space-2;
     }
 
     .result-open,
@@ -650,7 +509,7 @@ a.result-open-proxy {
       width: 28px;
       height: 28px;
       margin: 0;
-      border-radius: 999px;
+      border-radius: 6px;
       cursor: pointer;
 
       &:hover {
@@ -662,16 +521,11 @@ a.result-open-proxy {
         filter: invert(1) brightness(0.7);
       }
 
-      @media (max-width: @screen-mobile) {
-        width: 32px;
-        height: 32px;
-      }
-
-      .touch-target(32px);
+      .touch-target(28px);
     }
 
-    // Who found it, at the end of the row as in the app. A span with a list
-    // when several engines did, opened by focus without JavaScript.
+    // Who found it: metadata, at the end of the row. A span with a list when
+    // several engines did, opened by focus without JavaScript.
     .result-hoster {
       position: relative;
       margin-left: auto;
@@ -687,19 +541,15 @@ a.result-open-proxy {
         top: 100%;
         z-index: 10;
         width: fit-content;
-        margin: 4px 0 0;
-        padding: 8px;
+        margin: @space-1 0 0;
+        padding: @space-2 @space-3;
         display: none;
         background-color: @result-card-color;
+        border: 1px solid @border-color;
         border-radius: 8px;
 
         a {
           color: @link-color;
-          margin-left: 4px;
-
-          &:hover {
-            color: @a-hover-color;
-          }
         }
       }
 
@@ -711,6 +561,76 @@ a.result-open-proxy {
 
     .close-result-options {
       display: none;
+    }
+  }
+
+  // Results the engine grouped under this one
+  > .result-inherited-results {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: @space-3 @space-6;
+    margin-top: @space-4;
+    padding-left: @space-3;
+    border-left: 2px solid @border-color;
+
+    @media (min-width: 600px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    > .inherited-result {
+      .sub-result();
+    }
+  }
+
+  // Results of this host that ranked below this one (Search\HostCrowding)
+  > .result-more-from-host {
+    margin-top: @space-3;
+    padding-top: @space-1;
+    border-top: 1px solid @border-color;
+    font-size: 13px;
+
+    // base.less hides every <summary>'s disclosure marker, and without one
+    // this line reads as text rather than as something that opens. Drawn
+    // here instead, with empty alt text so a screen reader, which already
+    // announces the summary as expandable, does not read the arrow too.
+    > summary {
+      display: flex;
+      align-items: center;
+      gap: @space-1;
+      width: fit-content;
+      min-height: 32px;
+      color: @muted-text-color;
+      cursor: pointer;
+
+      &::before {
+        content: "▸";
+        content: "▸" / "";
+      }
+    }
+
+    &[open] > summary::before {
+      content: "▾";
+      content: "▾" / "";
+    }
+
+    > ul {
+      display: flex;
+      flex-direction: column;
+      gap: @space-3;
+      margin: @space-2 0 @space-3;
+      padding: 0 0 0 @space-3;
+      border-left: 2px solid @border-color;
+      list-style: none;
+
+      > li {
+        .sub-result();
+      }
+    }
+
+    > .more-from-host-search {
+      display: inline-block;
+      margin-bottom: @space-2;
+      color: @link-color;
     }
   }
 
@@ -750,22 +670,5 @@ a.result-open-proxy {
 @keyframes result-arrived {
   from {
     opacity: 0;
-  }
-}
-
-// A grouped or folded result: its own text on the left, its shield on the right.
-.sub-result-with-proxy() {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: 8px;
-  align-items: start;
-
-  > :not(.result-open-proxy) {
-    grid-column: 1;
-  }
-
-  > .result-open-proxy {
-    grid-column: 2;
-    grid-row: 1 / span 2;
   }
 }

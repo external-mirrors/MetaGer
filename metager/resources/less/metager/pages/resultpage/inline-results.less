@@ -1,82 +1,92 @@
+// News and videos between the results: a small heading and a row of cards
+// that scrolls sideways. Same heading as the quicktips, same card as a result.
 h3.inline-heading {
-  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: @space-2;
+  // #results puts @space-4 between its children; the heading belongs to the
+  // cards below it, so it takes some of that back from them.
+  margin: @space-2 0 -@space-2;
+  font-size: 15px;
+  font-weight: 600;
 
   >a {
-    font-size: .6em;
+    font-size: 13px;
+    font-weight: 400;
+    color: @link-color;
   }
 }
 
 >div.inline-results {
   display: flex;
-  gap: 12px;
-  overflow: auto;
-  padding-bottom: 0.7rem;
+  gap: @space-3;
+  overflow-x: auto;
+  padding-bottom: @space-1;
 
-  // A card like a result, with the same way to open it anonymously.
   >.inline-result {
-    // A fixed width: taken from the image, as it used to be, a card without
-    // one shrank to its longest word.
-    flex: 0 0 auto;
-    display: grid;
-    grid-template-columns: 15rem;
-    grid-template-rows: auto auto auto 1fr auto;
+    flex: 0 0 240px;
+    display: flex;
+    flex-direction: column;
     border: 1px solid @border-color;
     border-radius: 10px;
     overflow: hidden;
     background-color: @result-card-color;
 
+    // The picture first in the card, cropped to one shape whatever the engine
+    // sent.
     >.result-image {
+      order: -1;
       display: block;
-      background-color: #b2b2b24d;
-      height: 6.5rem;
+      aspect-ratio: 16 / 9;
       overflow: hidden;
+      background-color: @highlight-color;
 
       >img {
-        height: 100%;
         display: block;
-        margin-inline: auto;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
-    }
-
-    >.result-headline {
-      display: block;
-      margin-top: 4px;
-      padding: 0 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1.2;
-      max-height: 3.6em;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: inherit;
     }
 
     >.result-link {
       display: block;
-      padding: 12px 12px 0;
+      padding: @space-3 @space-3 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 12px;
-      color: @accent-text-color;
+      color: @muted-text-color;
+    }
+
+    >.result-headline {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+      margin-top: @space-1;
+      padding: 0 @space-3;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: @text-color;
     }
 
     >.age {
-      // #777 was 4.47:1 on white and 3.9:1 on the dark ground.
+      padding: @space-1 @space-3 0;
+      font-size: 12px;
       color: @muted-text-color;
-      padding: 4px 12px 0;
-      font-size: 0.9em;
-      display: grid;
-      align-content: end;
     }
 
     >.inline-result-footer {
       display: flex;
-      padding: 8px 12px 12px;
+      margin-top: auto;
+      padding: @space-2 @space-3;
 
       // See .result-footer: the action's padding is outside its text.
       > :first-child {
-        margin-left: -8px;
+        margin-left: -@space-2;
       }
     }
   }

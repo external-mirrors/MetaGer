@@ -18,9 +18,9 @@ use Tests\TestCase;
  * because without JavaScript there is no other way for them to get there.
  *
  * And not every quicktip answers the query: the saying and the MetaGer tip
- * (Quicktip::EXTRA_TYPES) stand next to any search. Those sit in a closed
- * <details> instead — at the end of the column, and before the pager in the
- * list.
+ * (Quicktip::EXTRA_TYPES) stand next to any search. Those come after the
+ * answers, drawn quieter — at the end of the column, and before the pager in
+ * the list. Not folded away: they are short, and there is room for them.
  */
 class QuicktipPlacementTest extends TestCase
 {
@@ -86,7 +86,7 @@ class QuicktipPlacementTest extends TestCase
         );
     }
 
-    public function testTheColumnShowsTheAnswersAndFoldsTheExtras(): void
+    public function testTheColumnShowsTheAnswersThenTheExtras(): void
     {
         $page = $this->page(["tip", "wikipedia", "spruch"]);
 
@@ -96,10 +96,9 @@ class QuicktipPlacementTest extends TestCase
         );
         $this->assertSame(
             ["spruch", "tip"],
-            $this->types($page, "//div[@id='quicktips']/details[" . self::hasClass("quicktip-extras") . "]/div[" . self::hasClass("quicktip") . "]")
+            $this->types($page, "//div[@id='quicktips']/div[" . self::hasClass("quicktip-extras") . "]/div[" . self::hasClass("quicktip") . "]")
         );
-        $fold = $page->query("//div[@id='quicktips']/details[" . self::hasClass("quicktip-extras") . "]")->item(0);
-        $this->assertFalse($fold->hasAttribute("open"), "The extras are closed until asked for.");
+        $this->assertSame(0, $page->query("//div[@id='quicktips']//details")->length, "There is room for the extras; they are not folded away.");
     }
 
     public function testTheListCarriesTheAnswersAfterTheSecondResult(): void
@@ -123,7 +122,7 @@ class QuicktipPlacementTest extends TestCase
         $this->assertSame(["wikipedia"], $this->types($page, "//section[" . self::hasClass("quicktips-inline") . "]/div[" . self::hasClass("quicktip") . "]"));
     }
 
-    public function testTheListCarriesTheExtrasClosedBeforeThePager(): void
+    public function testTheListCarriesTheExtrasBeforeThePager(): void
     {
         $page = $this->page(["tip", "wikipedia", "spruch"]);
 
@@ -131,7 +130,7 @@ class QuicktipPlacementTest extends TestCase
         $this->assertNotNull($extras);
         $this->assertSame(
             ["spruch", "tip"],
-            $this->types($page, "//div[" . self::hasClass("quicktips-inline-extras") . "]/details/div[" . self::hasClass("quicktip") . "]")
+            $this->types($page, "//div[" . self::hasClass("quicktips-inline-extras") . "]/div[" . self::hasClass("quicktip-extras") . "]/div[" . self::hasClass("quicktip") . "]")
         );
 
         // Only the pager may follow, and it renders nothing when there is no

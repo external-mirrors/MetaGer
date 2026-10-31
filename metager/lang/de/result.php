@@ -11,6 +11,8 @@ return [
         '7' => 'ÖFFNEN',
         'direct' => 'Direkt öffnen',
         'togglelabel' => 'Ergebnisoptionen ein- und ausschalten',
+        'anonym-short' => 'ANONYM',
+        'anonym' => 'Anonym öffnen',
     ],
     'gefVon' => 'von',
     'advertisement' => 'Anzeige',
@@ -27,6 +29,11 @@ return [
     'image' => [
         'download' => 'Bild herunterladen',
         'copyright' => 'Bilder können urheberrechtlich geschützt sein.',
+        'proxy' => 'SEITE ANONYM ÖFFNEN',
+    ],
+    'quicktips' => [
+        'heading' => 'Quicktips',
+        'extras' => 'Spruch und Tipp des Tages',
     ],
     'alt' => [
         'more' => 'Mehr',

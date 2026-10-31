@@ -11,6 +11,8 @@ return [
         '7' => 'OBRE',
         'direct' => 'Obertura directa',
         'togglelabel' => 'mostra/amaga les opcions del resultat',
+        'anonym-short' => 'ANÒNIM',
+        'anonym' => 'Obre anònimament',
     ],
     'gefVon' => 'per',
     'advertisement' => 'Anunci',
@@ -27,6 +29,11 @@ return [
     'image' => [
         'download' => 'Baixa la imatge',
         'copyright' => 'Les imatges poden estar subjectes a drets d\'autor.',
+        'proxy' => 'OBRE LA PÀGINA ANÒNIMAMENT',
+    ],
+    'quicktips' => [
+        'heading' => 'Quicktips',
+        'extras' => 'Cita i consell del dia',
     ],
     'alt' => [
         'more' => 'Més'

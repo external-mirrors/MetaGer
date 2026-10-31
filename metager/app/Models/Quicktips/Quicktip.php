@@ -4,6 +4,13 @@ namespace App\Models\Quicktips;
 
 class Quicktip
 {
+    /**
+     * Types that do not answer the query: the same saying or MetaGer tip could
+     * stand next to any search. The result page keeps them one click away
+     * instead of beside the results, where the answers belong.
+     */
+    const EXTRA_TYPES = ["spruch", "tip"];
+
     public $type;
     public $title;
     public $link;
@@ -49,5 +56,10 @@ class Quicktip
             default:
                 $this->order = 7;
         }
+    }
+
+    public function isExtra(): bool
+    {
+        return in_array($this->type, self::EXTRA_TYPES, true);
     }
 }

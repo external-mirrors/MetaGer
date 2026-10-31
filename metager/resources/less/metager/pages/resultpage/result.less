@@ -372,11 +372,25 @@ a.result-open-proxy {
       font-size: 13px;
       line-height: 24px;
 
+      // On a phone one row that is swiped sideways, as in the app: wrapped,
+      // nine sitelinks stacked five ragged lines into the card. The fade at
+      // the end says there is more; the padding under it lets the last one
+      // be scrolled clear of it.
       @media (max-width: @screen-mobile) {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-right: @space-6;
         line-height: 32px;
+        scrollbar-width: none;
+        mask-image: linear-gradient(to right, #000 calc(100% - @space-6), transparent);
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
 
       > li {
+        flex: 0 0 auto;
         list-style: none;
 
         > a {

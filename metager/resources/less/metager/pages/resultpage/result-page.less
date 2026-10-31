@@ -263,7 +263,6 @@ a {
     }
 
     #additions-container {
-      --ad-display: block;
       display: none;
     }
 
@@ -273,10 +272,6 @@ a {
 
     #foki {
       width: 100%;
-    }
-
-    #additions-container[data-authorized="true"] {
-      --ad-display: none;
     }
 
     #options {
@@ -800,12 +795,6 @@ a {
   }
 
   #additions-container {
-    --ad-display: block;
-
-    &[data-authorized="true"] {
-      --ad-display: none;
-    }
-
     grid-area: additions;
     /**/
     //min-width: @additions-width-min;
@@ -1228,16 +1217,6 @@ a {
         font-weight: normal;
       }
     }
-  }
-}
-
-#spendenaufruf {
-  margin-bottom: 10px;
-
-  a {
-    background-color: white;
-    display: inline-block;
-    width: 100%;
   }
 }
 

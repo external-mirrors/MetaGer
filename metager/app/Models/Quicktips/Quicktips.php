@@ -193,6 +193,12 @@ class Quicktips
                 } else {
                     $type = "";
                 }
+                // The donation appeal dates from MetaGer's free version. Every
+                // search is paid for now, so it is not shown to anyone, even
+                // if the quicktip server still sends it.
+                if ($type === "spendenaufruf") {
+                    continue;
+                }
 
                 // Title
                 $title = $quicktip_xml->title->__toString();

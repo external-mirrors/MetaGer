@@ -14,6 +14,21 @@ use ReflectionClass;
  */
 class QuicktipsParsingTest extends TestCase
 {
+    /**
+     * The donation appeal is from the time MetaGer had a free version. Every
+     * search is paid for now, so the result page never shows it — not even if
+     * an older quicktip server still sends one.
+     */
+    public function testADonationAppealFromTheServerIsDropped(): void
+    {
+        $quicktips = $this->parse([
+            $this->entry("spendenaufruf", "Jetzt MetaGer unterstützen"),
+            $this->entry("wikipedia", "Fahrradkette"),
+        ]);
+
+        $this->assertSame(["wikipedia"], array_map(fn($quicktip) => $quicktip->type, $quicktips));
+    }
+
     public function testQuicktipsAreSortedIntoDisplayOrder(): void
     {
         $quicktips = $this->parse([

@@ -183,8 +183,18 @@ class HostCrowdingTest extends TestCase
      */
     public function testResultsLoadedLaterAreCrowdedToo(): void
     {
-        $page = $this->search("/meta/meta.ger3")->getContent();
+        // A load-more only sends the list when something arrived since the
+        // page; Serper answering late, with nothing, is enough for that.
+        $this->actingAsSearchUser();
+        $fetcher = $this->fakeEngineResponses([
+            "brave" => $this->engineFixture("brave-web-same-host.json"),
+            "serper_web" => fn() => null,
+        ]);
+        $page = $this->get("/meta/meta.ger3?eingabe=" . urlencode("gebrauchte waschmaschine") . "&focus=web")
+            ->assertOk()
+            ->getContent();
         preg_match('/name="searchkey" content="([^"]+)"/', $page, $match);
+        $fetcher->deliverLate("serper_web", "no-result");
 
         $query = "eingabe=" . urlencode("gebrauchte waschmaschine") . "&focus=web";
         $html = $this->get("/meta/loadMore?" . $query . "&loadMore=loader_" . $match[1] . "&script=yes")

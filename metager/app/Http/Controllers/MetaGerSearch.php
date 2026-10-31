@@ -374,7 +374,11 @@ class MetaGerSearch extends Controller
             $finished = false;
         }
 
-        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && !$redirectsResolved && !array_key_exists("quicktips", $result)) {
+        # Whether the result list can differ from what the client already has:
+        # an engine answered since the last poll, or a late link resolved.
+        $changed = $engineCountBefore !== $enginesLoadedAfter || $redirectsResolved;
+
+        if ($request->header("If-Modified-Since") !== null && !$changed && !array_key_exists("quicktips", $result)) {
             // Nothing changed but we are not finished yet either
             return response("", 304);
         }
@@ -434,11 +438,26 @@ class MetaGerSearch extends Controller
                 # bis zu SerperBase::RESOLVE_WINDOW_SECONDS nach dem ersten
                 # Nachladen dauern, deutlich länger als das Warten auf Engines.
                 "resolving" => $resolving,
+                # false heißt: `results` ist dieselbe Liste wie beim letzten
+                # Aufruf, ein Client muss nichts neu darstellen. Die Liste wird
+                # trotzdem mitgeschickt, weil Clients sich auf sie verlassen.
+                "changed" => $changed,
             ]), 200, [
                 "Cache-Control" => $cacheControl,
                 "Last-Modified" => gmdate("D, d M Y H:i:s T"),
                 "Content-Type" => "application/json; charset=UTF-8",
             ], MetaGer::JSON_API_FLAGS);
+        }
+
+        # The website polls every second for up to SerperBase::RESOLVE_WINDOW_SECONDS,
+        # and most polls find nothing new. Without `results` the page leaves its
+        # list alone, so those polls cost no render here and no DOM work there.
+        if (!$changed) {
+            unset($result["results"]);
+            return response()->json(mb_convert_encoding($result, "UTF-8", "UTF-8"), 200, [
+                "Cache-Control" => $cacheControl,
+                "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+            ]);
         }
 
         $result["results"] = view('resultpages.results')

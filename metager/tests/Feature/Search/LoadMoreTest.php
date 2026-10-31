@@ -38,13 +38,19 @@ class LoadMoreTest extends TestCase
      * Run a search, then follow it with the load-more request the browser would
      * make: the same URL with the path swapped and the search key appended.
      * See resources/js/scriptResultPage.js.
+     *
+     * Serper answers only after the page has gone out, unless $serperLate is
+     * false, so the load-more has something new to deliver — which is the
+     * case it exists for. A poll that finds nothing new answers without
+     * `results`; see testAPollThatFindsNothingNewSendsNoResults.
      */
-    private function searchThenLoadMore(string $out = ""): \Illuminate\Testing\TestResponse
+    private function searchThenLoadMore(string $out = "", bool $serperLate = true): \Illuminate\Testing\TestResponse
     {
         $this->actingAsSearchUser();
-        $this->fakeEngineResponses([
+        $serper = $this->engineFixture("serper-web.json");
+        $fetcher = $this->fakeEngineResponses([
             "brave" => $this->engineFixture("brave-web.json"),
-            "serper_web" => $this->engineFixture("serper-web.json"),
+            "serper_web" => $serperLate ? fn() => null : $serper,
         ]);
 
         $query = "eingabe=kaffee&focus=web" . ($out !== "" ? "&out=" . $out : "");
@@ -53,6 +59,7 @@ class LoadMoreTest extends TestCase
         $page->assertOk();
 
         $searchkey = $this->searchKeyOf($page->getContent(), $out);
+        $fetcher->deliverLate("serper_web", $serper);
 
         return $this->get("/meta/loadMore?" . $query . "&loadMore=loader_" . $searchkey . "&script=yes");
     }
@@ -83,6 +90,39 @@ class LoadMoreTest extends TestCase
         $this->assertArrayHasKey("nextSearchLink", $payload);
         $this->assertArrayHasKey("imagesearch", $payload);
         $this->assertArrayHasKey("engines", $payload);
+    }
+
+    /**
+     * The website polls every second, for up to 45 seconds while Serper's
+     * goto links resolve, and most polls find nothing. Those answer without
+     * `results`, so the server renders nothing and the page leaves its list
+     * alone — scriptResultPage.js only touches the list when the key is there.
+     * Not an empty string: the page parses whatever `results` holds and would
+     * fail on an empty one.
+     */
+    public function testAPollThatFindsNothingNewSendsNoResults(): void
+    {
+        $payload = $this->searchThenLoadMore("", false)->json();
+
+        $this->assertArrayNotHasKey("results", $payload);
+        $this->assertTrue($payload["finished"]);
+    }
+
+    /**
+     * The API keeps sending the whole list either way — a client may rely on
+     * it — and says with `changed` whether there is anything to redraw.
+     */
+    public function testTheApiSaysWhetherTheListChanged(): void
+    {
+        $unchanged = $this->searchThenLoadMore("json", false)->json();
+        $this->assertFalse($unchanged["changed"]);
+        $this->assertNotEmpty($unchanged["results"]);
+    }
+
+    public function testTheApiSaysWhenTheListChanged(): void
+    {
+        $changed = $this->searchThenLoadMore("json")->json();
+        $this->assertTrue($changed["changed"]);
     }
 
     /**

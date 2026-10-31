@@ -174,6 +174,19 @@ class FakeFetcher
     }
 
     /**
+     * Answer every mission queued for engine $name so far, for an engine whose
+     * fixture held it back (a closure returning null) until after the page.
+     */
+    public function deliverLate(string $name, string $body): void
+    {
+        foreach ($this->missions as $mission) {
+            if ($mission["name"] === $name) {
+                $this->deliver($mission, $body);
+            }
+        }
+    }
+
+    /**
      * The engine names carried by each rpush, one entry per push.
      *
      * @return list<list<string>>

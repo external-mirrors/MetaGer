@@ -21,6 +21,8 @@ use Tests\TestCase;
  * (Quicktip::EXTRA_TYPES) stand next to any search. Those come after the
  * answers, drawn quieter — at the end of the column, and before the pager in
  * the list. Not folded away: they are short, and there is room for them.
+ * In the list the pager comes first: "Weitere Ergebnisse" is what someone at
+ * the end of the results is looking for, and the extras are the end of the page.
  */
 class QuicktipPlacementTest extends TestCase
 {
@@ -44,19 +46,19 @@ class QuicktipPlacementTest extends TestCase
             . implode("", $entries) . '</feed>';
     }
 
-    private function engines(?string $quicktips): array
+    private function engines(?string $quicktips, array $more = []): array
     {
-        return [
+        return array_merge([
             "brave" => $this->engineFixture("brave-web.json"),
             "serper_web" => $this->engineFixture("serper-web.json"),
             "Quicktips" => $quicktips ?? fn() => null,
-        ];
+        ], $more);
     }
 
-    private function page(array $types, string $extraQuery = ""): DOMXPath
+    private function page(array $types, string $extraQuery = "", array $moreEngines = []): DOMXPath
     {
         $this->actingAsSearchUser();
-        $this->fakeEngineResponses($this->engines($this->feed($types)));
+        $this->fakeEngineResponses($this->engines($this->feed($types), $moreEngines));
 
         $response = $this->get("/de-DE/meta/meta.ger3?eingabe=" . uniqid("kaffee") . "&focus=web" . $extraQuery);
         $response->assertOk();
@@ -122,7 +124,30 @@ class QuicktipPlacementTest extends TestCase
         $this->assertSame(["wikipedia"], $this->types($page, "//section[" . self::hasClass("quicktips-inline") . "]/div[" . self::hasClass("quicktip") . "]"));
     }
 
-    public function testTheListCarriesTheExtrasBeforeThePager(): void
+    /**
+     * Mojeek is the web engine whose fixture can say there is a second page:
+     * ten results of a hundred.
+     */
+    public function testThePagerComesBetweenTheResultsAndTheExtras(): void
+    {
+        $mojeek = json_encode(["response" => [
+            "status" => "OK",
+            "head" => ["start" => 1, "return" => 10, "results" => 100],
+            "results" => [["title" => "Kaffee bei Mojeek", "url" => "https://mojeek-example.org/kaffee", "desc" => "Nur Mojeek."]],
+        ]]);
+        $page = $this->page(["tip", "spruch"], "&web_engine_mojeek=on", ["mojeek" => $mojeek]);
+
+        $pager = $page->query("//div[@id='results']/nav[" . self::hasClass("mg-pager") . "]")->item(0);
+        $this->assertNotNull($pager, "Mojeek offered a second page, so there should be a pager.");
+        $this->assertStringContainsString("Weitere Ergebnisse", $pager->textContent);
+
+        $previous = $page->query("preceding-sibling::*[1]", $pager)->item(0);
+        $next = $page->query("following-sibling::*[1]", $pager)->item(0);
+        $this->assertStringContainsString("result", $previous->getAttribute("class"), "The pager follows the last result.");
+        $this->assertStringContainsString("quicktips-inline-extras", $next->getAttribute("class"), "The saying and the tip follow the pager.");
+    }
+
+    public function testTheListEndsWithTheExtras(): void
     {
         $page = $this->page(["tip", "wikipedia", "spruch"]);
 
@@ -133,12 +158,7 @@ class QuicktipPlacementTest extends TestCase
             $this->types($page, "//div[" . self::hasClass("quicktips-inline-extras") . "]/div[" . self::hasClass("quicktip-extras") . "]/div[" . self::hasClass("quicktip") . "]")
         );
 
-        // Only the pager may follow, and it renders nothing when there is no
-        // further page — as here.
-        $this->assertSame(0, $page->query(
-            "following-sibling::div[" . self::hasClass("result") . "]",
-            $extras
-        )->length, "The extras are the end of the list, after every result.");
+        $this->assertSame(0, $page->query("following-sibling::*", $extras)->length, "The extras are the end of the list.");
     }
 
     public function testOnlyExtrasPutNothingBetweenTheResults(): void

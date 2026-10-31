@@ -86,22 +86,27 @@ class ResultActionsTest extends TestCase
     }
 
     /**
-     * On a phone the footer only has room for "Anonym öffnen" and the menu, so
-     * the menu carries the other way to open the result. CSS decides which
-     * shows; both are always in the markup.
+     * Both ways to open a result stay in the row at every width: through the
+     * proxy, and the other way round from what the title does. A phone gets
+     * the short labels, not fewer actions.
      */
-    public function testTheOptionsMenuCarriesTheOtherWayToOpenTheResult(): void
+    public function testTheActionRowOffersTheOtherWayToOpenTheResult(): void
     {
         $page = $this->webPage();
 
         foreach ($this->results($page) as $result) {
             $title = $page->query(".//h2[" . self::hasClass("result-title") . "]/a", $result)->item(0);
-            $option = $page->query(".//li[" . self::hasClass("result-option-alternate-open") . "]/a", $result)->item(0);
-            $this->assertNotNull($option);
-            $this->assertSame($title->getAttribute("href"), $option->getAttribute("href"));
-            // Written like the options around it, not in the footer's capitals.
-            $this->assertContains(trim($option->textContent), ["Öffnen", "In neuem Tab öffnen"]);
+            $other = $page->query(".//div[" . self::hasClass("result-footer") . "]/a[" . self::hasClass("result-open-newtab") . " or " . self::hasClass("result-open") . "]", $result)->item(0);
+            $this->assertNotNull($other);
+            $this->assertSame($title->getAttribute("href"), $other->getAttribute("href"));
+            $this->assertSame("In neuem Tab öffnen", $this->label($page, $other, "long"));
+            $this->assertSame("Neuer Tab", $this->label($page, $other, "short"));
         }
+    }
+
+    private function label(DOMXPath $page, DOMElement $action, string $length): string
+    {
+        return trim($page->query("./span[" . self::hasClass("action-label-" . $length) . "]", $action)->item(0)?->textContent ?? "");
     }
 
     public function testGroupedResultsCanBeOpenedAnonymously(): void
@@ -139,7 +144,7 @@ class ResultActionsTest extends TestCase
         foreach ($cards as $card) {
             $link = $page->query(".//a[" . self::hasClass("result-open-proxy--short") . "]", $card)->item(0);
             $this->assertNotNull($link);
-            $this->assertSame("ANONYM", trim($link->textContent));
+            $this->assertSame("Anonym", trim($link->textContent));
         }
     }
 
@@ -155,7 +160,7 @@ class ResultActionsTest extends TestCase
         foreach ($actions as $row) {
             $link = $page->query("./a[" . self::hasClass("result-open-proxy") . "]", $row)->item(0);
             $this->assertNotNull($link);
-            $this->assertSame("SEITE ANONYM ÖFFNEN", trim($link->textContent));
+            $this->assertSame("Seite anonym öffnen", $this->label($page, $link, "long"));
         }
     }
 

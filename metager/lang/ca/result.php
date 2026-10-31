@@ -13,7 +13,8 @@ return [
         'togglelabel' => 'mostra/amaga les opcions del resultat',
         'open' => 'Obre',
         'newtab' => 'Obre en una pestanya nova',
-        'anonym-short' => 'ANÒNIM',
+        'anonym-short' => 'Anònimament',
+        'newtab-short' => 'Pestanya nova',
         'anonym' => 'Obre anònimament',
     ],
     'gefVon' => 'per',
@@ -31,7 +32,7 @@ return [
     'image' => [
         'download' => 'Baixa la imatge',
         'copyright' => 'Les imatges poden estar subjectes a drets d\'autor.',
-        'proxy' => 'OBRE LA PÀGINA ANÒNIMAMENT',
+        'proxy' => 'Obre la pàgina anònimament',
     ],
     'quicktips' => [
         'heading' => 'Quicktips',

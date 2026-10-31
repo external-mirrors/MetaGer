@@ -1,7 +1,8 @@
 {{-- "Open anonymously" for one result, wherever a result is shown: the result
      itself, its grouped and folded results, the news and video cards and the
-     image details. $variant is "full" (the label), "short" (a shorter label, for
-     cards) or "icon" (the shield alone, labelled for assistive technology).
+     image details. $variant is "full" (the label, shortened on a phone),
+     "short" (the short label, for cards) or "icon" (the shield alone, labelled
+     for assistive technology). $label replaces the long label.
 
      All SafeBrowse parameters travel in the hash (never the query string), which
      never reaches a server or its access logs. Each result opens in a tab of its
@@ -29,9 +30,10 @@
         @if ($proxyVariant === 'icon') aria-label="@lang('result.options.anonym')" @endif>
         <svg class="result-open-proxy-shield" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 4.5 3.4 8.2 8 9 4.6-.8 8-4.5 8-9V6z"/></svg>
         @if ($proxyVariant === 'full')
-            {!! $label ?? trans('result.options.5') !!}
+            <span class="action-label-long">{{ $label ?? trans('result.options.anonym') }}</span>
+            <span class="action-label-short">@lang('result.options.anonym-short')</span>
         @elseif ($proxyVariant === 'short')
-            @lang('result.options.anonym-short')
+            <span>@lang('result.options.anonym-short')</span>
         @endif
     </a>
 @endif

@@ -11,6 +11,8 @@ return [
         '7' => 'OBRE',
         'direct' => 'Obertura directa',
         'togglelabel' => 'mostra/amaga les opcions del resultat',
+        'open' => 'Obre',
+        'newtab' => 'Obre en una pestanya nova',
         'anonym-short' => 'ANÒNIM',
         'anonym' => 'Obre anònimament',
     ],

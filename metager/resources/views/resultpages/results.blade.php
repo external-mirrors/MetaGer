@@ -38,6 +38,8 @@
             @endif
         </div>
     @endif
-    @include('parts.quicktips-inline', ['quicktips' => $quicktips ?? [], 'part' => 'extras'])
+    {{-- The pager straight after the results: it is what someone at the end
+         of the list is looking for. The extras are the end of the page. --}}
     @include('parts.pager')
+    @include('parts.quicktips-inline', ['quicktips' => $quicktips ?? [], 'part' => 'extras'])
 </div>

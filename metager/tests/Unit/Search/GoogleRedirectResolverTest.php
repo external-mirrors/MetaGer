@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 /**
  * The edges of GoogleRedirectResolver that a result page would not show:
- * what counts as a redirect, and which `Location` answers are refused.
+ * what counts as a redirect, and which plain-text targets are refused.
  * The end-to-end behaviour is in Tests\Feature\Search\SerperGoogleRedirectTest.
  */
 class GoogleRedirectResolverTest extends TestCase
@@ -34,51 +34,35 @@ class GoogleRedirectResolverTest extends TestCase
         $this->assertSame($expected, GoogleRedirectResolver::isRedirect($url));
     }
 
-    public static function refusedLocations(): array
+    public static function refusedPlainTextTargets(): array
     {
         return [
-            "captcha page" => ["https://www.google.com/sorry/index?continue=x"],
-            "another redirect" => ["https://www.google.com/url?q=x"],
-            "javascript scheme" => ["javascript:alert(1)"],
-            "relative" => ["/somewhere"],
+            "captcha page" => ["https://www.google.com/url?q=https://www.google.com/sorry/index?continue=x"],
+            "another redirect" => ["https://www.google.com/url?q=https://www.google.com/goto?url=CAES"],
+            "javascript scheme" => ["https://www.google.com/url?q=javascript:alert(1)"],
+            "relative" => ["https://www.google.com/url?q=/somewhere"],
         ];
     }
 
-    #[DataProvider("refusedLocations")]
-    public function testRefusesLocationsThatAreNotAResult(string $location): void
+    #[DataProvider("refusedPlainTextTargets")]
+    public function testRefusesPlainTextTargetsThatAreNotAResult(string $url): void
     {
-        Http::preventStrayRequests();
-        Http::fake(["*" => Http::response("", 302, ["Location" => $location])]);
-
-        $url = "https://www.google.com/goto?url=CAES";
         $this->assertSame([$url => null], (new GoogleRedirectResolver())->resolve([$url]));
     }
 
-    public function testAPlainTextTargetThatIsNotHttpIsAskedForInstead(): void
+    public function testAGotoLinkIsDroppedWithoutAskingGoogle(): void
     {
         Http::preventStrayRequests();
-        Http::fake(["*" => Http::response("", 302, ["Location" => "https://example.org/real"])]);
-
-        $url = "https://www.google.com/url?q=javascript:alert(1)";
-        $this->assertSame([$url => "https://example.org/real"], (new GoogleRedirectResolver())->resolve([$url]));
-    }
-
-    public function testATimeoutDropsTheLinkRatherThanFailingTheSearch(): void
-    {
-        Http::fake(fn() => throw new \Illuminate\Http\Client\ConnectionException("timed out"));
 
         $url = "https://www.google.com/goto?url=CAES";
         $this->assertSame([$url => null], (new GoogleRedirectResolver())->resolve([$url]));
+
+        Http::assertNothingSent();
     }
 
-    public function testEachDistinctRedirectIsAskedForOnce(): void
+    public function testEntriesThatAreNotRedirectsComeBackUnchanged(): void
     {
-        Http::preventStrayRequests();
-        Http::fake(["*" => Http::response("", 302, ["Location" => "https://example.org/"])]);
-
-        $url = "https://www.google.com/goto?url=CAES";
-        (new GoogleRedirectResolver())->resolve([$url, $url, "https://example.org/other"]);
-
-        Http::assertSentCount(1);
+        $url = "https://example.org/other";
+        $this->assertSame([$url => $url], (new GoogleRedirectResolver())->resolve([$url, $url]));
     }
 }

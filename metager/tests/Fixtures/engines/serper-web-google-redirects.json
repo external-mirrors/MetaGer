@@ -2,23 +2,23 @@
   "organic": [
     {
       "title": "Is art anti-capitalist?",
-      "link": "https://www.google.com/goto?url=CAESggEB-resolvable",
-      "snippet": "Ein Ergebnis, das Serper nur als Google-Weiterleitung liefert.",
+      "link": "https://economistwritingeveryday.com/2025/11/17/is-art-anti-capitalist/",
+      "snippet": "Ein Ergebnis unter den ersten drei, das Serper schon aufgelöst hat.",
       "sitelinks": [
         {
           "title": "Archiv",
-          "link": "https://www.google.com/goto?url=CAESggEB-sitelink"
+          "link": "https://economistwritingeveryday.com/archive/"
         },
         {
-          "title": "Kaputt",
-          "link": "https://www.google.com/goto?url=CAESggEB-unresolvable-sitelink"
+          "title": "Nur bei Google",
+          "link": "https://www.google.com/goto?url=CAESggEB-sitelink"
         }
       ]
     },
     {
-      "title": "Von Google nicht aufgelöst",
-      "link": "https://www.google.com/goto?url=CAESggEB-unresolvable",
-      "snippet": "Google antwortet hier nicht mit einer Weiterleitung."
+      "title": "Nur als Google-Weiterleitung",
+      "link": "https://www.google.com/goto?url=CAESggEB-unresolved",
+      "snippet": "Ein Ergebnis nach den ersten drei, das Serper nicht aufgelöst hat."
     },
     {
       "title": "Alte Schreibweise",

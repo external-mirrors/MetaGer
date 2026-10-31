@@ -2,11 +2,6 @@
 
 namespace App\Search;
 
-use Illuminate\Http\Client\Pool;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http;
-use Log;
-
 /**
  * Takes Google's click-tracking redirects back out of an engine's answer.
  *
@@ -19,26 +14,30 @@ use Log;
  * keep its users out of. It also defeats deduplication, since the same page
  * from Brave and from Serper no longer looks like the same page.
  *
- * The token cannot be decoded locally (it is a protobuf wrapping ciphertext),
- * so it is resolved the only way there is: MetaGer asks Google itself, once,
- * without following the redirect, and reads `Location`. Google learns that
- * *MetaGer's* server resolved a link, which it learned anyway when Serper ran
- * the search; it learns nothing about the user. Cookies are not kept.
- *
  * `/url?q=…` and `/url?url=…`, the older spelling, carry the address in
- * plain text and are unwrapped without a request.
+ * plain text and are unwrapped here. `/goto` links are dropped.
  *
- * ## A redirect that cannot be resolved is dropped, not shown
+ * ## Why `/goto` is not asked for
  *
- * Falling back to the Google link would quietly reintroduce the leak whenever
- * Google is slow or rate-limits us, which is when nobody would be looking. A
- * result page one entry shorter is the cheaper failure.
+ * It used to be: MetaGer requested each one from Google, without following the
+ * redirect, and read `Location`. Since 30 October 2026 Google lets only a few
+ * of a search's links be opened right after it, and Serper now resolves the top
+ * three itself before answering — so what still arrives as `/goto` is what
+ * Google refuses to open. Production logs over the following night showed it:
+ * across 3,798 searches, 19.5% of lookups succeeded, and in 80% of searches
+ * exactly one did. That was one result per search bought with up to 1.5 s of
+ * latency and six or seven requests to Google that it mostly turned away.
+ *
+ * Serper offers a `/resolve` endpoint for the rest, but it takes about thirty
+ * seconds, which no result page can wait for.
+ *
+ * ## A redirect that cannot be read is dropped, not shown
+ *
+ * Falling back to the Google link would reintroduce the leak. A result page
+ * a few entries shorter is the cheaper failure.
  */
 class GoogleRedirectResolver
 {
-    /** Per lookup; they run in parallel, so this is roughly the added latency at worst. */
-    public const TIMEOUT_SECONDS = 1.5;
-
     /**
      * Whether $url is one of Google's redirect wrappers.
      */
@@ -66,9 +65,10 @@ class GoogleRedirectResolver
     /**
      * The address behind each redirect in $urls, keyed by the redirect.
      *
-     * Null for every redirect that could not be resolved to an http(s) URL
-     * outside Google's redirect machinery. Entries that are not redirects at
-     * all come back unchanged.
+     * Null for every redirect that does not name an http(s) URL outside
+     * Google's redirect machinery in plain text — which includes every `/goto`
+     * link. Entries that are not redirects at all come back unchanged. Never
+     * makes a request.
      *
      * @param string[] $urls
      * @return array<string, ?string>
@@ -76,52 +76,8 @@ class GoogleRedirectResolver
     public function resolve(array $urls): array
     {
         $resolved = [];
-        $toFetch = [];
-
         foreach (array_unique($urls) as $url) {
-            if (!self::isRedirect($url)) {
-                $resolved[$url] = $url;
-                continue;
-            }
-
-            $plain = self::unwrapLocally($url);
-            if ($plain !== null) {
-                $resolved[$url] = $plain;
-                continue;
-            }
-
-            $toFetch[] = $url;
-        }
-
-        if (empty($toFetch)) {
-            return $resolved;
-        }
-
-        $responses = Http::pool(fn(Pool $pool) => array_map(
-            fn(string $url) => $pool->as($url)
-                ->withoutRedirecting()
-                ->connectTimeout(self::TIMEOUT_SECONDS)
-                ->timeout(self::TIMEOUT_SECONDS)
-                ->withHeaders(["Accept" => "text/html"])
-                ->get($url),
-            $toFetch
-        ));
-
-        $failed = 0;
-        foreach ($toFetch as $url) {
-            $response = $responses[$url] ?? null;
-            $target = $response instanceof Response && $response->redirect()
-                ? self::acceptableTarget($response->header("Location"))
-                : null;
-
-            if ($target === null) {
-                $failed++;
-            }
-            $resolved[$url] = $target;
-        }
-
-        if ($failed > 0) {
-            Log::warning(sprintf("Could not resolve %d of %d Google redirect links; the results carrying them were dropped.", $failed, count($toFetch)));
+            $resolved[$url] = self::isRedirect($url) ? self::unwrapLocally($url) : $url;
         }
 
         return $resolved;
@@ -148,8 +104,7 @@ class GoogleRedirectResolver
 
     /**
      * A target worth showing: absolute http(s), and neither another redirect
-     * nor Google's "unusual traffic" page, which is where a rate-limited
-     * lookup is sent instead of the result.
+     * nor Google's "unusual traffic" page.
      */
     private static function acceptableTarget(?string $target): ?string
     {

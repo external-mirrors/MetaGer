@@ -174,12 +174,12 @@ abstract class SerperBase extends Searchengine
 
     /**
      * $body with every Google redirect replaced by its target, and every list
-     * entry whose redirect could not be resolved removed from its list.
+     * entry whose redirect could not be unwrapped removed from its list.
      *
      * Untouched — byte for byte — when it contains no redirect at all, which
      * is the common case, so most answers pay one substring check.
      */
-    public static function withoutGoogleRedirects(string $body, ?GoogleRedirectResolver $resolver = null): string
+    public static function withoutGoogleRedirects(string $body): string
     {
         if (!str_contains($body, "google.")) {
             return $body;
@@ -195,7 +195,7 @@ abstract class SerperBase extends Searchengine
             return $body;
         }
 
-        $resolved = ($resolver ?? new GoogleRedirectResolver())->resolve($redirects);
+        $resolved = (new GoogleRedirectResolver())->resolve($redirects);
 
         return json_encode(
             self::replaceRedirects($decoded, $resolved),

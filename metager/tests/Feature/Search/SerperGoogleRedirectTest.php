@@ -15,8 +15,13 @@ use Tests\TestCase;
  *
  * See App\Search\GoogleRedirectResolver and SerperBase::loadResponse.
  * tests/Fixtures/engines/serper-web-google-redirects.json has one entry of each
- * kind: a resolvable goto link (with sitelinks, one of them unresolvable), an
- * unresolvable one, the plain-text `/url?q=` spelling, and an ordinary link.
+ * kind: a result Serper already resolved (with one plain and one goto
+ * sitelink), a goto link it did not resolve, the plain-text `/url?q=`
+ * spelling, and an ordinary link.
+ *
+ * Since Google stopped letting most of a search's links be opened (30 October
+ * 2026), MetaGer no longer asks Google to resolve goto links itself — see the
+ * resolver's docblock for the numbers. What is still a goto link is dropped.
  */
 class SerperGoogleRedirectTest extends TestCase
 {
@@ -28,31 +33,8 @@ class SerperGoogleRedirectTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Registered before actingAsSearchUser, whose catch-all `*` stub would
-     * otherwise answer first: Http::fake appends, and the first match wins.
-     */
-    private function fakeGoogle(): void
-    {
-        Http::fake([
-            "www.google.com/goto?url=CAESggEB-resolvable" => Http::response("", 302, [
-                "Location" => "https://economistwritingeveryday.com/2025/11/17/is-art-anti-capitalist/",
-            ]),
-            "www.google.com/goto?url=CAESggEB-sitelink" => Http::response("", 302, [
-                "Location" => "https://economistwritingeveryday.com/archive/",
-            ]),
-            // What a rate-limited lookup looks like: a redirect, but to Google's
-            // own captcha rather than to the result.
-            "www.google.com/goto?url=CAESggEB-unresolvable-sitelink" => Http::response("", 302, [
-                "Location" => "https://www.google.com/sorry/index?continue=https://www.google.com/goto",
-            ]),
-            "www.google.com/goto?url=CAESggEB-unresolvable" => Http::response("<html></html>", 200),
-        ]);
-    }
-
     private function search(): array
     {
-        $this->fakeGoogle();
         $this->actingAsSearchUser();
         $this->fakeEngineResponses([
             "serper_web" => $this->engineFixture("serper-web-google-redirects.json"),
@@ -77,11 +59,11 @@ class SerperGoogleRedirectTest extends TestCase
         }
     }
 
-    public function testAGotoLinkIsReplacedByWhereGoogleRedirectsTo(): void
+    public function testGoogleIsNeverAskedToResolveAGotoLink(): void
     {
-        $links = array_column($this->search(), "link");
+        $this->search();
 
-        $this->assertContains("https://economistwritingeveryday.com/2025/11/17/is-art-anti-capitalist/", $links);
+        Http::assertNotSent(fn(Request $request) => str_contains($request->url(), "google.com/goto"));
     }
 
     public function testAPlainTextRedirectIsUnwrappedWithoutAskingGoogle(): void
@@ -92,20 +74,19 @@ class SerperGoogleRedirectTest extends TestCase
         Http::assertNotSent(fn(Request $request) => str_contains($request->url(), "/url?q="));
     }
 
-    public function testAResultWhoseRedirectCannotBeResolvedIsDroppedNotShown(): void
+    public function testAResultLeftAsAGotoLinkIsDroppedNotShown(): void
     {
-        $results = $this->search();
-        $titles = array_column($results, "title");
+        $titles = array_column($this->search(), "title");
 
-        $this->assertNotContains("Von Google nicht aufgelöst", $titles);
+        $this->assertNotContains("Nur als Google-Weiterleitung", $titles);
         $this->assertContains(
             "Kaffee bei Serper",
             $titles,
-            "Dropping one unresolvable result must not cost the rest of the page."
+            "Dropping one unresolved result must not cost the rest of the page."
         );
     }
 
-    public function testSitelinksAreResolvedAndUnresolvableOnesDropped(): void
+    public function testAResultSerperAlreadyResolvedIsKeptWithoutItsGotoSitelinks(): void
     {
         $this->search();
 

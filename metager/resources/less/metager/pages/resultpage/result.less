@@ -437,6 +437,16 @@ a.result-open-proxy {
     // padding so the space below the row matches the space above the title.
     margin-bottom: -@space-2;
 
+    // The row goes compact when the row is narrow, not when the screen is:
+    // how wide it is depends on the card, and how wide it needs to be on the
+    // language. With the long labels and "von 2 Anbietern" it needs 392px in
+    // German, 384px in English and 461px in Catalan; below that the engines
+    // used to wrap onto a line of their own before the labels shortened.
+    // The screen-width rules in .result-action() and below stay as the
+    // fallback for browsers without container queries. The queries are at
+    // the end of this block, after the rules they override.
+    container-type: inline-size;
+
     // Actions carry their padding outside their text; without this the row
     // would start to the right of the title above it.
     > :first-child {
@@ -608,6 +618,52 @@ a.result-open-proxy {
       &:focus > ul,
       &:focus-within > ul {
         display: block;
+      }
+    }
+
+    @container (max-width: 480px) {
+      .result-open,
+      .result-open-newtab,
+      .result-open-key,
+      .result-open-proxy {
+        > .action-label-long {
+          display: none;
+        }
+
+        > .action-label-short {
+          display: inline;
+        }
+      }
+    }
+
+    // A 320px phone leaves a 256px row, and "Anonym", "Neuer Tab" and
+    // "von 2 Anbietern" take 294px. The other way to open the result keeps its
+    // icon and drops its word: it repeats what the title does, and is hidden
+    // from assistive technology for that reason, so it loses no name.
+    @container (max-width: 320px) {
+      .result-open,
+      .result-open-newtab {
+        > .action-label-short {
+          display: none;
+        }
+      }
+    }
+
+    // A menu dropped from ⋯, which sits about 300px into the row, needs 240px
+    // or more beside it; where the row has less, it spans the row instead, as
+    // on a phone, rather than running off the right of the page.
+    @container (max-width: 640px) {
+      .result-menu {
+        position: static;
+      }
+
+      .result-options {
+        right: 0;
+
+        ul {
+          width: auto;
+          max-width: none;
+        }
       }
     }
 

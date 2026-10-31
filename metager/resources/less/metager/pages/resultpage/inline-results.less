@@ -17,14 +17,66 @@ h3.inline-heading {
   }
 }
 
->div.inline-results {
+// The frame does not scroll; the row inside it does. Without JavaScript it is
+// only a box. resultpage/scroller.js puts ‹ › in it, shown where a mouse is.
+>.inline-scroller {
+  position: relative;
+
+  >.inline-scroll-button {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    >.inline-scroll-button:not([hidden]) {
+      position: absolute;
+      z-index: 1;
+      // Level with the middle of the cards' pictures, 240px wide at 16:9.
+      top: 67px - 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 1px solid @border-color;
+      border-radius: 50%;
+      background-color: @result-card-color;
+      color: @text-color;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+      cursor: pointer;
+
+      &:hover {
+        background-color: @highlight-color;
+      }
+
+      &.back {
+        left: -@space-3;
+      }
+
+      &.forward {
+        right: -@space-3;
+      }
+    }
+
+    // Something to grab without JavaScript, and a hint that there is more.
+    >.inline-results {
+      scrollbar-width: thin;
+      scrollbar-color: @border-color transparent;
+    }
+  }
+}
+
+>.inline-scroller>div.inline-results {
   display: flex;
   gap: @space-3;
   overflow-x: auto;
   padding-bottom: @space-1;
+  // A click or a flick ends on a card's edge, not halfway through one.
+  scroll-snap-type: x mandatory;
 
   >.inline-result {
     flex: 0 0 240px;
+    scroll-snap-align: start;
     display: flex;
     flex-direction: column;
     border: 1px solid @border-color;

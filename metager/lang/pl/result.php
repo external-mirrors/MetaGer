@@ -18,6 +18,8 @@ return [
     'proxytext' => 'Link do wyniku jest otwierany anonimowo. Dane użytkownika nie zostaną przesłane na serwery docelowe. Niektóre strony internetowe mogą nie działać jak zwykle.',
     'news' => 'Istotne wiadomości',
     'videos' => 'Filmy',
+    'scroll-back' => 'Przewiń wstecz',
+    'scroll-forward' => 'Przewiń dalej',
     'more-from-host' => [
         'summary' => 'Więcej wyników z :host (:count)',
         'search' => 'Szukaj tylko w :host',

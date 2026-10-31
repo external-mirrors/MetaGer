@@ -18,6 +18,8 @@ return [
     'proxytext' => 'Resultatlänken öppnas anonymt. Dina uppgifter kommer inte att överföras till destinationsservrar. Vissa webbsidor kanske inte fungerar som vanligt.',
     'news' => 'Relevanta nyheter',
     'videos' => 'Videor',
+    'scroll-back' => 'Bläddra bakåt',
+    'scroll-forward' => 'Bläddra framåt',
     'more-from-host' => [
         'summary' => '{1} :count resultat till från :host|[2,*] :count resultat till från :host',
         'search' => 'Sök bara på :host',

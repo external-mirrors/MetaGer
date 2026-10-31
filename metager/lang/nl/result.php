@@ -3,6 +3,8 @@ return [
     'proxytext' => 'De resultaatlink wordt anoniem geopend. Uw gegevens worden niet doorgestuurd naar servers op de bestemming. Sommige webpagina\'s werken mogelijk niet zoals gewoonlijk.',
     'news' => 'Relevant nieuws',
     'videos' => 'Video\'s',
+    'scroll-back' => 'Terug scrollen',
+    'scroll-forward' => 'Verder scrollen',
     'gefVon' => 'door',
     'advertisement' => 'Advertentie',
     'providers' => 'aanbieders',

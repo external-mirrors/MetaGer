@@ -18,6 +18,8 @@ return [
     'proxytext' => 'Resultatlinket åbnes anonymt. Dine data vil ikke blive overført til destinationsservere. Nogle websider fungerer muligvis ikke som normalt.',
     'news' => 'Relevante nyheder',
     'videos' => 'Videoer',
+    'scroll-back' => 'Rul tilbage',
+    'scroll-forward' => 'Rul frem',
     'more-from-host' => [
         'summary' => '{1} :count resultat mere fra :host|[2,*] :count resultater mere fra :host',
         'search' => 'Søg kun på :host',

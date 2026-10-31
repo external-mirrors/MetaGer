@@ -10,23 +10,6 @@
                     {!! $result->titel !!}
                 </a>
             </h2>
-            @if (sizeof($result->gefVon) === 1)
-                <a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}"
-                    @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
-                    >{{ trans('result.gefVon') . ' ' . $result->gefVon[0] }} </a>
-            @else
-                <span title="{{ implode(', ', $result->gefVon) }}" class="result-hoster" tabindex="0">
-                    {{ trans('result.gefVon') . ' ' . sizeof($result->gefVon) . ' ' . trans('result.providers') }}
-                    <ul class="card">
-                        @foreach ($result->gefVon as $index => $gefVon)
-                            <li><a class="result-hoster" href="{{ $result->gefVonLink[$index] }}"
-                                    target="{{ $metager->getNewtab() }}" rel="noopener">{{ trans('result.gefVon') . ' ' . $result->gefVon[$index] }} </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </span>
-
-            @endif
         </div>
         <div class="result-subheadline">
             @if (app(\App\SearchSettings::class)->fokus === 'nachrichten')
@@ -103,6 +86,10 @@
             </div>
         @endif
         <div class="result-footer">
+            @include('parts.result-proxy-link', ['result' => $result])
+            {{-- The other way to open the result than its title does. Hidden on a
+                 phone, where the options menu carries it instead, so the row
+                 keeps room for touch-sized controls. --}}
             @if ($metager->getNewtab() === '_blank')
                 <a class="result-open" href="{{ $result->link }}" aria-hidden="true" tabindex="-1"
                     @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
@@ -113,39 +100,43 @@
                     {!! trans('result.options.6') !!}
                 </a>
             @endif
-            @if (request()->header("is-proxy") !== "true")
-                {{-- All SafeBrowse parameters travel in the hash (never the query string), which
-                     never reaches a server or its access logs. Each result opens in a tab of its
-                     own (resultpage/proxy.js), all of them in one SafeBrowse session.
-                     Only a query login carries the key here. SafeBrowse is same-origin, so a
-                     cookie login already sends the key on the WebSocket upgrade by itself, and a
-                     header login gets anonymous-token-key injected by the webextension the same
-                     way — neither needs it, and SafeBrowse forwards a hash key as ?key= on the
-                     socket URL, so emitting it anyway would write those keys into access logs.
-                     A query login has no other transport and its key is in the URL regardless.
-                     user() is evaluated first on purpose: it is what resolves login_method, which
-                     otherwise still holds its 'query' default and would match by accident.
-
-                     Without data-proxy-link, resultpage/proxy.js leaves the click alone and the
-                     href (old proxy) is followed — which is the whole opt-out for clients that
-                     cannot authenticate against SafeBrowse (see ClientCapabilities). Rendering the
-                     link for them instead would boot the SafeBrowse app just to dead-end on
-                     "Kein Authentifizierungsschlüssel angegeben". --}}
-                <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" @if (\App\Http\ClientCapabilities::supportsSafebrowse(request())) data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}#url={{ rawurlencode($result->link) }}&fallback={{ rawurlencode($result->proxyLink) }}@if (auth()->guard("key")->user() !== null && auth()->guard("key")->login_method === 'query')&key={{ rawurlencode(auth()->guard("key")->user()->key) }}@endif" @endif
-                    target="{{ $metager->getNewtab() }}" @if ($metager->getNewtab() === '_blank') rel="noopener" @endif>
-                    {!! trans('result.options.5') !!}
-                </a>
-            @endif
             <label class="toggle-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
                 >
                 <img src="/img/ellipsis.svg" alt="{{ trans('result.alt.more') }}" height="100%" loading="lazy" />
             </label>
+            @if (sizeof($result->gefVon) === 1)
+                <a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}"
+                    @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
+                    >{{ trans('result.gefVon') . ' ' . $result->gefVon[0] }} </a>
+            @else
+                <span title="{{ implode(', ', $result->gefVon) }}" class="result-hoster" tabindex="0">
+                    {{ trans('result.gefVon') . ' ' . sizeof($result->gefVon) . ' ' . trans('result.providers') }}
+                    <ul class="card">
+                        @foreach ($result->gefVon as $index => $gefVon)
+                            <li><a class="result-hoster" href="{{ $result->gefVonLink[$index] }}"
+                                    target="{{ $metager->getNewtab() }}" rel="noopener">{{ trans('result.gefVon') . ' ' . $result->gefVon[$index] }} </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </span>
+            @endif
         </div>
         <input type="checkbox" id="result-toggle-{{ $result->hash }}" class="result-toggle" aria-labelledby="result-toggle-{{ $result->hash }}-label">
         <div id="result-toggle-{{ $result->hash }}-label" class="result-options-label">@lang('result.options.togglelabel')</div>
         <div class="result-options">
             <div class="options">
                 <ul class="option-list list-unstyled small">
+                    <li class="result-option-alternate-open">
+                        @if ($metager->getNewtab() === '_blank')
+                            <a href="{{ $result->link }}" @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
+                                {!! trans('result.options.7') !!}
+                            </a>
+                        @else
+                            <a href="{{ $result->link }}" target="_blank" rel="noopener">
+                                {!! trans('result.options.6') !!}
+                            </a>
+                        @endif
+                    </li>
                     @if (strlen($metager->getSite()) === 0)
                         <li>
                             <a href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}"
@@ -180,6 +171,7 @@
                         title="{{ $inheritedResult->link }}" @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
                         target="{{ $metager->getNewtab() }}">{{ $inheritedResult->titel }}</a>
                     <div class="inherited-description">{{ $inheritedResult->descr }}</div>
+                    @include('parts.result-proxy-link', ['result' => $inheritedResult, 'variant' => 'icon'])
                 </div>
             @endforeach
         </div>
@@ -199,6 +191,7 @@
                             @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
                             target="{{ $metager->getNewtab() }}">{!! $moreResult->titel !!}</a>
                         <div class="more-from-host-description">{{ $moreResult->descr }}</div>
+                        @include('parts.result-proxy-link', ['result' => $moreResult, 'variant' => 'icon'])
                     </li>
                 @endforeach
             </ul>

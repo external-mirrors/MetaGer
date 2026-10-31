@@ -55,6 +55,14 @@
   --card-background-color: @color-white;
   --border-color: #ccc;
 
+  // The result page: results are cards on a duller ground, the way the Android
+  // app draws them (app-en, src/theme.ts — `canvas`, `card`, `muted`), so the
+  // two read as one product. Muted is for descriptions and attribution: 5.7:1
+  // on the card here, 6.4:1 in dark.
+  --resultpage-ground-color: #f4f4f4;
+  --result-card-color: @color-white;
+  --muted-text-color: #666;
+
   // Our SVG icons are all black, so light leaves them alone and dark flips them.
   --invert-state: invert(0%);
   --icon-color: 0;
@@ -151,6 +159,10 @@
   --card-background-color: @color-strong-grey;
   --border-color: #727272;
 
+  --resultpage-ground-color: #151515;
+  --result-card-color: #222;
+  --muted-text-color: #aaa;
+
   --invert-state: invert(100%);
   --icon-color: 0.9;
   --landing-icon-filter: brightness(1.75);
@@ -240,6 +252,9 @@
 @sidebar-list-hover-color: var(--sidebar-list-hover-color);
 @card-background-color: var(--card-background-color);
 @border-color: var(--border-color);
+@resultpage-ground-color: var(--resultpage-ground-color);
+@result-card-color: var(--result-card-color);
+@muted-text-color: var(--muted-text-color);
 @invert-state: var(--invert-state);
 @icon-color: var(--icon-color);
 @landing-icon-filter: var(--landing-icon-filter);

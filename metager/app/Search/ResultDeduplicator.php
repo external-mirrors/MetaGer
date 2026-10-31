@@ -102,6 +102,25 @@ class ResultDeduplicator
      * nothing to do with the duplicate and is only read to set `changed` —
      * see the note on that below.
      */
+    /**
+     * `$other` if it is `$current` without the cut, else `$current`.
+     *
+     * Only the rest of the same title counts: another engine's different
+     * wording of the page is no more right than the first one.
+     */
+    private function wholerTitle(string $current, string $other): string
+    {
+        if (!preg_match('/^(.*?)\s*(\.\.\.|…)$/u', $current, $cut)) {
+            return $current;
+        }
+
+        $prefix = $cut[1];
+
+        return $prefix !== "" && mb_strlen($other) > mb_strlen($prefix) && str_starts_with($other, $prefix)
+            ? $other
+            : $current;
+    }
+
     private function mergeInto(Result $kept, Result $duplicate, ?Result $previouslyKept): void
     {
         // Two parallel arrays rather than one list of pairs, which is why they
@@ -113,6 +132,11 @@ class ResultDeduplicator
         if (!empty($duplicate->image)) {
             $kept->image = $duplicate->image;
         }
+
+        // Google cuts titles at about sixty characters, and Serper passes the
+        // cut one on with a trailing " ...". When the other engine has the
+        // whole of the same title, that is the one to show.
+        $kept->titel = $this->wholerTitle($kept->titel, $duplicate->titel);
 
         if (!empty($duplicate->inheritedResults)) {
             $kept->inheritedResults = $duplicate->inheritedResults;

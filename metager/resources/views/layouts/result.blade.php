@@ -87,17 +87,20 @@
         @endif
         <div class="result-footer">
             @include('parts.result-proxy-link', ['result' => $result])
-            {{-- The other way to open the result than its title does. Hidden on a
-                 phone, where the options menu carries it instead, so the row
-                 keeps room for touch-sized controls. --}}
+            {{-- The other way to open the result than its title does: in this tab
+                 when titles open a new one, and the other way round. --}}
             @if ($metager->getNewtab() === '_blank')
                 <a class="result-open" href="{{ $result->link }}" aria-hidden="true" tabindex="-1"
                     @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
-                    {!! trans('result.options.7') !!}
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    <span class="action-label-long">@lang('result.options.open')</span>
+                    <span class="action-label-short">@lang('result.options.open')</span>
                 </a>
             @else
                 <a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
-                    {!! trans('result.options.6') !!}
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+                    <span class="action-label-long">@lang('result.options.newtab')</span>
+                    <span class="action-label-short">@lang('result.options.newtab-short')</span>
                 </a>
             @endif
             <label class="toggle-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
@@ -126,17 +129,6 @@
         <div class="result-options">
             <div class="options">
                 <ul class="option-list list-unstyled small">
-                    <li class="result-option-alternate-open">
-                        @if ($metager->getNewtab() === '_blank')
-                            <a href="{{ $result->link }}" @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
-                                @lang('result.options.open')
-                            </a>
-                        @else
-                            <a href="{{ $result->link }}" target="_blank" rel="noopener">
-                                @lang('result.options.newtab')
-                            </a>
-                        @endif
-                    </li>
                     @if (strlen($metager->getSite()) === 0)
                         <li>
                             <a href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}"

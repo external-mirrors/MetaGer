@@ -13,7 +13,8 @@ return [
         'togglelabel' => 'Ergebnisoptionen ein- und ausschalten',
         'open' => 'Öffnen',
         'newtab' => 'In neuem Tab öffnen',
-        'anonym-short' => 'ANONYM',
+        'anonym-short' => 'Anonym',
+        'newtab-short' => 'Neuer Tab',
         'anonym' => 'Anonym öffnen',
     ],
     'gefVon' => 'von',
@@ -31,7 +32,7 @@ return [
     'image' => [
         'download' => 'Bild herunterladen',
         'copyright' => 'Bilder können urheberrechtlich geschützt sein.',
-        'proxy' => 'SEITE ANONYM ÖFFNEN',
+        'proxy' => 'Seite anonym öffnen',
     ],
     'quicktips' => [
         'heading' => 'Quicktips',

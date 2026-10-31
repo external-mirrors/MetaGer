@@ -25,21 +25,20 @@
   }
 }
 
-// An action on a result: outlined, upper case, in the accent colour — the form
-// the Android app gives "ANONYM ÖFFNEN" (app-en, ResultRow.tsx), so the site and
-// the app offer the same buttons. On a phone a 44px touch target, see above.
-.result-action-pill() {
+// An action on a result: a quiet text button with an icon. All of them look
+// alike — "Anonym öffnen" is how some people open every result and others never
+// use, so it is not drawn as the one main action. The padding sits outside the
+// text, so a row starting with one lines up with the card's text by pulling it
+// back (see .result-footer).
+.result-action() {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   box-sizing: border-box;
   min-height: 28px;
-  padding: 0 12px;
-  border: 1px solid @accent-text-color;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 13px;
   line-height: 1;
   white-space: nowrap;
 
@@ -56,42 +55,48 @@
     background-color: @highlight-color;
   }
 
-  .touch-target(32px);
+  > svg {
+    flex: 0 0 auto;
+  }
+
+  // Long label on wider screens, short one on a phone, so every action of
+  // the row fits on one line at 390px.
+  > .action-label-short {
+    display: none;
+  }
+
+  @media (max-width: @screen-mobile) {
+    > .action-label-long {
+      display: none;
+    }
+
+    > .action-label-short {
+      display: inline;
+    }
+  }
+
+  .touch-target(28px);
 }
 
 // Everywhere a result can be opened through the proxy: results, their grouped
 // and folded results, the news and video cards and the image details.
 a.result-open-proxy {
-  .result-action-pill();
-
-  > .result-open-proxy-shield {
-    flex: 0 0 auto;
-  }
-
-  &.result-open-proxy--short {
-    min-height: 26px;
-    padding: 0 10px;
-    font-size: 10px;
-  }
+  .result-action();
 
   &.result-open-proxy--icon {
     justify-content: center;
     width: 28px;
-    min-height: 28px;
     height: 28px;
     padding: 0;
+    border-radius: 999px;
 
-    @media (max-width: @screen-mobile) {
-      width: 32px;
-      height: 32px;
-    }
   }
 }
 
 .result {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 4px;
 
   @supports not (selector(:first-child)) {
     gap: 0;
@@ -103,13 +108,13 @@ a.result-open-proxy {
 
   box-sizing: border-box;
   width: 100%;
-  padding: 16px 18px;
+  padding: 16px;
   border: 1px solid @border-color;
   border-radius: 10px;
   background-color: @result-card-color;
 
   @media (max-width: @screen-mobile) {
-    padding: 14px;
+    padding: 12px;
   }
 
   .result-header {
@@ -250,7 +255,7 @@ a.result-open-proxy {
       display: flex;
       overflow-x: auto;
       gap: 8px;
-      margin: 6px 0 0;
+      margin: 4px 0 0;
       padding: 0;
       list-style: none;
       font-size: 13px;
@@ -280,7 +285,7 @@ a.result-open-proxy {
     max-width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 8px;
 
     @supports not (selector(:first-child)) {
       gap: 0;
@@ -297,8 +302,10 @@ a.result-open-proxy {
       grid-template-columns: minmax(0, 1fr) auto;
       grid-template-rows: auto auto auto;
       grid-template-areas: "description image" "footer image" "options options";
-      column-gap: 1rem;
-      row-gap: 0.5rem;
+      column-gap: 12px;
+      // Not a row gap: the options row is in the template whether or not it
+      // shows, and a gap before it would sit empty at the bottom of the card.
+      row-gap: 0;
 
       .result-description {
         grid-area: description;
@@ -315,10 +322,12 @@ a.result-open-proxy {
 
       .result-footer {
         grid-area: footer;
+        margin-top: 8px;
       }
 
       .result-options {
         grid-area: options;
+        margin-top: 8px;
       }
 
       @media (max-width: 535px) {
@@ -359,8 +368,8 @@ a.result-open-proxy {
       // which is invalid CSS, so every browser dropped the declaration and the
       // size inherited anyway. lightningcss reads it as 1px instead and emits
       // that, which rendered every description invisible.
-      line-height: 1.3;
-      max-height: 5.2em;
+      line-height: 1.45;
+      max-height: 4.35em; // three lines
       clear: both;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -485,15 +494,6 @@ a.result-open-proxy {
           white-space: nowrap;
         }
 
-        // The footer's second way to open the result, moved here on a phone.
-        li.result-option-alternate-open {
-          display: none;
-
-          @media (max-width: @screen-mobile) {
-            display: list-item;
-          }
-        }
-
         // On a phone a list of touch-sized rows in a frame, not one line of
         // small links that scrolls sideways.
         @media (max-width: @screen-mobile) {
@@ -526,9 +526,9 @@ a.result-open-proxy {
     display: flex;
     flex-wrap: wrap;
     font-size: 0.9rem;
-    gap: 0.5rem;
-    margin-top: 0.25rem;
-    padding: 0 0 0 10px;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 0 0 0 12px;
     border-left: 2px solid @border-color;
 
     > .inherited-result {
@@ -546,7 +546,7 @@ a.result-open-proxy {
   // rest of the result in both themes without a palette entry of its own.
   > .result-more-from-host {
     font-size: 0.9rem;
-    margin-top: 0.25rem;
+    margin-top: 8px;
     border-top: 1px solid @border-color;
 
     // base.less hides every <summary>'s disclosure marker, and without one
@@ -558,7 +558,7 @@ a.result-open-proxy {
     > summary {
       cursor: pointer;
       width: fit-content;
-      padding: 0.25rem 0;
+      padding: 8px 0;
 
       &::before {
         content: "▸ ";
@@ -574,9 +574,9 @@ a.result-open-proxy {
     > ul {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 12px;
       list-style: none;
-      margin: 0.25rem 0 0.5rem;
+      margin: 0 0 8px;
       padding: 0;
 
       // One line of title and two of description: these are the host's
@@ -606,7 +606,7 @@ a.result-open-proxy {
 
     > .more-from-host-search {
       display: inline-block;
-      margin-bottom: 0.25rem;
+      margin-bottom: 8px;
     }
   }
 
@@ -624,19 +624,23 @@ a.result-open-proxy {
       }
     }
 
-    gap: 8px;
+    gap: 4px;
     align-items: center;
     align-self: end;
-    margin-top: 2px;
+    // The actions' own height is mostly air; pull the row into the card's
+    // padding so the space below it matches the space above.
+    margin-bottom: -4px;
+
+    // Actions carry their padding outside their text; without this the row
+    // would start 8px to the right of the title above it.
+    > :first-child {
+      margin-left: -8px;
+    }
 
     .result-open,
     .result-open-newtab,
     .result-open-key {
-      .result-action-pill();
-
-      @media (max-width: @screen-mobile) {
-        display: none;
-      }
+      .result-action();
     }
 
     .toggle-result-options {

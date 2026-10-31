@@ -40,6 +40,7 @@ h3.inline-heading {
 
     >.result-headline {
       display: block;
+      margin-top: 4px;
       padding: 0 12px;
       font-size: 1rem;
       font-weight: 600;
@@ -52,7 +53,7 @@ h3.inline-heading {
 
     >.result-link {
       display: block;
-      padding: 10px 12px 2px;
+      padding: 12px 12px 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -63,7 +64,7 @@ h3.inline-heading {
     >.age {
       // #777 was 4.47:1 on white and 3.9:1 on the dark ground.
       color: @muted-text-color;
-      padding: 2px 12px 0;
+      padding: 4px 12px 0;
       font-size: 0.9em;
       display: grid;
       align-content: end;
@@ -71,7 +72,12 @@ h3.inline-heading {
 
     >.inline-result-footer {
       display: flex;
-      padding: 8px 12px 10px;
+      padding: 8px 12px 12px;
+
+      // See .result-footer: the action's padding is outside its text.
+      > :first-child {
+        margin-left: -8px;
+      }
     }
   }
 }

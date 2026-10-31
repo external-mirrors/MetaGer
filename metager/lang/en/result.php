@@ -13,7 +13,8 @@ return [
         'togglelabel' => 'toggle result options',
         'open' => 'Open',
         'newtab' => 'Open in new tab',
-        'anonym-short' => 'ANONYMOUS',
+        'anonym-short' => 'Anonymously',
+        'newtab-short' => 'New tab',
         'anonym' => 'Open anonymously',
     ],
     'gefVon' => 'by',
@@ -31,7 +32,7 @@ return [
     'image' => [
         'download' => 'Download Image',
         'copyright' => 'Images may be copyrighted.',
-        'proxy' => 'OPEN PAGE ANONYMOUSLY',
+        'proxy' => 'Open page anonymously',
     ],
     'quicktips' => [
         'heading' => 'Quicktips',

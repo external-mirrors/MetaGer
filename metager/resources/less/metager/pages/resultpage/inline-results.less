@@ -1,4 +1,4 @@
->h3.inline-heading {
+h3.inline-heading {
   margin: 0;
 
   >a {
@@ -8,22 +8,28 @@
 
 >div.inline-results {
   display: flex;
-  gap: 1rem;
+  gap: 12px;
   overflow: auto;
   padding-bottom: 0.7rem;
 
+  // A card like a result, with the same way to open it anonymously.
   >.inline-result {
+    // A fixed width: taken from the image, as it used to be, a card without
+    // one shrank to its longest word.
+    flex: 0 0 auto;
     display: grid;
-    grid-template-columns: min-content;
-    grid-template-rows: auto auto auto 1fr;
+    grid-template-columns: 15rem;
+    grid-template-rows: auto auto auto 1fr auto;
+    border: 1px solid @border-color;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: @result-card-color;
 
     >.result-image {
       display: block;
       background-color: #b2b2b24d;
       height: 6.5rem;
       overflow: hidden;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
 
       >img {
         height: 100%;
@@ -34,7 +40,9 @@
 
     >.result-headline {
       display: block;
+      padding: 0 12px;
       font-size: 1rem;
+      font-weight: 600;
       line-height: 1.2;
       max-height: 3.6em;
       overflow: hidden;
@@ -44,18 +52,26 @@
 
     >.result-link {
       display: block;
+      padding: 10px 12px 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 11em;
+      font-size: 12px;
+      color: @accent-text-color;
     }
 
     >.age {
       // #777 was 4.47:1 on white and 3.9:1 on the dark ground.
-      color: @text-color-alpha-70;
+      color: @muted-text-color;
+      padding: 2px 12px 0;
       font-size: 0.9em;
       display: grid;
       align-content: end;
+    }
+
+    >.inline-result-footer {
+      display: flex;
+      padding: 8px 12px 10px;
     }
   }
 }

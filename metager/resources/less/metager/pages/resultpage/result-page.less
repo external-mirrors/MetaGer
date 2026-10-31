@@ -1,7 +1,7 @@
 /* Variables */
 
-// Background color
-@resultpage-background-color: @background-color;
+// Background color: a duller ground under result cards, as in the Android app
+@resultpage-background-color: @resultpage-ground-color;
 // Margin to the left of the results
 @results-margin-left: 16px;
 // Min and max widths of the 2 resultpage columns
@@ -23,7 +23,7 @@
 // six things and gives the width to the query.
 @research-bar-phone-breakpoint: 480px;
 // Quicktip background color
-@quicktip-background-color: @resultpage-background-color;
+@quicktip-background-color: @result-card-color;
 // Color of the Spruch author
 @spruch-author-color: @color-strong-grey;
 /* Styles */
@@ -449,8 +449,14 @@ a {
 
             >.actions {
               display: flex;
-              justify-content: space-between;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 0.5rem;
               padding: 0.5rem 0;
+
+              >.result-hoster {
+                margin-left: auto;
+              }
 
               >a.btn {
                 height: max-content;
@@ -577,7 +583,7 @@ a {
     border-radius: 10px;
     padding: 5px;
     margin-left: 10px;
-    background-color: @resultpage-background-color;
+    background-color: @result-card-color;
     box-shadow: 0px 1px 1.5px 0px rgba(0, 0, 0, 0.12),
       1px 0px 1px 0px rgba(0, 0, 0, 0.24);
 
@@ -698,8 +704,17 @@ a {
     #results {
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
+      gap: 12px;
       scroll-margin-top: 80px;
+
+      // The in-list copy of the quicktips (parts/quicktips-inline), for widths
+      // where the column beside the results is hidden. Exactly one of the two
+      // shows: the column needs more than 1350px, see #additions-container.
+      > .quicktips-inline {
+        @media (min-width: 1351px) {
+          display: none;
+        }
+      }
 
       @supports not (selector(:first-child)) {
         gap: 0;
@@ -864,7 +879,7 @@ a {
   max-width: @results-width-max;
 
   #research-bar {
-    background-color: @resultpage-background-color;
+    background-color: @result-card-color;
     border: 1px solid @border-color;
     border-bottom: 1px solid @metager-orange;
     box-shadow: 0px 1px 1.5px 0px rgba(0, 0, 0, 0.12),

@@ -36,7 +36,9 @@
 				@if(empty($filter->hidden) || $filter->hidden === false)
 				<div class="option-selector">
 					<div>
-						<label for="{{$filterName}}">
+						{{-- Prefixed: "color", "language" and "sort" are too plain to be
+						     the only element on the page with that id. --}}
+						<label for="filter-{{$filterName}}">
 							@lang($filter->name)
 						</label>
 					@if($filterName === "freshness")
@@ -53,7 +55,7 @@
 					@else
 					</div>
 					@endif
-					<select name="{{$filter->{'get-parameter'} }}" class="custom-select custom-select-sm" form="searchForm">
+					<select id="filter-{{$filterName}}" name="{{$filter->{'get-parameter'} }}" class="custom-select custom-select-sm" form="searchForm">
 					@foreach($filter->values as $value => $text)
 					@if($value === "nofilter" && Cookie::get($metager->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null)
 					<option value="off" @if(empty($filter->value) || $filter->value === "off")selected @endif>{{trans($text)}}</option>

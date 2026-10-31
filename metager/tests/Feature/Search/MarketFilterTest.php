@@ -105,7 +105,7 @@ class MarketFilterTest extends TestCase
 
         $this->assertSame(
             1,
-            preg_match('/<select name="m".*?<\/select>/s', $html, $select),
+            preg_match('/<select[^>]*name="m"[^>]*>.*?<\/select>/s', $html, $select),
             "The $locale result page has no market selector.",
         );
 

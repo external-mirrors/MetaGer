@@ -1430,6 +1430,7 @@
     ".result .result-header .result-subheadline figure.content-warning.active:before { border-top-color }": "rgb(114, 114, 114)",
     ".result-hoster>.card { background-color }": "rgb(25, 25, 25)",
     ".result-icon-floppy { filter }": "invert(0.48) sepia(0.6) saturate(50) hue-rotate(188deg)",
+    ".result.result-arrived { opacity }": "0",
     ".resultpage-searchbar>.suggestions { border-bottom-color }": "rgb(88, 88, 88)",
     ".resultpage-searchbar>.suggestions { border-left-color }": "rgb(88, 88, 88)",
     ".resultpage-searchbar>.suggestions { border-right-color }": "rgb(88, 88, 88)",

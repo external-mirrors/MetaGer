@@ -3,7 +3,8 @@ import updateProxyLinks from "./resultpage/proxy";
 import { renderRelativeDates } from "./relative-time";
 import { initAccountBreadcrumb } from "./accountBreadcrumb";
 import { setMenuOpen } from "./sidebar/menu-toggle";
-import { replaceKeepingFoldsOpen } from "./resultpage/folds";
+import { patchResults, rememberServerMarkup } from "./resultpage/patch";
+import { nextPollDelay } from "./resultpage/loader";
 
 let bootEvent = new Event("boot");
 let resultLoaderEvent = new Event("resultsChanged");
@@ -65,12 +66,21 @@ function initialize() {
 })();
 
 (() => {
-  let resultLoaderFinished = false;
+  // Before "boot", which is what starts reformatting dates and proxy links in the list; see
+  // resultpage/patch.js for why the server's own markup is what later answers are compared with.
+  const resultList = document.querySelector("#results");
+  if (resultList) {
+    rememberServerMarkup(resultList);
+  }
+
+  let resultLoaderStarted = false;
   document.addEventListener("boot", loadMoreResults);
   function loadMoreResults() {
-    if (resultLoaderFinished) {
+    if (resultLoaderStarted) {
       return;
     }
+    resultLoaderStarted = true;
+
     var searchKey = document.querySelector("meta[name=searchkey]").content;
     var updateUrl = document.location.href;
     updateUrl += "&loadMore=loader_" + searchKey + "&script=yes";
@@ -81,61 +91,56 @@ function initialize() {
       return;
     }
 
-    var currentlyLoading = false;
-    var counter = 0;
-
-    var fetchResults = function () {
-      if (!currentlyLoading) {
-        counter++;
-        if (counter >= 10) {
-          clearInterval(resultLoader);
-        }
-        currentlyLoading = true;
-        fetch(updateUrl)
-          .then((response) => response.json())
-          .then((data) => {
-            // Check if we can clear the interval (once every searchengine has answered)
-            if (!data || data.finished) {
-              clearInterval(resultLoader);
-              resultLoaderFinished = true;
-            }
-
-            if ("results" in data) {
-              let resultsContainer = document.querySelector("#results");
-              let container = document.createElement("div");
-              container.innerHTML = data.results;
-              let new_source = container.querySelector("#results").innerHTML;
-              replaceKeepingFoldsOpen(document.querySelector("#results"), new_source);
-              document.dispatchEvent(resultLoaderEvent);
-
-              // Remove no results error if results got loaded after the fact by Javascript
-              let results = document.querySelectorAll("#results > .result");
-              let no_results_error = document.querySelector(".alert .no-results-error");
-              if (results.length > 0 && no_results_error !== null) {
-                no_results_error.remove();
-              }
-            }
-
-            if ("quicktips" in data && data.quicktips !== "") {
-              let container = document.createElement("div");
-              container.innerHTML = data.quicktips;
-              let new_quicktips = container.querySelector(
-                "#additions-container"
-              );
-              document
-                .getElementById("resultpage-container")
-                .append(new_quicktips);
-            }
-
-            updateProxyLinks();
-            currentlyLoading = false;
-          });
-      }
+    let polls = 0;
+    const poll = () => {
+      fetch(updateUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          polls++;
+          showLoadedResults(data);
+          const delay = nextPollDelay(polls, data);
+          if (delay !== null) {
+            setTimeout(poll, delay);
+          }
+        })
+        // A failed poll ends loading; the page already shows what it has.
+        .catch(() => {});
     };
+    poll();
+  }
 
-    // Regularily check for not yet delivered Results
-    var resultLoader = window.setInterval(fetchResults, 1000);
-    fetchResults();
+  function showLoadedResults(data) {
+    // Absent when nothing changed since the last poll, which is most of them.
+    if ("results" in data) {
+      let container = document.createElement("div");
+      container.innerHTML = data.results;
+      let rendered = container.querySelector("#results");
+      let list = document.querySelector("#results");
+      if (rendered && list) {
+        patchResults(list, rendered.innerHTML);
+        document.dispatchEvent(resultLoaderEvent);
+      }
+
+      // Remove no results error if results got loaded after the fact by Javascript
+      let results = document.querySelectorAll("#results > .result");
+      let no_results_error = document.querySelector(".alert .no-results-error");
+      if (results.length > 0 && no_results_error !== null) {
+        no_results_error.remove();
+      }
+    }
+
+    if ("quicktips" in data && data.quicktips !== "") {
+      let container = document.createElement("div");
+      container.innerHTML = data.quicktips;
+      let new_quicktips = container.querySelector(
+        "#additions-container"
+      );
+      document
+        .getElementById("resultpage-container")
+        .append(new_quicktips);
+    }
+
+    updateProxyLinks();
   }
 })();
 

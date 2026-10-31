@@ -579,3 +579,21 @@
 .result-icon-floppy {
   filter: invert(48%) sepia(60%) saturate(5000%) hue-rotate(188deg);
 }
+
+// A result load-more brought in after the page (resultpage/patch.js): fades in,
+// so a reader notices the list grew without it jumping into view.
+.result.result-arrived {
+  animation: result-arrived 0.4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .result.result-arrived {
+    animation: none;
+  }
+}
+
+@keyframes result-arrived {
+  from {
+    opacity: 0;
+  }
+}

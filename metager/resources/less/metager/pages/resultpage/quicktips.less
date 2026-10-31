@@ -1,23 +1,21 @@
 /* Quicktips */
-// @import "../../variables.less";
-// @import "../../general/cards.less";
-// @import "../../general/general.less";
 @quicktip-font-large: @result-font-large;
 @quicktip-font-medium: @result-font-medium;
 @quicktip-font-small: @result-font-small;
 
 // The column beside the results and its in-list copy for narrower screens
-// (parts/quicktips, parts/quicktips-inline) are the same cards.
+// (parts/quicktips, parts/quicktips-inline) are the same cards, built like a
+// result: a title, its source as metadata, secondary text below.
 #quicktips,
 .quicktips-inline {
+  display: flex;
+  flex-direction: column;
+  gap: @space-4;
+  background-color: inherit;
+
   h1 {
     border: 0;
   }
-
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background-color: inherit;
 
   a {
     text-decoration: none;
@@ -28,121 +26,102 @@
   }
 
   .quicktip {
+    position: relative;
+    margin: 0;
+    padding: @space-5;
     border: 1px solid @border-color;
     border-radius: 10px;
-    position: relative;
+    background-color: @quicktip-background-color;
+    font-size: 14px;
 
-    details[open=""] .quicktip-extender {
-      animation-name: quicktip-extender-turn;
-      animation-fill-mode: forwards;
+    @media (max-width: @screen-mobile) {
+      padding: @space-4;
     }
 
-    margin: 0;
-    padding: 16px;
-    background-color: @quicktip-background-color;
-
-    details:not([open=""]) {
-      .quicktip-summary p {
-        .overflow-ellipsis;
-      }
+    details > summary {
+      cursor: pointer;
     }
 
     .quicktip-summary {
       display: block;
 
+      .quicktip-headline {
+        display: flex;
+        align-items: baseline;
+        gap: @space-2;
+        width: 100%;
+
+        .quicktip-title,
+        .quicktip-title a {
+          flex: 1 1 auto;
+          margin: 0;
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 1.3;
+          color: @text-color;
+        }
+
+        .space-taker {
+          display: none;
+        }
+
+        .quicktip-hoster {
+          flex: 0 0 auto;
+          font-size: 12px;
+          color: @muted-text-color;
+          white-space: nowrap;
+        }
+
+        .quicktip-extender,
+        .mg-icon {
+          flex: 0 0 auto;
+          align-self: center;
+          height: 16px;
+        }
+      }
+
+      p {
+        margin: @space-2 0 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: @secondary-text-color;
+      }
+
+      .author {
+        display: block;
+        margin-top: @space-1;
+        font-size: 12px;
+        color: @muted-text-color;
+      }
+
       .btn {
         display: inline-block;
-        margin-bottom: 0;
-        font-weight: 400;
-        text-align: center;
-        vertical-align: middle;
-        -ms-touch-action: manipulation;
-        touch-action: manipulation;
-        cursor: pointer;
-        background-image: none;
+        margin-top: @space-2;
+        padding: @space-2 @space-3;
         border: 1px solid transparent;
-        white-space: nowrap;
-        padding: 6px 12px;
+        border-radius: 6px;
         font-size: 14px;
-        line-height: 1.42857143;
-        border-radius: 4px;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+        line-height: 1.4;
+        text-align: center;
+        white-space: nowrap;
+        cursor: pointer;
         text-decoration: none;
 
         &:hover {
           text-decoration: underline;
         }
       }
-
-      .quicktip-headline {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .quicktip-title,
-        .quicktip-title a {
-          flex-grow: 0;
-          margin: 0px 0px 5px 0px;
-          font-size: 16px;
-          font-weight: 600;
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .space-taker {
-          flex-grow: 1;
-        }
-
-        .quicktip-hoster {
-          flex-grow: 0;
-          font-size: @quicktip-font-small;
-          color: @muted-text-color;
-          white-space: nowrap;
-        }
-
-        .quicktip-extender {
-          flex-grow: 0;
-          color: #777;
-          font-size: 20px;
-          height: 20px;
-          font-size: @quicktip-font-large;
-        }
-
-        >* {
-          margin: 0px 5px;
-
-          &:first-child {
-            margin-left: 0px;
-          }
-
-          &:last-child {
-            margin-right: 0px;
-          }
-        }
-      }
-
-      .result-hoster {
-        font-size: @result-font-small;
-        margin-left: 20px;
-        color: #808080;
-        white-space: nowrap;
-      }
-
-      p {
-        font-size: 13px;
-      }
     }
 
     .quicktip-detail {
-      border-bottom: 1px solid @border-color;
+      margin-top: @space-3;
+      padding-top: @space-3;
+      border-top: 1px solid @border-color;
 
       h2 {
-        margin: 10px 0px;
-        font-size: 16px;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
       }
 
       p {
@@ -151,40 +130,11 @@
       }
     }
 
-    &[type="spruch"] {
-      .quicktip-summary {
-        display: flex;
-        flex-direction: column;
-
-        p {
-          text-align: justify;
-          font-style: italic;
-          quotes: "„" "“";
-
-          &:before {
-            content: open-quote;
-          }
-
-          &:after {
-            content: close-quote;
-          }
-        }
-
-        .author {
-          color: @text-color;
-          font-size: 12px;
-          align-self: flex-end;
-        }
-      }
-    }
-
     &[type="duckDuckGo-bang"] {
       .bang-btn {
         width: 100%;
-        margin-top: 5px;
         color: #fff;
         background-color: #286992;
-        font-size: 16px;
       }
     }
   }
@@ -200,44 +150,49 @@
   details[open] .mg-icon-rot180 {
     transform: rotate(180deg);
   }
-}
-#quicktips,
-.quicktips-inline {
-  // Quicktips that do not answer the query (Quicktip::EXTRA_TYPES), closed until
-  // asked for. The cards inside lose their own frame: the fold is the card.
+
+  // Quicktips that do not answer the query (Quicktip::EXTRA_TYPES): shown, but
+  // after the answers and quieter than them — no frame, just a rule above.
   .quicktip-extras {
-    border: 1px solid @border-color;
-    border-radius: 10px;
-    padding: 0 16px;
-    background-color: @quicktip-background-color;
-
-    > summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      min-height: 44px;
-      cursor: pointer;
-      color: @accent-text-color;
-
-      // base.less hides every <summary>'s marker; without one this reads as
-      // text rather than as something that opens.
-      > span:first-child::before {
-        content: "› ";
-        content: "› " / "";
-      }
-
-      > .quicktip-extras-count {
-        font-size: @quicktip-font-small;
-        color: @muted-text-color;
-      }
-    }
+    display: flex;
+    flex-direction: column;
+    gap: @space-4;
 
     > .quicktip {
+      padding: @space-4 0 0;
       border: 0;
       border-top: 1px solid @border-color;
       border-radius: 0;
-      padding: 12px 0;
+      background-color: transparent;
+    }
+
+    // Alone, with no answers above them: no rule to separate them from, and
+    // the first line level with the first result's title beside it.
+    &:first-child > .quicktip:first-child {
+      padding-top: @space-5;
+      border-top: 0;
+    }
+
+    > .quicktip[type="spruch"] .quicktip-summary {
+      p {
+        margin: 0;
+        font-size: 15px;
+        font-style: italic;
+        color: @text-color;
+        quotes: "„" "“";
+
+        &::before {
+          content: open-quote;
+        }
+
+        &::after {
+          content: close-quote;
+        }
+      }
+
+      .author::before {
+        content: "— ";
+      }
     }
   }
 }

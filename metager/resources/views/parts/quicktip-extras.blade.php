@@ -1,11 +1,8 @@
-{{-- Quicktips that do not answer the query (Quicktip::EXTRA_TYPES), closed
-     until asked for. A <details>, so it opens without JavaScript. --}}
+{{-- Quicktips that do not answer the query (Quicktip::EXTRA_TYPES): after the
+     answers, drawn quieter than them (quicktips.less). Not folded away — they
+     are short, and wherever they are shown there is room for them. --}}
 @if (sizeof($extras) > 0)
-    <details class="quicktip-extras">
-        <summary>
-            <span>@lang('result.quicktips.extras')</span>
-            <span class="quicktip-extras-count">{{ sizeof($extras) }}</span>
-        </summary>
+    <div class="quicktip-extras">
         @include('quicktips', ['quicktips' => $extras])
-    </details>
+    </div>
 @endif

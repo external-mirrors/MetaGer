@@ -279,7 +279,7 @@ a {
 
     #options {
       width: 100%;
-      margin: 8px 0;
+      margin-bottom: @space-2;
     }
 
     #results-container {
@@ -1052,48 +1052,59 @@ a {
 
 }
 
+// The fokus tabs. Quieter than the results under them: the current one is
+// marked by weight and an accent bar on the divider, the others are muted.
 #foki {
   display: flex;
   justify-content: left;
 
   #foki-box {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
+    gap: @space-5;
     width: 100%;
     max-width: @results-width-max;
     background-color: @resultpage-background-color;
     overflow-x: auto;
-    padding-bottom: 8px;
-    border-bottom: 1px solid @border-color;
+    // On a phone the row swipes, and the cut-off last tab says there is more;
+    // a scrollbar under it was a second divider.
+    scrollbar-width: none;
+    // The divider as an inset shadow and not a border: a border sits outside
+    // the scrolling area, and the active tab's bar has to cover it.
+    box-shadow: inset 0 -1px 0 @border-color;
 
-    &>div {
-      padding-right: 16px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
-      &>a {
-        color: @text-color;
+    >div {
+      flex: 0 0 auto;
+
+      >a {
+        display: block;
+        padding: @space-2 0 calc(@space-2 - 2px);
+        border-bottom: 2px solid transparent;
+        font-size: 14px;
+        line-height: 1.5;
+        color: @secondary-text-color;
+        text-decoration: none;
+        white-space: nowrap;
+
+        &:hover {
+          color: @text-color;
+          border-bottom-color: @border-color;
+        }
       }
 
       &.active>a {
-        border-bottom: 1px solid @text-color;
         color: @text-color;
+        font-weight: 600;
+        border-bottom-color: @accent-fill-color;
       }
 
+      // Room after the last tab, so a swipe can bring it clear of the edge.
       &:last-child {
-        padding-right: 20px;
+        padding-right: @space-4;
       }
-    }
-
-    .edit-focus {
-      margin-left: 7px;
-    }
-
-    /* Scrollbar Style */
-    &::-webkit-scrollbar {
-      height: 0px;
-      /* remove scrollbar space */
-      background: transparent;
-      /* optional: just make scrollbar invisible */
     }
   }
 }
@@ -1155,49 +1166,91 @@ a {
     transform: scaleY(1);
   }
 
+  // Settings and Filter: small outlined pills, the shape of the engine chips
+  // at the end of the page. The result count is small print beside them.
   #toggle-box {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    margin-left: -8px;
-
-    >div {
-      margin-left: 8px;
-    }
+    gap: @space-2;
+    padding-top: @space-3;
 
     #filter-toggle {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      justify-content: center;
-      flex-grow: 0;
-      margin-left: 0px;
+      gap: @space-2;
+    }
 
-      >div {
-        margin-left: 8px;
+    #settings-link,
+    .option-toggle label,
+    #options-reset a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      padding: 3px 12px;
+      border: 1px solid @border-color;
+      border-radius: 999px;
+      background-color: @result-card-color;
+      font-size: 13px;
+      font-weight: normal;
+      line-height: 1.5;
+      color: @secondary-text-color;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      // #settings-link is a jump target from the settings page.
+      scroll-margin-top: 80px;
+
+      &:hover {
+        color: @text-color;
+        border-color: @muted-text-color;
       }
+
+      >svg {
+        flex: 0 0 auto;
+      }
+    }
+
+    // How many settings differ from the defaults.
+    .settings-count {
+      min-width: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background-color: @accent-fill-color;
+      color: @on-accent-color;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 18px;
+      text-align: center;
+    }
+
+    // Undoing the filters is the way out, in the accent.
+    #options-reset a {
+      color: @accent-text-color;
     }
 
     #result-count {
-      flex-grow: 1;
-      text-align: right;
-    }
-
-    .option-toggle {
-      text-align: center;
-
-      label {
-        font-weight: normal;
-        margin-bottom: 0;
-        display: flex;
-        align-items: center;
-      }
+      margin-left: auto;
+      font-size: 13px;
+      color: @muted-text-color;
     }
   }
 
+  // While the box is open the pill that opened it says so.
+  &:has(> input#options-toggle:checked) .option-toggle label {
+    border-color: @accent-fill-color;
+    color: @accent-text-color;
+  }
+
+  // The filters on a card of their own, like the results under them.
   #options-box {
     width: 100%;
-    padding-bottom: 8px;
-    border-bottom: 1px solid @border-color;
+    padding: @space-3 @space-4;
+    border: 1px solid @border-color;
+    border-radius: 10px;
+    background-color: @result-card-color;
 
     // The filters wrap rather than scroll sideways: in one scrolling row the
     // last of them ran off a phone's edge with nothing to say there was more.
@@ -1205,19 +1258,28 @@ a {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
-      gap: @space-3 @space-4;
+      gap: @space-3 @space-5;
 
       .option-selector {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 2px;
+        gap: @space-1;
         max-width: 100%;
-        font-size: 0.9em;
+
+        >div {
+          display: flex;
+          align-items: center;
+          gap: @space-1;
+        }
 
         label {
+          display: inline-flex;
+          align-items: center;
           margin-bottom: 0;
-          font-weight: normal;
+          font-size: 12px;
+          font-weight: 600;
+          color: @secondary-text-color;
         }
 
         // The palette's field colours, as every other select gets them
@@ -1225,21 +1287,41 @@ a {
         // the palette's text, which in the dark theme is near-white too.
         // A select is as wide as its longest option, and a language can be
         // "Englisch (Vereinigtes Königreich)": capped at the line.
-        select {
+        select,
+        input[type="date"] {
           max-width: 100%;
+          height: 32px;
+          padding: 0 @space-2;
+          border: 1px solid @border-color;
+          border-radius: 8px;
           background-color: @input-background;
           color: @input-text;
-          border: 1px solid @border-color;
-          padding: 3px;
-          border-radius: 5px;
+          font-size: 13px;
+
+          &:hover {
+            border-color: @muted-text-color;
+          }
+
+          &:focus-visible {
+            outline: 2px solid @focus-ring-color;
+            outline-offset: 1px;
+          }
         }
 
+        // The calendar beside "Datum": swaps the dropdown for two date fields.
         label[for="custom-date"] {
+          padding: 2px;
+          border-radius: 4px;
+          color: @muted-text-color;
           cursor: pointer;
 
           &:hover {
-            color: red;
+            color: @accent-text-color;
           }
+        }
+
+        &:has(> #custom-date:checked) label[for="custom-date"] {
+          color: @accent-text-color;
         }
 
         #bing-from-to {
@@ -1254,32 +1336,9 @@ a {
           display: flex;
           flex-wrap: wrap;
           align-items: center;
+          gap: @space-1;
+          color: @muted-text-color;
         }
-      }
-    }
-  }
-
-  #settings {
-    text-align: center;
-
-    a {
-      display: flex;
-      align-items: center;
-      color: @text-color;
-      scroll-margin-top: 80px;
-
-      &:hover {
-        color: red;
-
-        span.badge {
-          background-color: red;
-        }
-      }
-
-      span.badge {
-        margin-top: -12px;
-        font-size: 0.7em;
-        font-weight: normal;
       }
     }
   }

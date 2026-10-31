@@ -2,16 +2,16 @@
 	<div id="toggle-box">
 		<div id="settings">
 			<a id="settings-link" href="{{ route('settings', ["focus" => $metager->getFokus(), "url" => $metager->generateSearchLink($metager->getFokus())]) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
-			<img src="/img/icon-settings.svg"alt="" aria-hidden="true"id="result-img-settings">
-				@if($metager->getSavedSettingCount() > 0) <span class="badge badge-primary"></span>{{ $metager->getSavedSettingCount() }}@endif
+			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/></svg>
 				@lang('metaGer.settings.name')&hellip;
+				@if($metager->getSavedSettingCount() > 0)<span class="settings-count">{{ $metager->getSavedSettingCount() }}</span>@endif
 			</a>
 		</div>
 		<div id="filter-toggle">
 			@if(sizeof(app(\App\SearchSettings::class)->parameterFilter) > 0)
 			<div class="option-toggle">
 				<label class="navigation-element" for="options-toggle">
-				<img src="/img/svg-icons/icon-filter.svg"alt="" aria-hidden="true"id="result-img-filter"> Filter&hellip;
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>Filter&hellip;
 				</label>
 			</div>
 			@endif
@@ -43,7 +43,7 @@
 						</label>
 					@if($filterName === "freshness")
 						<label for="custom-date" title="@lang('metaGer.filter.customdatetitle')">
-						<img src="/img/icon-settings.svg"alt="" aria-hidden="true"id="result-img-settings">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
 						</label>
 					</div>
 						<input id="custom-date" type="checkbox" form="searchForm" 

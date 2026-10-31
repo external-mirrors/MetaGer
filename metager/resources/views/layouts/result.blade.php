@@ -50,7 +50,7 @@
                 @else
                     {{ $result->additionalInformation['date']->isoFormat('lll') }} — 
                 @endif
-            </span>
+            </div>
             @elseif(array_key_exists('date_string', $result->additionalInformation))
                 <span class="date-string">{{ $result->additionalInformation['date_string'] }} — </span>
             @endif
@@ -104,10 +104,44 @@
                     <span class="action-label-short">@lang('result.options.newtab-short')</span>
                 </a>
             @endif
-            <label class="toggle-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
-                >
-                <img src="/img/ellipsis.svg" alt="{{ trans('result.alt.more') }}" height="100%" loading="lazy" />
-            </label>
+            {{-- The options menu: a checkbox, so ⋯ opens it without JavaScript. Inside
+                 the row so it can drop down from ⋯ (result.less). --}}
+            <div class="result-menu">
+                <input type="checkbox" id="result-toggle-{{ $result->hash }}" class="result-toggle" aria-labelledby="result-toggle-{{ $result->hash }}-label">
+                <label class="toggle-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
+                    >
+                    <img src="/img/ellipsis.svg" alt="{{ trans('result.alt.more') }}" height="100%" loading="lazy" />
+                </label>
+                <div id="result-toggle-{{ $result->hash }}-label" class="result-options-label">@lang('result.options.togglelabel')</div>
+                <div class="result-options">
+                    <div class="options">
+                        <ul class="option-list list-unstyled small">
+                            @if (strlen($metager->getSite()) === 0)
+                                <li>
+                                    <a href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}"
+                                        @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
+                                        {!! trans('result.options.1') !!}
+                                    </a>
+                                </li>
+                            @endif
+                            <li>
+                                <a href="{{ $metager->generateRemovedHostLink($result->strippedHost) }}"
+                                    @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
+                                    {!! trans('result.options.2', ['host' => $result->strippedHost]) !!}
+                                </a>
+                            </li>
+                            @if ($result->strippedHost !== $result->strippedDomain)
+                                <li>
+                                    <a href="{{ $metager->generateRemovedDomainLink($result->strippedDomain) }}"
+                                        @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
+                                        {!! trans('result.options.3', ['domain' => $result->strippedDomain]) !!}
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+            </div>
             @if (sizeof($result->gefVon) === 1)
                 <a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}"
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
@@ -124,36 +158,6 @@
                     </ul>
                 </span>
             @endif
-        </div>
-        <input type="checkbox" id="result-toggle-{{ $result->hash }}" class="result-toggle" aria-labelledby="result-toggle-{{ $result->hash }}-label">
-        <div id="result-toggle-{{ $result->hash }}-label" class="result-options-label">@lang('result.options.togglelabel')</div>
-        <div class="result-options">
-            <div class="options">
-                <ul class="option-list list-unstyled small">
-                    @if (strlen($metager->getSite()) === 0)
-                        <li>
-                            <a href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}"
-                                @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
-                                {!! trans('result.options.1') !!}
-                            </a>
-                        </li>
-                    @endif
-                    <li>
-                        <a href="{{ $metager->generateRemovedHostLink($result->strippedHost) }}"
-                            @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
-                            {!! trans('result.options.2', ['host' => $result->strippedHost]) !!}
-                        </a>
-                    </li>
-                    @if ($result->strippedHost !== $result->strippedDomain)
-                        <li>
-                            <a href="{{ $metager->generateRemovedDomainLink($result->strippedDomain) }}"
-                                @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
-                                {!! trans('result.options.3', ['domain' => $result->strippedDomain]) !!}
-                            </a>
-                        </li>
-                    @endif
-                </ul>
-            </div>
         </div>
     </div>
     @if (sizeof($result->inheritedResults) > 0)

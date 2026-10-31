@@ -293,7 +293,7 @@ a.result-open-proxy {
     &.with-image {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      grid-template-areas: "description image" "sitelinks sitelinks" "footer footer" "options options";
+      grid-template-areas: "description image" "sitelinks sitelinks" "footer footer";
       column-gap: @space-4;
 
       .result-description {
@@ -311,10 +311,6 @@ a.result-open-proxy {
 
       .result-footer {
         grid-area: footer;
-      }
-
-      .result-options {
-        grid-area: options;
       }
     }
 
@@ -395,29 +391,6 @@ a.result-open-proxy {
       }
     }
 
-    /* The options menu: a checkbox, so it opens without JavaScript */
-    .result-toggle {
-      position: absolute;
-      left: -300%;
-
-      &:checked ~ .result-options {
-        display: block;
-      }
-
-      // For keyboard users, who cannot see which of the hidden checkboxes
-      // has focus. A tap on the ⋯ focuses it too, and must not show this.
-      &:focus-visible + .result-options-label {
-        display: block;
-      }
-    }
-
-    .result-options-label {
-      display: none;
-      width: max-content;
-      margin: 0 auto;
-      outline: 1px auto;
-    }
-
     &.ad .ad-hoster {
       &,
       & a,
@@ -435,63 +408,11 @@ a.result-open-proxy {
       text-align: right;
       color: #777;
     }
-
-    // What ⋯ opens: a menu, framed like one, at every width — rows of the
-    // card's secondary text that light up when pointed at, 44px on a phone.
-    & > .result-options {
-      display: none;
-      margin-top: @space-2;
-
-      ul {
-        display: flex;
-        flex-direction: column;
-        width: max-content;
-        max-width: 100%;
-        min-width: 240px;
-        box-sizing: border-box;
-        margin: 0;
-        padding: @space-1 0;
-        border: 1px solid @border-color;
-        border-radius: 8px;
-        font-size: 13px;
-
-        li {
-          list-style: none;
-        }
-
-        li > a {
-          display: flex;
-          align-items: center;
-          min-height: 32px;
-          padding: 0 @space-3;
-          color: @secondary-text-color;
-          text-decoration: none;
-
-          &:hover {
-            color: @text-color;
-            background-color: @highlight-color;
-          }
-        }
-
-        @media (max-width: @screen-mobile) {
-          width: 100%;
-          font-size: 15px;
-
-          li.result-saver {
-            display: none;
-          }
-
-          li > a {
-            min-height: 44px;
-            padding: 0 @space-4;
-          }
-        }
-      }
-    }
   }
 
   // 4. Actions and engines
   .result-footer {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -512,6 +433,110 @@ a.result-open-proxy {
     .result-open-newtab,
     .result-open-key {
       .result-action();
+    }
+
+    // ⋯ and what it opens. The menu drops down from ⋯ over what is below it,
+    // rather than opening a box inside the card that pushes the next result
+    // down. A checkbox, so it works without JavaScript; ⋯ again closes it.
+    .result-menu {
+      position: relative;
+      display: flex;
+
+      // On a phone there is no room beside ⋯: the menu spans the row instead,
+      // anchored to the footer.
+      @media (max-width: @screen-mobile) {
+        position: static;
+      }
+    }
+
+    .result-toggle {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+
+      &:focus-visible + .toggle-result-options {
+        outline: 2px solid @focus-ring-color;
+        outline-offset: 2px;
+      }
+
+      &:checked + .toggle-result-options {
+        background-color: @highlight-color;
+      }
+
+      &:checked ~ .result-options {
+        display: block;
+      }
+    }
+
+    // Names the checkbox for assistive technology; ⋯'s focus ring shows it.
+    .result-options-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .result-options {
+      display: none;
+      position: absolute;
+      top: calc(100% + @space-1);
+      left: 0;
+      z-index: 20;
+
+      @media (max-width: @screen-mobile) {
+        right: 0;
+      }
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        min-width: 240px;
+        width: max-content;
+        max-width: calc(100vw - 2 * @space-4);
+        box-sizing: border-box;
+        margin: 0;
+        padding: @space-1 0;
+        border: 1px solid @border-color;
+        border-radius: 8px;
+        background-color: @result-card-color;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+        font-size: 13px;
+
+        @media (max-width: @screen-mobile) {
+          width: auto;
+          max-width: none;
+          font-size: 15px;
+        }
+
+        li {
+          list-style: none;
+        }
+
+        li > a {
+          display: flex;
+          align-items: center;
+          min-height: 32px;
+          padding: 0 @space-3;
+          color: @secondary-text-color;
+          white-space: nowrap;
+          text-decoration: none;
+
+          &:hover {
+            color: @text-color;
+            background-color: @highlight-color;
+          }
+
+          @media (max-width: @screen-mobile) {
+            min-height: 44px;
+            padding: 0 @space-4;
+            white-space: normal;
+          }
+        }
+      }
     }
 
     .toggle-result-options {

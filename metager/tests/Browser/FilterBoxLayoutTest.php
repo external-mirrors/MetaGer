@@ -99,4 +99,55 @@ class FilterBoxLayoutTest extends DuskTestCase
             $this->assertLessThanOrEqual(1, $layout["spill"], "The filters are taller than the box unfolds.");
         });
     }
+
+    public static function widths(): array
+    {
+        return ["phone" => [360], "desktop" => [1280]];
+    }
+
+    /**
+     * The closed toolbar (Einstellungen, Filter) is used in few searches, and
+     * it sat between the tabs and the first result with more room above and
+     * below it than there is between two results: on a phone the tabs and the
+     * toolbar took a quarter of the first screen. It sits closer to
+     * them than the results are to each other.
+     */
+    #[DataProvider("widths")]
+    public function testTheClosedToolbarSitsCloserThanTheResults(int $width): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses(["brave" => $this->engineFixture("brave-web.json")]);
+        $html = $this->get("/de-DE/meta/meta.ger3?eingabe=kaffee&focus=web")
+            ->assertOk()
+            ->getContent();
+
+        $this->browse(function (Browser $browser) use ($html, $width) {
+            $browser->resize(1400, 900)->visit("/metager_maps/version.txt");
+            $browser->driver->executeScript(
+                "const frame = document.createElement('iframe');"
+                    . "frame.id = 'page'; frame.style.cssText = 'width: ' + arguments[1] + 'px; height: 800px; border: 0';"
+                    . "document.body.replaceChildren(frame);"
+                    . "frame.contentDocument.open(); frame.contentDocument.write(arguments[0]); frame.contentDocument.close();",
+                [$html, $width]
+            );
+            $browser->waitUntil("document.querySelector('#page').contentDocument.readyState === 'complete'"
+                . " && document.querySelector('#page').contentDocument.querySelectorAll('#results > .result').length > 1");
+
+            $gaps = $browser->script(
+                "const page = document.querySelector('#page').contentDocument;"
+                    . "const box = (s) => page.querySelector(s).getBoundingClientRect();"
+                    . "const [first, second] = [...page.querySelectorAll('#results > .result')].filter((r) => r.offsetHeight > 0);"
+                    . "const pill = box('#settings-link');"
+                    . "return {"
+                    . " above: Math.round(pill.top - box('#foki-box').bottom),"
+                    . " below: Math.round(first.getBoundingClientRect().top - pill.bottom),"
+                    . " between: Math.round(second.getBoundingClientRect().top - first.getBoundingClientRect().bottom),"
+                    . "};"
+            )[0];
+
+            $this->assertGreaterThan(0, $gaps["between"], "The results touch: nothing to compare with.");
+            $this->assertLessThan($gaps["between"], $gaps["above"], "The tabs and the toolbar are not closer together than two results: " . json_encode($gaps));
+            $this->assertLessThan($gaps["between"], $gaps["below"], "The toolbar and the first result are not closer together than two results: " . json_encode($gaps));
+        });
+    }
 }

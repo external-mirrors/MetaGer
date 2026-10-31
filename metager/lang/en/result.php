@@ -11,6 +11,8 @@ return [
         '7' => 'OPEN',
         'direct' => 'Direct Open',
         'togglelabel' => 'toggle result options',
+        'anonym-short' => 'ANONYMOUS',
+        'anonym' => 'Open anonymously',
     ],
     'gefVon' => 'by',
     'advertisement' => 'Ad',
@@ -27,6 +29,11 @@ return [
     'image' => [
         'download' => 'Download Image',
         'copyright' => 'Images may be copyrighted.',
+        'proxy' => 'OPEN PAGE ANONYMOUSLY',
+    ],
+    'quicktips' => [
+        'heading' => 'Quicktips',
+        'extras' => 'Quote and tip of the day',
     ],
     'alt' => [
         'more' => 'More'

@@ -9,6 +9,7 @@
     @include('parts.alteration')
     @foreach ($metager->getResults() as $index => $result)
         @if ($index === 2)
+            @include('parts.quicktips-inline', ['quicktips' => $quicktips ?? [], 'part' => 'answers'])
             @include('layouts.resultpage.news', ['news' => $metager->news])
         @endif
         @if ($index === 5)
@@ -16,6 +17,9 @@
         @endif
         @include('layouts.result', ['result' => $result, 'index' => $index + 1])
     @endforeach
+    @if (sizeof($metager->getResults()) <= 2)
+        @include('parts.quicktips-inline', ['quicktips' => $quicktips ?? [], 'part' => 'answers'])
+    @endif
     @if(sizeof($metager->getUserDomainBlacklist()) > 0)
         <div class="alert alert-warning">
             @if(sizeof($metager->getUserDomainBlacklist()) <= 3)
@@ -34,5 +38,6 @@
             @endif
         </div>
     @endif
+    @include('parts.quicktips-inline', ['quicktips' => $quicktips ?? [], 'part' => 'extras'])
     @include('parts.pager')
 </div>

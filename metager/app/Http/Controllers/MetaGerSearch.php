@@ -342,6 +342,7 @@ class MetaGerSearch extends Controller
         if ($quicktips !== null && $quicktips->new) {
             $result["quicktips"] = Blade::render("parts.quicktips", ["quicktips" => $quicktips->quicktips]);
         }
+        $quicktipsArrived = $quicktips !== null && $quicktips->new && sizeof($quicktips->quicktips ?? []) > 0;
 
         $newResults = 0;
         $viewResults = [];
@@ -452,7 +453,11 @@ class MetaGerSearch extends Controller
         # The website polls every second for up to SerperBase::RESOLVE_WINDOW_SECONDS,
         # and most polls find nothing new. Without `results` the page leaves its
         # list alone, so those polls cost no render here and no DOM work there.
-        if (!$changed) {
+        #
+        # The rendered list also changes when the quicktips arrive: on a narrow
+        # screen they sit inside it (parts/quicktips-inline). Not part of
+        # $changed, which out=json reports, and JSON carries no quicktips.
+        if (!$changed && !$quicktipsArrived) {
             unset($result["results"]);
             return response()->json(mb_convert_encoding($result, "UTF-8", "UTF-8"), 200, [
                 "Cache-Control" => $cacheControl,
@@ -469,6 +474,7 @@ class MetaGerSearch extends Controller
             ->with('errors', $metager->errors)
             ->with('apiAuthorized', $metager->isApiAuthorized())
             ->with('metager', $metager)
+            ->with('quicktips', $quicktips?->quicktips ?? [])
             ->with('fokus', $metager->getFokus())->render();
 
         # JSON encoding will fail if invalid UTF-8 Characters are in this string

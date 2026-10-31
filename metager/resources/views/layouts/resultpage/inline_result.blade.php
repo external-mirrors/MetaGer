@@ -20,4 +20,7 @@
     {{ $result->age }}
     @endif
     </div>
+    <div class="inline-result-footer">
+        @include('parts.result-proxy-link', ['result' => $result, 'variant' => 'short'])
+    </div>
 </div>

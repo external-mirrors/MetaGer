@@ -99,6 +99,8 @@ class ResultActionsTest extends TestCase
             $option = $page->query(".//li[" . self::hasClass("result-option-alternate-open") . "]/a", $result)->item(0);
             $this->assertNotNull($option);
             $this->assertSame($title->getAttribute("href"), $option->getAttribute("href"));
+            // Written like the options around it, not in the footer's capitals.
+            $this->assertContains(trim($option->textContent), ["Öffnen", "In neuem Tab öffnen"]);
         }
     }
 

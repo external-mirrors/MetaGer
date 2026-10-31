@@ -129,11 +129,11 @@
                     <li class="result-option-alternate-open">
                         @if ($metager->getNewtab() === '_blank')
                             <a href="{{ $result->link }}" @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
-                                {!! trans('result.options.7') !!}
+                                @lang('result.options.open')
                             </a>
                         @else
                             <a href="{{ $result->link }}" target="_blank" rel="noopener">
-                                {!! trans('result.options.6') !!}
+                                @lang('result.options.newtab')
                             </a>
                         @endif
                     </li>

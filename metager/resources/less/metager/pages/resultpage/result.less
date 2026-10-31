@@ -5,9 +5,29 @@
 @result-description-color: @text-color;
 @result-image-border-color: @color-almost-white;
 
+// A control drawn smaller than it can be tapped: the visible part stays at
+// the size the row looks right at, and an invisible margin around it makes the
+// 44px a finger needs. Only on a phone, where nothing is pointed at precisely.
+.touch-target(@visible) {
+  @media (max-width: @screen-mobile) {
+    position: relative;
+    min-height: @visible;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: ((@visible - 44px) / 2);
+      bottom: ((@visible - 44px) / 2);
+      // Half the 8px gap between neighbouring controls, so two never overlap.
+      left: -4px;
+      right: -4px;
+    }
+  }
+}
+
 // An action on a result: outlined, upper case, in the accent colour — the form
 // the Android app gives "ANONYM ÖFFNEN" (app-en, ResultRow.tsx), so the site and
-// the app offer the same buttons. 44px tall on a phone, which is a touch target.
+// the app offer the same buttons. On a phone a 44px touch target, see above.
 .result-action-pill() {
   display: inline-flex;
   align-items: center;
@@ -36,10 +56,7 @@
     background-color: @highlight-color;
   }
 
-  @media (max-width: @screen-mobile) {
-    min-height: 44px;
-    padding: 0 16px;
-  }
+  .touch-target(32px);
 }
 
 // Everywhere a result can be opened through the proxy: results, their grouped
@@ -55,10 +72,6 @@ a.result-open-proxy {
     min-height: 26px;
     padding: 0 10px;
     font-size: 10px;
-
-    @media (max-width: @screen-mobile) {
-      min-height: 44px;
-    }
   }
 
   &.result-open-proxy--icon {
@@ -69,8 +82,8 @@ a.result-open-proxy {
     padding: 0;
 
     @media (max-width: @screen-mobile) {
-      width: 44px;
-      height: 44px;
+      width: 32px;
+      height: 32px;
     }
   }
 }
@@ -231,33 +244,33 @@ a.result-open-proxy {
       }
     }
 
+    // Sitelinks, as chips: one row that scrolls sideways rather than wraps,
+    // since how many there are is the engine's choice.
     > .result-deep-buttons {
       display: flex;
       overflow-x: auto;
-      gap: 1.5rem;
-
-      @supports not (selector(:first-child)) {
-        gap: 0;
-
-        > *:not(:nth-child(1)) {
-          padding: 0 0.75rem;
-        }
-      }
-
-      margin: 0;
+      gap: 8px;
+      margin: 6px 0 0;
       padding: 0;
-      margin-bottom: -0.25rem;
-      font-size: 0.8rem;
+      list-style: none;
+      font-size: 13px;
 
       > li {
-        &:nth-child(1) {
-          list-style-type: none;
-        }
+        flex: 0 0 auto;
+        list-style: none;
 
         > a {
+          display: inline-flex;
+          align-items: center;
+          box-sizing: border-box;
+          min-height: 30px;
+          padding: 0 12px;
+          border: 1px solid @border-color;
+          border-radius: 999px;
           white-space: nowrap;
-          display: block;
-          padding-bottom: 0.5rem;
+          color: @accent-text-color;
+          text-decoration: none;
+          .touch-target(30px);
         }
       }
     }
@@ -279,7 +292,9 @@ a.result-open-proxy {
 
     &.with-image {
       display: grid;
-      grid-template-columns: auto auto;
+      // The text column gives way, the picture does not: with `auto auto` a
+      // long description took the room and the picture was drawn over it.
+      grid-template-columns: minmax(0, 1fr) auto;
       grid-template-rows: auto auto auto;
       grid-template-areas: "description image" "footer image" "options options";
       column-gap: 1rem;
@@ -289,11 +304,12 @@ a.result-open-proxy {
         grid-area: description;
       }
 
-      .result-image {
+      .result-image,
+      .result-logo {
         grid-area: image;
-        align-self: center;
+        align-self: start;
         justify-self: end;
-        border-radius: 15px;
+        border-radius: 8px;
         overflow: hidden;
       }
 
@@ -306,17 +322,20 @@ a.result-open-proxy {
       }
 
       @media (max-width: 535px) {
-        grid-template-columns: auto auto;
+        grid-template-columns: minmax(0, 1fr) auto;
         grid-template-rows: repeat(3, auto);
         grid-template-areas: "description image" "footer footer" "options options";
 
-        > .result-image img {
-          max-width: 120px;
+        > .result-image img,
+        > .result-logo img {
+          max-width: 72px;
+          max-height: 72px;
         }
       }
     }
 
-    .result-image {
+    .result-image,
+    .result-logo {
       max-width: 160px;
 
       > a {
@@ -381,10 +400,16 @@ a.result-open-proxy {
           overflow-x: auto;
           opacity: 1;
           display: block;
+
+          @media (max-width: @screen-mobile) {
+            max-height: none;
+          }
         }
       }
 
-      &:focus + .result-options-label {
+      // For keyboard users, who cannot see which of the hidden checkboxes
+      // has focus. A tap on the ⋯ focuses it too, and must not show this.
+      &:focus-visible + .result-options-label {
         display: block;
       }
     }
@@ -466,6 +491,31 @@ a.result-open-proxy {
 
           @media (max-width: @screen-mobile) {
             display: list-item;
+          }
+        }
+
+        // On a phone a list of touch-sized rows in a frame, not one line of
+        // small links that scrolls sideways.
+        @media (max-width: @screen-mobile) {
+          flex-direction: column;
+          gap: 0;
+          margin-top: 8px;
+          padding: 4px 0;
+          border: 1px solid @border-color;
+          border-radius: 8px;
+
+          li {
+            padding: 0;
+            font-size: 15px;
+          }
+
+          li > a {
+            display: flex;
+            align-items: center;
+            min-height: 44px;
+            padding: 0 14px;
+            color: @text-color;
+            white-space: normal;
           }
         }
       }
@@ -609,9 +659,11 @@ a.result-open-proxy {
       }
 
       @media (max-width: @screen-mobile) {
-        width: 44px;
-        height: 44px;
+        width: 32px;
+        height: 32px;
       }
+
+      .touch-target(32px);
     }
 
     // Who found it, at the end of the row as in the app. A span with a list

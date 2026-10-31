@@ -11,6 +11,8 @@ return [
         '7' => 'ÖFFNEN',
         'direct' => 'Direkt öffnen',
         'togglelabel' => 'Ergebnisoptionen ein- und ausschalten',
+        'open' => 'Öffnen',
+        'newtab' => 'In neuem Tab öffnen',
         'anonym-short' => 'ANONYM',
         'anonym' => 'Anonym öffnen',
     ],

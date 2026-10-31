@@ -24,6 +24,14 @@ const serverMarkup = new WeakMap();
 const POSITION_ATTRIBUTES = ["data-index", "data-target"];
 
 /**
+ * Images go through /meta/picture?data=…, whose data is encrypted with a fresh IV and an expiry
+ * one day from now on every render, so the same image never has the same URL twice. Compared as
+ * is, every result with an image looked changed on every poll, and was replaced, image and all.
+ * The old URL stays valid for a day, so keeping it is safe.
+ */
+const PICTURE_DATA = /(\/meta\/picture\?data=)[^"&]*/g;
+
+/**
  * Record the server's markup for every element in `container`. Call before anything else on the
  * page modifies the list.
  */
@@ -49,13 +57,14 @@ export function patchResults(container, html) {
     const next = keyed(template.content.children).map(([key, element]) => {
         const markup = markupOf(element);
         const existing = current.get(key);
-        current.delete(key);
 
         if (existing !== undefined && serverMarkup.get(existing) === markup) {
+            current.delete(key);
             syncPositions(existing, element);
             return existing;
         }
 
+        // A replaced element stays in `current`, so it is removed with the ones that are gone.
         if (existing !== undefined) {
             reopenFolds(existing, element);
         } else if (key.startsWith("result:")) {
@@ -110,7 +119,7 @@ function keyed(elements) {
 function markupOf(element) {
     const copy = element.cloneNode(true);
     POSITION_ATTRIBUTES.forEach((attribute) => copy.removeAttribute(attribute));
-    return copy.outerHTML;
+    return copy.outerHTML.replace(PICTURE_DATA, "$1");
 }
 
 function syncPositions(existing, rendered) {

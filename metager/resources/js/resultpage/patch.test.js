@@ -2,11 +2,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { patchResults, rememberServerMarkup } from "./patch";
 
-function result(hash, { index = 1, title = hash, fold = null } = {}) {
+function result(hash, { index = 1, title = hash, fold = null, image = null } = {}) {
     const details = fold
         ? `<details class="result-more-from-host" data-host="${fold}"><summary>${fold}</summary><ul></ul></details>`
         : "";
-    return `<div class="result" data-count="${hash}" data-index="${index}"><h2>${title}</h2>${details}</div>`;
+    const img = image ? `<img src="http://localhost:8080/meta/picture?data=${image}" alt="">` : "";
+    return `<div class="result" data-count="${hash}" data-index="${index}"><h2>${title}</h2>${img}${details}</div>`;
 }
 
 function list(...items) {
@@ -68,12 +69,36 @@ describe("patchResults", () => {
     });
 
     it("replaces a result the server now renders differently", () => {
-        const container = page(list(result("a", { title: "old" })));
+        const container = page(list(result("a", { title: "old" }), result("b")));
 
-        patchResults(container, list(result("a", { title: "new" })));
+        patchResults(container, list(result("a", { title: "new" }), result("b")));
 
+        expect(hashes(container)).toEqual(["a", "b"]);
         expect(container.querySelector("h2").textContent).toBe("new");
         expect(container.children[0].classList.contains("result-arrived")).toBe(false);
+    });
+
+    /**
+     * The first run against the real page doubled the list: a replaced result was taken out of
+     * the bookkeeping before it was known to be replaced, so it was neither kept nor removed.
+     */
+    it("never leaves the replaced element behind", () => {
+        const container = page(list(result("a", { title: "old" }), result("b", { title: "old" }), result("c")));
+
+        patchResults(container, list(result("c"), result("a", { title: "new" }), result("b", { title: "new" })));
+
+        expect(hashes(container)).toEqual(["c", "a", "b"]);
+        expect([...container.querySelectorAll("h2")].map((h) => h.textContent)).toEqual(["c", "new", "new"]);
+    });
+
+    it("keeps a result whose only difference is the image proxy's freshly encrypted URL", () => {
+        const container = page(list(result("a", { image: "eyJpdiI6IkFBQSJ9" })));
+        const a = container.children[0];
+
+        patchResults(container, list(result("a", { image: "eyJpdiI6IkJCQiJ9" })));
+
+        expect(container.children[0]).toBe(a);
+        expect(container.children).toHaveLength(1);
     });
 
     it("removes results that are no longer in the list", () => {

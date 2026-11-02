@@ -74,6 +74,7 @@ return [
     'dark' => 'Escuro',
     'light' => 'Luz',
     'newTab' => 'Abrir resultados em novos separadores',
+    'openAnonymously' => 'Abrir resultados anonimamente',
     'off' => 'desligado',
     'on' => 'sobre',
     'more' => 'Mais definições',

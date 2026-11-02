@@ -791,6 +791,19 @@ class MetaGer
         return $this->newtab;
     }
 
+    /**
+     * Whether a link to $target — a Result, a Search\Sitelink, anything with
+     * a link and a proxyLink — leads through the proxy rather than to the page
+     * (parts/result-href). The "open results anonymously" setting, except on a
+     * page that is itself viewed through the proxy, which is anonymous already.
+     */
+    public function opensAnonymously(object $target): bool
+    {
+        return app(SearchSettings::class)->open_anonymously
+            && request()->header("is-proxy") !== "true"
+            && !empty($target->proxyLink ?? "");
+    }
+
     public function setResults($results)
     {
         $this->results = $results;

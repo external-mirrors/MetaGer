@@ -292,7 +292,7 @@ class SettingsPostRedirectTest extends TestCase
 
     public static function settingsThatArriveAsSomethingOtherThanAString(): array
     {
-        $fields = ["suggestion_provider", "suggestion_delay", "suggestion_addressbar", "tips", "tiles_startpage", "zitate", "dark_mode", "new_tab"];
+        $fields = ["suggestion_provider", "suggestion_delay", "suggestion_addressbar", "tips", "tiles_startpage", "zitate", "dark_mode", "new_tab", "open_anonymously"];
         $cases = [];
         foreach ($fields as $field) {
             // ConvertEmptyStringsToNull turns a submitted-but-empty field into null,

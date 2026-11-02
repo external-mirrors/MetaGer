@@ -5,7 +5,7 @@
                 @if (isset($result->price) && $result->price != 0)
                     <span class="result-price">{!! $result->price_text !!}</span>
                 @endif
-                <a href="{{ $result->link }}" target="{{ $metager->getNewtab() }}"
+                <a @include('parts.result-href', ['target' => $result]) target="{{ $metager->getNewtab() }}"
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif>
                     {!! $result->titel !!}
                 </a>
@@ -18,7 +18,7 @@
                         src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->additionalInformation['favicon_url']) }}"
                         alt="" loading="lazy">
                 @endif
-                <a class=" result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}"
+                <a class=" result-link" @include('parts.result-href', ['target' => $result]) title="{{ $result->anzeigeLink }}"
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif target="{{ $metager->getNewtab() }}">
                     {{ $result->strippedHost }}
                 </a>
@@ -34,7 +34,7 @@
                     <span class="date-string">{{ $result->additionalInformation['date_string'] }}</span>
                 @endif
             @else
-                <a class=" result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}"
+                <a class=" result-link" @include('parts.result-href', ['target' => $result]) title="{{ $result->anzeigeLink }}"
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif target="{{ $metager->getNewtab() }}">
                     {{ $result->anzeigeLink }}
                 </a>
@@ -58,7 +58,7 @@
         </div>
         @if (isset($result->logo))
             <div class="result-logo" aria-hidden="true">
-                <a href="{{ $result->link }}" tabindex="-1" @if ($metager->isFramed()) target="_top" @endif>
+                <a @include('parts.result-href', ['target' => $result]) tabindex="-1" @if ($metager->isFramed()) target="_top" @endif>
                     <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->logo) }}" alt=""
                         loading="lazy" />
                 </a>
@@ -66,7 +66,7 @@
         @endif
         @if ($result->image !== '')
             <div class="result-image" aria-hidden="true">
-                <a href="{{ $result->link }}" tabindex="-1" @if ($metager->isFramed()) target="_top" @endif>
+                <a @include('parts.result-href', ['target' => $result]) tabindex="-1" @if ($metager->isFramed()) target="_top" @endif>
                     <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->image) }}" alt=""
                         loading="lazy" />
                 </a>
@@ -83,7 +83,7 @@
                 <ul class="result-deep-buttons">
                     @foreach ($sitelinks->inline() as $button)
                         <li>
-                            <a href="{{ $button->link }}" title="{{ $button->link }}"
+                            <a @include('parts.result-href', ['target' => $button]) title="{{ $button->link }}"
                                 @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
                                 target="{{ $metager->getNewtab() }}">{{ $button->title }}</a>
                         </li>
@@ -95,7 +95,7 @@
                         <ul>
                             @foreach ($sitelinks->links as $button)
                                 <li>
-                                    <a href="{{ $button->link }}" title="{{ $button->link }}"
+                                    <a @include('parts.result-href', ['target' => $button]) title="{{ $button->link }}"
                                         @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
                                         target="{{ $metager->getNewtab() }}">{{ $button->title }}</a>
                                     @include('parts.result-proxy-link', ['result' => $button, 'variant' => 'icon'])
@@ -109,8 +109,11 @@
         <div class="result-footer">
             @include('parts.result-proxy-link', ['result' => $result])
             {{-- The other way to open the result than its title does: in this tab
-                 when titles open a new one, and the other way round. --}}
-            @if ($metager->getNewtab() === '_blank')
+                 when titles open a new one, and the other way round. Not when the
+                 title opens it anonymously: through SafeBrowse every result opens
+                 in a tab of its own anyway, and the row offers the direct way. --}}
+            @if ($metager->opensAnonymously($result))
+            @elseif ($metager->getNewtab() === '_blank')
                 <a class="result-open" href="{{ $result->link }}" aria-hidden="true" tabindex="-1"
                     @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -184,7 +187,7 @@
         <div class="result-inherited-results">
             @foreach ($result->inheritedResults as $inheritedResult)
                 <div class="inherited-result">
-                    <a class="inherited-title" href="{{ $inheritedResult->link }}"
+                    <a class="inherited-title" @include('parts.result-href', ['target' => $inheritedResult])
                         title="{{ $inheritedResult->link }}" @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
                         target="{{ $metager->getNewtab() }}">{{ $inheritedResult->titel }}</a>
                     <div class="inherited-description">{{ $inheritedResult->descr }}</div>
@@ -204,7 +207,7 @@
             <ul>
                 @foreach ($result->moreFromHost as $moreResult)
                     <li>
-                        <a href="{{ $moreResult->link }}" title="{{ $moreResult->link }}"
+                        <a @include('parts.result-href', ['target' => $moreResult]) title="{{ $moreResult->link }}"
                             @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
                             target="{{ $metager->getNewtab() }}">{!! $moreResult->titel !!}</a>
                         <div class="more-from-host-description">{{ $moreResult->descr }}</div>

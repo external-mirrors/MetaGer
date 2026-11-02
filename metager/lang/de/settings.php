@@ -92,6 +92,7 @@ return [
     'meaning' => 'Bedeutung',
     'more' => 'Weitere Einstellungen',
     'newTab' => 'Ergebnisse in neuem Tab öffnen',
+    'openAnonymously' => 'Ergebnisse anonym öffnen',
     'noSettings' => 'Aktuell sind keine Einstellungen gesetzt!',
     'off' => 'Deaktiviert',
     'on' => 'auf',

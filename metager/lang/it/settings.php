@@ -44,6 +44,7 @@ return [
     'dark' => 'Scuro',
     'light' => 'Luce',
     'newTab' => 'Aprire i risultati in nuove schede',
+    'openAnonymously' => 'Aprire i risultati in modo anonimo',
     'off' => 'spento',
     'on' => 'su',
     'more' => 'Altre impostazioni',

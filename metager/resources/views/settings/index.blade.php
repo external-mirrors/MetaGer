@@ -108,7 +108,7 @@
                         <h3 class="block-title">@lang('settings.more')</h3>
                     </div>
 
-                    @foreach (['tips', 'tiles_startpage', 'dark_mode', 'new_tab', 'zitate'] as $key)
+                    @foreach (['tips', 'tiles_startpage', 'dark_mode', 'new_tab', 'open_anonymously', 'zitate'] as $key)
                         @continue(!$globalSettings->has($key))
                         <div class="row">
                             <div class="row-text"><label class="field-label" for="{{ $key }}">@lang($globalSettings[$key]['label'])</label></div>

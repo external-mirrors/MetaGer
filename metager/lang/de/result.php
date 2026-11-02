@@ -10,6 +10,7 @@ return [
         '6' => 'IN NEUEM TAB ÖFFNEN',
         '7' => 'ÖFFNEN',
         'direct' => 'Direkt öffnen',
+        'direct-short' => 'Direkt',
         'togglelabel' => 'Ergebnisoptionen ein- und ausschalten',
         'open' => 'Öffnen',
         'newtab' => 'In neuem Tab öffnen',

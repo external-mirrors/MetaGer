@@ -17,7 +17,8 @@ return [
         '5' => 'ANONIEM OPENEN',
         '6' => 'OPENEN IN NIEUW TABBLAD',
         '7' => 'OPEN',
-        'direct' => 'Direct Open',
+        'direct' => 'Direct openen',
+        'direct-short' => 'Direct',
         'togglelabel' => 'resultatenopties omschakelen',
     ],
     'sitelinks' => [

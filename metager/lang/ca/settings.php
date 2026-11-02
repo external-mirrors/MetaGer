@@ -69,6 +69,7 @@ return [
     'dark' => 'Fosca',
     'light' => 'Clara',
     'newTab' => 'Obre els resultats en pestanyes noves',
+    'openAnonymously' => 'Obre els resultats de manera anònima',
     'off' => 'desactivat',
     'on' => 'activat',
     'more' => 'Més opcions',

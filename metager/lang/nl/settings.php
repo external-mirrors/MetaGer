@@ -2,6 +2,7 @@
 return [
     'light' => 'Licht',
     'newTab' => 'Resultaten openen in nieuwe tabbladen',
+    'openAnonymously' => 'Resultaten anoniem openen',
     'off' => 'uit',
     'on' => 'op',
     'more' => 'Meer instellingen',

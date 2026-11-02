@@ -52,6 +52,7 @@ return [
     'dark' => 'Tumma',
     'light' => 'Valo',
     'newTab' => 'Avaa tulokset uusissa välilehdissä',
+    'openAnonymously' => 'Avaa tulokset anonyymisti',
     'off' => 'off',
     'on' => 'osoitteessa',
     'more' => 'Lisää asetuksia',

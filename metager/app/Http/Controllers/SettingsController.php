@@ -166,6 +166,7 @@ class SettingsController extends Controller
                 'tiles_startpage' => $settings->tiles_startpage ? 'on' : 'off',
                 'dark_mode' => $settings->theme,
                 'new_tab' => $settings->newtab ? 'on' : 'off',
+                'open_anonymously' => $settings->open_anonymously ? 'on' : 'off',
                 'zitate' => $settings->zitate ? 'on' : 'off',
             ])
             ->with('js', [Vite::asset('resources/js/scriptSettings.js')]), 200, [
@@ -353,6 +354,7 @@ class SettingsController extends Controller
             self::PROCESS_GLOBAL_SETTING_CHANGE("zitate", self::SETTING_INPUT($request, 'zitate'));
             self::PROCESS_GLOBAL_SETTING_CHANGE("dark_mode", self::SETTING_INPUT($request, 'dark_mode'));
             self::PROCESS_GLOBAL_SETTING_CHANGE("new_tab", self::SETTING_INPUT($request, 'new_tab'));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("open_anonymously", self::SETTING_INPUT($request, 'open_anonymously'));
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#more-settings";
         }
 
@@ -472,6 +474,15 @@ class SettingsController extends Controller
             } else {
                 Cookie::queue(Cookie::forever('new_tab', 'on', '/', null, $secure, true));
                 $carry->set('new_tab', 'on');
+            }
+            return true;
+        } else if ($key === "open_anonymously" && in_array($value, ["on", "off"])) {
+            if ($value === "off") {
+                Cookie::queue(Cookie::forget('open_anonymously', '/'));
+                $carry->forget('open_anonymously');
+            } else {
+                Cookie::queue(Cookie::forever('open_anonymously', 'on', '/', null, $secure, true));
+                $carry->set('open_anonymously', 'on');
             }
             return true;
         }

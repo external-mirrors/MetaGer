@@ -57,7 +57,9 @@ export default function updateProxyLinks() {
         return;
     }
 
-    const links = document.querySelectorAll("a.result-open-proxy");
+    // Every link the server wired for SafeBrowse: the shields, and with the "open results
+    // anonymously" setting the result's own links too (parts/proxy-safebrowse-attribute).
+    const links = document.querySelectorAll("a[data-proxy-link]");
     if (links.length === 0) return;
 
     // Start the reachability test early so the result is usually cached before the first click

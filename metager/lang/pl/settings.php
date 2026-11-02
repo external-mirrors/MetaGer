@@ -40,6 +40,7 @@ return [
     'dark' => 'Ciemny',
     'light' => 'Światło',
     'newTab' => 'Otwieranie wyników w nowych kartach',
+    'openAnonymously' => 'Otwieranie wyników anonimowo',
     'off' => 'wyłączony',
     'on' => 'na',
     'more' => 'Więcej ustawień',

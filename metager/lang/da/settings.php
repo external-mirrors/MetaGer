@@ -40,6 +40,7 @@ return [
     'dark' => 'Mørk',
     'light' => 'Lys',
     'newTab' => 'Åbn resultater i nye faner',
+    'openAnonymously' => 'Åbn resultater anonymt',
     'off' => 'af',
     'on' => 'på',
     'more' => 'Flere indstillinger',

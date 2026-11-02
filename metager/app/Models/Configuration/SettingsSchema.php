@@ -91,6 +91,17 @@ class SettingsSchema
                 "clients" => ["web", "headless"],
             ],
             [
+                // Web-only: it rewrites the links on MetaGer's own result
+                // page. The app opens results itself, from out=json's
+                // proxyLink.
+                "key" => "open_anonymously",
+                "type" => "enum",
+                "label" => "settings.openAnonymously",
+                "values" => self::onOffValues(),
+                "default" => "off",
+                "clients" => ["web"],
+            ],
+            [
                 // Web-only: the app themes itself natively and never renders
                 // MetaGer's HTML, so this setting has no meaning for it.
                 "key" => "dark_mode",

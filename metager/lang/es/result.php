@@ -10,6 +10,7 @@ return [
         '6' => 'ABRIR NUEVA PESTAÑA',
         '7' => 'ABRIR',
         'direct' => 'Abrir directamente',
+        'direct-short' => 'Directo',
         'togglelabel' => 'alternar opciones de resultados',
     ],
     'gefVon' => 'Encontrado de',

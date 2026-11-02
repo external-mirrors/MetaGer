@@ -69,6 +69,7 @@ return [
     'dark' => 'Dark',
     'light' => 'Light',
     'newTab' => 'Open results in new tabs',
+    'openAnonymously' => 'Open results anonymously',
     'off' => 'off',
     'on' => 'on',
     'more' => 'More Settings',

@@ -94,6 +94,12 @@
   .touch-target(28px);
 }
 
+// With the "open results anonymously" setting the shield's place holds its
+// opposite, the one way to open the page directly. Looks like every other action.
+a.result-open-direct {
+  .result-action();
+}
+
 // Everywhere a result can be opened through the proxy: results, their grouped
 // and folded results, the news and video cards and the image details.
 a.result-open-proxy {
@@ -716,7 +722,8 @@ a.result-open-proxy {
       .result-open,
       .result-open-newtab,
       .result-open-key,
-      .result-open-proxy {
+      .result-open-proxy,
+      .result-open-direct {
         > .action-label-long {
           display: none;
         }

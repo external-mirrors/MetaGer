@@ -28,7 +28,7 @@
             </div>
             <div class="details">
                 <h3 class="title">{{ $result->titel }}</h3>
-                <a class="link" href="{{ $result->link }}" target="{{ $metager->getNewtab() }}"
+                <a class="link" @include('parts.result-href', ['target' => $result]) target="{{ $metager->getNewtab() }}"
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif>{{ $result->anzeigeLink }}</a>
                 <div class="actions">
                     @include('parts.result-proxy-link', ['result' => $result, 'label' => trans('result.image.proxy')])

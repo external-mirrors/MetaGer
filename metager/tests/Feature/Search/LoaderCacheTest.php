@@ -216,6 +216,13 @@ class LoaderCacheTest extends TestCase
      * used by the search or not, so a disabled-by-default engine pays it too:
      * one more engine costs about 2.9 KB per search in flight. The ceiling moved from 68,000, which the previous figure was
      * 27 bytes under, to 72,000.
+     *
+     * The "open results anonymously" setting added 28 bytes on top of that —
+     * one more property on SearchSettings, which serializes all of them — and
+     * fits under the same ceiling. The load-more request does not actually need
+     * any of those request-derived properties: SearchSettingsProvider boots the
+     * restored settings again, from the load-more request itself — another few
+     * hundred bytes that could go, and are not touched here.
      */
     public function testTheLoaderEntryStaysWithinItsSizeBudget(): void
     {

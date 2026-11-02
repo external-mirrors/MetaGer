@@ -86,6 +86,7 @@ class SettingsUrlCarryTest extends TestCase
             "tiles_startpage" => ["tiles_startpage", "off", "on"],
             "zitate" => ["zitate", "off", "on"],
             "new_tab" => ["new_tab", "on", "off"],
+            "open_anonymously" => ["open_anonymously", "on", "off"],
         ];
     }
 

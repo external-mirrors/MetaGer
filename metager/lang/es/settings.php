@@ -40,6 +40,7 @@ return [
     'dark' => 'Oscuro',
     'light' => 'Brillante',
     'newTab' => 'Abrir los resultados en una nueva pestaña',
+    'openAnonymously' => 'Abrir los resultados de forma anónima',
     'off' => 'Desde',
     'on' => 'en',
     'more' => 'Más ajustes',

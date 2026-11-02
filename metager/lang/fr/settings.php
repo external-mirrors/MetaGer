@@ -43,6 +43,7 @@ return [
     'dark' => 'Sombre',
     'light' => 'Clair',
     'newTab' => 'Ouvrir les résultats dans de nouveaux onglets',
+    'openAnonymously' => 'Ouvrir les résultats de manière anonyme',
     'off' => 'éteint',
     'more' => 'Plus de paramètres',
     'noSettings' => 'Actuellement, aucun paramètre n\'est défini !',

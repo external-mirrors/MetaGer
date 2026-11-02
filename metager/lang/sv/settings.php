@@ -4,6 +4,7 @@ return [
     'dark' => 'Mörk',
     'light' => 'Ljus',
     'newTab' => 'Öppna resultat i nya flikar',
+    'openAnonymously' => 'Öppna resultat anonymt',
     'off' => 'av',
     'on' => 'på',
     'more' => 'Fler inställningar',

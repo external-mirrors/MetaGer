@@ -23,6 +23,8 @@ class SearchSettings
     public $fokus;
     public $available_foki = [];
     public $newtab = false;
+    /** Every way into a result goes through the proxy (MetaGer::opensAnonymously). */
+    public $open_anonymously = false;
     public $zitate = true;
     public $blacklist = [];
     public $blacklist_tld = [];
@@ -174,6 +176,7 @@ class SearchSettings
             default:
                 $this->newtab = false;
         }
+        $this->open_anonymously = $this->getSettingValue("open_anonymously", "off") === "on";
         $zitate = $this->getSettingValue("zitate", Localization::getLanguage() === "de" ? "on" : "off");
         if ($zitate === "on")
             $this->zitate = true;

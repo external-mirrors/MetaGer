@@ -38,6 +38,8 @@
                             @lang('settings.darkmode')
                             @elseif($key === 'new_tab')
                             @lang('settings.newTab')
+                            @elseif($key === 'open_anonymously')
+                            @lang('settings.openAnonymously')
                             @endif
                         </td>
                         <td>

@@ -32,8 +32,11 @@
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif>{{ $result->anzeigeLink }}</a>
                 <div class="actions">
                     @include('parts.result-proxy-link', ['result' => $result, 'label' => trans('result.image.proxy')])
-                    <a href="{{ $result->image->image_proxy }}" target="_blank"
-                        class="btn btn-default btn-sm">@lang('result.image.download')</a>
+                    <a href="{{ $result->image->image_proxy }}" target="_blank" rel="noopener"
+                        class="result-image-download">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+                        <span>@lang('result.image.download')</span>
+                    </a>
                     @if (sizeof($result->gefVon) === 1)
                         <a class="result-hoster" href="{{ $result->gefVonLink[0] }}"
                             target="{{ $metager->getNewtab() }}"

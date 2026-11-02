@@ -146,7 +146,7 @@ class OpenAnonymouslyTest extends TestCase
         foreach ($cards as $card) {
             $direct = $page->query(".//a[" . self::hasClass("result-open-direct") . "]", $card)->item(0);
             $this->assertNotNull($direct, "A card offers no way to open its page directly.");
-            $this->assertSame("Direkt", trim($direct->textContent));
+            $this->assertSame("Direkt öffnen", trim($direct->textContent));
             foreach ($page->query("./a", $card) as $link) {
                 $this->assertOpensAnonymously($link, $direct->getAttribute("href"));
             }

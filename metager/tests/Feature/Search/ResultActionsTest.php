@@ -135,6 +135,11 @@ class ResultActionsTest extends TestCase
         }
     }
 
+    /**
+     * The whole label, not "Anonym": a card has room for it at every width,
+     * and the single word alone reads as a remark that the card opens
+     * anonymously rather than as a button that does it.
+     */
     public function testNewsAndVideoCardsCanBeOpenedAnonymously(): void
     {
         $page = $this->webPage();
@@ -142,9 +147,9 @@ class ResultActionsTest extends TestCase
         $cards = iterator_to_array($page->query("//div[" . self::hasClass("inline-result") . "]"));
         $this->assertNotEmpty($cards, "brave-web.json carries news and videos.");
         foreach ($cards as $card) {
-            $link = $page->query(".//a[" . self::hasClass("result-open-proxy--short") . "]", $card)->item(0);
+            $link = $page->query(".//a[" . self::hasClass("result-open-proxy--card") . "]", $card)->item(0);
             $this->assertNotNull($link);
-            $this->assertSame("Anonym", trim($link->textContent));
+            $this->assertSame("Anonym öffnen", trim($link->textContent));
         }
     }
 
@@ -162,6 +167,29 @@ class ResultActionsTest extends TestCase
             $this->assertNotNull($link);
             $this->assertSame("Seite anonym öffnen", $this->label($page, $link, "long"));
         }
+    }
+
+    /**
+     * "Bild herunterladen" is an action like the one beside it, not the last
+     * Bootstrap button on the result page: same class of element, same look.
+     */
+    public function testTheImageDownloadIsAnActionLikeTheOthers(): void
+    {
+        $page = $this->page("eingabe=kaffee&focus=bilder", [
+            "brave_images" => $this->engineFixture("brave-images.json"),
+            "serper_images" => "no-result",
+        ]);
+
+        $actions = iterator_to_array($page->query("//div[" . self::hasClass("actions") . "]"));
+        $this->assertNotEmpty($actions);
+        foreach ($actions as $row) {
+            $download = $page->query("./a[" . self::hasClass("result-image-download") . "]", $row)->item(0);
+            $this->assertNotNull($download);
+            $this->assertSame("Bild herunterladen", trim($download->textContent));
+            $this->assertStringNotContainsString("btn", $download->getAttribute("class"));
+            $this->assertSame("noopener", $download->getAttribute("rel"));
+        }
+        $this->assertSame(0, $page->query("//div[" . self::hasClass("image-details") . "]//a[" . self::hasClass("btn") . "]")->length);
     }
 
     /**

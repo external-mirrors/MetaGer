@@ -1,8 +1,11 @@
 {{-- "Open anonymously" for one result, wherever a result is shown: the result
      itself, its grouped and folded results, the news and video cards and the
      image details. $variant is "full" (the label, shortened on a phone),
-     "short" (the short label, for cards) or "icon" (the shield alone, labelled
-     for assistive technology). $label replaces the long label.
+     "card" (the full label at every width: a news or video card is as wide on
+     a phone as anywhere, holds one action and has room for it, and the short
+     "Anonym" alone reads as a remark rather than a button) or "icon" (the
+     shield alone, labelled for assistive technology). $label replaces the
+     long label.
 
      With the "open results anonymously" setting the result's own links already
      go through the proxy (parts/result-href), so this turns into its opposite:
@@ -21,7 +24,7 @@
                 <span class="action-label-long">@lang('result.options.direct')</span>
                 <span class="action-label-short">@lang('result.options.direct-short')</span>
             @else
-                <span>@lang('result.options.direct-short')</span>
+                <span>@lang('result.options.direct')</span>
             @endif
         </a>
     @endif
@@ -33,8 +36,8 @@
         @if ($proxyVariant === 'full')
             <span class="action-label-long">{{ $label ?? trans('result.options.anonym') }}</span>
             <span class="action-label-short">@lang('result.options.anonym-short')</span>
-        @elseif ($proxyVariant === 'short')
-            <span>@lang('result.options.anonym-short')</span>
+        @elseif ($proxyVariant === 'card')
+            <span>{{ $label ?? trans('result.options.anonym') }}</span>
         @endif
     </a>
 @endif

@@ -29,7 +29,7 @@
     position: relative;
     margin: 0;
     padding: @space-5;
-    border: 1px solid @border-color;
+    border: 1px solid @result-card-border-color;
     border-radius: 10px;
     background-color: @quicktip-background-color;
     font-size: 14px;
@@ -159,7 +159,7 @@
 
   // Quicktips that do not answer the query (Quicktip::EXTRA_TYPES): shown, but
   // after the answers and quieter than them. Nothing here is filled like a
-  // result card: the saying is a pull quote, the tip an outlined note.
+  // result card: the saying is a pull quote, the tip a note on a grey ground.
   .quicktip-extras {
     display: flex;
     flex-direction: column;
@@ -210,8 +210,12 @@
       }
     }
 
+    // Told apart by a tonal ground, not a frame (Material 3's surface tones):
+    // visibly a box, and still quieter than the white, framed cards.
     > .quicktip[type="tip"] {
       padding: @space-4;
+      border: 0;
+      background-color: @quiet-surface-color;
 
       .quicktip-summary {
         .quicktip-title,

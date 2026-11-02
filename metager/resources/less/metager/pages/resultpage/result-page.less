@@ -55,7 +55,8 @@
     font-weight: bold;
     bottom: -6px;
     left: -5px;
-    color: @accent-text-color;
+    // The same as beside the start page's logo (general/base.less).
+    color: @muted-text-color;
 
     span {
       padding: 0.1rem;
@@ -336,11 +337,14 @@ a {
           grid-template-rows: masonry;
           gap: 1rem;
 
+          // A card like every other result: framed, rounded all round, the
+          // picture on a placeholder ground and its title on the card.
           >.image {
             overflow: hidden;
-            border-radius: 10px 10px 0 0;
+            border: 1px solid @result-card-border-color;
+            border-radius: 10px;
             margin: 0;
-            background-color: @highlight-color;
+            background-color: @result-card-color;
             cursor: pointer;
 
             >div {
@@ -348,6 +352,7 @@ a {
                 display: flex;
                 justify-content: center;
                 height: 100%;
+                background-color: @highlight-color;
 
                 >img {
                   width: 100%;
@@ -413,11 +418,14 @@ a {
           max-height: 80vh;
           overflow: auto;
           max-height: calc(100vh - 5rem);
+          box-sizing: border-box;
+          border: 1px solid @result-card-border-color;
           border-radius: 10px;
-          background-color: @highlight-color;
+          background-color: @result-card-color;
 
           @media (max-width: @full-screen-details-breakpoint) {
             background-color: @background-color;
+            border: 0;
             border-radius: 0;
             grid-template-rows: minmax(auto, 75dvh) 1fr;
             height: 100vh;
@@ -461,8 +469,10 @@ a {
                 margin-left: auto;
               }
 
-              >a.btn {
-                height: max-content;
+              // An action like "Seite anonym öffnen" beside it and like every
+              // action under a web result (pages/resultpage/result.less).
+              >a.result-image-download {
+                .result-action();
               }
 
               >.result-hoster {
@@ -585,7 +595,7 @@ a {
   &>div {
     flex: 1 1 auto;
     max-width: @results-width-max;
-    border: 1px solid @border-color;
+    border: 1px solid @result-card-border-color;
     border-radius: 10px;
     background-color: @result-card-color;
 
@@ -1251,7 +1261,7 @@ a {
   #options-box {
     width: 100%;
     padding: @space-3 @space-4;
-    border: 1px solid @border-color;
+    border: 1px solid @result-card-border-color;
     border-radius: 10px;
     background-color: @result-card-color;
 

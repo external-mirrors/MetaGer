@@ -37,15 +37,20 @@
   @link: #06c;
 
   --metager-orange: @orange;
-  // The brand orange is too light to carry anything that has to be read: white
-  // on #ff8000 is 2.5:1, and #ff8000 as text on white is the same. It stays the
-  // colour of borders, rules and the logo; text and solid buttons use these,
-  // which keep the hue and clear WCAG AA's 4.5:1 on every surface they sit on —
-  // the page, the cards and the alert ground (tests/Browser/AccessibilityTest).
-  --accent-text-color: #a85000;
-  --accent-fill-color: #a85000;
-  --on-accent-color: @color-white;
-  --focus-ring-color: #a85000;
+  // The brand orange cannot be text on white: #ff8000 on white is 2.5:1, and
+  // every orange dark enough for 4.5:1 is brown, which does not read as the
+  // logo's colour. So the solid buttons keep the real orange and turn their
+  // text dark (6.9:1, the way the dark palette already does it), and the text
+  // that used to be orange is a dark grey: 6.5:1 on the darkest surface it sits
+  // on, the tip's ground (tests/Browser/AccessibilityTest).
+  --accent-text-color: #555;
+  --accent-fill-color: @orange;
+  --on-accent-color: #1a1a1a;
+  // The logo orange, by decision rather than by measurement: it is 2.5:1 on
+  // white, below the 3:1 that audits reading WCAG 1.4.11 ask of a focus ring
+  // (2.4.7 itself sets no contrast). The brown that passed did not read as the
+  // brand. A two-tone ring would keep the orange and pass.
+  --focus-ring-color: @orange;
   --background-color: @color-white;
   --background-color-mobile: #fafafa;
   --text-color: @text;
@@ -61,6 +66,10 @@
   // on the card here, 6.4:1 in dark.
   --resultpage-ground-color: #f4f4f4;
   --result-card-color: @color-white;
+  --result-card-border-color: #ccc;
+  // A note rather than a result (the "Wussten Sie schon?" tip): set apart by
+  // its ground alone, without a frame, so it reads as quieter than the cards.
+  --quiet-surface-color: #efefef;
   --muted-text-color: #666;
   // Running text that supports a heading — a result's description. Between
   // the text colour and muted: 9.7:1 on the card here, 10.4:1 in dark.
@@ -164,6 +173,10 @@
 
   --resultpage-ground-color: #151515;
   --result-card-color: #222;
+  // Quieter than --border-color (#727272), which the form controls keep: a
+  // card is told apart by its ground already, the frame only finishes it.
+  --result-card-border-color: #3f3e3e;
+  --quiet-surface-color: #1d1d1d;
   --muted-text-color: #aaa;
   --secondary-text-color: #ccc;
 
@@ -258,6 +271,8 @@
 @border-color: var(--border-color);
 @resultpage-ground-color: var(--resultpage-ground-color);
 @result-card-color: var(--result-card-color);
+@result-card-border-color: var(--result-card-border-color);
+@quiet-surface-color: var(--quiet-surface-color);
 @muted-text-color: var(--muted-text-color);
 @secondary-text-color: var(--secondary-text-color);
 

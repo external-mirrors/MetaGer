@@ -21,6 +21,6 @@
     @endif
     </div>
     <div class="inline-result-footer">
-        @include('parts.result-proxy-link', ['result' => $result, 'variant' => 'short'])
+        @include('parts.result-proxy-link', ['result' => $result, 'variant' => 'card'])
     </div>
 </div>

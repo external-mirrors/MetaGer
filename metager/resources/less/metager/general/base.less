@@ -175,7 +175,7 @@ p a:not(.btn) {
 }
 
 // One focus ring for the whole site, drawn only for the keyboard
-// (:focus-visible), in the accent colour that clears 3:1 on every surface.
+// (:focus-visible), in the focus ring colour (see variables.less for its contrast).
 // A component that draws focus its own way overrides this with a more specific
 // rule; nothing may switch it off without putting something in its place —
 // tests/Browser/KeyboardAccessTest walks every tab stop and fails on one that
@@ -248,7 +248,9 @@ i.fa {
     position: relative;
     left: -10px;
     font-style: initial;
-    color: @text-color-alpha-60;
+    // One colour for the language code beside every logo — start page,
+    // subpages and result page — so it does not change between them.
+    color: @muted-text-color;
     bottom: 2px;
     font-weight: normal;
 
@@ -298,7 +300,7 @@ i.fa {
     align-self: flex-end;
     position: relative;
     bottom: -9px;
-    color: @accent-text-color;
+    color: @muted-text-color;
     font-weight: bold;
 
     &>span {

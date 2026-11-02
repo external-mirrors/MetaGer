@@ -15,6 +15,15 @@ use Validator;
 
 class Pictureproxy extends Controller
 {
+    /**
+     * The largest upstream image the proxy reads. Everything it fetches is
+     * held in memory several times over (the body, the Response, Imagick's
+     * output, Cache::put's serialisation), so a ~100 MB image ran the
+     * 256 MB memory_limit out (GlitchTip METAGER-18K). Anything larger
+     * answers 404, as an image that cannot be fetched always has.
+     */
+    public const MAX_IMAGE_BYTES = 16 * 1024 * 1024;
+
     public function get(Request $request)
     {
         // Validate input arguments
@@ -66,7 +75,7 @@ class Pictureproxy extends Controller
                     ],
                 ]);
 
-                $file         = file_get_contents($url, false, $context);
+                $stream       = fopen($url, "rb", false, $context);
                 $responseCode = explode(" ", $http_response_header[0])[1];
                 $contentType  = "";
                 foreach ($http_response_header as $header) {
@@ -74,6 +83,16 @@ class Pictureproxy extends Controller
                         $tmp         = explode(": ", $header);
                         $contentType = $tmp[1];
                     }
+                    if (stripos($header, "Content-Length:") === 0 && (int) trim(substr($header, 15)) > self::MAX_IMAGE_BYTES) {
+                        fclose($stream);
+                        abort(404);
+                    }
+                }
+                // Content-Length is optional; the read itself is the cap.
+                $file = stream_get_contents($stream, self::MAX_IMAGE_BYTES + 1);
+                fclose($stream);
+                if ($file === false || strlen($file) > self::MAX_IMAGE_BYTES) {
+                    abort(404);
                 }
                 if (stripos($contentType, "image/") === false) {
                     $finfo       = new \finfo(FILEINFO_MIME_TYPE);

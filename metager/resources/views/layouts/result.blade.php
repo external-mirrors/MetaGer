@@ -72,19 +72,39 @@
                 </a>
             </div>
         @endif
-        {{-- Sitelinks: navigation into the result, read after its description. --}}
-        @if (sizeof($result->deepResults['buttons']) > 0)
-            <ul class="result-deep-buttons">
-                @foreach ($result->deepResults['buttons'] as $button)
-                    <li>
-                        <a href="{{ $button->link }}" title="{{ $button->link }}"
-                            @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
-                            target="{{ $metager->getNewtab() }}">
-                            {{ $button->title }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
+        {{-- Sitelinks: navigation into the result, read after its description.
+             Four inline; the rest in a closed <details>, listed in full with a
+             shield beside each, and the inline row hidden while it is open
+             (result.less). Which links, and whether they are an article's
+             sections, is App\Search\Sitelinks. --}}
+        @php($sitelinks = \App\Search\Sitelinks::of($result))
+        @if (!$sitelinks->isEmpty())
+            <div class="result-sitelinks">
+                <ul class="result-deep-buttons">
+                    @foreach ($sitelinks->inline() as $button)
+                        <li>
+                            <a href="{{ $button->link }}" title="{{ $button->link }}"
+                                @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
+                                target="{{ $metager->getNewtab() }}">{{ $button->title }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+                @if ($sitelinks->hasMore())
+                    <details class="result-sitelinks-all">
+                        <summary>{{ trans($sitelinks->areSections ? 'result.sitelinks.sections' : 'result.sitelinks.links', ['count' => count($sitelinks->links)]) }}</summary>
+                        <ul>
+                            @foreach ($sitelinks->links as $button)
+                                <li>
+                                    <a href="{{ $button->link }}" title="{{ $button->link }}"
+                                        @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
+                                        target="{{ $metager->getNewtab() }}">{{ $button->title }}</a>
+                                    @include('parts.result-proxy-link', ['result' => $button, 'variant' => 'icon'])
+                                </li>
+                            @endforeach
+                        </ul>
+                    </details>
+                @endif
+            </div>
         @endif
         <div class="result-footer">
             @include('parts.result-proxy-link', ['result' => $result])

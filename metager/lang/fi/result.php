@@ -20,6 +20,10 @@ return [
     'videos' => 'Videot',
     'scroll-back' => 'Vieritä taaksepäin',
     'scroll-forward' => 'Vieritä eteenpäin',
+    'sitelinks' => [
+        'sections' => 'Kaikki :count osiota',
+        'links' => 'Kaikki :count linkkiä',
+    ],
     'more-from-host' => [
         'summary' => '{1} :count tulos lisää sivustolta :host|[2,*] :count tulosta lisää sivustolta :host',
         'search' => 'Hae vain sivustolta :host',

@@ -20,6 +20,10 @@ return [
     'videos' => 'Videor',
     'scroll-back' => 'Bläddra bakåt',
     'scroll-forward' => 'Bläddra framåt',
+    'sitelinks' => [
+        'sections' => 'Alla :count avsnitt',
+        'links' => 'Alla :count länkar',
+    ],
     'more-from-host' => [
         'summary' => '{1} :count resultat till från :host|[2,*] :count resultat till från :host',
         'search' => 'Sök bara på :host',

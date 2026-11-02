@@ -108,6 +108,25 @@ a.result-open-proxy {
   }
 }
 
+// A <summary> that reads as something that opens. base.less hides every
+// <summary>'s disclosure marker, and without one the line reads as text. Drawn
+// here instead, with empty alt text so a screen reader, which already announces
+// the summary as expandable, does not read the arrow too. [open] turns it to ▾.
+.disclosure-summary() {
+  display: flex;
+  align-items: center;
+  gap: @space-1;
+  width: fit-content;
+  min-height: 32px;
+  color: @muted-text-color;
+  cursor: pointer;
+
+  &::before {
+    content: "▸";
+    content: "▸" / "";
+  }
+}
+
 // A grouped or folded result: title and description on the left, its shield
 // beside the title.
 .sub-result() {
@@ -300,7 +319,7 @@ a.result-open-proxy {
         grid-area: description;
       }
 
-      .result-deep-buttons {
+      .result-sitelinks {
         grid-area: sitelinks;
       }
 
@@ -361,12 +380,73 @@ a.result-open-proxy {
       }
     }
 
-    // 3. Sitelinks: plain links, wrapping, after the description
+    // 3. Sitelinks: plain links after the description, four at most
+    // (Search\Sitelinks); the rest in a closed <details> that lists them all.
+    .result-sitelinks {
+      margin-top: @space-2;
+      font-size: 13px;
+
+      // The full list repeats the four inline links, so the row steps aside
+      // while it is open. A browser without :has shows both, which is merely
+      // redundant.
+      &:has(> .result-sitelinks-all[open]) > .result-deep-buttons {
+        display: none;
+      }
+    }
+
+    .result-sitelinks-all {
+      > summary {
+        .disclosure-summary();
+        min-height: 28px;
+      }
+
+      &[open] > summary::before {
+        content: "▾";
+        content: "▾" / "";
+      }
+
+      // Columns, so the eye runs down a left edge instead of along a line of
+      // links with nothing between them. Each with its shield, as grouped
+      // results have.
+      > ul {
+        columns: 22em auto;
+        column-gap: @space-6;
+        margin: @space-1 0 0;
+        padding: 0;
+        list-style: none;
+
+        > li {
+          display: flex;
+          align-items: flex-start;
+          gap: @space-1;
+          break-inside: avoid;
+          padding: 2px 0;
+          line-height: 20px;
+
+          > a:not(.result-open-proxy) {
+            min-width: 0;
+            color: @accent-text-color;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+
+          > .result-open-proxy {
+            flex: 0 0 auto;
+            height: 20px;
+            min-height: 20px;
+          }
+        }
+      }
+    }
+
     .result-deep-buttons {
       display: flex;
       flex-wrap: wrap;
-      gap: 0 @space-4;
-      margin: @space-2 0 0;
+      gap: 0 @space-2;
+      margin: 0;
       padding: 0;
       list-style: none;
       font-size: 13px;
@@ -392,6 +472,17 @@ a.result-open-proxy {
       > li {
         flex: 0 0 auto;
         list-style: none;
+
+        // A separator, so it is clear where one link ends and the next starts
+        // — sitelink titles are often several words with dates in brackets.
+        // After a link rather than before the next, so a wrapped row ends on
+        // one instead of starting with it.
+        &:not(:last-child)::after {
+          content: "·";
+          content: "·" / "";
+          margin-left: @space-2;
+          color: @muted-text-color;
+        }
 
         > a {
           color: @accent-text-color;
@@ -697,23 +788,8 @@ a.result-open-proxy {
     border-top: 1px solid @border-color;
     font-size: 13px;
 
-    // base.less hides every <summary>'s disclosure marker, and without one
-    // this line reads as text rather than as something that opens. Drawn
-    // here instead, with empty alt text so a screen reader, which already
-    // announces the summary as expandable, does not read the arrow too.
     > summary {
-      display: flex;
-      align-items: center;
-      gap: @space-1;
-      width: fit-content;
-      min-height: 32px;
-      color: @muted-text-color;
-      cursor: pointer;
-
-      &::before {
-        content: "▸";
-        content: "▸" / "";
-      }
+      .disclosure-summary();
     }
 
     &[open] > summary::before {

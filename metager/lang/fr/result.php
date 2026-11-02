@@ -20,6 +20,10 @@ return [
     'advertisement' => 'Annonce',
     'providers' => 'fournisseurs',
     'proxytext' => 'Le lien vers le résultat est ouvert de manière anonyme. Vos données ne seront pas transférées aux serveurs de destination. Certaines pages web peuvent ne pas fonctionner comme d\'habitude.',
+    'sitelinks' => [
+        'sections' => 'Les :count sections',
+        'links' => 'Les :count liens',
+    ],
     'more-from-host' => [
         'summary' => '{1} :count autre résultat de :host|[2,*] :count autres résultats de :host',
         'search' => 'Rechercher uniquement sur :host',

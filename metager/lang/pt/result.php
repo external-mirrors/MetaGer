@@ -1,5 +1,9 @@
 <?php
 return [
+    'sitelinks' => [
+        'sections' => 'Todas as :count seções',
+        'links' => 'Todos os :count links',
+    ],
     'more-from-host' => [
         'summary' => '{1} :count resultado a mais de :host|[2,*] :count resultados a mais de :host',
         'search' => 'Pesquisar apenas em :host',

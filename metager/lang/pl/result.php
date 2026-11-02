@@ -20,6 +20,10 @@ return [
     'videos' => 'Filmy',
     'scroll-back' => 'Przewiń wstecz',
     'scroll-forward' => 'Przewiń dalej',
+    'sitelinks' => [
+        'sections' => 'Wszystkie sekcje (:count)',
+        'links' => 'Wszystkie linki (:count)',
+    ],
     'more-from-host' => [
         'summary' => 'Więcej wyników z :host (:count)',
         'search' => 'Szukaj tylko w :host',

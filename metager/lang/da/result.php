@@ -20,6 +20,10 @@ return [
     'videos' => 'Videoer',
     'scroll-back' => 'Rul tilbage',
     'scroll-forward' => 'Rul frem',
+    'sitelinks' => [
+        'sections' => 'Alle :count afsnit',
+        'links' => 'Alle :count links',
+    ],
     'more-from-host' => [
         'summary' => '{1} :count resultat mere fra :host|[2,*] :count resultater mere fra :host',
         'search' => 'Søg kun på :host',

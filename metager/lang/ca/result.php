@@ -26,6 +26,10 @@ return [
     'videos' => 'Vídeos',
     'scroll-back' => 'Desplaça enrere',
     'scroll-forward' => 'Desplaça endavant',
+    'sitelinks' => [
+        'sections' => 'Les :count seccions',
+        'links' => 'Els :count enllaços',
+    ],
     'more-from-host' => [
         'summary' => '{1} :count resultat més de :host|[2,*] :count resultats més de :host',
         'search' => 'Cerca només a :host',

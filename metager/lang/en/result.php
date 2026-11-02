@@ -26,6 +26,10 @@ return [
     'videos' => 'Videos',
     'scroll-back' => 'Scroll back',
     'scroll-forward' => 'Scroll forward',
+    'sitelinks' => [
+        'sections' => 'All :count sections',
+        'links' => 'All :count links',
+    ],
     'more-from-host' => [
         'summary' => '{1} :count more result from :host|[2,*] :count more results from :host',
         'search' => 'Search only on :host',

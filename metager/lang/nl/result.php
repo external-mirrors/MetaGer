@@ -20,6 +20,10 @@ return [
         'direct' => 'Direct Open',
         'togglelabel' => 'resultatenopties omschakelen',
     ],
+    'sitelinks' => [
+        'sections' => 'Alle :count secties',
+        'links' => 'Alle :count links',
+    ],
     'more-from-host' => [
         'summary' => '{1} :count extra resultaat van :host|[2,*] :count extra resultaten van :host',
         'search' => 'Alleen zoeken op :host',

@@ -1,12 +1,12 @@
 <?php
 return [
+    'lead' => 'Respondemos más rápido por correo electrónico.',
     'headline' => [
         '1' => 'Contacto',
         '2' => 'Correo electrónico',
     ],
     'letter' => [
-        '1' => 'Por carta',
-        '2' => 'Respondemos más rápido por correo electrónico. Por correo postal, puede escribirnos a:',
+        '1' => 'Correo postal',
         '3' => "SUMA-EV\r
 Postfach 51 01 43\r
 D-30631 Hannover\r

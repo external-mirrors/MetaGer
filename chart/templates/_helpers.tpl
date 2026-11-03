@@ -209,12 +209,8 @@ The .env file. Every container needs this one and nothing runs without it.
 {{- end -}}
 
 {{/*
-Search configuration — only the containers that run a search need these: fpm
-serves result pages, the queue runs jobs that touch the same config.
-
-The operator blacklists used to be mounted here too, as three more keys of the
-same Secret. They live in the database now (App\Search\Blacklists), edited
-through /api/blocklist; `artisan blocklist:import-files` moved them over.
+Search configuration and blacklists — only the containers that run a search need
+these: fpm serves result pages, the queue runs jobs that touch the same config.
 */}}
 {{- define "chart.mounts.config" -}}
 - name: secrets
@@ -223,6 +219,15 @@ through /api/blocklist; `artisan blocklist:import-files` moved them over.
 - name: secrets
   mountPath: /metager/metager_app/config/suggestions.json
   subPath: SUGGESTIONS
+- name: secrets
+  mountPath: /metager/metager_app/config/blacklistDomains.txt
+  subPath: BLACKLIST_DOMAINS
+- name: secrets
+  mountPath: /metager/metager_app/config/blacklistUrl.txt
+  subPath: BLACKLIST_URL
+- name: secrets
+  mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+  subPath: BLACKLIST_DESCRIPTION_URL
 {{- end -}}
 
 {{/*

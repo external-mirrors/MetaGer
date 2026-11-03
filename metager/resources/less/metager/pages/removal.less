@@ -109,11 +109,26 @@
                 cursor: pointer;
                 font-weight: bold;
                 padding: 0.6rem 0;
+
+                // The site's base styles hide the native marker on every
+                // <summary>; without one this does not read as something that
+                // opens.
+                &::before {
+                    content: "▸";
+                    display: inline-block;
+                    width: 1.1em;
+                    color: @metager-orange;
+                    transition: transform 0.15s;
+                }
             }
 
             &[open] > summary {
                 border-bottom: 1px solid @metager-orange;
                 margin-bottom: 0.5rem;
+
+                &::before {
+                    transform: rotate(90deg);
+                }
             }
 
             &:target {

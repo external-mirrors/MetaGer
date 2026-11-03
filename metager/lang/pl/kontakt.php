@@ -21,14 +21,11 @@ Niemcy",
             'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'intro' => 'Zanim napiszesz: na wiele pytań odpowiedź jest już tutaj — zwykle szybciej niż e-mailem.',
     'removal' => [
-        'heading' => 'Chcesz usunąć wynik wyszukiwania?',
-        'text' => 'Najpierw przeczytaj nasz poradnik. MetaGer pokazuje wyniki innych wyszukiwarek, więc wynik można usunąć tylko na stronie internetowej i w tych wyszukiwarkach. Poradnik pokazuje, gdzie i jak.',
-        'link' => 'Poradnik: usuwanie wyniku wyszukiwania',
+        'hint' => 'Chodzi o usunięcie wyniku wyszukiwania? Najpierw przeczytaj <a href=":link">nasz poradnik</a>: MetaGer pokazuje wyniki innych wyszukiwarek, więc wynik można zwykle usunąć tylko tam.',
     ],
     'topics' => [
-        'heading' => 'Inne częste sprawy',
+        'heading' => 'Częste pytania',
         'key' => [
             'title' => 'Klucz MetaGer i tokeny',
             'text' => 'Jak działa klucz, doładowanie i saldo',
@@ -54,5 +51,4 @@ Niemcy",
             'text' => 'Co zapisujemy — a czego nie',
         ],
     ],
-    'reach' => 'Jak się z nami skontaktować',
 ];

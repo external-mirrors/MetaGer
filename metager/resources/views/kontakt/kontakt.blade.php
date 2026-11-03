@@ -4,24 +4,32 @@
 
 @section('content')
 {{--
-	/kontakt — routes people before it gives them an address.
+	/kontakt — email first, for everyone.
 
-	The mail we can help least with is "please remove this search result", so
-	that comes first and goes to the removal guide; then the other frequent
-	questions that already have a page; only then email and post.
+	The mail we can help least with is "please remove this search result":
+	MetaGer shows other engines' results. The page does not advertise that
+	request; whoever is about to write it meets one line pointing to the
+	removal guide right before the button that opens their mail program.
+	One column, so a fold opening in one section never stretches another.
 	No script on this page.
 --}}
 <div id="kontakt">
 	<h1 class="page-title">{!! trans('kontakt.headline.1') !!}</h1>
-	<p class="contact-intro">@lang('kontakt.intro')</p>
 
-	<section class="contact-removal" aria-labelledby="contact-removal-heading">
-		<h2 id="contact-removal-heading">@lang('kontakt.removal.heading')</h2>
-		<p>@lang('kontakt.removal.text')</p>
-		<a class="contact-button" href="{{ route('removal') }}">@lang('kontakt.removal.link')</a>
+	<section class="contact-section contact-email" id="email" aria-labelledby="contact-email-heading">
+		<h2 id="contact-email-heading">@lang('kontakt.headline.2')</h2>
+		<p class="contact-address">{{ $to_mail }}</p>
+		<p class="contact-removal-hint">@lang('kontakt.removal.hint', ['link' => route('removal')])</p>
+		<a class="contact-button" href="mailto:{{ $to_mail }}">@lang('kontakt.email.write')</a>
+		<details class="contact-pgp">
+			<summary>@lang('kontakt.email.pgp.summary')</summary>
+			<p>@lang('kontakt.email.pgp.description')</p>
+			<p>@lang('kontakt.email.pgp.pubkey', ['keyserver' => 'https://keys.openpgp.org/search?q=' . urlencode($to_mail)])</p>
+			<p class="contact-fingerprint">@lang('kontakt.email.pgp.fingerprint')</p>
+		</details>
 	</section>
 
-	<section class="contact-topics" aria-labelledby="contact-topics-heading">
+	<section class="contact-section contact-topics" aria-labelledby="contact-topics-heading">
 		<h2 id="contact-topics-heading">@lang('kontakt.topics.heading')</h2>
 		<ul>
 			@foreach($topics as $topic => $url)
@@ -33,24 +41,10 @@
 		</ul>
 	</section>
 
-	<h2 class="contact-reach">@lang('kontakt.reach')</h2>
-	<div class="contact-ways">
-		<section class="contact-way" id="email" aria-labelledby="contact-email-heading">
-			<h3 id="contact-email-heading">@lang('kontakt.headline.2')</h3>
-			<p class="contact-address">{{ $to_mail }}</p>
-			<a class="contact-button" href="mailto:{{ $to_mail }}">@lang('kontakt.email.write')</a>
-			<details class="contact-pgp">
-				<summary>@lang('kontakt.email.pgp.summary')</summary>
-				<p>@lang('kontakt.email.pgp.description')</p>
-				<p>@lang('kontakt.email.pgp.pubkey', ['keyserver' => 'https://keys.openpgp.org/search?q=' . urlencode($to_mail)])</p>
-				<p class="contact-fingerprint">@lang('kontakt.email.pgp.fingerprint')</p>
-			</details>
-		</section>
-		<section class="contact-way" id="post" aria-labelledby="contact-post-heading">
-			<h3 id="contact-post-heading">{!! trans('kontakt.letter.1') !!}</h3>
-			<p>{!! trans('kontakt.letter.2') !!}</p>
-			<address>{!! trans('kontakt.letter.3') !!}</address>
-		</section>
-	</div>
+	<section class="contact-section contact-post" id="post" aria-labelledby="contact-post-heading">
+		<h2 id="contact-post-heading">{!! trans('kontakt.letter.1') !!}</h2>
+		<p>{!! trans('kontakt.letter.2') !!}</p>
+		<address>{!! trans('kontakt.letter.3') !!}</address>
+	</section>
 </div>
 @endsection

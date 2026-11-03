@@ -109,24 +109,60 @@ class ContactPageTest extends TestCase
 
     /**
      * The most frequent mail we cannot act on is "please remove this result":
-     * MetaGer shows other engines' results. The page sends people to the
-     * removal guide before it shows an address.
+     * MetaGer shows other engines' results. The page must not advertise that
+     * request — no headline, no call to action at the top — but whoever is
+     * about to write it meets a pointer to the removal guide right before the
+     * button that opens their mail program. Everyone else just writes.
      */
-    public function testTheRemovalGuideComesBeforeAnyAddress(): void
+    public function testTheRemovalGuideIsPointedToRightBeforeWriting(): void
     {
         $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
 
+        $hint = strpos($content, '<p class="contact-removal-hint">');
         $guide = strpos($content, '/de-DE/entfernen"');
-        $mail = strpos($content, 'href="mailto:');
+        $button = strpos($content, '<a class="contact-button" href="mailto:');
 
+        $this->assertNotFalse($hint, "There is no removal hint on the contact page.");
         $this->assertNotFalse($guide, "The contact page does not link to the removal guide.");
-        $this->assertNotFalse($mail);
-        $this->assertLessThan($mail, $guide, "The removal guide has to come before the email address.");
+        $this->assertNotFalse($button);
+        $this->assertLessThan($guide, $hint);
+        $this->assertLessThan($button, $guide, "The guide has to come before the button that opens the mail program.");
+        $this->assertSame(
+            1,
+            substr_count($content, '/de-DE/entfernen"'),
+            "The guide is linked once, from the hint — not from a call to action of its own.",
+        );
+    }
+
+    /** Characterization of what the first redesign did, and must not come back. */
+    public function testTheRemovalRequestIsNotAdvertised(): void
+    {
+        $this->get("/de-DE/kontakt")
+            ->assertOk()
+            ->assertDontSeeText("Ein Suchergebnis entfernen lassen?")
+            ->assertDontSeeText("Anleitung: Suchergebnis entfernen")
+            ->assertDontSee("contact-removal\"", false);
+    }
+
+    /** Email is what most visitors came for: it comes before the topic list. */
+    public function testEmailComesFirst(): void
+    {
+        $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
+
+        $email = strpos($content, 'id="email"');
+        $topics = strpos($content, 'contact-topics"');
+        $post = strpos($content, 'id="post"');
+
+        $this->assertNotFalse($email);
+        $this->assertNotFalse($topics);
+        $this->assertNotFalse($post);
+        $this->assertLessThan($topics, $email);
+        $this->assertLessThan($post, $topics);
     }
 
     /**
-     * The address is what most visitors scrolled down for, so it is the email
-     * card's headline and comes with a button that opens their mail program —
+     * The address is what most visitors came for, so it is the email
+     * section's headline and comes with a button that opens their mail program —
      * not a link inside a sentence under eight lines of PGP explanation.
      */
     public function testTheAddressIsTheEmailCardsMainAction(): void
@@ -159,13 +195,6 @@ class ContactPageTest extends TestCase
         $folded = substr($content, $fold, $end - $fold);
         $this->assertStringContainsString('href="/download/pubkey.asc"', $folded);
         $this->assertStringContainsString("5FA5 2398 C382 B498 B14A", $folded);
-    }
-
-    public function testTheRemovalButtonSaysWhereItLeads(): void
-    {
-        $this->get("/de-DE/kontakt")
-            ->assertOk()
-            ->assertSeeText("Anleitung: Suchergebnis entfernen");
     }
 
     /** Post is welcome; the page just says email is faster. */

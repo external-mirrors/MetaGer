@@ -18,14 +18,11 @@ return [
         '2' => 'Responem més ràpid per correu electrònic. Per correu postal, ens trobareu a:',
         '3' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nAlemanya",
     ],
-    'intro' => 'Abans d’escriure: moltes preguntes ja tenen resposta aquí — normalment més ràpida que per correu.',
     'removal' => [
-        'heading' => 'Voleu que s’elimini un resultat de cerca?',
-        'text' => 'Llegiu primer la nostra guia. MetaGer mostra els resultats d’altres cercadors, de manera que un resultat només es pot eliminar al lloc web i en aquests cercadors. La guia explica on i com.',
-        'link' => 'Guia: eliminar un resultat de cerca',
+        'hint' => 'Es tracta d\'eliminar un resultat de cerca? Llegiu primer <a href=":link">la nostra guia</a>: MetaGer mostra resultats d\'altres cercadors, i per això normalment un resultat només es pot eliminar allà.',
     ],
     'topics' => [
-        'heading' => 'Altres consultes habituals',
+        'heading' => 'Consultes habituals',
         'key' => [
             'title' => 'Clau de MetaGer i tokens',
             'text' => 'Com funciona la clau, recàrrega i saldo',
@@ -51,5 +48,4 @@ return [
             'text' => 'Què desem — i què no',
         ],
     ],
-    'reach' => 'Com contactar-nos',
 ];

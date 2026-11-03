@@ -109,6 +109,11 @@ return [
         // .env.example.
         "internal_url" => env("CRM_INTERNAL_URL", env("CRM_BASE_URL")),
         "token" => env("CRM_TOKEN"),
+        // The other direction: what suma-crm must send as its bearer token
+        // to /api/blocklist (App\Http\Middleware\CrmAuthorization). Kept
+        // apart from `token`, which authorises this app's calls *to*
+        // suma-crm, so neither side can act as the other.
+        "admin_token" => env("CRM_ADMIN_TOKEN"),
     ],
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),

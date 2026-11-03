@@ -60,6 +60,7 @@ class BlocklistNormalizerTest extends TestCase
     {
         $this->assertSame("", BlocklistNormalizer::link(""));
         $this->assertSame("", BlocklistNormalizer::host("   "));
+        $this->assertSame("", BlocklistNormalizer::link("not a url at all/"));
     }
 
     public function testTermsAreFoldedSplitDedupedAndSorted(): void

@@ -1,5 +1,6 @@
 <?php
 return [
+    'lead' => 'Email gets the fastest answer.',
     'headline' => [
         '1' => 'Contact',
         '2' => 'Email',
@@ -25,8 +26,7 @@ return [
         ],
     ],
     'letter' => [
-        '1' => 'By Letter Mail',
-        '2' => 'Email gets the fastest answer. By post, you can reach us at:',
+        '1' => 'Post',
         '3' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nGermany",
     ],
     'removal' => [

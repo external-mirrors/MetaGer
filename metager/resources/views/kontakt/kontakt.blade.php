@@ -10,47 +10,58 @@
 	The mail we can help least with is "please remove this search result":
 	MetaGer shows other engines' results. The page does not advertise that
 	request; whoever is about to write it meets one line pointing to the
-	removal guide right before the button that opens their mail program.
-	One column, so a fold opening in one section never stretches another.
+	removal guide right under the button that opens their mail program.
+	One row per way to reach us, so a fold opening in one never stretches
+	another.
 	No script on this page.
 --}}
 <div id="kontakt">
 	<h1 class="page-title">{!! trans('kontakt.headline.1') !!}</h1>
+	<p class="contact-lead">@lang('kontakt.lead')</p>
 
+	{{-- An address card: each way to reach us is one row, its h2 a short
+	     label beside the content (pages/contact.less), stacked on a phone. --}}
 	<section class="contact-section contact-email" id="email" aria-labelledby="contact-email-heading">
 		<h2 id="contact-email-heading">@lang('kontakt.headline.2')</h2>
-		<p class="contact-address">{{ $to_mail }}</p>
-		<p class="contact-removal-hint">@lang('kontakt.removal.hint', ['link' => route('removal')])</p>
-		<a class="contact-button" href="mailto:{{ $to_mail }}">@lang('kontakt.email.write')</a>
-		<details class="contact-pgp">
-			<summary>@lang('kontakt.email.pgp.summary')</summary>
-			{{-- How suma-crm decides to answer encrypted: App\Pgp\KeyDiscovery
-			     there. ContactPageTest pins this text to those rules. --}}
-			<p>@lang('kontakt.email.pgp.signed')</p>
-			<p>@lang('kontakt.email.pgp.pubkey', ['keyserver' => 'https://keys.openpgp.org/search?q=' . urlencode($to_mail)])</p>
-			<p class="contact-fingerprint">@lang('kontakt.email.pgp.fingerprint')</p>
-			<h3>@lang('kontakt.email.pgp.replies.heading')</h3>
-			<p>@lang('kontakt.email.pgp.replies.how')</p>
-			<ul>
-				@foreach(trans('kontakt.email.pgp.replies.trusted_when') as $rule)
-					<li>{!! $rule !!}</li>
-				@endforeach
-			</ul>
-			<p>@lang('kontakt.email.pgp.replies.otherwise')</p>
-			<p>@lang('kontakt.email.pgp.replies.tofu')</p>
-			<p>@lang('kontakt.email.pgp.replies.never_plain')</p>
-		</details>
+		<div class="contact-section-body">
+			<div class="contact-email-primary">
+				<p class="contact-address">{{ $to_mail }}</p>
+				<a class="contact-button" href="mailto:{{ $to_mail }}">@lang('kontakt.email.write')</a>
+			</div>
+			<p class="contact-removal-hint">@lang('kontakt.removal.hint', ['link' => route('removal')])</p>
+			<details class="contact-pgp">
+				<summary>@lang('kontakt.email.pgp.summary')</summary>
+				{{-- How suma-crm decides to answer encrypted: App\Pgp\KeyDiscovery
+				     there. ContactPageTest pins this text to those rules. --}}
+				<p>@lang('kontakt.email.pgp.signed')</p>
+				<p>@lang('kontakt.email.pgp.pubkey', ['keyserver' => 'https://keys.openpgp.org/search?q=' . urlencode($to_mail)])</p>
+				<p class="contact-fingerprint">@lang('kontakt.email.pgp.fingerprint')</p>
+				<h3>@lang('kontakt.email.pgp.replies.heading')</h3>
+				<p>@lang('kontakt.email.pgp.replies.how')</p>
+				<ul>
+					@foreach(trans('kontakt.email.pgp.replies.trusted_when') as $rule)
+						<li>{!! $rule !!}</li>
+					@endforeach
+				</ul>
+				<p>@lang('kontakt.email.pgp.replies.otherwise')</p>
+				<p>@lang('kontakt.email.pgp.replies.tofu')</p>
+				<p>@lang('kontakt.email.pgp.replies.never_plain')</p>
+			</details>
+		</div>
 	</section>
 
 	<section class="contact-section contact-phone" id="phone" aria-labelledby="contact-phone-heading">
 		<h2 id="contact-phone-heading">@lang('kontakt.phone.heading')</h2>
-		<p class="contact-address"><a href="{{ $phone_uri }}">{{ $phone }}</a></p>
+		<div class="contact-section-body">
+			<p class="contact-phone-number"><a href="{{ $phone_uri }}">{{ $phone }}</a></p>
+		</div>
 	</section>
 
 	<section class="contact-section contact-post" id="post" aria-labelledby="contact-post-heading">
 		<h2 id="contact-post-heading">{!! trans('kontakt.letter.1') !!}</h2>
-		<p>{!! trans('kontakt.letter.2') !!}</p>
-		<address>{!! trans('kontakt.letter.3') !!}</address>
+		<div class="contact-section-body">
+			<address>{!! trans('kontakt.letter.3') !!}</address>
+		</div>
 	</section>
 
 	<section class="contact-section contact-topics" aria-labelledby="contact-topics-heading">
@@ -58,8 +69,7 @@
 		<ul>
 			@foreach($topics as $topic => $url)
 				<li>
-					<a href="{{ $url }}">@lang("kontakt.topics.$topic.title")</a>
-					<span>@lang("kontakt.topics.$topic.text")</span>
+					<a href="{{ $url }}"><span>@lang("kontakt.topics.$topic.title")<span>@lang("kontakt.topics.$topic.text")</span></span></a>
 				</li>
 			@endforeach
 		</ul>

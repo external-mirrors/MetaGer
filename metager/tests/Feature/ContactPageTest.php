@@ -111,22 +111,27 @@ class ContactPageTest extends TestCase
      * The most frequent mail we cannot act on is "please remove this result":
      * MetaGer shows other engines' results. The page must not advertise that
      * request — no headline, no call to action at the top — but whoever is
-     * about to write it meets a pointer to the removal guide right before the
-     * button that opens their mail program. Everyone else just writes.
+     * about to write it meets a pointer to the removal guide right at the
+     * button that opens their mail program: the very next thing under it,
+     * before the PGP fold. Everyone else just writes.
      */
-    public function testTheRemovalGuideIsPointedToRightBeforeWriting(): void
+    public function testTheRemovalGuideIsPointedToRightAtTheButton(): void
     {
         $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
 
+        $this->assertMatchesRegularExpression(
+            '#E-Mail schreiben</a>\s*</div>\s*<p class="contact-removal-hint">#',
+            $content,
+            "The removal hint has to be the next thing after the address and its button.",
+        );
+
         $hint = strpos($content, '<p class="contact-removal-hint">');
         $guide = strpos($content, '/de-DE/entfernen"');
-        $button = strpos($content, '<a class="contact-button" href="mailto:');
+        $fold = strpos($content, '<details class="contact-pgp">');
 
-        $this->assertNotFalse($hint, "There is no removal hint on the contact page.");
         $this->assertNotFalse($guide, "The contact page does not link to the removal guide.");
-        $this->assertNotFalse($button);
         $this->assertLessThan($guide, $hint);
-        $this->assertLessThan($button, $guide, "The guide has to come before the button that opens the mail program.");
+        $this->assertLessThan($fold, $guide, "The guide has to come before the PGP fold.");
         $this->assertSame(
             1,
             substr_count($content, '/de-DE/entfernen"'),
@@ -234,13 +239,49 @@ class ContactPageTest extends TestCase
         $this->assertStringNotContainsString("fügen Sie bitte Ihren öffentlichen Schlüssel an", $folded);
     }
 
-    /** Post is welcome; the page just says email is faster. */
+    /**
+     * Post is welcome; the page says once, under the title, that email is
+     * faster — not again inside the postal section, where it read as talking
+     * people out of writing a letter.
+     */
     public function testThePostalCardDoesNotTalkPeopleOutOfWriting(): void
+    {
+        $content = $this->get("/de-DE/kontakt")
+            ->assertOk()
+            ->assertDontSeeText("unbedingt nötig")
+            ->assertSee('<p class="contact-lead">Am schnellsten antworten wir per E-Mail.</p>', false)
+            ->getContent();
+
+        $this->assertSame(1, substr_count($content, "Am schnellsten antworten wir per E-Mail."));
+        $this->assertLessThan(strpos($content, 'id="email"'), strpos($content, 'class="contact-lead"'));
+    }
+
+    /**
+     * The address-card layout: each way to reach us is one row, its name a
+     * short label beside it. Long labels ("Per Brief-Post") wrapped in the
+     * label column, so the label is the bare medium.
+     */
+    public function testEachWayToReachUsIsLabelledShortly(): void
     {
         $this->get("/de-DE/kontakt")
             ->assertOk()
-            ->assertDontSeeText("unbedingt nötig")
-            ->assertSeeText("Am schnellsten antworten wir per E-Mail.");
+            ->assertSee('<h2 id="contact-email-heading">E-Mail</h2>', false)
+            ->assertSee('<h2 id="contact-phone-heading">Telefon</h2>', false)
+            ->assertSee('<h2 id="contact-post-heading">Post</h2>', false)
+            ->assertDontSeeText("Per Brief-Post");
+    }
+
+    /**
+     * The address and the button that writes to it sit together, so the
+     * button reads as "write to this address" rather than as a separate
+     * call to action under the removal hint.
+     */
+    public function testTheAddressAndItsButtonSitTogether(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '#<div class="contact-email-primary">\s*<p class="contact-address">[^<]*</p>\s*<a class="contact-button" href="mailto:#',
+            $this->get("/de-DE/kontakt")->assertOk()->getContent(),
+        );
     }
 
     /** @return array<string, array{0: string}> */

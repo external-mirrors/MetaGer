@@ -1,5 +1,6 @@
 <?php
 return [
+    'lead' => 'Respondemos mais depressa por e-mail.',
     'email' => [
         'pgp' => [
             'summary' => 'Escrever cifrado (PGP)',
@@ -21,12 +22,11 @@ return [
         'write' => 'Escrever um e-mail',
     ],
     'letter' => [
-        '2' => 'Respondemos mais depressa por e-mail. Por correio, pode escrever-nos para:',
         '3' => "SUMA-EV\r
 Postfach 51 01 43\r
 D-30631 Hannover\r
 Alemanha",
-        '1' => 'Por correio postal',
+        '1' => 'Correio',
     ],
     'headline' => [
         '2' => 'Correio eletrónico',

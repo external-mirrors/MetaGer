@@ -1,8 +1,8 @@
 <?php
 return [
+    'lead' => 'Vi svarer hurtigst på e-mail.',
     'letter' => [
-        '1' => 'Med brevpost',
-        '2' => 'Vi svarer hurtigst på e-mail. Med post kan du skrive til os på:',
+        '1' => 'Post',
         '3' => "SUMA-EV\r
 Postfach 51 01 43\r
 D-30631 Hannover\r

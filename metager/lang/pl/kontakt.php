@@ -1,8 +1,8 @@
 <?php
 return [
+    'lead' => 'Najszybciej odpowiadamy na e-maile.',
     'letter' => [
-        '1' => 'Listownie',
-        '2' => 'Najszybciej odpowiadamy na e-maile. Pocztą tradycyjną możesz pisać na adres:',
+        '1' => 'Poczta',
         '3' => "SUMA-EV\r
 Postfach 51 01 43\r
 D-30631 Hannover\r

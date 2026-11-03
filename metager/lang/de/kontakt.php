@@ -1,12 +1,12 @@
 <?php
 return [
+    'lead' => 'Am schnellsten antworten wir per E-Mail.',
     'headline' => [
         '1' => 'Kontakt',
         '2' => 'E-Mail',
     ],
     'letter' => [
-        '1' => 'Per Brief-Post',
-        '2' => 'Am schnellsten antworten wir per E-Mail. Per Post erreichen Sie uns unter:',
+        '1' => 'Post',
         '3' => "SUMA-EV\r
 Postfach 51 01 43\r
 D-30631 Hannover\r

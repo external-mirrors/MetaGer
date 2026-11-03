@@ -1,57 +1,102 @@
 @import "../variables.less";
 
-// /kontakt — email first, for everyone; one column.
+// /kontakt — email first, for everyone.
 //
-// Same column as the removal guide (pages/removal.less) and the key FAQ, so a
-// visitor sent from here to there does not change pages in look. Colour comes
+// An address card: each way to reach us is one row, its <h2> a short label in
+// a narrow column beside the content, rows divided by a hairline. On a phone
+// the label wraps above its content (flex-wrap, no media query). Colour comes
 // from the theme tokens only, so light and dark follow the site's palette
 // switch. No script.
 //
-// One column on purpose: side by side, the email and post cards were squeezed
-// into half the column each, and opening the PGP fold stretched the postal
-// card along with it.
+// One row per medium on purpose: side by side, the email and post cards were
+// squeezed into half the column each, and opening the PGP fold stretched the
+// postal card along with it.
 
 #kontakt {
-    max-width: 46rem;
+    max-width: 50rem;
     margin: 0 auto;
 
+    .contact-lead {
+        color: @secondary-text-color;
+        font-size: 1.1rem;
+        margin: 0.25rem 0 2rem;
+    }
+
+    .contact-email {
+        border-top: 2px solid @text-color;
+    }
+
     .contact-section {
-        margin-top: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 2rem;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid @border-color;
 
         > h2 {
-            font-size: 1.3rem;
-            margin: 0 0 0.75rem;
+            flex: 0 0 8rem;
+            margin: 0;
+            padding-top: 0.3rem;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: @muted-text-color;
         }
 
-        & + .contact-section {
-            border-top: 1px solid @border-color;
-            padding-top: 1.5rem;
+        > .contact-section-body {
+            flex: 999 1 20rem;
+            min-width: 0;
+
+            > :first-child {
+                margin-top: 0;
+            }
+
+            > :last-child {
+                margin-bottom: 0;
+            }
         }
+    }
+
+    // The address and the button that writes to it, on one line while they
+    // fit.
+    .contact-email-primary {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem 1.25rem;
+        margin-bottom: 0.9rem;
     }
 
     // What most visitors came for: large, and plain text so it can be
-    // selected and copied; the button below opens the mail program.
+    // selected and copied; the button beside it opens the mail program.
     .contact-address {
         font-size: 1.5rem;
         font-weight: bold;
-        margin: 0 0 0.75rem;
+        margin: 0;
         overflow-wrap: anywhere;
     }
 
-    // For the one request we cannot act on. Deliberately quiet — muted text,
-    // a neutral rule — so it catches whoever is about to write it without
+    .contact-phone-number {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    // For the one request we cannot act on. Deliberately quiet — plain
+    // secondary text — so it catches whoever is about to write it without
     // suggesting the request to anyone else.
     .contact-removal-hint {
         color: @secondary-text-color;
         font-size: 0.95rem;
-        border-left: 3px solid @border-color;
-        padding-left: 0.75rem;
-        margin: 0 0 1rem;
+        margin: 0 0 0.9rem;
     }
 
     .contact-button {
-        display: inline-block;
-        padding: 0.5rem 1rem;
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        box-sizing: border-box;
+        padding: 0 1.1rem;
         border-radius: 6px;
         background-color: @accent-fill-color;
         // Orange ground in both palettes, so the text on it is dark in
@@ -66,18 +111,19 @@
         }
     }
 
-    // PGP for the few who use it — complete, but folded. Same fold as the
-    // removal guide's (pages/removal.less).
+    // PGP for the few who use it — complete, but folded, and inside the
+    // email row, so opening it only makes that row taller. Same marker as the
+    // removal guide's folds (pages/removal.less).
     .contact-pgp {
-        margin-top: 1.25rem;
-        border: 1px solid @border-color;
-        border-radius: 6px;
-        padding: 0 0.75rem;
+        border-top: 1px dashed @border-color;
+        padding-top: 0.25rem;
 
         > summary {
             cursor: pointer;
             font-weight: bold;
-            padding: 0.6rem 0;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
 
             // The site's base styles hide the native marker on every
             // <summary>; without one this does not read as something that
@@ -92,8 +138,7 @@
         }
 
         &[open] > summary {
-            border-bottom: 1px solid @metager-orange;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
 
             &::before {
                 transform: rotate(90deg);
@@ -122,30 +167,71 @@
         }
     }
 
-    .contact-topics > ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-        gap: 0.75rem 1.5rem;
-
-        > li {
-            > a {
-                display: block;
-                font-weight: bold;
-            }
-
-            > span {
-                color: @muted-text-color;
-                font-size: 0.9rem;
-            }
-        }
-    }
-
     // letter.3 carries its line breaks in the string.
-    .contact-post > address {
+    .contact-post address {
         white-space: pre-line;
         font-style: normal;
+        margin: 0;
+    }
+
+    // Not a row of the card: a list under it, one link per line with an
+    // arrow, in two columns while they fit.
+    .contact-topics {
+        display: block;
+        border-bottom: 0;
+        padding-top: 3rem;
+
+        > h2 {
+            font-size: 1.3rem;
+            text-transform: none;
+            letter-spacing: normal;
+            color: inherit;
+            padding: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        > ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+            column-gap: 2rem;
+
+            > li {
+                border-bottom: 1px solid @border-color;
+
+                > a {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 1rem;
+                    min-height: 44px;
+                    padding: 0.8rem 0;
+                    font-weight: bold;
+                    text-decoration: none;
+
+                    &:hover,
+                    &:focus-visible {
+                        text-decoration: underline;
+                    }
+
+                    &::after {
+                        content: "›";
+                        flex: none;
+                        font-size: 1.4rem;
+                        line-height: 1;
+                        color: @muted-text-color;
+                    }
+
+                    > span > span {
+                        display: block;
+                        font-weight: normal;
+                        color: @muted-text-color;
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+        }
     }
 }

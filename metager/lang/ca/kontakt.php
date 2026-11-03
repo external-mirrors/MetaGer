@@ -1,5 +1,6 @@
 <?php
 return [
+    'lead' => 'Responem més ràpid per correu electrònic.',
     'headline' => [
         '1' => 'Contacte',
         '2' => 'Correu electrònic',
@@ -25,8 +26,7 @@ return [
         ],
     ],
     'letter' => [
-        '1' => 'Per correu postal',
-        '2' => 'Responem més ràpid per correu electrònic. Per correu postal, ens trobareu a:',
+        '1' => 'Correu postal',
         '3' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nAlemanya",
     ],
     'removal' => [

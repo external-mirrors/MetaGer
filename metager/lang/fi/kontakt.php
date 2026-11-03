@@ -1,12 +1,12 @@
 <?php
 return [
+    'lead' => 'Vastaamme nopeimmin sähköpostiin.',
     'headline' => [
         '1' => 'Ota yhteyttä',
         '2' => 'Sähköposti',
     ],
     'letter' => [
-        '1' => 'Kirjepostitse',
-        '2' => 'Vastaamme nopeimmin sähköpostiin. Postitse tavoitat meidät osoitteesta:',
+        '1' => 'Posti',
         '3' => "SUMA-EV\r
 Postfach 51 01 43\r
 D-30631 Hannover\r

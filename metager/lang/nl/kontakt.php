@@ -1,8 +1,8 @@
 <?php
 return [
+    'lead' => 'Per e-mail antwoorden we het snelst.',
     'letter' => [
-        '1' => 'Per briefpost',
-        '2' => 'Per e-mail antwoorden we het snelst. Per post kun je ons bereiken op:',
+        '1' => 'Post',
         '3' => "SUMA-EV\r
 Postfach 51 01 43\r
 D-30631 Hannover\r

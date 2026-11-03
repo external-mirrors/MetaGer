@@ -8,9 +8,16 @@ return [
     ],
     'contexts' => [
         'contact' => [
-            'title' => 'Yhteydenottolomakkeen käyttö',
-            'description' => 'Kun käytät MetaGerin yhteydenottolomaketta, syntyy seuraavia tietoja, joita säilytämme viitetarkoituksiin enintään 2 kuukautta pyyntösi täyttämisen jälkeen:',
-            'contact' => 'Säilytetään viitetarkoituksiin enintään 2 kuukauden ajan pyynnön täyttämisen jälkeen.',
+            'title' => 'Yhteydenotto sähköpostitse',
+            'description' => 'Kun kirjoitat johonkin <a href=":link_contact">yhteystietosivumme</a> osoitteista, käsittelemme sähköpostisi tikettijärjestelmässämme. Tällöin syntyy seuraavia tietoja:',
+            'contact' => 'Säilytetään sähköpostiesi ja niiden liitteiden kanssa 3 kuukautta asiasi päättymisen jälkeen.',
+        ],
+        'removal' => [
+            'title' => 'Pyynnöt hakutulosten poistamisesta',
+            'description' => 'Jos pyydät meitä piilottamaan hakutuloksen MetaGerissä (ks. <a href=":link_removal">Hakutuloksen poistaminen</a>), avaamme sähköpostistasi asian, jossa tutkimme pyyntösi ja teemme päätöksen. Oikeusperuste on GDPR:n 6 artiklan 1 kohdan c alakohta yhdessä 17 artiklan kanssa. Itse sähköposteihisi sovelletaan kohtaa ”Yhteydenotto sähköpostitse”. Asiassa syntyy seuraavia tietoja:',
+            'contact' => 'Poistamme nimesi ja sähköpostiosoitteesi asiasta 6 kuukautta sen päättymisen jälkeen.',
+            'message' => 'Kyseiset osoitteet (URL-osoitteet) ja hakusanat sekä liitteet, kuten kopio henkilöllisyystodistuksestasi, jos pyydämme sitä: hakusanat ja liitteet poistamme viimeistään 6 kuukautta asian päättymisen jälkeen, paitsi piilotetun tuloksen osalta (ks. alla).',
+            'block' => 'Jos piilotamme tuloksen, säilytämme sen osoitteen, hakusanat, joilla se on piilotettu (yleensä nimesi), ja päätöksemme perustelut niin kauan kuin tulos pysyy piilotettuna. Tarvitsemme niitä, jotta piilotus toimii ja jotta voimme perustella sen, jos se riitautetaan (GDPR:n 17 artiklan 3 kohdan e alakohta ja 6 artiklan 1 kohdan f alakohta).',
         ],
         'title' => 'Saapuvat tiedot asiayhteyden mukaan',
         'metager' => [

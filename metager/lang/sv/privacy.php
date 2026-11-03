@@ -17,9 +17,16 @@ return [
             'suggest' => 'Om sökförslag är aktiverade för adressfältet i din webbläsare (valfritt) måste vi lagra dina förslagsinställningar på vår server. Nyckeln kommer att vara en sammanhängande sträng av din IP-adress, din useragent och din webbläsares accept-language header som är sha1-hashad. Om inställningen är avaktiverad (standard) lagras ingenting.',
         ],
         'contact' => [
-            'title' => 'Användning av kontaktformuläret',
-            'description' => 'När du använder MetaGers kontaktformulär genereras följande uppgifter, som vi lagrar för referensändamål upp till 2 månader efter det att din förfrågan har slutförts:',
-            'contact' => 'Kommer att lagras för referensändamål upp till 2 månader efter att din begäran har slutförts.',
+            'title' => 'Kontakt via e-post',
+            'description' => 'Skriver du till någon av adresserna på vår <a href=":link_contact">kontaktsida</a> hanterar vi ditt e-postmeddelande i vårt ärendesystem. Då uppstår följande uppgifter:',
+            'contact' => 'Sparas tillsammans med dina e-postmeddelanden och deras bilagor till 3 månader efter att ditt ärende avslutats.',
+        ],
+        'removal' => [
+            'title' => 'Begäranden om att ta bort sökresultat',
+            'description' => 'Ber du oss att dölja ett sökresultat på MetaGer (se <a href=":link_removal">Få ett sökresultat borttaget</a>) öppnar vi ett ärende för ditt e-postmeddelande där vi prövar och beslutar om din begäran. Rättslig grund är artikel 6.1 c jämförd med artikel 17 i GDPR. För själva e-postmeddelandena gäller avsnittet ”Kontakt via e-post”. I ärendet uppstår följande uppgifter:',
+            'contact' => 'Ditt namn och din e-postadress raderar vi ur ärendet 6 månader efter att det avslutats.',
+            'message' => 'De berörda adresserna (URL:er) och söktermerna samt bilagor som en kopia av din id-handling om vi ber om det: söktermer och bilagor raderar vi senast 6 månader efter att ärendet avslutats, utom för ett dolt resultat (se nedan).',
+            'block' => 'Döljer vi ett resultat sparar vi dess adress, de söktermer det är dolt för (oftast ditt namn) och skälen för vårt beslut så länge resultatet förblir dolt. Vi behöver dem för att döljandet ska fungera och för att kunna motivera det om det ifrågasätts (artikel 17.3 e och artikel 6.1 f i GDPR).',
         ],
         'donate' => [
             'title' => 'Användning av donationsformuläret',

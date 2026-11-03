@@ -51,9 +51,16 @@ return [
             'suggest' => 'Jeśli sugestie wyszukiwania są włączone na pasku adresu przeglądarki (opcjonalnie), musimy przechowywać ustawienia sugestii na naszym serwerze. Kluczem będzie połączony ciąg adresu IP, useragent i nagłówek accept-language przeglądarki, który jest hashowany sha1. Jeśli ustawienie jest wyłączone (domyślnie), nic nie zostanie zapisane.',
         ],
         'contact' => [
-            'title' => 'Korzystanie z formularza kontaktowego',
-            'description' => 'Podczas korzystania z formularza kontaktowego MetaGer generowane są następujące dane, które przechowujemy w celach referencyjnych do 2 miesięcy po zakończeniu zapytania:',
-            'contact' => 'Dane będą przechowywane do celów referencyjnych przez okres do 2 miesięcy po zakończeniu przetwarzania wniosku.',
+            'title' => 'Kontakt e-mailowy',
+            'description' => 'Jeśli napiszesz na jeden z adresów z naszej <a href=":link_contact">strony kontaktowej</a>, obsługujemy Twoją wiadomość w naszym systemie zgłoszeń. Powstają przy tym następujące dane:',
+            'contact' => 'Przechowujemy je wraz z Twoimi wiadomościami i ich załącznikami do 3 miesięcy po zakończeniu Twojej sprawy.',
+        ],
+        'removal' => [
+            'title' => 'Wnioski o usunięcie wyników wyszukiwania',
+            'description' => 'Jeśli poprosisz nas o ukrycie wyniku wyszukiwania w MetaGer (zob. <a href=":link_removal">Usunięcie wyniku wyszukiwania</a>), zakładamy dla Twojej wiadomości sprawę, w której rozpatrujemy wniosek i podejmujemy decyzję. Podstawą prawną jest art. 6 ust. 1 lit. c w związku z art. 17 RODO. Do samych wiadomości stosuje się sekcję „Kontakt e-mailowy”. W sprawie powstają następujące dane:',
+            'contact' => 'Imię i nazwisko oraz adres e-mail usuwamy ze sprawy 6 miesięcy po jej zakończeniu.',
+            'message' => 'Adresy (URL) i wyszukiwane hasła, których dotyczy wniosek, oraz załączniki, takie jak kopia dokumentu tożsamości, jeśli o nią poprosimy: hasła i załączniki usuwamy najpóźniej 6 miesięcy po zakończeniu sprawy, z wyjątkiem ukrytego wyniku (zob. niżej).',
+            'block' => 'Jeśli ukryjemy wynik, przechowujemy jego adres, hasła, dla których jest ukryty (zwykle Twoje imię i nazwisko), oraz uzasadnienie naszej decyzji tak długo, jak wynik pozostaje ukryty. Potrzebujemy ich, aby ukrycie działało i abyśmy mogli je uzasadnić w razie sprzeciwu (art. 17 ust. 3 lit. e oraz art. 6 ust. 1 lit. f RODO).',
         ],
         'mapsapp' => [
             'title' => 'Korzystanie z aplikacji MetaGer',

@@ -21,9 +21,16 @@ return [
             'suggest' => 'If search suggestions are enabled for the address bar of your browser (optional) we need to store your suggestion settings on our server. The key will be a concatenated string of your IP Address, your useragent and your browsers accept-language header which is sha1 hashed. If the setting is disabled (default) nothing will be stored.'
         ],
         'contact' => [
-            'title' => 'Use of the contact form',
-            'description' => 'When using the MetaGer contact form, the following data is generated, which we store for reference purposes up to 2 months after the completion of your request:',
-            'contact' => 'Will be stored for reference purposes up to 2 months after completion of your request.',
+            'title' => 'Contact by email',
+            'description' => 'If you write to one of the addresses on our <a href=":link_contact">contact page</a>, we handle your email in our ticket system. This involves the following data:',
+            'contact' => 'Kept together with your emails and their attachments until 3 months after your request is closed.',
+        ],
+        'removal' => [
+            'title' => 'Requests to remove search results',
+            'description' => 'If you ask us to hide a search result on MetaGer (see <a href=":link_removal">Removing a search result</a>), we open a case for your email in which we check and decide on your request. The legal basis is Art. 6(1)(c) in conjunction with Art. 17 GDPR. Your emails themselves are covered by “Contact by email”. The case involves the following data:',
+            'contact' => 'We delete your name and email address from the case 6 months after it is closed.',
+            'message' => 'The addresses (URLs) and search terms concerned, and attachments such as a copy of your ID if we ask for one: we delete the search terms and attachments no later than 6 months after the case is closed, except for a hidden result (see below).',
+            'block' => 'If we hide a result, we keep its address, the search terms it is hidden for (usually your name) and the reasons for our decision for as long as the result stays hidden. We need them for the hiding to work and to justify it if it is challenged (Art. 17(3)(e) and Art. 6(1)(f) GDPR).',
         ],
         'donate' => [
             'title' => 'Use of the donation form',

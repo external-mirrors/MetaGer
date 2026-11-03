@@ -29,9 +29,16 @@ return [
             'suggest' => 'Als zoeksuggesties zijn ingeschakeld voor de adresbalk van je browser (optioneel), moeten we je suggestie-instellingen opslaan op onze server. De sleutel is een aaneengeschakelde string van je IP-adres, je useragent en de accept-taalheader van je browser die sha1-gehasht is. Als de instelling is uitgeschakeld (standaard), wordt er niets opgeslagen.',
         ],
         'contact' => [
-            'title' => 'Gebruik van het contactformulier',
-            'description' => 'Wanneer u het contactformulier van MetaGer gebruikt, worden de volgende gegevens gegenereerd, die we bewaren voor referentiedoeleinden tot 2 maanden na de voltooiing van uw verzoek:',
-            'contact' => 'Wordt opgeslagen voor referentiedoeleinden tot 2 maanden na afronding van je verzoek.',
+            'title' => 'Contact per e-mail',
+            'description' => 'Schrijft u naar een van de adressen op onze <a href=":link_contact">contactpagina</a>, dan behandelen wij uw e-mail in ons ticketsysteem. Daarbij ontstaan de volgende gegevens:',
+            'contact' => 'Bewaren wij samen met uw e-mails en hun bijlagen tot 3 maanden na afronding van uw verzoek.',
+        ],
+        'removal' => [
+            'title' => 'Verzoeken om zoekresultaten te verwijderen',
+            'description' => 'Vraagt u ons een zoekresultaat op MetaGer te verbergen (zie <a href=":link_removal">Een zoekresultaat laten verwijderen</a>), dan openen wij voor uw e-mail een dossier waarin wij uw verzoek beoordelen en erover beslissen. De rechtsgrond is art. 6, lid 1, onder c, in samenhang met art. 17 AVG. Voor uw e-mails zelf geldt het onderdeel „Contact per e-mail”. In het dossier ontstaan de volgende gegevens:',
+            'contact' => 'Uw naam en e-mailadres verwijderen wij uit het dossier 6 maanden na afronding ervan.',
+            'message' => 'De betreffende adressen (URL’s) en zoektermen, en bijlagen zoals een kopie van uw identiteitsbewijs als wij daarom vragen: zoektermen en bijlagen verwijderen wij uiterlijk 6 maanden na afronding van het dossier, behalve bij een verborgen resultaat (zie hieronder).',
+            'block' => 'Verbergen wij een resultaat, dan bewaren wij het adres, de zoektermen waarvoor het verborgen is (meestal uw naam) en de motivering van ons besluit zolang het resultaat verborgen blijft. Wij hebben ze nodig om het verbergen te laten werken en om het te kunnen motiveren als het wordt aangevochten (art. 17, lid 3, onder e, en art. 6, lid 1, onder f, AVG).',
         ],
         'key' => [
             'title' => 'MetaGer-sleutel afrekenen',

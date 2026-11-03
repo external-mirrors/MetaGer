@@ -19,9 +19,16 @@ return [
         ],
         'title' => 'Indgående data efter kontekst',
         'contact' => [
-            'title' => 'Brug af kontaktformularen',
-            'description' => 'Når du bruger MetaGers kontaktformular, genereres følgende data, som vi gemmer til referenceformål i op til 2 måneder efter afslutningen af din anmodning:',
-            'contact' => 'Vil blive gemt til referenceformål op til 2 måneder efter afslutningen af din anmodning.',
+            'title' => 'Kontakt via e-mail',
+            'description' => 'Skriver du til en af adresserne på vores <a href=":link_contact">kontaktside</a>, behandler vi din e-mail i vores ticketsystem. Herved opstår følgende data:',
+            'contact' => 'Opbevares sammen med dine e-mails og deres vedhæftede filer indtil 3 måneder efter, at din henvendelse er afsluttet.',
+        ],
+        'removal' => [
+            'title' => 'Anmodninger om fjernelse af søgeresultater',
+            'description' => 'Beder du os om at skjule et søgeresultat på MetaGer (se <a href=":link_removal">Få et søgeresultat fjernet</a>), opretter vi en sag for din e-mail, hvor vi undersøger og træffer afgørelse om din anmodning. Retsgrundlaget er art. 6, stk. 1, litra c, sammenholdt med art. 17 i GDPR. For selve dine e-mails gælder afsnittet „Kontakt via e-mail“. I sagen opstår følgende data:',
+            'contact' => 'Vi sletter dit navn og din e-mailadresse fra sagen 6 måneder efter, at sagen er afsluttet.',
+            'message' => 'De pågældende adresser (URL’er) og søgeord samt vedhæftede filer som en kopi af dit ID, hvis vi beder om det: søgeord og vedhæftede filer sletter vi senest 6 måneder efter, at sagen er afsluttet, undtagen ved et skjult resultat (se nedenfor).',
+            'block' => 'Skjuler vi et resultat, opbevarer vi dets adresse, de søgeord, det er skjult for (som regel dit navn), og begrundelsen for vores afgørelse, så længe resultatet forbliver skjult. Vi har brug for dem, for at skjulningen virker, og for at kunne begrunde den, hvis den anfægtes (art. 17, stk. 3, litra e, og art. 6, stk. 1, litra f, i GDPR).',
         ],
         'donate' => [
             'title' => 'Brug af donationsformularen',

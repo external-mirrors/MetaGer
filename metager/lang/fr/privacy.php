@@ -128,9 +128,16 @@ return [
             'suggest' => 'Si les suggestions de recherche sont activées dans la barre d\'adresse de votre navigateur (facultatif), nous devons stocker vos paramètres de suggestion sur notre serveur. La clé sera une chaîne concaténée de votre adresse IP, de votre useragent et de l\'en-tête accept-language de votre navigateur, qui est hachée en sha1. Si le paramètre est désactivé (par défaut), rien ne sera stocké.',
         ],
         'contact' => [
-            'title' => 'Utilisation du formulaire de contact',
-            'description' => 'Lorsque vous utilisez le formulaire de contact de MetaGer, les données suivantes sont générées. Nous les conservons à des fins de référence jusqu\'à deux mois après la finalisation de votre demande :',
-            'contact' => 'Elle sera conservée à des fins de référence jusqu\'à deux mois après l\'achèvement de votre demande.',
+            'title' => 'Contact par e-mail',
+            'description' => 'Si vous nous écrivez à l’une des adresses de notre <a href=":link_contact">page de contact</a>, nous traitons votre e-mail dans notre système de tickets. Les données suivantes sont alors générées :',
+            'contact' => 'Conservées avec vos e-mails et leurs pièces jointes jusqu’à 3 mois après la clôture de votre demande.',
+        ],
+        'removal' => [
+            'title' => 'Demandes de suppression de résultats de recherche',
+            'description' => 'Si vous nous demandez de masquer un résultat de recherche sur MetaGer (voir <a href=":link_removal">Faire supprimer un résultat de recherche</a>), nous ouvrons pour votre e-mail un dossier dans lequel nous examinons votre demande et statuons. La base juridique est l’art. 6, par. 1, point c), en liaison avec l’art. 17 du RGPD. Vos e-mails eux-mêmes relèvent de la section « Contact par e-mail ». Le dossier comporte les données suivantes :',
+            'contact' => 'Nous supprimons votre nom et votre adresse e-mail du dossier 6 mois après sa clôture.',
+            'message' => 'Les adresses (URL) et les termes de recherche concernés, ainsi que les pièces jointes comme une copie de votre pièce d’identité si nous la demandons : nous supprimons les termes de recherche et les pièces jointes au plus tard 6 mois après la clôture du dossier, sauf pour un résultat masqué (voir ci-dessous).',
+            'block' => 'Si nous masquons un résultat, nous conservons son adresse, les termes de recherche pour lesquels il est masqué (le plus souvent votre nom) et les motifs de notre décision tant que le résultat reste masqué. Nous en avons besoin pour que le masquage fonctionne et pour pouvoir le justifier s’il est contesté (art. 17, par. 3, point e), et art. 6, par. 1, point f), du RGPD).',
         ],
         'donate' => [
             'title' => 'Utilisation du formulaire de don',

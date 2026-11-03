@@ -37,6 +37,8 @@ Duitsland",
     ],
     'phone' => [
         'heading' => 'Telefoon',
+        'hours' => 'Maandag tot en met vrijdag, :from–:to uur (Duitse tijd)',
+        'outside' => 'Binnen deze tijden bereikt u ons bijna altijd, daarbuiten bijna nooit. Stuur ons dan liever een e-mail.',
     ],
     'topics' => [
         'heading' => 'Veelgestelde vragen',

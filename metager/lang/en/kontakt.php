@@ -34,6 +34,8 @@ return [
     ],
     'phone' => [
         'heading' => 'Phone',
+        'hours' => 'Monday to Friday, :from–:to German time',
+        'outside' => 'Within these hours you will almost always reach us, outside them almost never. Then it is better to send us an email.',
     ],
     'topics' => [
         'heading' => 'Common questions',

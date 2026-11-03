@@ -54,6 +54,9 @@
 		<h2 id="contact-phone-heading">@lang('kontakt.phone.heading')</h2>
 		<div class="contact-section-body">
 			<p class="contact-phone-number"><a href="{{ $phone_uri }}">{{ $phone }}</a></p>
+			{{-- The times are <time> elements built by ContactController. --}}
+			<p class="contact-phone-hours">@lang('kontakt.phone.hours', $office_hours)</p>
+			<p class="contact-phone-outside">@lang('kontakt.phone.outside')</p>
 		</div>
 	</section>
 

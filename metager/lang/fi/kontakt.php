@@ -37,6 +37,8 @@ Saksa",
     ],
     'phone' => [
         'heading' => 'Puhelin',
+        'hours' => 'Maanantaista perjantaihin klo :from–:to Saksan aikaa',
+        'outside' => 'Silloin tavoitat meidät lähes aina, muulloin tuskin koskaan. Lähetä meille silloin mieluummin sähköpostia.',
     ],
     'topics' => [
         'heading' => 'Yleisiä kysymyksiä',

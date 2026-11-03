@@ -37,6 +37,8 @@ Tyskland",
     ],
     'phone' => [
         'heading' => 'Telefon',
+        'hours' => 'Mandag til fredag kl. :from–:to (tysk tid)',
+        'outside' => 'I det tidsrum træffer du os næsten altid, uden for det næsten aldrig. Skriv så hellere en e-mail til os.',
     ],
     'topics' => [
         'heading' => 'Almindelige spørgsmål',

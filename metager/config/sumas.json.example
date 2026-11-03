@@ -3,5 +3,10 @@
         "request-header": {
             "X-Subscription-Token": "your-secret-api-key"
         }
+    },
+    "staan": {
+        "request-header": {
+            "Authorization": "Bearer your-secret-api-key"
+        }
     }
 }

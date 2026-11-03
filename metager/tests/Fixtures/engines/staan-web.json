@@ -1,0 +1,86 @@
+{
+  "search_id": "01906c9e-7e3f-7000-8000-abc123def456",
+  "query": {
+    "q": "kaffee",
+    "market": "de-de",
+    "count": 10,
+    "offset": 0
+  },
+  "web": {
+    "results": [
+      {
+        "title": "Kaffee &amp; Zubereitung",
+        "url": "https://example.org/kaffee",
+        "snippet": "Alles &uuml;ber Kaffee, R&ouml;stung und Zubereitung.",
+        "display_url": "example.org > kaffee",
+        "hostname": "example.org",
+        "favicon_url": "https://s.qwant.com/v1/fav/example.org",
+        "published_date": "2026-10-28T09:30:00Z"
+      },
+      {
+        "title": "Kaffeesorten im Vergleich",
+        "url": "https://beispiel.de/sorten",
+        "snippet": "Arabica, Robusta und was sie unterscheidet.",
+        "display_url": "beispiel.de > sorten",
+        "hostname": "beispiel.de",
+        "thumbnail": "https://beispiel.de/bilder/bohnen.jpg"
+      },
+      {
+        "title": "Ohne Link",
+        "url": "",
+        "snippet": "Ein Eintrag ohne URL wird verworfen.",
+        "display_url": "",
+        "hostname": ""
+      },
+      {
+        "title": "Kaffee Ergebnis 3",
+        "url": "https://kaffee3.example.net/",
+        "snippet": "Kaffee, Seite 3.",
+        "display_url": "kaffee3.example.net",
+        "hostname": "kaffee3.example.net"
+      },
+      {
+        "title": "Kaffee Ergebnis 4",
+        "url": "https://kaffee4.example.net/",
+        "snippet": "Kaffee, Seite 4.",
+        "display_url": "kaffee4.example.net",
+        "hostname": "kaffee4.example.net"
+      },
+      {
+        "title": "Kaffee Ergebnis 5",
+        "url": "https://kaffee5.example.net/",
+        "snippet": "Kaffee, Seite 5.",
+        "display_url": "kaffee5.example.net",
+        "hostname": "kaffee5.example.net"
+      },
+      {
+        "title": "Kaffee Ergebnis 6",
+        "url": "https://kaffee6.example.net/",
+        "snippet": "Kaffee, Seite 6.",
+        "display_url": "kaffee6.example.net",
+        "hostname": "kaffee6.example.net"
+      },
+      {
+        "title": "Kaffee Ergebnis 7",
+        "url": "https://kaffee7.example.net/",
+        "snippet": "Kaffee, Seite 7.",
+        "display_url": "kaffee7.example.net",
+        "hostname": "kaffee7.example.net"
+      },
+      {
+        "title": "Kaffee Ergebnis 8",
+        "url": "https://kaffee8.example.net/",
+        "snippet": "Kaffee, Seite 8.",
+        "display_url": "kaffee8.example.net",
+        "hostname": "kaffee8.example.net"
+      },
+      {
+        "title": "Kaffee Ergebnis 9",
+        "url": "https://kaffee9.example.net/",
+        "snippet": "Kaffee, Seite 9.",
+        "display_url": "kaffee9.example.net",
+        "hostname": "kaffee9.example.net"
+      }
+    ]
+  }
+}

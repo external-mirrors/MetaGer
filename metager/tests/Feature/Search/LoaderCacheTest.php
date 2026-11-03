@@ -209,6 +209,13 @@ class LoaderCacheTest extends TestCase
      * videos and a few clusters therefore costs several KB more than one it
      * answers with none — which is worth knowing before reading the ceiling
      * below as the cost of an average search.
+     *
+     * 67,973 became 70,848 with the Staan engine: 2.4 KB of searchengines for
+     * its SearchengineConfiguration and 0.5 KB of settings for its market and
+     * site: filter entries. Every registered engine is in the loader entry,
+     * used by the search or not, so a disabled-by-default engine pays it too:
+     * one more engine costs about 2.9 KB per search in flight. The ceiling moved from 68,000, which the previous figure was
+     * 27 bytes under, to 72,000.
      */
     public function testTheLoaderEntryStaysWithinItsSizeBudget(): void
     {
@@ -217,7 +224,7 @@ class LoaderCacheTest extends TestCase
         $bytes = strlen(serialize($entry));
 
         $this->assertLessThan(
-            68_000,
+            72_000,
             $bytes,
             sprintf(
                 "One in-flight search now costs %d bytes of cache. Breakdown: settings %d, searchengines %d, "

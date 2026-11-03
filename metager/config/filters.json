@@ -55,6 +55,11 @@
           "prefix": "site:",
           "suffix": ""
         },
+        "staan": {
+          "type": "append",
+          "prefix": "site:",
+          "suffix": ""
+        },
         "brave": {
           "type": "append",
           "prefix": "site:",
@@ -698,6 +703,26 @@
             "da_DK": "da_DK",
             "fi_FI": "fi_FI",
             "sv_SE": "sv_SE"
+          }
+        },
+        "staan": {
+          "get-parameter": "market",
+          "values": {
+            "de_DE": "de-de",
+            "de_AT": "de-de",
+            "de_CH": "de-de",
+            "fr_FR": "fr-fr",
+            "fr_CA": "fr-fr",
+            "fr_BE": "fr-fr",
+            "fr_CH": "fr-fr",
+            "en_US": "en-us",
+            "en_GB": "en-gb",
+            "en_CA": "en-ca",
+            "en_AU": "en-au",
+            "en_IN": "en-in",
+            "en_IE": "en-ie",
+            "en_NZ": "en-nz",
+            "en_ZA": "en-za"
           }
         },
         "pixabay": {

@@ -5,7 +5,8 @@
       "mojeek",
       "yandex",
       "brave",
-      "serper_web"
+      "serper_web",
+      "staan"
     ],
     "main": [
       "brave"

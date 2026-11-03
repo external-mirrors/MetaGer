@@ -99,6 +99,36 @@ class ConsistentLookTest extends DuskTestCase
     }
 
     /**
+     * A result's address is a link, in the link colour, in both themes. Dark
+     * had it (#ff9933, the link and the accent there are the same orange) and
+     * light had the accent text, a grey (#555): the one colour on a result
+     * card was there in one theme and missing in the other. Light's link
+     * colour is blue, not orange, by decision — no orange is both legible on
+     * white and not brown.
+     */
+    #[DataProvider("themes")]
+    public function testTheResultAddressIsInTheLinkColour(string $theme): void
+    {
+        $html = $this->resultPage("eingabe=kaffee&focus=web&dark_mode={$theme}", [
+            "brave" => $this->engineFixture("brave-web.json"),
+        ]);
+
+        $this->browse(function (Browser $browser) use ($html) {
+            $this->show($browser, $html)->assertPresent("#results .result .result-subheadline .result-link");
+            $link = $browser->driver->executeScript(
+                "const p = document.createElement('a'); p.style.color = 'var(--link-color)';"
+                    . " document.body.append(p); const c = getComputedStyle(p).color; p.remove(); return c;"
+            );
+
+            $this->assertSame(
+                ["color" => $link],
+                $this->style($browser, "#results .result .result-subheadline .result-link", ["color"]),
+                "The result's address is not in the link colour."
+            );
+        });
+    }
+
+    /**
      * Image results are cards like web results: the same frame, rounded on
      * every corner — the tiles were rounded at the top only and unframed, and
      * the detail panel had a grey ground of its own.

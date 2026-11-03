@@ -12,6 +12,11 @@ return [
         'direct' => 'Öppna direkt',
         'direct-short' => 'Direkt',
         'togglelabel' => 'växla resultatalternativ',
+        'open' => 'Öppna',
+        'newtab' => 'Öppna i en ny flik',
+        'anonym-short' => 'Anonymt',
+        'newtab-short' => 'Ny flik',
+        'anonym' => 'Öppna anonymt',
     ],
     'gefVon' => 'av',
     'advertisement' => 'Annons',
@@ -33,9 +38,13 @@ return [
     'image' => [
         'download' => 'Ladda ner bild',
         'copyright' => 'Bilderna kan vara upphovsrättsskyddade.',
+        'proxy' => 'Öppna sidan anonymt',
     ],
     'more-news' => 'mer',
     'alt' => [
         'more' => 'mer',
+    ],
+    'quicktips' => [
+        'heading' => 'Snabbtips',
     ],
 ];

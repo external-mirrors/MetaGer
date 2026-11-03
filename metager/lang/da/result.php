@@ -12,6 +12,11 @@ return [
         'direct' => 'Åbn direkte',
         'direct-short' => 'Direkte',
         'togglelabel' => 'Skift mellem resultatindstillinger',
+        'open' => 'Åben',
+        'newtab' => 'Åbn i nyt faneblad',
+        'anonym-short' => 'Anonymt',
+        'newtab-short' => 'Ny fane',
+        'anonym' => 'Åbn anonymt',
     ],
     'gefVon' => 'af',
     'advertisement' => 'Annonce',
@@ -33,9 +38,13 @@ return [
     'image' => [
         'download' => 'Download billede',
         'copyright' => 'Billeder kan være ophavsretligt beskyttet.',
+        'proxy' => 'Åbn siden anonymt',
     ],
     'more-news' => 'mere',
     'alt' => [
         'more' => 'Mere',
+    ],
+    'quicktips' => [
+        'heading' => 'Hurtige tips',
     ],
 ];

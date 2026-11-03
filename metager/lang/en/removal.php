@@ -39,7 +39,7 @@ return [
     ],
     'providers' => [
         'heading' => 'Ask the search engines MetaGer shows',
-        'text' => 'MetaGer does not keep its own copy of these results. It asks the search engines below at the moment you search, and shows what they return. So when a result is removed at one of them, it disappears from MetaGer as well.',
+        'text' => 'MetaGer has no collection of these results of its own. It asks the search engines below at the moment you search, shows what they return, and caches their answer for an hour at most. So once one of them removes a result, it is also gone from what MetaGer gets from that engine.',
         'which' => 'Which search engine a result comes from is written under the result on MetaGer’s result page. One result can come from several of them; then ask each one.',
         'shows' => 'On MetaGer in:',
         'kinds' => [
@@ -50,7 +50,7 @@ return [
         'no_form' => 'No form — contact :name',
         'contact' => 'Contact :name',
         'us' => 'Write to us',
-        'google' => 'MetaGer receives Google’s results through the service Serper. A result Google removes is therefore also gone from MetaGer’s Google results.',
+        'google' => 'MetaGer receives Google’s results through the service Serper. What Google removes from its index is then gone from MetaGer too. Personal data, however, Google only hides from people searching in Europe; we cannot promise that this covers MetaGer’s queries through Serper. We check it when you write to us.',
         'brave' => 'Brave Search runs its own index. Requests about personal data go by email to privacy@brave.com with the subject “RTBF request”; the linked page says what the email needs to contain.',
         'yandex' => 'Yandex runs its own index. For each request there is a separate form on its support pages.',
         'mojeek' => 'Mojeek runs its own index and does not edit its results by hand. It removes pages for legal reasons on request; write to it through its contact page and name the exact URLs.',
@@ -67,7 +67,8 @@ return [
         'steps' => [
             'We check whether MetaGer shows the result for the searches you name, and which search engines it comes from.',
             'We answer with the right links for exactly those search engines — the ones on this page.',
-            'Only where a removal at the source is not possible and the law requires it of us do we hide the result on MetaGer ourselves. That only affects MetaGer: the result stays on the website and in every other search engine.',
+            'If you have a claim against MetaGer itself, for example under Art. 17 GDPR for searches for your name, we hide the result on MetaGer, even if it stays up at the source. You do not have to ask the website or the search engines first. Hiding it only affects MetaGer: the result stays on the website and in every other search engine.',
+            'We answer within one month. If a request is particularly complex, it can take up to two months longer; we tell you so within the first month. If we do not hide a result, we tell you why. You can then complain to a data protection supervisory authority or go to court.',
         ],
         'include' => 'To make this quick, please send the exact addresses (URLs) of the results and the searches they appear for.',
         'contact' => 'To the contact page',

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
+      xmlns:mg="http://metager.de/opensearch/">
+  <title>Nolm Results</title>
+  <updated>2026-11-03T08:00:00+01:00</updated>
+  <opensearch:totalResults>12</opensearch:totalResults>
+  <opensearch:Query role="request" searchTerms="kaffee"/>
+  <id>urn:uuid:5b0e1d2a-0000-4000-8000-000000000001</id>
+
+  <entry>
+    <title>Kaffeemeldung 1</title>
+    <link href="https://www.tagesschau.de/kaffee/meldung-1.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.tagesschau.de/kaffee/meldung-1.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 1.</content>
+    <published>2026-10-21T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 2</title>
+    <link href="https://www.tagesschau.de/kaffee/meldung-2.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.tagesschau.de/kaffee/meldung-2.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 2.</content>
+    <published>2026-10-22T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 3</title>
+    <link href="https://www.tagesschau.de/kaffee/meldung-3.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.tagesschau.de/kaffee/meldung-3.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 3.</content>
+    <published>2026-10-23T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 4</title>
+    <link href="https://www.taz.de/kaffee/meldung-4.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.taz.de/kaffee/meldung-4.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 4.</content>
+    <published>2026-10-24T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 5</title>
+    <link href="https://www.spiegel.de/kaffee/meldung-5.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.spiegel.de/kaffee/meldung-5.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 5.</content>
+    <published>2026-10-25T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 6</title>
+    <link href="https://www.heise.de/kaffee/meldung-6.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.heise.de/kaffee/meldung-6.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 6.</content>
+    <published>2026-10-26T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 7</title>
+    <link href="https://www.zeit.de/kaffee/meldung-7.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.zeit.de/kaffee/meldung-7.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 7.</content>
+    <published>2026-10-27T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 8</title>
+    <link href="https://www.t-online.de/kaffee/meldung-8.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.t-online.de/kaffee/meldung-8.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 8.</content>
+    <published>2026-10-28T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 9</title>
+    <link href="https://www.derstandard.at/kaffee/meldung-9.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.derstandard.at/kaffee/meldung-9.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 9.</content>
+    <published>2026-10-29T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 10</title>
+    <link href="https://www.golem.de/kaffee/meldung-10.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.golem.de/kaffee/meldung-10.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 10.</content>
+    <published>2026-10-20T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 11</title>
+    <link href="https://www.sueddeutsche.de/kaffee/meldung-11.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.sueddeutsche.de/kaffee/meldung-11.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 11.</content>
+    <published>2026-10-21T09:30:00+01:00</published>
+  </entry>
+
+  <entry>
+    <title>Kaffeemeldung 12</title>
+    <link href="https://www.faz.net/kaffee/meldung-12.html" hreflang="de"/>
+    <mg:anzeigeLink>https://www.faz.net/kaffee/meldung-12.html</mg:anzeigeLink>
+    <content type="text" xml:lang="de">Beschreibung der Kaffeemeldung 12.</content>
+    <published>2026-10-22T09:30:00+01:00</published>
+  </entry>
+
+</feed>

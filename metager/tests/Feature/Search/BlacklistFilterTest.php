@@ -174,6 +174,68 @@ class BlacklistFilterTest extends TestCase
         $this->assertContains("https://example.org/espresso", $this->links($this->search("tee")));
     }
 
+    /**
+     * The query is lowercased before it is compared, so a search typed with
+     * capitals is still caught by a lowercase entry.
+     */
+    public function testTheQueryIsLowercasedBeforeTheComparison(): void
+    {
+        $this->writeBlacklist("blacklistDomains.txt", "");
+        $this->writeBlacklist("blacklistUrl.txt", "example.org/espresso|kaffee\n");
+
+        $this->assertNotContains("https://example.org/espresso", $this->links($this->search("KaFFee")));
+    }
+
+    /**
+     * The query part of the entry is *not* lowercased, so an entry written with
+     * a capital letter can never match: the query it is compared against has
+     * already been folded.
+     */
+    public function testAQueryScopedEntryWrittenWithCapitalsNeverMatches(): void
+    {
+        $this->writeBlacklist("blacklistDomains.txt", "");
+        $this->writeBlacklist("blacklistUrl.txt", "example.org/espresso|Kaffee\n");
+
+        $this->assertContains(
+            "https://example.org/espresso",
+            $this->links($this->search("Kaffee")),
+            "A capitalised query entry now matches. Sensible, but a change: say so on purpose."
+        );
+    }
+
+    /**
+     * The query must equal the entry exactly: one more word and the page is
+     * shown again, and so it is with the same words in another order.
+     */
+    public function testAQueryScopedEntryNeedsTheExactQuery(): void
+    {
+        $this->writeBlacklist("blacklistDomains.txt", "");
+        $this->writeBlacklist("blacklistUrl.txt", "example.org/espresso|kaffee bohnen\n");
+
+        $this->assertContains(
+            "https://example.org/espresso",
+            $this->links($this->search("bohnen kaffee")),
+            "A reordered query now matches the entry."
+        );
+    }
+
+    /**
+     * Domain entries are compared with the stripped host exactly as written,
+     * so an entry that kept its `www.` matches nothing: the host it would have
+     * to equal has had its `www.` removed.
+     */
+    public function testADomainEntryWrittenWithWwwMatchesNothing(): void
+    {
+        $this->writeBlacklist("blacklistDomains.txt", "www.beispiel.de\n");
+        $this->writeBlacklist("blacklistUrl.txt", "");
+
+        $this->assertContains(
+            "https://beispiel.de/sorten",
+            $this->links($this->search()),
+            "A `www.` domain entry now blocks. Sensible, but a change: say so on purpose."
+        );
+    }
+
     public function testACommentLineInTheUrlBlacklistIsNotAnEntry(): void
     {
         $this->writeBlacklist("blacklistDomains.txt", "");

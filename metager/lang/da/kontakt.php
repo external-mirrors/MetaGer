@@ -2,7 +2,7 @@
 return [
     'letter' => [
         '1' => 'Med brevpost',
-        '2' => 'Vi foretrækker digital kontakt. Men hvis du finder det nødvendigt at kontakte os postalt, kan du sende os en mail på:',
+        '2' => 'Vi svarer hurtigst på e-mail. Med post kan du skrive til os på:',
         '3' => "SUMA-EV\r
 Postfach 51 01 43\r
 D-30631 Hannover\r
@@ -11,11 +11,11 @@ Tyskland",
     'headline' => [
         '1' => 'Kontakt',
         '2' => 'E-mail',
-        'pgp' => 'Kryptering',
     ],
     'email' => [
-        'text' => 'Du kan kontakte os ved at sende en mail til: <a href="mailto::mail">:mail</a>',
+        'write' => 'Skriv en e-mail',
         'pgp' => [
+            'summary' => 'Skriv krypteret (PGP)',
             'description' => 'Vores e-mails er kryptografisk signerede. Hvis du vil verificere signaturen eller sende din mail krypteret, skal du bruge følgende offentlige nøgle. Hvis du ønsker at modtage et krypteret svar, bedes du vedhæfte din offentlige nøgle til din krypterede og signerede mail.',
             'pubkey' => 'PGP Publickey: <a href="/download/pubkey.asc" download="0x2185CC8F3CA782EC.asc">0x2185CC8F3CA782EC</a> eller på <a href=":keyserver" target="_blank" rel="noopener">keys.openpgp.org</a>',
             'fingerprint' => 'PGP-fingeraftryk: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
@@ -25,7 +25,7 @@ Tyskland",
     'removal' => [
         'heading' => 'Vil du have et søgeresultat fjernet?',
         'text' => 'Læs venligst vores vejledning først. MetaGer viser resultater fra andre søgemaskiner, så et resultat kan kun fjernes hos hjemmesiden og hos disse søgemaskiner. Vejledningen viser hvor og hvordan.',
-        'link' => 'Til vejledningen',
+        'link' => 'Vejledning: fjern et søgeresultat',
     ],
     'topics' => [
         'heading' => 'Andre almindelige spørgsmål',

@@ -43,16 +43,14 @@
     </div>
     <div class="result-body {{ !empty($result->logo) || !empty($result->image) ? 'with-image' : '' }}">
         <div class="result-description">
-            @if (array_key_exists('date', $result->additionalInformation))
-            <span class="date" data-timestamp="{{ $result->getDate()->unix() }}">
-                @if ($result->getDate()->isToday())
-                    {{ $result->additionalInformation['date']->format('H:i:s') }} — 
-                @else
-                    {{ $result->additionalInformation['date']->isoFormat('lll') }} — 
-                @endif
-            </span>
+            {{-- A news card already shows the date beside the host, above. The
+                 dash stays outside span.date: relative-time.js replaces that
+                 span's text. tests/Feature/Search/DatedResultsMarkupTest. --}}
+            @if (app(\App\SearchSettings::class)->fokus === 'nachrichten')
+            @elseif (array_key_exists('date', $result->additionalInformation))
+                <span class="date" data-timestamp="{{ $result->getDate()->unix() }}">@if ($result->getDate()->isToday()){{ $result->additionalInformation['date']->format('H:i:s') }}@else{{ $result->additionalInformation['date']->isoFormat('lll') }}@endif</span> —
             @elseif(array_key_exists('date_string', $result->additionalInformation))
-                <span class="date-string">{{ $result->additionalInformation['date_string'] }} — </span>
+                <span class="date-string">{{ $result->additionalInformation['date_string'] }}</span> —
             @endif
             {{ $result->descr }}
         </div>

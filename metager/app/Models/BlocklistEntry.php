@@ -91,6 +91,40 @@ class BlocklistEntry extends Model
             : BlocklistNormalizer::link($value);
     }
 
+    /**
+     * Normalise terms into the stored form: the sorted set, space-joined.
+     * Null for anything but url_terms.
+     *
+     * @param string|array<int, string>|null $terms
+     */
+    public static function normalizeTerms(string $kind, string|array|null $terms): ?string
+    {
+        if ($kind !== self::KIND_URL_TERMS || $terms === null) {
+            return null;
+        }
+
+        return implode(" ", BlocklistNormalizer::terms($terms));
+    }
+
+    /**
+     * The non-deleted entry with exactly this kind, value and terms, if any.
+     * One such entry at a time is the uniqueness rule of docs/blocklist-api.md;
+     * it is checked here rather than by an index, because "unique among rows
+     * where deleted_at is null" is a partial index, which is not portable.
+     */
+    public static function activeDuplicate(string $kind, string $value, ?string $terms): ?self
+    {
+        return static::query()
+            ->where("kind", $kind)
+            ->where("value", $value)
+            ->when(
+                $terms === null,
+                fn(Builder $q) => $q->whereNull("terms"),
+                fn(Builder $q) => $q->where("terms", $terms)
+            )
+            ->first();
+    }
+
     /** @return list<string> */
     public function termList(): array
     {

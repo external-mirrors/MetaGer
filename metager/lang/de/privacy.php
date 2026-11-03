@@ -20,9 +20,16 @@ return [
             'suggest' => 'Wenn Suchvorschläge für die Adressleiste Ihres Browsers aktiviert sind (optional), müssen wir Ihre Vorschlagseinstellungen auf unserem Server speichern. Der Schlüssel ist eine verkettete Zeichenkette aus Ihrer IP-Adresse, Ihrem User-Agent und dem accept-language-Header Ihres Browsers, der mit einem sha1-Hash versehen ist. Wenn die Einstellung deaktiviert ist (Standard), wird nichts gespeichert.',
         ],
         'contact' => [
-            'title' => 'Nutzung des Kontaktformulars',
-            'description' => 'Bei der Nutzung des MetaGer-Kontaktformulars fallen folgende Daten an, die wir zu Referenzzwecken bis 2 Monate nach Abschluss Ihres Anliegens speichern:',
-            'contact' => 'Werden zu Referenzzwecken bis 2 Monate nach Abschluss Ihres Anliegens gespeichert.',
+            'title' => 'Kontakt per E-Mail',
+            'description' => 'Schreiben Sie uns an eine der Adressen auf unserer <a href=":link_contact">Kontaktseite</a>, bearbeiten wir Ihre E-Mail in unserem Ticketsystem. Dabei fallen folgende Daten an:',
+            'contact' => 'Speichern wir mit Ihren E-Mails und deren Anhängen bis 3 Monate nach Abschluss Ihres Anliegens.',
+        ],
+        'removal' => [
+            'title' => 'Anträge auf Entfernen von Suchergebnissen',
+            'description' => 'Bitten Sie uns, ein Suchergebnis bei MetaGer auszublenden (siehe <a href=":link_removal">Suchergebnis entfernen lassen</a>), legen wir zu Ihrer E-Mail einen Vorgang an, in dem wir Ihre Anfrage prüfen und entscheiden. Rechtsgrundlage ist Art. 6 Abs. 1 lit. c in Verbindung mit Art. 17 DSGVO. Für Ihre E-Mails selbst gilt der Abschnitt „Kontakt per E-Mail“. Im Vorgang fallen folgende Daten an:',
+            'contact' => 'Name und E-Mail-Adresse löschen wir aus dem Vorgang 6 Monate nach Abschluss des Vorgangs.',
+            'message' => 'Die Adressen (URLs) und Suchbegriffe, um die es geht, und Anhänge wie eine Ausweiskopie, wenn wir darum bitten: Suchbegriffe und Anhänge löschen wir spätestens 6 Monate nach Abschluss des Vorgangs, außer bei einem ausgeblendeten Ergebnis (siehe unten).',
+            'block' => 'Blenden wir ein Ergebnis aus, speichern wir dessen Adresse, die Suchbegriffe, für die es ausgeblendet ist (meist Ihren Namen), und die Begründung unserer Entscheidung, solange das Ergebnis ausgeblendet bleibt. Wir brauchen sie, damit das Ausblenden wirkt und wir es begründen können, wenn es angefochten wird (Art. 17 Abs. 3 lit. e und Art. 6 Abs. 1 lit. f DSGVO).',
         ],
         'donate' => [
             'title' => 'Nutzung des Spendenformulars',

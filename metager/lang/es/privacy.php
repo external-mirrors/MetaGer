@@ -16,9 +16,16 @@ return [
         ],
         'title' => 'Datos entrantes por contexto',
         'contact' => [
-            'title' => 'Utilización del formulario de contacto',
-            'description' => 'Al utilizar el formulario de contacto de MetaGer, se generan los siguientes datos, que almacenamos como referencia hasta 2 meses después de la finalización de su solicitud:',
-            'contact' => 'Se almacenará con fines de referencia hasta 2 meses después de la finalización de su solicitud.',
+            'title' => 'Contacto por correo electrónico',
+            'description' => 'Si nos escribe a una de las direcciones de nuestra <a href=":link_contact">página de contacto</a>, tramitamos su correo en nuestro sistema de tickets. Se generan los siguientes datos:',
+            'contact' => 'Los conservamos junto con sus correos y sus archivos adjuntos hasta 3 meses después de cerrar su solicitud.',
+        ],
+        'removal' => [
+            'title' => 'Solicitudes de eliminación de resultados de búsqueda',
+            'description' => 'Si nos pide que ocultemos un resultado de búsqueda en MetaGer (véase <a href=":link_removal">Eliminar un resultado de búsqueda</a>), abrimos un expediente para su correo en el que examinamos su solicitud y decidimos sobre ella. La base jurídica es el art. 6.1.c en relación con el art. 17 del RGPD. Para sus correos en sí rige el apartado «Contacto por correo electrónico». En el expediente se generan los siguientes datos:',
+            'contact' => 'Borramos su nombre y su dirección de correo del expediente 6 meses después de cerrarlo.',
+            'message' => 'Las direcciones (URL) y los términos de búsqueda afectados, y archivos adjuntos como una copia de su documento de identidad si se la pedimos: borramos los términos de búsqueda y los adjuntos a más tardar 6 meses después de cerrar el expediente, salvo en el caso de un resultado oculto (véase más abajo).',
+            'block' => 'Si ocultamos un resultado, conservamos su dirección, los términos de búsqueda para los que está oculto (normalmente su nombre) y los motivos de nuestra decisión mientras el resultado siga oculto. Los necesitamos para que la ocultación funcione y para poder justificarla si se impugna (art. 17.3.e y art. 6.1.f del RGPD).',
         ],
         'donate' => [
             'title' => 'Utilización del formulario de donación',

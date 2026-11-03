@@ -122,9 +122,16 @@ return [
             'suggest' => 'Se i suggerimenti di ricerca sono abilitati per la barra degli indirizzi del browser (opzionale), dobbiamo memorizzare le impostazioni dei suggerimenti sul nostro server. La chiave sarà una stringa concatenata del vostro indirizzo IP, del vostro useragent e dell\'intestazione accept-language del vostro browser, sottoposta a hashhed sha1. Se l\'impostazione è disattivata (impostazione predefinita) non verrà memorizzato nulla.',
         ],
         'contact' => [
-            'title' => 'Utilizzo del modulo di contatto',
-            'description' => 'Quando si utilizza il modulo di contatto di MetaGer, vengono generati i seguenti dati, che vengono conservati a scopo di riferimento fino a 2 mesi dopo il completamento della richiesta:',
-            'contact' => 'Saranno conservati a scopo di riferimento fino a 2 mesi dopo il completamento della richiesta.',
+            'title' => 'Contatto via e-mail',
+            'description' => 'Se ci scrivete a uno degli indirizzi della nostra <a href=":link_contact">pagina di contatto</a>, gestiamo la vostra e-mail nel nostro sistema di ticket. Vengono generati i seguenti dati:',
+            'contact' => 'Conservati insieme alle vostre e-mail e ai relativi allegati fino a 3 mesi dopo la chiusura della vostra richiesta.',
+        ],
+        'removal' => [
+            'title' => 'Richieste di rimozione di risultati di ricerca',
+            'description' => 'Se ci chiedete di nascondere un risultato di ricerca su MetaGer (vedi <a href=":link_removal">Far rimuovere un risultato di ricerca</a>), apriamo per la vostra e-mail una pratica in cui esaminiamo la richiesta e decidiamo. La base giuridica è l’art. 6, par. 1, lett. c), in combinato disposto con l’art. 17 del GDPR. Per le vostre e-mail vale la sezione «Contatto via e-mail». Nella pratica vengono generati i seguenti dati:',
+            'contact' => 'Cancelliamo il vostro nome e indirizzo e-mail dalla pratica 6 mesi dopo la sua chiusura.',
+            'message' => 'Gli indirizzi (URL) e i termini di ricerca interessati, e allegati come una copia del vostro documento d’identità se lo chiediamo: cancelliamo i termini di ricerca e gli allegati al più tardi 6 mesi dopo la chiusura della pratica, tranne nel caso di un risultato nascosto (vedi sotto).',
+            'block' => 'Se nascondiamo un risultato, ne conserviamo l’indirizzo, i termini di ricerca per cui è nascosto (di solito il vostro nome) e le motivazioni della nostra decisione finché il risultato resta nascosto. Ci servono perché l’oscuramento funzioni e per poterlo motivare se viene contestato (art. 17, par. 3, lett. e), e art. 6, par. 1, lett. f), del GDPR).',
         ],
         'donate' => [
             'title' => 'Utilizzo del modulo di donazione',

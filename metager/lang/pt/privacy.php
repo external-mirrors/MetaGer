@@ -77,9 +77,16 @@ return [
             'suggest' => 'Se as sugestões de pesquisa estiverem activadas para a barra de endereço do seu browser (opcional), precisamos de armazenar as suas definições de sugestões no nosso servidor. A chave será uma cadeia concatenada do seu endereço IP, do seu useragent e do cabeçalho accept-language do seu browser, que é hash sha1. Se a definição estiver desactivada (predefinição), nada será armazenado.',
         ],
         'contact' => [
-            'title' => 'Utilização do formulário de contacto',
-            'description' => 'Ao utilizar o formulário de contacto MetaGer, são gerados os seguintes dados, que armazenamos para fins de referência até 2 meses após a conclusão do seu pedido:',
-            'contact' => 'Será guardado para efeitos de referência até 2 meses após a conclusão do seu pedido.',
+            'title' => 'Contacto por e-mail',
+            'description' => 'Se nos escrever para um dos endereços da nossa <a href=":link_contact">página de contacto</a>, tratamos o seu e-mail no nosso sistema de tickets. São gerados os seguintes dados:',
+            'contact' => 'Guardamo-los juntamente com os seus e-mails e respetivos anexos até 3 meses após a conclusão do seu pedido.',
+        ],
+        'removal' => [
+            'title' => 'Pedidos de remoção de resultados de pesquisa',
+            'description' => 'Se nos pedir para ocultar um resultado de pesquisa no MetaGer (ver <a href=":link_removal">Remover um resultado de pesquisa</a>), abrimos um processo para o seu e-mail, no qual analisamos o seu pedido e decidimos sobre ele. O fundamento jurídico é o art. 6.º, n.º 1, alínea c), em conjugação com o art. 17.º do RGPD. Aos seus e-mails propriamente ditos aplica-se a secção «Contacto por e-mail». No processo são gerados os seguintes dados:',
+            'contact' => 'Apagamos o seu nome e endereço de e-mail do processo 6 meses após a sua conclusão.',
+            'message' => 'Os endereços (URL) e os termos de pesquisa em causa, e anexos como uma cópia do seu documento de identificação, se o pedirmos: apagamos os termos de pesquisa e os anexos o mais tardar 6 meses após a conclusão do processo, exceto no caso de um resultado ocultado (ver abaixo).',
+            'block' => 'Se ocultarmos um resultado, guardamos o seu endereço, os termos de pesquisa para os quais está ocultado (normalmente o seu nome) e os fundamentos da nossa decisão enquanto o resultado permanecer ocultado. Precisamos deles para que a ocultação funcione e para a podermos fundamentar se for contestada (art. 17.º, n.º 3, alínea e), e art. 6.º, n.º 1, alínea f), do RGPD).',
         ],
         'donate' => [
             'title' => 'Utilização do formulário de donativo',

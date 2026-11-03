@@ -39,7 +39,7 @@
                     </article>
                     <article class="kontext">
                         <h1 id="contact">@lang('privacy.contexts.contact.title')</h1>
-                        <div>@lang('privacy.contexts.contact.description')</div>
+                        <div>@lang('privacy.contexts.contact.description', ['link_contact' => route('contact')])</div>
                         <ol class="datum-list">
                             <li><a href="#ip-address">@lang('privacy.data.ip'):</a> @lang('privacy.data.unused')</li>
                             <li><a href="#user-agent">@lang('privacy.data.useragent'):</a> @lang('privacy.data.unused')</li>
@@ -48,6 +48,18 @@
                             <li><a href="#message">@lang('privacy.data.message'):</a>
                                 @lang('privacy.contexts.contact.contact')</li>
                         </ol>
+                    </article>
+                    {{-- Pinned to suma-crm's retention by PrivacyPolicyContactRetentionTest. --}}
+                    <article class="kontext">
+                        <h1 id="removal-requests">@lang('privacy.contexts.removal.title')</h1>
+                        <div>@lang('privacy.contexts.removal.description', ['link_removal' => route('removal')])</div>
+                        <ol class="datum-list">
+                            <li><a href="#contact-data">@lang('privacy.data.contact'):</a>
+                                @lang('privacy.contexts.removal.contact')</li>
+                            <li><a href="#message">@lang('privacy.data.message'):</a>
+                                @lang('privacy.contexts.removal.message')</li>
+                        </ol>
+                        <div>@lang('privacy.contexts.removal.block')</div>
                     </article>
                     <article class="kontext">
                         <h1 id="donation">@lang('privacy.contexts.donate.title')</h1>
@@ -324,6 +336,6 @@
         <div class="section">
             <h1>@lang('privacy.changes.title')</h1>
             <div>@lang('privacy.changes.description')</div>
-            <div>@lang('privacy.changes.date', ['date' => '2026-10-30'])</div>
+            <div>@lang('privacy.changes.date', ['date' => '2026-11-03'])</div>
         </div>
 @endsection

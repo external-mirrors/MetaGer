@@ -21,9 +21,16 @@ return [
             'suggest' => 'Si teniu activats els suggeriments de cerca per a la barra d\'adreces del navegador (opcional), hem de desar la vostra configuració de suggeriments al nostre servidor. La clau serà una cadena formada per la vostra adreça IP, el vostre agent d\'usuari i la capçalera accept-language del navegador, amb un resum SHA-1. Si l\'opció està desactivada (valor predeterminat), no es desa res.'
         ],
         'contact' => [
-            'title' => 'Ús del formulari de contacte',
-            'description' => 'En fer servir el formulari de contacte de MetaGer es generen les dades següents, que desem com a referència fins a 2 mesos després de tancar la vostra petició:',
-            'contact' => 'Es desaran com a referència fins a 2 mesos després de tancar la vostra petició.',
+            'title' => 'Contacte per correu electrònic',
+            'description' => 'Si ens escriviu a una de les adreces de la nostra <a href=":link_contact">pàgina de contacte</a>, gestionem el vostre correu al nostre sistema de tiquets. Això implica les dades següents:',
+            'contact' => 'Les conservem amb els vostres correus i els seus fitxers adjunts fins a 3 mesos després de tancar la vostra sol·licitud.',
+        ],
+        'removal' => [
+            'title' => 'Sol·licituds d’eliminació de resultats de cerca',
+            'description' => 'Si ens demaneu que amaguem un resultat de cerca a MetaGer (vegeu <a href=":link_removal">Eliminar un resultat de cerca</a>), obrim un expedient per al vostre correu en què examinem la sol·licitud i en decidim. La base jurídica és l’art. 6.1.c en relació amb l’art. 17 del RGPD. Per als vostres correus mateixos, vegeu «Contacte per correu electrònic». L’expedient implica les dades següents:',
+            'contact' => 'Esborrem el vostre nom i adreça electrònica de l’expedient 6 mesos després de tancar-lo.',
+            'message' => 'Les adreces (URL) i els termes de cerca afectats, i fitxers adjunts com una còpia del document d’identitat si us la demanem: esborrem els termes de cerca i els adjunts com a molt tard 6 mesos després de tancar l’expedient, excepte en el cas d’un resultat amagat (vegeu més avall).',
+            'block' => 'Si amaguem un resultat, en conservem l’adreça, els termes de cerca per als quals està amagat (normalment el vostre nom) i els motius de la nostra decisió mentre el resultat continuï amagat. Els necessitem perquè l’ocultació funcioni i per justificar-la si és impugnada (art. 17.3.e i art. 6.1.f del RGPD).',
         ],
         'donate' => [
             'title' => 'Ús del formulari de donatius',

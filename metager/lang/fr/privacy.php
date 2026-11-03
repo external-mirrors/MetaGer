@@ -87,7 +87,7 @@ return [
             'title' => 'Obligation de notification en cas de rectification ou d\'effacement de données à caractère personnel ou de limitation du traitement :',
             'description' => 'Conformément à l\'article 19 du RGPD, si nous avions rendu les données que vous nous avez confiées accessibles à des tiers (ce que nous ne faisons jamais), nous serions tenus de les informer que, à votre demande, nous les supprimerions, les modifierions, etc.',
         ],
-        'perception' => 'Pour exercer ces droits, il suffit de nous contacter en utilisant notre <a href=":contact_link">formulaire de contact</a></b>. Si vous préférez la forme épistolaire, envoyez-nous un courrier à l\'adresse de nos bureaux :',
+        'perception' => 'Pour exercer ces droits, il suffit de nous contacter via notre <a href=":contact_link">page de contact</a>. Si vous préférez la forme épistolaire, envoyez-nous un courrier à l\'adresse de nos bureaux :',
     ],
     'changes' => [
         'title' => 'Modifications de la présente déclaration',
@@ -112,7 +112,7 @@ return [
     'title' => 'Politique de confidentialité',
     'responsible_party' => [
         'title' => 'Personnes responsables et personnes de contact',
-        'description' => 'MetaGer et les services associés sont exploités par <a href="https://suma-ev.de">SUMA-EV</a>, qui est également l\'auteur de cette déclaration. Dans cette déclaration, le terme "nous" désigne généralement SUMA-EV. Vous trouverez nos coordonnées dans notre site <a href=":link_impress">Mentions légales</a>. Vous pouvez nous contacter par courrier électronique en utilisant notre formulaire de contact <a href=":link_contact"></a> .',
+        'description' => 'MetaGer et les services associés sont exploités par <a href="https://suma-ev.de">SUMA-EV</a>, qui est également l\'auteur de cette déclaration. Dans cette déclaration, le terme "nous" désigne généralement SUMA-EV. Vous trouverez nos coordonnées dans notre site <a href=":link_impress">Mentions légales</a>. Vous pouvez nous contacter par courrier électronique via notre <a href=":link_contact">page de contact</a>.',
     ],
     'principles' => [
         'title' => 'Principes',

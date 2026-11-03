@@ -191,7 +191,7 @@ return [
             'title' => 'Obrigação de notificação em caso de correção ou supressão de dados pessoais ou de limitação do tratamento:',
             'description' => 'De acordo com o artigo 19.º do RGPD, se tivéssemos tornado acessíveis a terceiros os dados que nos confiou (o que nunca fazemos), seríamos obrigados a informá-los de que, a seu pedido, iríamos apagar, alterar, etc.',
         ],
-        'perception' => 'Para exercer estes direitos, basta contactar-nos através do nosso <a href=":contact_link">formulário de contacto</a></b>. Se preferir a forma de carta, envie-nos correio para o nosso endereço de escritório:',
+        'perception' => 'Para exercer estes direitos, basta contactar-nos através da nossa <a href=":contact_link">página de contacto</a>. Se preferir a forma de carta, envie-nos correio para o nosso endereço de escritório:',
     ],
     'changes' => [
         'title' => 'Alterações a esta declaração',
@@ -201,7 +201,7 @@ return [
     'introduction' => 'Para uma maior transparência, enumeramos os dados que recolhemos do utilizador e a forma como os utilizamos. A proteção dos seus dados é importante para nós e deve sê-lo também para si. <strong>Leia atentamente esta declaração; é do seu interesse.</strong>',
     'responsible_party' => [
         'title' => 'Pessoas responsáveis e pessoas de contacto',
-        'description' => 'O MetaGer e os serviços relacionados são operados por <a href="https://suma-ev.de">SUMA-EV</a>, que é também o autor desta declaração. Nesta declaração, "nós" significa geralmente a SUMA-EV. Pode encontrar os nossos dados de contacto em <a href=":link_impress">Imprint</a>. Podemos ser contactados por e-mail através do nosso formulário de contacto <a href=":link_contact"></a> .',
+        'description' => 'O MetaGer e os serviços relacionados são operados por <a href="https://suma-ev.de">SUMA-EV</a>, que é também o autor desta declaração. Nesta declaração, "nós" significa geralmente a SUMA-EV. Pode encontrar os nossos dados de contacto em <a href=":link_impress">Imprint</a>. Podemos ser contactados por e-mail através da nossa <a href=":link_contact">página de contacto</a>.',
     ],
     'principles' => [
         'title' => 'Princípios',

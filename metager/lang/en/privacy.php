@@ -5,7 +5,7 @@ return [
     'introduction' => 'For maximum transparency, we list what data we collect from you and how we use it. The protection of your data is important to us and it should be to you too. <strong>Please read this statement carefully; it is in your interest.</strong>',
     'responsible_party' => [
         'title' => 'Responsible persons and contact persons',
-        'description' => 'MetaGer and related services are operated by <a href="https://suma-ev.de">SUMA-EV</a>, which is also the author of this statement. In this statement, “we” generally means SUMA-EV. You can find our contact details in our <a href=":link_impress">Imprint</a>. We can be reached by email using our <a href=":link_contact">contact form</a>.'
+        'description' => 'MetaGer and related services are operated by <a href="https://suma-ev.de">SUMA-EV</a>, which is also the author of this statement. In this statement, “we” generally means SUMA-EV. You can find our contact details in our <a href=":link_impress">Imprint</a>. You can reach us by email through our <a href=":link_contact">contact page</a>.'
     ],
     'principles' => [
         'title' => 'Principles',
@@ -205,7 +205,7 @@ return [
             'title' => 'Obligation to notify in connection with the correction or deletion of personal data or the restriction of processing:',
             'description' => 'According to Article 19 GDPR; if we should have made data that you have entrusted to us accessible to third parties (which we never do), we would be obliged to inform them that we would, at your request, delete, change, etc. have performed.',
         ],
-        'perception' => 'To exercise these rights, it is sufficient to contact us using our <a href=":contact_link">contact form</a></b>. If you prefer the letter form, send us mail to our office address:',
+        'perception' => 'To exercise these rights, it is sufficient to contact us through our <a href=":contact_link">contact page</a>. If you prefer the letter form, send us mail to our office address:',
     ],
     'changes' => [
         'title' => 'Changes to this Statement',

@@ -87,7 +87,7 @@ return [
             'title' => 'Obbligo di notifica in relazione alla correzione o cancellazione dei dati personali o alla limitazione del trattamento:',
             'description' => 'Ai sensi dell\'articolo 19 del GDPR, se avessimo reso accessibili a terzi i dati che ci avete affidato (cosa che non facciamo mai), saremmo obbligati a informarli che, su vostra richiesta, li avremmo cancellati, modificati, ecc.',
         ],
-        'perception' => 'Per esercitare tali diritti, è sufficiente contattarci utilizzando il nostro <a href=":contact_link">formulario di contatto</a></b>. Se preferite la forma epistolare, inviateci una lettera all\'indirizzo del nostro ufficio:',
+        'perception' => 'Per esercitare tali diritti, è sufficiente contattarci tramite la nostra <a href=":contact_link">pagina di contatto</a>. Se preferite la forma epistolare, inviateci una lettera all\'indirizzo del nostro ufficio:',
     ],
     'changes' => [
         'description' => 'Come le nostre offerte, anche la presente dichiarazione sulla protezione dei dati è soggetta a continue modifiche. Si consiglia pertanto di rileggerla regolarmente.',
@@ -206,7 +206,7 @@ return [
     'introduction' => 'Per la massima trasparenza, vi elenchiamo quali dati raccogliamo da voi e come li utilizziamo. La protezione dei vostri dati è importante per noi e dovrebbe esserlo anche per voi. <strong>Vi invitiamo a leggere attentamente la presente dichiarazione; è nel vostro interesse.</strong>',
     'responsible_party' => [
         'title' => 'Persone responsabili e di contatto',
-        'description' => 'MetaGer e i servizi correlati sono gestiti da <a href="https://suma-ev.de">SUMA-EV</a>, che è anche l\'autore di questa dichiarazione. In questa dichiarazione, per "noi" si intende generalmente SUMA-EV. I nostri dati di contatto sono riportati nel nostro <a href=":link_impress">Imprint</a>. Possiamo essere contattati via e-mail utilizzando il nostro modulo di contatto <a href=":link_contact"></a> .',
+        'description' => 'MetaGer e i servizi correlati sono gestiti da <a href="https://suma-ev.de">SUMA-EV</a>, che è anche l\'autore di questa dichiarazione. In questa dichiarazione, per "noi" si intende generalmente SUMA-EV. I nostri dati di contatto sono riportati nel nostro <a href=":link_impress">Imprint</a>. Possiamo essere contattati via e-mail tramite la nostra <a href=":link_contact">pagina di contatto</a>.',
     ],
     'monitoring' => [
         'title' => 'Monitoraggio degli errori e delle applicazioni',

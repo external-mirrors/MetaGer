@@ -89,7 +89,7 @@ return [
     'introduction' => 'W celu zapewnienia maksymalnej przejrzystości podajemy, jakie dane zbieramy od użytkowników i w jaki sposób je wykorzystujemy. Ochrona danych użytkownika jest dla nas ważna i powinna być również ważna dla użytkownika. <strong>Prosimy o uważne przeczytanie niniejszego oświadczenia; leży to w Państwa interesie.</strong>',
     'responsible_party' => [
         'title' => 'Osoby odpowiedzialne i osoby kontaktowe',
-        'description' => 'MetaGer i powiązane usługi są obsługiwane przez <a href="https://suma-ev.de">SUMA-EV</a>, która jest również autorem niniejszego oświadczenia. W tym oświadczeniu "my" oznacza ogólnie SUMA-EV. Nasze dane kontaktowe można znaleźć na stronie <a href=":link_impress">Imprint</a>. Można się z nami skontaktować za pośrednictwem poczty elektronicznej, korzystając z formularza kontaktowego <a href=":link_contact"></a> .',
+        'description' => 'MetaGer i powiązane usługi są obsługiwane przez <a href="https://suma-ev.de">SUMA-EV</a>, która jest również autorem niniejszego oświadczenia. W tym oświadczeniu "my" oznacza ogólnie SUMA-EV. Nasze dane kontaktowe można znaleźć na stronie <a href=":link_impress">Imprint</a>. Można się z nami skontaktować za pośrednictwem poczty elektronicznej, za pośrednictwem naszej <a href=":link_contact">strony kontaktowej</a>.',
     ],
     'principles' => [
         'title' => 'Zasady',
@@ -186,7 +186,7 @@ return [
             'title' => 'Obowiązek powiadomienia w związku z korektą lub usunięciem danych osobowych lub ograniczeniem przetwarzania:',
             'description' => 'Zgodnie z art. 19 RODO; gdybyśmy udostępnili dane, które nam powierzyłeś, stronom trzecim (czego nigdy nie robimy), bylibyśmy zobowiązani do poinformowania ich, że na Twoje żądanie usuniemy, zmienimy itp.',
         ],
-        'perception' => 'Aby skorzystać z tych praw, wystarczy skontaktować się z nami za pomocą naszego <a href=":contact_link">formularza kontaktowego</a></b>. Jeśli wolisz formę listowną, wyślij nam wiadomość na adres naszego biura:',
+        'perception' => 'Aby skorzystać z tych praw, wystarczy skontaktować się z nami za pośrednictwem naszej <a href=":contact_link">strony kontaktowej</a>. Jeśli wolisz formę listowną, wyślij nam wiadomość na adres naszego biura:',
     ],
     'changes' => [
         'title' => 'Zmiany w niniejszym Oświadczeniu',

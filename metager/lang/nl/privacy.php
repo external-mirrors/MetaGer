@@ -88,7 +88,7 @@ return [
     'introduction' => 'Voor maximale transparantie zetten we op een rij welke gegevens we van je verzamelen en hoe we deze gebruiken. De bescherming van uw gegevens is belangrijk voor ons en zou dat ook voor u moeten zijn. <strong>Lees deze verklaring zorgvuldig; het is in uw belang.</strong>',
     'responsible_party' => [
         'title' => 'Verantwoordelijke personen en contactpersonen',
-        'description' => 'MetaGer en aanverwante diensten worden beheerd door <a href="https://suma-ev.de">SUMA-EV</a>, die ook de auteur van deze verklaring is. In deze verklaring betekent "wij" over het algemeen SUMA-EV. Onze contactgegevens vindt u op onze <a href=":link_impress">Imprint</a>. U kunt ons per e-mail bereiken via ons <a href=":link_contact">contactformulier</a>.',
+        'description' => 'MetaGer en aanverwante diensten worden beheerd door <a href="https://suma-ev.de">SUMA-EV</a>, die ook de auteur van deze verklaring is. In deze verklaring betekent "wij" over het algemeen SUMA-EV. Onze contactgegevens vindt u op onze <a href=":link_impress">Imprint</a>. U kunt ons per e-mail bereiken via onze <a href=":link_contact">contactpagina</a>.',
     ],
     'hosting' => [
         'title' => 'Hosting',
@@ -181,7 +181,7 @@ return [
             'title' => 'Verplichting tot kennisgeving in verband met de correctie of verwijdering van persoonsgegevens of de beperking van de verwerking:',
             'description' => 'Volgens Artikel 19 GDPR; als we gegevens die u aan ons hebt toevertrouwd toegankelijk zouden hebben gemaakt voor derden (wat we nooit doen), zouden we verplicht zijn om hen te informeren dat we, op uw verzoek, zouden verwijderen, wijzigen, etc. hebben uitgevoerd.',
         ],
-        'perception' => 'Om deze rechten uit te oefenen, volstaat het contact met ons op te nemen via ons <a href=":contact_link">contactformulier</a></b>. Als u de voorkeur geeft aan het briefformulier, kunt u ons een brief sturen naar ons kantooradres:',
+        'perception' => 'Om deze rechten uit te oefenen, volstaat het contact met ons op te nemen via onze <a href=":contact_link">contactpagina</a>. Als u de voorkeur geeft aan het briefformulier, kunt u ons een brief sturen naar ons kantooradres:',
     ],
     'data' => [
         'payment' => 'Betalingsgegevens',

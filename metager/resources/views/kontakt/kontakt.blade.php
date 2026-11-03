@@ -23,9 +23,21 @@
 		<a class="contact-button" href="mailto:{{ $to_mail }}">@lang('kontakt.email.write')</a>
 		<details class="contact-pgp">
 			<summary>@lang('kontakt.email.pgp.summary')</summary>
-			<p>@lang('kontakt.email.pgp.description')</p>
+			{{-- How suma-crm decides to answer encrypted: App\Pgp\KeyDiscovery
+			     there. ContactPageTest pins this text to those rules. --}}
+			<p>@lang('kontakt.email.pgp.signed')</p>
 			<p>@lang('kontakt.email.pgp.pubkey', ['keyserver' => 'https://keys.openpgp.org/search?q=' . urlencode($to_mail)])</p>
 			<p class="contact-fingerprint">@lang('kontakt.email.pgp.fingerprint')</p>
+			<h3>@lang('kontakt.email.pgp.replies.heading')</h3>
+			<p>@lang('kontakt.email.pgp.replies.how')</p>
+			<ul>
+				@foreach(trans('kontakt.email.pgp.replies.trusted_when') as $rule)
+					<li>{!! $rule !!}</li>
+				@endforeach
+			</ul>
+			<p>@lang('kontakt.email.pgp.replies.otherwise')</p>
+			<p>@lang('kontakt.email.pgp.replies.tofu')</p>
+			<p>@lang('kontakt.email.pgp.replies.never_plain')</p>
 		</details>
 	</section>
 

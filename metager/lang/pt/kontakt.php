@@ -3,7 +3,18 @@ return [
     'email' => [
         'pgp' => [
             'summary' => 'Escrever cifrado (PGP)',
-            'description' => 'Os nossos e-mails são assinados criptograficamente. Se pretender verificar a assinatura ou enviar o seu correio encriptado, utilize a seguinte chave pública. Se pretender receber uma resposta encriptada, anexe a sua chave pública ao seu correio encriptado e assinado.',
+            'signed' => 'Todos os e-mails que enviamos são assinados com a nossa chave OpenPGP, que também segue no cabeçalho Autocrypt. Use esta chave para nos escrever de forma cifrada:',
+            'replies' => [
+                'heading' => 'Respostas cifradas',
+                'how' => 'Respondemos cifrado automaticamente assim que tivermos a sua chave e confiarmos nela. Para isso, assine o seu e-mail. Obtemos a sua chave do e-mail (em anexo ou no cabeçalho Autocrypt) ou de keys.openpgp.org, e usamo-la por iniciativa própria se',
+                'trusted_when' => [
+                    'keys.openpgp.org a fornecer para o seu endereço (ou seja, o endereço está lá verificado), ou',
+                    'o seu e-mail tiver uma assinatura DKIM válida do seu domínio de envio.',
+                ],
+                'otherwise' => 'Caso contrário, alguém da nossa equipa confirma-a primeiro manualmente. A partir daí, ciframos tudo o que lhe enviamos, não apenas as respostas.',
+                'tofu' => 'Confiamos na primeira chave que recebermos assim para o seu endereço (Trust on First Use). Não adotamos automaticamente uma nova chave para o mesmo endereço: até a verificarmos, continuamos a cifrar com a anterior.',
+                'never_plain' => 'Nunca respondemos sem cifra a um e-mail cifrado. Sem a sua chave, não podemos responder — por isso, assine sempre os e-mails cifrados que nos enviar.',
+            ],
             'pubkey' => 'PGP Publickey: <a href="/download/pubkey.asc" download="0x2185CC8F3CA782EC.asc">0x2185CC8F3CA782EC</a> ou em <a href=":keyserver" target="_blank" rel="noopener">keys.openpgp.org</a>',
             'fingerprint' => 'Impressão digital PGP: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],

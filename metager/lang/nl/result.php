@@ -20,6 +20,11 @@ return [
         'direct' => 'Direct openen',
         'direct-short' => 'Direct',
         'togglelabel' => 'resultatenopties omschakelen',
+        'open' => 'Openen',
+        'newtab' => 'In een nieuw tabblad openen',
+        'anonym-short' => 'Anoniem',
+        'newtab-short' => 'Nieuw tabblad',
+        'anonym' => 'Anoniem openen',
     ],
     'sitelinks' => [
         'sections' => 'Alle :count secties',
@@ -33,9 +38,13 @@ return [
     'image' => [
         'download' => 'Afbeelding downloaden',
         'copyright' => 'Afbeeldingen kunnen auteursrechtelijk beschermd zijn.',
+        'proxy' => 'Pagina anoniem openen',
     ],
     'more-news' => 'meer',
     'alt' => [
         'more' => 'Meer',
+    ],
+    'quicktips' => [
+        'heading' => 'Snelle tips',
     ],
 ];

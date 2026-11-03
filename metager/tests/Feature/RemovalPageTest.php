@@ -71,6 +71,9 @@ class RemovalPageTest extends TestCase
             }
             $this->assertNotSame($provider["note"], __($provider["note"], [], "de"), "[$id] note has no German text");
             $this->assertNotSame($provider["note"], __($provider["note"], [], "en"), "[$id] note has no English text");
+            if ($provider["type"] === "provider" && array_filter($provider["links"]) === []) {
+                $this->assertNotEmpty($provider["contact"], "[$id] has no form and no contact: the card would have nowhere to send people.");
+            }
             $anchors[] = $provider["anchor"];
         }
 

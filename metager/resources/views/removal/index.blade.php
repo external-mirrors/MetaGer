@@ -76,6 +76,9 @@
 						<p>{{ __($provider['note']) }}</p>
 						@if($provider['type'] === 'metager')
 							<p class="removal-provider-links"><a href="{{ route('contact') }}">@lang('removal.providers.us')</a></p>
+						@elseif(empty(array_filter($provider['links'])))
+							{{-- No form for anything: one contact line, not three identical ones. --}}
+							<p class="removal-provider-links"><a href="{{ $provider['contact'] }}" rel="noopener noreferrer">@lang('removal.providers.no_form', ['name' => $provider['name']])</a></p>
 						@else
 							<dl class="removal-provider-links">
 								@foreach($kinds as $kind)

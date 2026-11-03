@@ -197,6 +197,31 @@ class ContactPageTest extends TestCase
         $this->assertStringContainsString("5FA5 2398 C382 B498 B14A", $folded);
     }
 
+    /**
+     * The fold says how suma-crm actually decides to answer encrypted
+     * (App\Pgp\KeyDiscovery there): the sender signs; the key comes from the
+     * mail or keys.openpgp.org; it is used by itself only when
+     * keys.openpgp.org serves it for the address or the mail passed DKIM for
+     * its From domain, otherwise after a person confirms it; the first such
+     * key is trusted and a later one is not swapped in silently; and a reply
+     * to an encrypted mail never goes out in clear text. If suma-crm's rules
+     * change, this text has to change with them.
+     */
+    public function testPgpFoldExplainsWhenWeAnswerEncrypted(): void
+    {
+        $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
+        $fold = strpos($content, '<details class="contact-pgp">');
+        $folded = substr($content, $fold, strpos($content, "</details>", $fold) - $fold);
+
+        $this->assertStringContainsString("signieren Sie Ihre E-Mail", $folded);
+        $this->assertStringContainsString("Autocrypt", $folded);
+        $this->assertStringContainsString("keys.openpgp.org ihn für Ihre Adresse ausgibt", $folded);
+        $this->assertStringContainsString("DKIM", $folded);
+        $this->assertStringContainsString("Trust on First Use", $folded);
+        $this->assertStringContainsString("nie unverschlüsselt", $folded);
+        $this->assertStringNotContainsString("fügen Sie bitte Ihren öffentlichen Schlüssel an", $folded);
+    }
+
     /** Post is welcome; the page just says email is faster. */
     public function testThePostalCardDoesNotTalkPeopleOutOfWriting(): void
     {

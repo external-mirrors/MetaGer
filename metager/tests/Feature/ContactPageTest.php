@@ -106,4 +106,51 @@ class ContactPageTest extends TestCase
         $this->assertFileDoesNotExist(resource_path("js/contact.js"));
         $this->assertStringNotContainsString("contact.js", file_get_contents(base_path("vite.config.js")));
     }
+
+    /**
+     * The most frequent mail we cannot act on is "please remove this result":
+     * MetaGer shows other engines' results. The page sends people to the
+     * removal guide before it shows an address.
+     */
+    public function testTheRemovalGuideComesBeforeAnyAddress(): void
+    {
+        $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
+
+        $guide = strpos($content, '/de-DE/entfernen"');
+        $mail = strpos($content, 'href="mailto:');
+
+        $this->assertNotFalse($guide, "The contact page does not link to the removal guide.");
+        $this->assertNotFalse($mail);
+        $this->assertLessThan($mail, $guide, "The removal guide has to come before the email address.");
+    }
+
+    /** @return array<string, array{0: string}> */
+    public static function topicPaths(): array
+    {
+        return [
+            "key" => ["/de-DE/hilfe/schluessel"],
+            "orders" => ["/de-DE/konto/bestellungen"],
+            "donation" => ["/de-DE/spende"],
+            "help" => ["/de-DE/hilfe"],
+            "privacy" => ["/de-DE/datenschutz"],
+        ];
+    }
+
+    #[DataProvider("topicPaths")]
+    public function testFrequentQuestionsLinkToTheirPages(string $path): void
+    {
+        $this->get("/de-DE/kontakt")
+            ->assertOk()
+            ->assertSee($path . '"', false);
+    }
+
+    public function testThePageNeedsNoScriptOfItsOwn(): void
+    {
+        $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
+        $start = strpos($content, '<div id="kontakt">');
+        $end = strpos($content, '</main>', $start);
+
+        $this->assertNotFalse($start);
+        $this->assertStringNotContainsString("<script", substr($content, $start, $end === false ? null : $end - $start));
+    }
 }

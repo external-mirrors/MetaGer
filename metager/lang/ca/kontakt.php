@@ -18,4 +18,38 @@ return [
         '2' => 'Preferim el contacte digital. Tanmateix, si considereu necessari contactar amb nosaltres per correu postal, podeu escriure a:',
         '3' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nAlemanya",
     ],
+    'intro' => 'Abans d’escriure: moltes preguntes ja tenen resposta aquí — normalment més ràpida que per correu.',
+    'removal' => [
+        'heading' => 'Voleu que s’elimini un resultat de cerca?',
+        'text' => 'Llegiu primer la nostra guia. MetaGer mostra els resultats d’altres cercadors, de manera que un resultat només es pot eliminar al lloc web i en aquests cercadors. La guia explica on i com.',
+        'link' => 'Llegiu la guia',
+    ],
+    'topics' => [
+        'heading' => 'Altres consultes habituals',
+        'key' => [
+            'title' => 'Clau de MetaGer i tokens',
+            'text' => 'Com funciona la clau, recàrrega i saldo',
+        ],
+        'orders' => [
+            'title' => 'Comandes i factures',
+            'text' => 'Trobeu una comanda, rebuts i reemborsaments',
+        ],
+        'donation' => [
+            'title' => 'Feu un donatiu',
+            'text' => 'Doneu suport a MetaGer amb un donatiu',
+        ],
+        'membership' => [
+            'title' => 'Feu-vos-en membre',
+            'text' => 'Uniu-vos a SUMA-EV, l’associació que hi ha darrere de MetaGer',
+        ],
+        'help' => [
+            'title' => 'Ajuda per a la cerca',
+            'text' => 'Funcions, configuració i preguntes freqüents',
+        ],
+        'privacy' => [
+            'title' => 'Privadesa',
+            'text' => 'Què desem — i què no',
+        ],
+    ],
+    'reach' => 'Com contactar-nos',
 ];

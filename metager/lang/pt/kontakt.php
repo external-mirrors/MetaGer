@@ -21,4 +21,38 @@ Alemanha",
         'pgp' => 'Encriptação',
         '1' => 'Contacto',
     ],
+    'intro' => 'Antes de nos escrever: muitas perguntas já têm resposta aqui — normalmente mais rápida do que por e-mail.',
+    'removal' => [
+        'heading' => 'Pretende que um resultado de pesquisa seja removido?',
+        'text' => 'Leia primeiro o nosso guia. O MetaGer mostra os resultados de outros motores de pesquisa, pelo que um resultado só pode ser removido no sítio web e nesses motores de pesquisa. O guia explica onde e como.',
+        'link' => 'Ler o guia',
+    ],
+    'topics' => [
+        'heading' => 'Outros pedidos frequentes',
+        'key' => [
+            'title' => 'Chave MetaGer e tokens',
+            'text' => 'Como funciona a chave, carregamento e saldo',
+        ],
+        'orders' => [
+            'title' => 'Encomendas e faturas',
+            'text' => 'Encontrar uma encomenda, recibos e reembolsos',
+        ],
+        'donation' => [
+            'title' => 'Doar',
+            'text' => 'Apoie o MetaGer com um donativo',
+        ],
+        'membership' => [
+            'title' => 'Tornar-se membro',
+            'text' => 'Junte-se à SUMA-EV, a associação por trás do MetaGer',
+        ],
+        'help' => [
+            'title' => 'Ajuda na pesquisa',
+            'text' => 'Funções, definições e perguntas frequentes',
+        ],
+        'privacy' => [
+            'title' => 'Privacidade',
+            'text' => 'O que guardamos — e o que não guardamos',
+        ],
+    ],
+    'reach' => 'Como nos contactar',
 ];

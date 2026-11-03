@@ -8,6 +8,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AnonymousToken;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ChargeController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
@@ -186,14 +187,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
 
     // {url?} only fed the old contact form's "missing pages" hint. Still
     // accepted, so old /kontakt/… links (the sidebar's /kontakt/) land here.
-    Route::get('kontakt/{url?}', function () {
-        $to_mail = Localization::getLanguage() === "de" ? config("metager.metager.ticketsystem.germanmail") : config("metager.metager.ticketsystem.englishmail");
-        return view('kontakt.kontakt')
-            ->with('title', trans('titles.kontakt'))
-            ->with('to_mail', $to_mail)
-            ->with('navbarFocus', 'kontakt')
-            ->with("css", [Vite::asset('resources/less/metager/pages/contact.less')]);
-    })->name("contact");
+    Route::get('kontakt/{url?}', [ContactController::class, 'show'])->name("contact");
     Route::get('entfernen', [RemovalController::class, 'show'])->name('removal');
 
     Route::get('adblocker', function () {

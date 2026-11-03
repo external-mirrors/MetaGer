@@ -12,6 +12,11 @@ return [
         'direct' => 'Apri direttamente',
         'direct-short' => 'Diretto',
         'togglelabel' => 'per attivare le opzioni dei risultati',
+        'open' => 'Apri',
+        'newtab' => 'Apri in una nuova scheda',
+        'anonym-short' => 'In forma anonima',
+        'newtab-short' => 'Nuova scheda',
+        'anonym' => 'Apri in modo anonimo',
     ],
     'gefVon' => 'da',
     'advertisement' => 'Annuncio',
@@ -33,9 +38,13 @@ return [
     'image' => [
         'download' => 'Scarica l\'immagine',
         'copyright' => 'Le immagini possono essere protette da copyright.',
+        'proxy' => 'Apri la pagina in modo anonimo',
     ],
     'more-news' => 'di più',
     'alt' => [
         'more' => 'Di più',
+    ],
+    'quicktips' => [
+        'heading' => 'Consigli rapidi',
     ],
 ];

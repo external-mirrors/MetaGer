@@ -49,7 +49,7 @@ class Mojeek extends Searchengine
                     'pt_BR' => 'pt_BR',
                 ],
             ],
-            'engine-boost' => 1.2,
+            'engine-boost' => 0.8,
             'cache-duration' => 0,
             'disabled' => false,
             'filter-opt-in' => false,

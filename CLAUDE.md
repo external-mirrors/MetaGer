@@ -257,6 +257,25 @@ Two of these carry preserved quirks that look like bugs and are pinned as charac
 rather than fixed — `ResultDeduplicator`'s `changed` flag and the double-encoded host in
 `LinkBuilder`. Read the class docblock before "fixing" one.
 
+## Blocklist
+
+The operator blocklist — results MetaGer will not show, descriptions it blanks — is the
+`blocklist_entries` table (`App\Models\BlocklistEntry`), not files any more. suma-crm edits it
+live through `/api/blocklist`; `docs/blocklist-api.md` is the contract both sides test against
+(`BlocklistApiTest`, `BlocklistCheckTest`), so change it and both sides together. The routes are
+in `routes/api.php`, outside the `web` group, behind `CrmAuthorization` and `CRM_ADMIN_TOKEN`.
+
+`App\Search\Blacklists` compiles the table into a snapshot keyed by the Redis counter
+`blocklist:version`, which every model write bumps. FPM keeps nothing between requests, so the
+snapshot is also written as an OPcache-held PHP file per version under
+`storage/framework/cache/blocklist`: a search costs one `GET`, the database is read once per pod
+per edit, and with Redis or the database down the last snapshot stays — never an empty list.
+Values are normalised on both sides by `BlocklistNormalizer`; write entries through
+`normalizeValue`/`normalizeTerms`, never raw. Tests that touch entries use `UsesInMemorySqlite`;
+`TestCase::setUp` flushes the snapshot because the counter is shared by the whole suite.
+`POST /api/blocklist/check` runs real searches with the filter bypassed (`ListingCheck`) — it is
+the one place a request runs several searches, by swapping the request-scoped singletons.
+
 ## What the result page actually spends its time on
 
 Profiled with xdebug tracing against a warm result page with engines faked, which is the only

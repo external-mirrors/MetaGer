@@ -19,6 +19,7 @@ use App\Http\Controllers\MetaGerSearch;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Pictureproxy;
 use App\Http\Controllers\Prometheus;
+use App\Http\Controllers\RemovalController;
 use App\Http\Controllers\SearchEngineList;
 use App\Http\Controllers\SitesearchController;
 use App\Http\Controllers\StartpageController;
@@ -193,6 +194,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('navbarFocus', 'kontakt')
             ->with("css", [Vite::asset('resources/less/metager/pages/contact.less')]);
     })->name("contact");
+    Route::get('entfernen', [RemovalController::class, 'show'])->name('removal');
 
     Route::get('adblocker', function () {
         return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [Vite::asset('resources/less/metager/pages/adblocker.less')]]));

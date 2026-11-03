@@ -1,0 +1,193 @@
+@import "../variables.less";
+
+// /entfernen — where a search result can actually be removed.
+//
+// Same column and numbered steps as the key FAQ (pages/help.less, #key-faq),
+// so the help pages read as one family. Only the theme tokens from
+// variables.less carry colour, so light and dark follow the site's palette
+// switch without a second stylesheet. No script: the request kinds are
+// <details>, the table of contents is anchors.
+
+#removal {
+    max-width: 46rem;
+    margin: 0 auto;
+
+    .removal-lead {
+        font-size: 1.1rem;
+    }
+
+    .removal-toc {
+        border-left: 3px solid @metager-orange;
+        padding: 0.25rem 0 0.25rem 1rem;
+        margin: 1.5rem 0;
+
+        .removal-toc-label {
+            font-weight: bold;
+        }
+
+        ol {
+            margin: 0.25rem 0 0;
+            padding-left: 1.25rem;
+        }
+    }
+
+    // The anchors are linked from outside (suma-crm replies), so the target
+    // should not end up under the top edge, and should be visible as the one
+    // that was meant.
+    [id] {
+        scroll-margin-top: 1rem;
+    }
+
+    .removal-steps {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 2rem;
+        counter-reset: removal-step;
+
+        > .removal-step {
+            counter-increment: removal-step;
+            display: grid;
+            grid-template-columns: 2.5rem minmax(0, 1fr);
+            column-gap: 0.75rem;
+
+            &::before {
+                content: counter(removal-step);
+                grid-row: 1;
+                grid-column: 1;
+                align-self: start;
+                display: grid;
+                place-items: center;
+                width: 2rem;
+                aspect-ratio: 1 / 1;
+                margin-top: 0.15rem;
+                background-color: @accent-fill-color;
+                // Orange ground in both palettes, so the digit on it is dark
+                // in both, as in #key-faq.
+                color: @on-accent-color;
+                font-weight: bold;
+                line-height: 1;
+                border-radius: 50%;
+            }
+
+            > * {
+                grid-column: 2;
+            }
+
+            > h2 {
+                grid-row: 1;
+                font-size: 1.4rem;
+                margin: 0 0 0.5rem;
+            }
+        }
+    }
+
+    .removal-tips {
+        padding-left: 1.25rem;
+
+        > li + li {
+            margin-top: 0.4rem;
+        }
+    }
+
+    .removal-sources {
+        color: @secondary-text-color;
+    }
+
+    .removal-kinds {
+        display: grid;
+        gap: 0.5rem;
+
+        > details {
+            border: 1px solid @border-color;
+            border-radius: 6px;
+            padding: 0 0.75rem;
+
+            > summary {
+                cursor: pointer;
+                font-weight: bold;
+                padding: 0.6rem 0;
+            }
+
+            &[open] > summary {
+                border-bottom: 1px solid @metager-orange;
+                margin-bottom: 0.5rem;
+            }
+
+            &:target {
+                border-color: @metager-orange;
+            }
+        }
+    }
+
+    .removal-providers {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .removal-provider {
+        background-color: @card-background-color;
+        border: 1px solid @border-color;
+        border-radius: 6px;
+        padding: 1rem;
+
+        // Arriving from a reply's link: mark the provider that was meant.
+        &:target {
+            border-color: @metager-orange;
+            box-shadow: 0 0 0 2px @metager-orange;
+        }
+
+        > h3 {
+            font-size: 1.2rem;
+            margin: 0 0 0.25rem;
+        }
+
+        > .removal-provider-foki {
+            color: @muted-text-color;
+            font-size: 0.9rem;
+            margin-top: 0;
+        }
+    }
+
+    dl.removal-provider-links {
+        margin: 0.75rem 0 0;
+        display: grid;
+        gap: 0.5rem;
+
+        dt {
+            font-size: 0.85rem;
+            color: @muted-text-color;
+        }
+
+        dd {
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .removal-us-steps {
+        padding-left: 1.25rem;
+
+        > li + li {
+            margin-top: 0.4rem;
+        }
+    }
+
+    a.removal-contact {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        background-color: @accent-fill-color;
+        color: @on-accent-color;
+        font-weight: bold;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            text-decoration: underline;
+        }
+    }
+}

@@ -224,4 +224,86 @@ class RemovalPageTest extends TestCase
             ->assertOk()
             ->assertSee('href="' . route("contact") . '"', false);
     }
+
+    /**
+     * The page recommends asking at the source first, but it must not make
+     * that a condition for us to act. A search engine's duty to delist under
+     * Art. 17 GDPR stands on its own: the person need not go to the publisher
+     * first, and the duty holds even when the page stays up (CJEU C-131/12,
+     * Google Spain, paras. 85-88). The first version said we only hide a
+     * result "where removal at the source is not possible", which read as
+     * turning valid requests away.
+     */
+    public function testWritingToUsDoesNotRequireAskingTheSourceFirst(): void
+    {
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertDontSeeText("an der Quelle nicht möglich ist")
+            ->assertSeeText("Steht Ihnen gegenüber MetaGer ein Anspruch zu")
+            ->assertSeeText("müssen Sie sich nicht zuerst an die Webseite oder die Suchmaschinen wenden");
+    }
+
+    /**
+     * Art. 12(3) and (4) GDPR: an answer within a month, and if we do not act,
+     * the reasons and where to complain. suma-crm's removal cases run on the
+     * same one-month deadline (RemovalRequest::deadline_at).
+     */
+    public function testWritingToUsNamesTheDeadlineAndWhereToComplain(): void
+    {
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertSeeText("innerhalb eines Monats")
+            ->assertSeeText("Datenschutz-Aufsichtsbehörde");
+    }
+
+    /** One request per test: a second one is routed against the first one's locale-stripped state and 404s. */
+    public function testWritingToUsNamesTheDeadlineAndWhereToComplainInEnglish(): void
+    {
+        $this->followingRedirects()->get("/en-US/entfernen", ["Sec-Fetch-Mode" => "navigate"])
+            ->assertOk()
+            ->assertSeeText("within one month")
+            ->assertSeeText("data protection supervisory authority");
+    }
+
+    /**
+     * The page used to say MetaGer keeps no copy of the results. It caches
+     * every engine's answer, for up to an hour by default
+     * (SearchengineConfiguration::$cacheDuration). The page now says "up to
+     * an hour", so this fails when an engine in use is cached for longer.
+     */
+    public function testThePageDoesNotUnderstateHowLongWeCacheResults(): void
+    {
+        $registry = new SearchEngineRegistry();
+        foreach ($registry->foki as $fokus) {
+            foreach ($fokus->sumas as $engine) {
+                $config = $registry->sumas->{$engine};
+                if ($config->disabled ?? false) {
+                    continue;
+                }
+                $this->assertLessThanOrEqual(
+                    60,
+                    (new \App\Models\SearchengineConfiguration($config))->cacheDuration,
+                    "[$engine] is cached for longer than the hour lang/*/removal.php providers.text names.",
+                );
+            }
+        }
+
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertDontSeeText("MetaGer speichert diese Ergebnisse nicht selbst")
+            ->assertSeeText("höchstens eine Stunde");
+    }
+
+    /**
+     * Unverified, and for personal data doubtful: Google delists for people
+     * searching from Europe, and Serper does not promise to query from there.
+     * The card must not promise that Google's delisting reaches MetaGer.
+     */
+    public function testTheGoogleCardDoesNotPromiseThatDelistingReachesUs(): void
+    {
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertDontSeeText("fehlt deshalb auch in MetaGers Google-Ergebnissen")
+            ->assertSeeText("Persönliche Daten blendet Google nur für Suchende in Europa aus");
+    }
 }

@@ -39,7 +39,7 @@ return [
     ],
     'providers' => [
         'heading' => 'Pregunteu als cercadors que mostra MetaGer',
-        'text' => 'MetaGer no en guarda cap còpia pròpia. Consulta els cercadors de sota en el moment de la vostra cerca i mostra el que retornen. Per això, quan un d’ells elimina un resultat, també desapareix de MetaGer.',
+        'text' => 'MetaGer no té cap col·lecció pròpia d’aquests resultats. Consulta els cercadors de sota en el moment de la vostra cerca, mostra el que retornen i en desa la resposta com a màxim una hora. Per això, quan un d’ells elimina un resultat, també desapareix del que MetaGer en rep.',
         'which' => 'A la pàgina de resultats de MetaGer, sota cada resultat, hi diu de quin cercador prové. Un resultat pot venir de diversos; en aquest cas, pregunteu a cadascun.',
         'shows' => 'A MetaGer a:',
         'kinds' => [
@@ -50,7 +50,7 @@ return [
         'no_form' => 'Sense formulari — contacteu amb :name',
         'contact' => 'Contacteu amb :name',
         'us' => 'Escriviu-nos',
-        'google' => 'MetaGer rep els resultats de Google a través del servei Serper. Per tant, un resultat que Google elimina també desapareix dels resultats de Google a MetaGer.',
+        'google' => 'MetaGer rep els resultats de Google a través del servei Serper. El que Google elimina del seu índex també desapareix de MetaGer. Ara bé, les dades personals Google només les amaga a qui cerca des d’Europa; no podem garantir que això afecti les consultes de MetaGer a través de Serper. Ho comprovem quan ens escriviu.',
         'brave' => 'Brave Search té un índex propi. Les sol·licituds sobre dades personals s’envien per correu electrònic a privacy@brave.com amb l’assumpte «RTBF request»; la pàgina enllaçada explica què ha de contenir el correu.',
         'yandex' => 'Yandex té un índex propi. Per a cada sol·licitud hi ha un formulari diferent a les seves pàgines d’ajuda.',
         'mojeek' => 'Mojeek té un índex propi i no edita els resultats a mà. Retira pàgines per motius legals a petició; escriviu-li des de la pàgina de contacte i indiqueu els URL exactes.',
@@ -67,7 +67,8 @@ return [
         'steps' => [
             'Comprovem si MetaGer mostra el resultat per a les cerques que indiqueu i de quins cercadors prové.',
             'Us responem amb els enllaços adequats per a exactament aquests cercadors — els d’aquesta pàgina.',
-            'Només quan no és possible eliminar-lo a l’origen i la llei ens ho exigeix, l’amaguem nosaltres a MetaGer. Això només afecta MetaGer: el resultat continua al lloc web i a tots els altres cercadors.',
+            'Si teniu un dret davant de MetaGer mateix, per exemple segons l’art. 17 del RGPD en les cerques del vostre nom, amaguem el resultat a MetaGer, encara que continuï a l’origen. No cal que abans us adreceu al lloc web ni als cercadors. Amagar-lo només afecta MetaGer: el resultat continua al lloc web i a tots els altres cercadors.',
+            'Responem en el termini d’un mes. Si una sol·licitud és especialment complexa, pot trigar fins a dos mesos més; us ho diem dins del primer mes. Si no amaguem un resultat, us en donem els motius. Aleshores podeu presentar una reclamació davant d’una autoritat de control de protecció de dades o acudir als tribunals.',
         ],
         'include' => 'Perquè sigui ràpid, indiqueu les adreces exactes (URL) dels resultats i les cerques en què apareixen.',
         'contact' => 'A la pàgina de contacte',

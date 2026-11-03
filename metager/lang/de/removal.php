@@ -39,7 +39,7 @@ return [
     ],
     'providers' => [
         'heading' => 'Fragen Sie die Suchmaschinen, die MetaGer zeigt',
-        'text' => 'MetaGer speichert diese Ergebnisse nicht selbst. Wir fragen die Suchmaschinen unten in dem Moment, in dem Sie suchen, und zeigen, was sie liefern. Wird ein Ergebnis bei einer von ihnen entfernt, verschwindet es deshalb auch bei MetaGer.',
+        'text' => 'MetaGer hat keine eigene Sammlung dieser Ergebnisse. Wir fragen die Suchmaschinen unten in dem Moment, in dem Sie suchen, zeigen, was sie liefern, und speichern ihre Antwort höchstens eine Stunde zwischen. Entfernt eine von ihnen ein Ergebnis, fehlt es danach auch in dem, was MetaGer von ihr bekommt.',
         'which' => 'Von welcher Suchmaschine ein Ergebnis stammt, steht auf MetaGers Ergebnisseite unter dem Ergebnis. Kommt es von mehreren, fragen Sie bitte jede davon.',
         'shows' => 'Bei MetaGer in:',
         'kinds' => [
@@ -50,7 +50,7 @@ return [
         'no_form' => 'Kein Formular — :name kontaktieren',
         'contact' => ':name kontaktieren',
         'us' => 'Schreiben Sie uns',
-        'google' => 'MetaGer bezieht Googles Ergebnisse über den Dienst Serper. Ein Ergebnis, das Google entfernt, fehlt deshalb auch in MetaGers Google-Ergebnissen.',
+        'google' => 'MetaGer bezieht Googles Ergebnisse über den Dienst Serper. Was Google aus seinem Index entfernt, fehlt danach auch bei MetaGer. Persönliche Daten blendet Google nur für Suchende in Europa aus; ob das bei MetaGers Abfragen über Serper greift, können wir nicht zusagen. Wir prüfen es, wenn Sie uns schreiben.',
         'brave' => 'Brave Search betreibt einen eigenen Index. Anträge zu persönlichen Daten gehen per E-Mail an privacy@brave.com mit dem Betreff „RTBF request“; die verlinkte Seite sagt, was die E-Mail enthalten muss.',
         'yandex' => 'Yandex betreibt einen eigenen Index. Für jedes Anliegen gibt es auf den Hilfeseiten ein eigenes Formular.',
         'mojeek' => 'Mojeek betreibt einen eigenen Index und bearbeitet seine Ergebnisse nicht von Hand. Aus rechtlichen Gründen entfernt Mojeek Seiten auf Antrag; schreiben Sie über die Kontaktseite und nennen Sie die genauen Adressen.',
@@ -67,7 +67,8 @@ return [
         'steps' => [
             'Wir prüfen, ob MetaGer das Ergebnis bei den Suchen zeigt, die Sie nennen, und von welchen Suchmaschinen es stammt.',
             'Wir antworten mit den passenden Links für genau diese Suchmaschinen — denen auf dieser Seite.',
-            'Nur wo das Entfernen an der Quelle nicht möglich ist und das Recht es von uns verlangt, blenden wir das Ergebnis bei MetaGer selbst aus. Das betrifft nur MetaGer: Auf der Webseite und in allen anderen Suchmaschinen bleibt es stehen.',
+            'Steht Ihnen gegenüber MetaGer ein Anspruch zu, etwa nach Art. 17 DSGVO bei Suchen nach Ihrem Namen, blenden wir das Ergebnis bei MetaGer aus, auch wenn es an der Quelle stehen bleibt. Dafür müssen Sie sich nicht zuerst an die Webseite oder die Suchmaschinen wenden. Das Ausblenden betrifft nur MetaGer: Auf der Webseite und in allen anderen Suchmaschinen bleibt das Ergebnis stehen.',
+            'Wir antworten innerhalb eines Monats. Ist eine Anfrage besonders aufwendig, kann es bis zu zwei Monate länger dauern; das sagen wir Ihnen dann innerhalb des ersten Monats. Blenden wir ein Ergebnis nicht aus, nennen wir Ihnen die Gründe. Sie können sich dann bei einer Datenschutz-Aufsichtsbehörde beschweren oder vor Gericht gehen.',
         ],
         'include' => 'Damit es schnell geht, nennen Sie bitte die genauen Adressen (URLs) der Ergebnisse und die Suchbegriffe, bei denen sie erscheinen.',
         'contact' => 'Zur Kontaktseite',

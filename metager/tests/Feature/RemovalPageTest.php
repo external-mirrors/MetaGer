@@ -268,8 +268,11 @@ class RemovalPageTest extends TestCase
     /**
      * The page used to say MetaGer keeps no copy of the results. It caches
      * every engine's answer, for up to an hour by default
-     * (SearchengineConfiguration::$cacheDuration). The page now says "up to
-     * an hour", so this fails when an engine in use is cached for longer.
+     * (SearchengineConfiguration::$cacheDuration), and the result page keeps
+     * what it showed for another hour so "load more" can rebuild it
+     * (MetaGerSearch, "loader_<uid>"). The page says "a few hours", as the
+     * privacy policy does (privacy.contexts.search.query); this fails when an
+     * engine in use is cached for longer than the hour that wording assumes.
      */
     public function testThePageDoesNotUnderstateHowLongWeCacheResults(): void
     {
@@ -283,7 +286,7 @@ class RemovalPageTest extends TestCase
                 $this->assertLessThanOrEqual(
                     60,
                     (new \App\Models\SearchengineConfiguration($config))->cacheDuration,
-                    "[$engine] is cached for longer than the hour lang/*/removal.php providers.text names.",
+                    "[$engine] is cached for longer than an hour; lang/*/removal.php providers.text says \"a few hours\".",
                 );
             }
         }
@@ -291,7 +294,8 @@ class RemovalPageTest extends TestCase
         $this->get("/de-DE/entfernen")
             ->assertOk()
             ->assertDontSeeText("MetaGer speichert diese Ergebnisse nicht selbst")
-            ->assertSeeText("höchstens eine Stunde");
+            ->assertDontSeeText("höchstens eine Stunde")
+            ->assertSeeText("für wenige Stunden");
     }
 
     /**
@@ -305,5 +309,39 @@ class RemovalPageTest extends TestCase
             ->assertOk()
             ->assertDontSeeText("fehlt deshalb auch in MetaGers Google-Ergebnissen")
             ->assertSeeText("Persönliche Daten blendet Google nur für Suchende in Europa aus");
+    }
+
+    /**
+     * Not wanting the content is right; discouraging the address was not. A
+     * search engine that is told about a clearly illegal result has to act
+     * on it, and the page must not look as if we would rather not know.
+     */
+    public function testIllegalContentAsksForTheAddressButNeverTheContent(): void
+    {
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertDontSeeText("weder die Inhalte noch Links darauf")
+            ->assertSeeText("nennen Sie uns nur seine Adresse (URL) als Text")
+            ->assertSeeText("nie die Inhalte selbst");
+    }
+
+    /**
+     * suma-crm may ask for proof of identity and keeps it with the case;
+     * otherwise anyone could have any address removed. The page says so up
+     * front, with what we need it for and that it can be blacked out
+     * (Art. 12(6) GDPR, data minimisation), right after what to include.
+     */
+    public function testWritingToUsSaysWhenWeAskForProofOfIdentity(): void
+    {
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+
+        $this->assertStringContainsString("etwa eine Kopie Ihres Ausweises", $content);
+        $this->assertStringContainsString("schwärzen", $content);
+        $this->assertStringContainsString("mit Ihren übrigen Angaben", $content);
+        $this->assertLessThan(
+            strpos($content, "Kopie Ihres Ausweises"),
+            strpos($content, "die genauen Adressen (URLs)"),
+            "The identity note belongs after what to include in the mail.",
+        );
     }
 }

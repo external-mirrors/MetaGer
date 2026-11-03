@@ -99,6 +99,10 @@ class BlocklistNormalizer
         if (str_starts_with($host, "www.")) {
             $host = substr($host, 4);
         }
+        // parse_url() takes "not a url" for a host; no result ever has one.
+        if (preg_match('/\s/u', $host)) {
+            return ["", ""];
+        }
 
         return [$host, $parts["path"] ?? ""];
     }

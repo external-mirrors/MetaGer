@@ -53,6 +53,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        // First, so nothing in the web routes can shadow them.
+        $this->mapApiRoutes();
+
         $this->mapWebRoutes();
 
         $this->mapSessionRoutes();
@@ -74,6 +77,30 @@ class RouteServiceProvider extends ServiceProvider
             'namespace' => $this->namespace,
         ], function ($router) {
             require base_path('routes/web.php');
+        });
+    }
+
+    /**
+     * Server-to-server JSON APIs (routes/api.php).
+     *
+     * Deliberately outside the `web` group: nothing there applies to a caller
+     * that authenticates with a bearer token and sends no cookies, and
+     * LocalizationRedirect would relocate a request that forgot its Accept
+     * header to another domain. Each route names its own authorization.
+     *
+     * Not the framework's `api` group either: its throttle keys on
+     * `$request->user()`, which here would resolve the default guard for a
+     * caller that is not a user. The one endpoint that needs a limit sets its
+     * own (BlocklistCheckController).
+     *
+     * @return void
+     */
+    protected function mapApiRoutes()
+    {
+        Route::group([
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/api.php');
         });
     }
 

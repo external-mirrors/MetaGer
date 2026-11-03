@@ -37,6 +37,8 @@ Germany",
     ],
     'phone' => [
         'heading' => 'Telefon',
+        'hours' => 'Montag bis Freitag, :from–:to Uhr (deutsche Zeit)',
+        'outside' => 'In dieser Zeit erreichen Sie uns fast immer, außerhalb fast nie. Schreiben Sie uns dann besser eine E-Mail.',
     ],
     'topics' => [
         'heading' => 'Häufige Anliegen',

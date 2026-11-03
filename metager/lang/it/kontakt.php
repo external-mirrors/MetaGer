@@ -37,6 +37,8 @@ Germania",
     ],
     'phone' => [
         'heading' => 'Telefono',
+        'hours' => 'Dal lunedì al venerdì, dalle :from alle :to (ora tedesca)',
+        'outside' => 'In questi orari ci trovate quasi sempre, al di fuori quasi mai. In quel caso è meglio scriverci un’e-mail.',
     ],
     'topics' => [
         'heading' => 'Domande frequenti',

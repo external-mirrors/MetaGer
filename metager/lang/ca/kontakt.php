@@ -34,6 +34,8 @@ return [
     ],
     'phone' => [
         'heading' => 'Telèfon',
+        'hours' => 'De dilluns a divendres, de :from a :to (hora alemanya)',
+        'outside' => 'En aquest horari gairebé sempre us respondrem; fora d’aquest horari, gairebé mai. Llavors és millor que ens escriviu un correu electrònic.',
     ],
     'topics' => [
         'heading' => 'Consultes habituals',

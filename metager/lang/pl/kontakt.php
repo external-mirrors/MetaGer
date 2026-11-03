@@ -1,16 +1,5 @@
 <?php
 return [
-    'form' => [
-        '2' => 'Możesz wysłać nam anonimową wiadomość za pomocą tego formularza. Jeśli zdecydujesz się nie podawać swojego adresu e-mail, oczywiście nie otrzymasz odpowiedzi.',
-        'name' => 'Nazwa',
-        '5' => 'Twój adres e-mail (opcjonalnie)',
-        '6' => 'Twoja wiadomość',
-        '7' => 'Przedmiot',
-        '9' => 'Do 5 załączników (rozmiar pliku < 5 MB)',
-        '1' => 'Anonimowy formularz kontaktowy',
-        '8' => 'Wyślij',
-        'temperror' => 'Obecnie doświadczamy trudności. Nasz formularz kontaktowy wkrótce powróci.',
-    ],
     'letter' => [
         '1' => 'Listownie',
         '2' => 'Preferujemy kontakt cyfrowy. Jeśli jednak uznasz za konieczne skontaktowanie się z nami drogą pocztową, możesz wysłać do nas wiadomość na adres:',
@@ -18,13 +7,6 @@ return [
 Postfach 51 01 43\r
 D-30631 Hannover\r
 Niemcy",
-    ],
-    'error' => [
-        '1' => 'Przepraszamy, ale niestety nie otrzymaliśmy żadnych danych z prośbą o kontakt. Wiadomość nie została wysłana.',
-        '2' => 'Wystąpił błąd podczas dostarczania wiadomości. Możesz skontaktować się z nami bezpośrednio pod adresem :email',
-    ],
-    'success' => [
-        '1' => 'Wiadomość została dostarczona pomyślnie. Pierwsza automatyczna odpowiedź została wysłana na adres :email.',
     ],
     'headline' => [
         '1' => 'Kontakt',

@@ -75,5 +75,4 @@ return [
             'rule-name' => 'mensagem personalizada',
         ],
     ],
-    'pcsrf' => 'Infelizmente, isto não funcionou. Por favor, tente novamente.',
 ];

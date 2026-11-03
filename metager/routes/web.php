@@ -14,7 +14,6 @@ use App\Http\Controllers\HealthcheckController;
 use App\Http\Controllers\KeyCreationController;
 use App\Http\Controllers\LangSelector;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\MailController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\MetaGerSearch;
 use App\Http\Controllers\OrderController;
@@ -184,18 +183,17 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('navbarFocus', 'kontakt');
     });
 
-    Route::get('kontakt/{url?}', function ($url = "") {
+    // {url?} only fed the old contact form's "missing pages" hint. Still
+    // accepted, so old /kontakt/… links (the sidebar's /kontakt/) land here.
+    Route::get('kontakt/{url?}', function () {
         $to_mail = Localization::getLanguage() === "de" ? config("metager.metager.ticketsystem.germanmail") : config("metager.metager.ticketsystem.englishmail");
         return view('kontakt.kontakt')
             ->with('title', trans('titles.kontakt'))
             ->with('to_mail', $to_mail)
             ->with('navbarFocus', 'kontakt')
-            ->with('url', $url)
-            ->with('js', [Vite::asset('resources/js/contact.js')])
             ->with("css", [Vite::asset('resources/less/metager/pages/contact.less')]);
     })->name("contact");
 
-    //Route::post('kontakt', [MailController::class, 'contactMail']);
     Route::get('adblocker', function () {
         return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [Vite::asset('resources/less/metager/pages/adblocker.less')]]));
     })->name("adblocker");

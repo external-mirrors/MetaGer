@@ -8,28 +8,10 @@ Postfach 51 01 43\r
 D-30631 Hannover\r
 Duitsland",
     ],
-    'error' => [
-        '1' => 'Het spijt ons, maar helaas hebben we geen gegevens ontvangen bij uw contactverzoek. Het bericht is niet verzonden.',
-        '2' => 'Er is een fout opgetreden bij het afleveren van uw bericht. U kunt rechtstreeks contact met ons opnemen onder :email',
-    ],
-    'success' => [
-        '1' => 'Je bericht is succesvol afgeleverd. Een eerste automatisch antwoord werd verzonden naar :email.',
-    ],
     'headline' => [
         '1' => 'Neem contact op met',
         '2' => 'E-mail',
         'pgp' => 'Encryptie',
-    ],
-    'form' => [
-        '1' => 'Anoniem contactformulier',
-        '2' => 'Je kunt ons een anoniem bericht sturen via dit formulier. Als je ervoor kiest om je e-mailadres niet in te vullen, ontvang je uiteraard geen antwoord.',
-        'name' => 'Naam',
-        '5' => 'Je e-mailadres (optioneel)',
-        '6' => 'Uw bericht',
-        '7' => 'Onderwerp',
-        '8' => 'Stuur',
-        '9' => 'Maximaal 5 bijlagen (bestandsgrootte < 5 MB)',
-        'temperror' => 'We ondervinden momenteel problemen. Ons contactformulier is binnenkort weer beschikbaar.',
     ],
     'email' => [
         'text' => 'Je kunt ons bereiken door een mail te sturen naar: <a href="mailto::mail">:mail</a>',

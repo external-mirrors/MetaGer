@@ -75,5 +75,4 @@ return [
             'rule-name' => 'Brugerdefineret besked',
         ],
     ],
-    'pcsrf' => 'Det virkede desværre ikke. Prøv venligst igen.',
 ];

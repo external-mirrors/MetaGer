@@ -5,17 +5,6 @@ return [
         '2' => 'E-Mail',
         'pgp' => 'Verschlüsselung',
     ],
-    'form' => [
-        '1' => 'Anonymes Kontakt-Formular',
-        '2' => 'Mit diesem Formular können Sie uns eine anonyme Nachricht zukommen lassen. Wenn Sie Ihre E-Mail-Adresse nicht angeben, werden Sie natürlich keine Antwort erhalten.',
-        'name' => 'Name',
-        '5' => 'Ihre E-Mail Adresse (optional)',
-        '6' => 'Ihre Nachricht',
-        '7' => 'Betreff',
-        '8' => 'Senden',
-        '9' => 'Bis zu 5 Anhänge hinzufügen (Dateigröße < 5 MB)',
-        'temperror' => 'Wir haben derzeit Schwierigkeiten. Unser Kontakt-Formular wird bald wieder verfügbar sein.',
-    ],
     'letter' => [
         '1' => 'Per Brief-Post',
         '2' => 'Wir ziehen es vor, auf digitalem Wege kontaktiert zu werden. Wenn Sie jedoch eine postalische Kontaktaufnahme als unbedingt nötig erachten, erreichen Sie uns unter der folgenden Adresse:',
@@ -23,13 +12,6 @@ return [
 Postfach 51 01 43\r
 D-30631 Hannover\r
 Germany",
-    ],
-    'error' => [
-        '1' => 'Tut uns leid, aber leider haben wir mit Ihrer Kontaktanfrage keine Daten erhalten. Die Nachricht wurde nicht versandt.',
-        '2' => 'Beim Versand Ihrer Nachricht ist ein Fehler aufgetreten. Sie können uns direkt unter folgender E-Mail Adresse kontaktieren: :email',
-    ],
-    'success' => [
-        '1' => 'Ihre Nachricht wurde uns erfolgreich zugestellt. Eine erste automatische Bestätigung haben wir an :email gesendet.',
     ],
     'email' => [
         'text' => 'Sie können uns eine E-Mail schicken an: <a href="mailto::mail">:mail</a>',

@@ -1,27 +1,9 @@
 <?php
 return [
-    'error' => [
-        '1' => 'Olemme pahoillamme, mutta emme valitettavasti saaneet mitään tietoja yhteydenottopyyntösi yhteydessä. Viestiä ei lähetetty.',
-        '2' => 'Viestisi toimittamisessa tapahtui virhe. Voit ottaa meihin yhteyttä suoraan osoitteessa :email',
-    ],
-    'success' => [
-        '1' => 'Viestisi toimitettiin onnistuneesti. Ensimmäinen automaattinen vastaus lähetettiin osoitteeseen :email.',
-    ],
     'headline' => [
         '1' => 'Ota yhteyttä',
         '2' => 'Sähköposti',
         'pgp' => 'Salaus',
-    ],
-    'form' => [
-        '1' => 'Anonyymi yhteydenottolomake',
-        '2' => 'Voit lähettää meille nimettömän viestin tällä lomakkeella. Jos päätät olla ilmoittamatta sähköpostiosoitettasi, et tietenkään saa vastausta.',
-        'name' => 'Nimi',
-        '5' => 'Sähköpostiosoitteesi (vapaaehtoinen)',
-        '6' => 'Viestisi',
-        '7' => 'Aihe',
-        '8' => 'Lähetä',
-        '9' => 'Enintään 5 liitetiedostoa (tiedostokoko < 5 MB)',
-        'temperror' => 'Meillä on tällä hetkellä vaikeuksia. Yhteydenottolomakkeemme palaa pian.',
     ],
     'letter' => [
         '1' => 'Kirjepostitse',

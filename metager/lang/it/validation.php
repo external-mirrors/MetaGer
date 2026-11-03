@@ -73,7 +73,6 @@ return [
             'rule-name' => 'messaggio personalizzato',
         ],
     ],
-    'pcsrf' => 'Purtroppo non ha funzionato. Si prega di riprovare.',
     'in_array' => 'Il campo :attribute non esiste in :other.',
     'integer' => 'L\'attributo :deve essere un numero intero.',
 ];

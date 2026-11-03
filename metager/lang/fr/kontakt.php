@@ -5,17 +5,6 @@ return [
         '2' => 'Courriel',
         'pgp' => 'Cryptage',
     ],
-    'form' => [
-        '1' => 'Formulaire de contact anonyme',
-        '2' => 'Vous pouvez nous envoyer un message anonyme en utilisant ce formulaire. Si vous choisissez de ne pas indiquer votre adresse électronique, vous ne recevrez bien entendu aucune réponse.',
-        'name' => 'Nom',
-        '5' => 'Votre adresse électronique (facultatif)',
-        '6' => 'Votre message',
-        '7' => 'Sujet',
-        '8' => 'Envoyer',
-        '9' => 'Jusqu\'à 5 pièces jointes (taille des fichiers < 5 MB)',
-        'temperror' => 'Nous rencontrons actuellement des difficultés. Notre formulaire de contact sera bientôt rétabli.',
-    ],
     'letter' => [
         '1' => 'Par courrier postal',
         '2' => 'Nous préférons les contacts numériques. Toutefois, si vous estimez qu\'il est nécessaire de nous contacter par voie postale, vous pouvez nous envoyer un courrier à l\'adresse suivante :',
@@ -23,13 +12,6 @@ return [
 Postfach 51 01 43\r
 D-30631 Hannover\r
 Allemagne",
-    ],
-    'error' => [
-        '1' => 'Nous sommes désolés, mais nous n\'avons malheureusement reçu aucune donnée concernant votre demande de contact. Le message n\'a pas été envoyé.',
-        '2' => 'Une erreur s\'est produite lors de la transmission de votre message. Vous pouvez nous contacter directement sous :email',
-    ],
-    'success' => [
-        '1' => 'Votre message a été transmis avec succès. Une première réponse automatique a été envoyée à :email.',
     ],
     'email' => [
         'text' => 'Vous pouvez nous contacter en envoyant un courrier à : <a href="mailto::mail">:mail</a>',

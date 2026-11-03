@@ -83,4 +83,27 @@ class ContactPageTest extends TestCase
     {
         $this->get($path)->assertOk()->assertSee("Postfach 51 01 43", false);
     }
+
+    /**
+     * The anonymous contact form was commented out years ago, but the page
+     * kept rendering an always-on "we have difficulties" alert above where it
+     * used to be, and loaded resources/js/contact.js, which reached for the
+     * form's `pcsrf` input and threw on null under webdriver.
+     */
+    public function testThereIsNoContactFormLeft(): void
+    {
+        $page = $this->get("/de-DE/kontakt")->assertOk();
+
+        $page->assertDontSee("<form", false);
+        $page->assertDontSee("pcsrf", false);
+        $page->assertDontSee("kontakt.form", false);
+        $page->assertDontSeeText("Wir haben derzeit Schwierigkeiten");
+        $page->assertDontSee("contact.js", false);
+    }
+
+    public function testTheDeadContactScriptIsNoLongerBuilt(): void
+    {
+        $this->assertFileDoesNotExist(resource_path("js/contact.js"));
+        $this->assertStringNotContainsString("contact.js", file_get_contents(base_path("vite.config.js")));
+    }
 }

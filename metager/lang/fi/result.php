@@ -13,6 +13,11 @@ return [
         'direct' => 'Avaa suoraan',
         'direct-short' => 'Suoraan',
         'togglelabel' => 'Tulosvaihtoehtojen vaihtaminen',
+        'open' => 'Avaa',
+        'newtab' => 'Avaa uudessa välilehdessä',
+        'anonym-short' => 'Anonyymisti',
+        'newtab-short' => 'Uusi välilehti',
+        'anonym' => 'Avaa nimettömästi',
     ],
     'gefVon' => 'by',
     'advertisement' => 'Mainos',
@@ -33,9 +38,13 @@ return [
     'image' => [
         'download' => 'Lataa kuva',
         'copyright' => 'Kuvat voivat olla tekijänoikeudellisesti suojattuja.',
+        'proxy' => 'Avaa sivu nimettömästi',
     ],
     'more-news' => 'lisää',
     'alt' => [
         'more' => 'Lisää',
+    ],
+    'quicktips' => [
+        'heading' => 'Pikavinkit',
     ],
 ];

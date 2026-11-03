@@ -9,9 +9,9 @@ use Tests\TestCase;
 /**
  * /kontakt — when someone picks up the phone.
  *
- * Weekdays 9:00 to 16:00 German time someone almost always answers, outside
+ * Weekdays 9:00 to 15:00 German time someone almost always answers, outside
  * those hours almost never. The times are written the way the visitor's
- * locale writes them (16:00 in Germany, 4:00 PM in the US), and always say
+ * locale writes them (15:00 in Germany, 3:00 PM in the US), and always say
  * which clock they are on, because a visitor elsewhere would otherwise read
  * them as their own.
  */
@@ -21,21 +21,21 @@ class ContactPhoneHoursTest extends TestCase
     {
         $this->get("/de-DE/kontakt")
             ->assertOk()
-            ->assertSee('Montag bis Freitag, <time datetime="09:00">09:00</time>–<time datetime="16:00">16:00</time> Uhr (deutsche Zeit)', false);
+            ->assertSee('Montag bis Freitag, <time datetime="09:00">09:00</time>–<time datetime="15:00">15:00</time> Uhr (deutsche Zeit)', false);
     }
 
     public function testAmericanVisitorsSeeTwelveHourTimes(): void
     {
         $this->followingRedirects()->get("/en-US/kontakt")
             ->assertOk()
-            ->assertSee('Monday to Friday, <time datetime="09:00">9:00 AM</time>–<time datetime="16:00">4:00 PM</time> German time', false);
+            ->assertSee('Monday to Friday, <time datetime="09:00">9:00 AM</time>–<time datetime="15:00">3:00 PM</time> German time', false);
     }
 
     public function testBritishVisitorsSeeTwentyFourHourTimes(): void
     {
         $this->get("/en-GB/kontakt")
             ->assertOk()
-            ->assertSee('<time datetime="09:00">09:00</time>–<time datetime="16:00">16:00</time> German time', false);
+            ->assertSee('<time datetime="09:00">09:00</time>–<time datetime="15:00">15:00</time> German time', false);
     }
 
     /** The hours belong to the phone, not to email or post. */

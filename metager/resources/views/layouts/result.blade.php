@@ -50,7 +50,7 @@
                 @else
                     {{ $result->additionalInformation['date']->isoFormat('lll') }} — 
                 @endif
-            </div>
+            </span>
             @elseif(array_key_exists('date_string', $result->additionalInformation))
                 <span class="date-string">{{ $result->additionalInformation['date_string'] }} — </span>
             @endif

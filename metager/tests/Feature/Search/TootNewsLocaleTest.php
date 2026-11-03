@@ -7,13 +7,17 @@ use Tests\TestCase;
 
 /**
  * `tootnews` is one engine name serving two hosts: `toot.suma-lab.de` for
- * English, `troetnews.suma-ev.de` for German, same feed/API on both. Nothing
+ * English, `troet.suma-lab.de` for German, same feed/API on both. Nothing
  * in `SearchengineConfiguration` picks a host per language, so
  * `Tootnews::__construct()` swaps `configuration->host` in for a German
  * locale after the base config (which points at the English host) is
  * applied. This pins that the request actually goes to the right host for
  * each language, since a mistake here degrades silently: both hosts answer
  * with a 200, just the wrong index.
+ *
+ * The hosts are compared exactly, not by substring: the German host once
+ * shipped as `troetnews.suma-ev.de`, a name that never existed in DNS, so
+ * every German news search lost the engine without an error anyone saw.
  */
 class TootNewsLocaleTest extends TestCase
 {
@@ -46,7 +50,7 @@ class TootNewsLocaleTest extends TestCase
         $url = $this->requestUrlFor("/de-DE");
 
         $this->assertNotNull($url, "tootnews queued no request for a German search");
-        $this->assertStringContainsString("troetnews.suma-ev.de", $url);
+        $this->assertSame("troet.suma-lab.de", parse_url($url, PHP_URL_HOST));
     }
 
     public function testAnEnglishNewsSearchQueriesTheEnglishHost(): void
@@ -58,6 +62,6 @@ class TootNewsLocaleTest extends TestCase
         $url = $this->requestUrlFor("");
 
         $this->assertNotNull($url, "tootnews queued no request for an English search");
-        $this->assertStringContainsString("toot.suma-lab.de", $url);
+        $this->assertSame("toot.suma-lab.de", parse_url($url, PHP_URL_HOST));
     }
 }

@@ -10,8 +10,8 @@ use Log;
 
 class Tootnews extends Searchengine
 {
-    /** troetnews.suma-ev.de instead of toot.suma-lab.de for a German search; see __construct(). */
-    const GERMAN_HOST = 'troetnews.suma-ev.de';
+    /** troet.suma-lab.de instead of toot.suma-lab.de for a German search; see __construct(). */
+    const GERMAN_HOST = 'troet.suma-lab.de';
     const GERMAN_DISPLAY_NAME = 'TroetNews';
 
     const CONFIG_OVERLOAD = [

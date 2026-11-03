@@ -82,7 +82,7 @@ class TootNewsParsingTest extends TestCase
         $engine->loadResults(self::REAL_FEED);
 
         $this->assertSame("TroetNews", $engine->results[0]->gefVon[0]);
-        $this->assertStringContainsString("troetnews.suma-ev.de", $engine->results[0]->gefVonLink[0]);
+        $this->assertSame("https://troet.suma-lab.de", $engine->results[0]->gefVonLink[0]);
     }
 
     /** @return array<int, array{titel: string, link: string, anzeigeLink: string}> */

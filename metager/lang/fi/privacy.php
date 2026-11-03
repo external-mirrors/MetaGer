@@ -156,7 +156,7 @@ return [
     ],
     'responsible_party' => [
         'title' => 'Vastuuhenkilöt ja yhteyshenkilöt',
-        'description' => 'MetaGeriä ja siihen liittyviä palveluja ylläpitää <a href="https://suma-ev.de">SUMA-EV</a>, joka on myös tämän lausuman laatija. Tässä lausunnossa "me" tarkoittaa yleensä SUMA-EV:tä. Löydät yhteystietomme osoitteesta <a href=":link_impress">Jälki</a>. Meidät tavoittaa sähköpostitse <a href=":link_contact">yhteydenottolomakkeella</a>.',
+        'description' => 'MetaGeriä ja siihen liittyviä palveluja ylläpitää <a href="https://suma-ev.de">SUMA-EV</a>, joka on myös tämän lausuman laatija. Tässä lausunnossa "me" tarkoittaa yleensä SUMA-EV:tä. Löydät yhteystietomme osoitteesta <a href=":link_impress">Jälki</a>. Meidät tavoittaa sähköpostitse <a href=":link_contact">yhteystietosivumme</a> kautta.',
     ],
     'hosting' => [
         'title' => 'Hosting',
@@ -201,7 +201,7 @@ return [
             'title' => 'Ilmoitusvelvollisuus henkilötietojen korjaamisen tai poistamisen tai käsittelyn rajoittamisen yhteydessä:',
             'description' => 'Yleisen tietosuoja-asetuksen 19 artiklan mukaan; jos olisimme antaneet meille antamasi tiedot kolmansien osapuolten käyttöön (mitä emme koskaan tee), meidän olisi ilmoitettava heille, että poistamme, muutamme jne. pyyntösi mukaisesti.',
         ],
-        'perception' => 'Näiden oikeuksien käyttämiseksi riittää, että otat meihin yhteyttä <a href=":contact_link">yhteydenottolomakkeella</a></b>. Jos haluat mieluummin kirjelomakkeen, lähetä meille postia toimistomme osoitteeseen:',
+        'perception' => 'Näiden oikeuksien käyttämiseksi riittää, että otat meihin yhteyttä <a href=":contact_link">yhteystietosivumme</a> kautta. Jos haluat mieluummin kirjelomakkeen, lähetä meille postia toimistomme osoitteeseen:',
     ],
     'changes' => [
         'title' => 'Muutokset tähän lausumaan',

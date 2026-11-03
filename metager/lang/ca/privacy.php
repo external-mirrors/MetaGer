@@ -5,7 +5,7 @@ return [
     'introduction' => 'Per garantir la màxima transparència, detallem quines dades recollim de vosaltres i com les fem servir. La protecció de les vostres dades és important per a nosaltres i també ho hauria de ser per a vosaltres. <strong>Llegiu atentament aquesta declaració; va en el vostre interès.</strong>',
     'responsible_party' => [
         'title' => 'Responsables i persones de contacte',
-        'description' => 'MetaGer i els serveis relacionats són gestionats per <a href="https://suma-ev.de">SUMA-EV</a>, que també és l\'autora d\'aquesta declaració. En aquesta declaració, «nosaltres» es refereix en general a SUMA-EV. Trobareu les nostres dades de contacte a l\'<a href=":link_impress">avís legal</a>. Ens podeu escriure per correu electrònic mitjançant el <a href=":link_contact">formulari de contacte</a>.'
+        'description' => 'MetaGer i els serveis relacionats són gestionats per <a href="https://suma-ev.de">SUMA-EV</a>, que també és l\'autora d\'aquesta declaració. En aquesta declaració, «nosaltres» es refereix en general a SUMA-EV. Trobareu les nostres dades de contacte a l\'<a href=":link_impress">avís legal</a>. Ens podeu escriure per correu electrònic a través de la nostra <a href=":link_contact">pàgina de contacte</a>.'
     ],
     'principles' => [
         'title' => 'Principis',
@@ -205,7 +205,7 @@ return [
             'title' => 'Obligació de notificació en relació amb la rectificació o la supressió de dades personals o la limitació del tractament:',
             'description' => 'D\'acord amb l\'article 19 del RGPD; si haguéssim fet accessibles a tercers dades que ens heu confiat (cosa que no fem mai), estaríem obligats a informar-los de les supressions, modificacions, etc. que haguéssim fet a petició vostra.',
         ],
-        'perception' => 'Per exercir aquests drets n\'hi ha prou de contactar amb nosaltres mitjançant el <a href=":contact_link">formulari de contacte</a></b>. Si preferiu la via postal, escriviu-nos a l\'adreça de la nostra oficina:',
+        'perception' => 'Per exercir aquests drets n\'hi ha prou de contactar amb nosaltres a través de la nostra <a href=":contact_link">pàgina de contacte</a>. Si preferiu la via postal, escriviu-nos a l\'adreça de la nostra oficina:',
     ],
     'changes' => [
         'title' => 'Canvis en aquesta declaració',

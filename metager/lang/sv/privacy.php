@@ -142,7 +142,7 @@ return [
             'description' => 'Enligt artikel 19 GDPR; om vi skulle ha gjort uppgifter som du har anförtrott oss tillgängliga för tredje part (vilket vi aldrig gör), skulle vi vara skyldiga att informera dem om att vi, på din begäran, skulle radera, ändra, etc. har utfört.',
             'title' => 'Anmälningsskyldighet i samband med rättelse eller radering av personuppgifter eller begränsning av behandling:',
         ],
-        'perception' => 'För att utöva dessa rättigheter räcker det att du kontaktar oss via vårt <a href=":contact_link">kontaktformulär</a></b>. Om du föredrar brevformuläret kan du skicka e-post till vår kontorsadress:',
+        'perception' => 'För att utöva dessa rättigheter räcker det att du kontaktar oss via vår <a href=":contact_link">kontaktsida</a>. Om du föredrar brevformuläret kan du skicka e-post till vår kontorsadress:',
         'title' => 'Dina rättigheter som användare (och våra skyldigheter)',
         'description' => 'För att du också ska kunna skydda dina personuppgifter klargör vi (enligt art. 13 DSGVO) att du har följande rättigheter:',
         'information' => [
@@ -193,7 +193,7 @@ return [
     'introduction' => 'För maximal transparens listar vi vilka uppgifter vi samlar in från dig och hur vi använder dem. Skyddet av dina uppgifter är viktigt för oss och det borde det vara för dig också. <strong>Vänligen läs detta uttalande noggrant; det ligger i ditt intresse.</strong>',
     'responsible_party' => [
         'title' => 'Ansvariga personer och kontaktpersoner',
-        'description' => 'MetaGer och relaterade tjänster drivs av <a href="https://suma-ev.de">SUMA-EV</a>, som också är författare till detta uttalande. I detta uttalande betyder "vi" i allmänhet SUMA-EV. Du kan hitta våra kontaktuppgifter i vår <a href=":link_impress">Imprint</a>. Du kan nå oss via e-post genom att använda vårt kontaktformulär <a href=":link_contact"></a> .',
+        'description' => 'MetaGer och relaterade tjänster drivs av <a href="https://suma-ev.de">SUMA-EV</a>, som också är författare till detta uttalande. I detta uttalande betyder "vi" i allmänhet SUMA-EV. Du kan hitta våra kontaktuppgifter i vår <a href=":link_impress">Imprint</a>. Du kan nå oss via e-post via vår <a href=":link_contact">kontaktsida</a>.',
     ],
     'principles' => [
         'title' => 'Principer',

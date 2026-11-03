@@ -4,7 +4,7 @@ return [
     'introduction' => 'Für maximale Transparenz listen wir auf, welche Daten wir von Ihnen erheben und wie wir sie verwenden. Der Schutz Ihrer Daten ist uns wichtig und Ihnen sollte er das auch sein. <strong>Lesen Sie diese Erklärung bitte gründlich; es ist in Ihrem Interesse.</strong>',
     'responsible_party' => [
         'title' => 'Verantwortliche und Ansprechpartner',
-        'description' => 'MetaGer und verwandte Dienste werden betrieben vom <a href="https://suma-ev.de">SUMA-EV</a>, der auch Verfasser dieser Erklärung ist. Mit „Wir“ ist in dieser Erklärung in der Regel der SUMA-EV gemeint. Unsere Kontaktdaten finden Sie in unserem <a href=":link_impress">Impressum</a>. Per E-Mail sind wir über unser <a href=":link_contact">Kontaktformular</a> zu erreichen.',
+        'description' => 'MetaGer und verwandte Dienste werden betrieben vom <a href="https://suma-ev.de">SUMA-EV</a>, der auch Verfasser dieser Erklärung ist. Mit „Wir“ ist in dieser Erklärung in der Regel der SUMA-EV gemeint. Unsere Kontaktdaten finden Sie in unserem <a href=":link_impress">Impressum</a>. Per E-Mail erreichen Sie uns über unsere <a href=":link_contact">Kontaktseite</a>.',
     ],
     'principles' => [
         'title' => 'Grundsätze',
@@ -204,7 +204,7 @@ return [
             'title' => 'Mitteilungspflicht im Zusammenhang mit der Berichtigung oder Löschung personenbezogener Daten oder der Einschränkung der Verarbeitung:',
             'description' => 'Gemäß Artikel 19 DSGVO; falls wir Daten, die Sie uns anvertraut haben, Dritten zugänglich gemacht haben sollten (was wir niemals tun), wären wir verpflichtet, jenen mitzuteilen, dass wir auf Ihre Veranlassung hin eine Löschung, Änderung u.s.w. durchgeführt haben.',
         ],
-        'perception' => 'Zur Wahrnehmung dieser Rechte genügt es, uns mit unserem <a href=":contact_link">Kontaktformular</a></b> zu kontaktieren. Sollten Sie die Briefform bevorzugen, senden Sie uns Post an unsere Büroadresse:',
+        'perception' => 'Zur Wahrnehmung dieser Rechte genügt es, uns über unsere <a href=":contact_link">Kontaktseite</a> zu kontaktieren. Sollten Sie die Briefform bevorzugen, senden Sie uns Post an unsere Büroadresse:',
     ],
     'changes' => [
         'title' => 'Änderungen an dieser Erklärung',

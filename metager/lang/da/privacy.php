@@ -172,13 +172,13 @@ return [
             'title' => 'Underretningspligt i forbindelse med rettelse eller sletning af personoplysninger eller begrænsning af behandling:',
             'description' => 'I henhold til artikel 19 GDPR; hvis vi skulle have gjort data, som du har betroet os, tilgængelige for tredjeparter (hvilket vi aldrig gør), ville vi være forpligtet til at informere dem om, at vi på din anmodning ville slette, ændre osv. har udført.',
         ],
-        'perception' => 'For at udøve disse rettigheder er det tilstrækkeligt at kontakte os ved hjælp af vores <a href=":contact_link">kontaktformular</a></b>. Hvis du foretrækker brevformularen, kan du sende os en mail til vores kontoradresse:',
+        'perception' => 'For at udøve disse rettigheder er det tilstrækkeligt at kontakte os via vores <a href=":contact_link">kontaktside</a>. Hvis du foretrækker brevformularen, kan du sende os en mail til vores kontoradresse:',
     ],
     'title' => 'Privatlivspolitik',
     'introduction' => 'For at sikre maksimal gennemsigtighed viser vi, hvilke data vi indsamler fra dig, og hvordan vi bruger dem. Beskyttelsen af dine data er vigtig for os, og det bør den også være for dig. <strong>Læs venligst denne erklæring omhyggeligt; det er i din interesse.</strong>',
     'responsible_party' => [
         'title' => 'Ansvarlige personer og kontaktpersoner',
-        'description' => 'MetaGer og relaterede tjenester drives af <a href="https://suma-ev.de">SUMA-EV</a>, som også er forfatter til denne erklæring. I denne erklæring betyder "vi" generelt SUMA-EV. Du kan finde vores kontaktoplysninger i vores <a href=":link_impress">Imprint</a>. Vi kan kontaktes via e-mail ved hjælp af vores <a href=":link_contact">kontaktformular</a>.',
+        'description' => 'MetaGer og relaterede tjenester drives af <a href="https://suma-ev.de">SUMA-EV</a>, som også er forfatter til denne erklæring. I denne erklæring betyder "vi" generelt SUMA-EV. Du kan finde vores kontaktoplysninger i vores <a href=":link_impress">Imprint</a>. Vi kan kontaktes via e-mail via vores <a href=":link_contact">kontaktside</a>.',
     ],
     'hosting' => [
         'title' => 'Hosting',

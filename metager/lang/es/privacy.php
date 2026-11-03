@@ -4,7 +4,7 @@ return [
     'introduction' => 'En aras de la máxima transparencia, le indicamos qué datos recogemos de usted y cómo los utilizamos. La protección de sus datos es importante para nosotros y debería serlo también para usted. <strong>Lea atentamente esta declaración; es en su interés.</strong>',
     'responsible_party' => [
         'title' => 'Responsables y personas de contacto',
-        'description' => 'MetaGer y los servicios relacionados son operados por <a href="https://suma-ev.de">SUMA-EV</a>, que es también el autor de esta declaración. En esta declaración, "nosotros" se refiere generalmente a SUMA-EV. Puede encontrar nuestros datos de contacto en nuestro <a href=":link_impress">Pie de imprenta</a>. Puede ponerse en contacto con nosotros por correo electrónico utilizando nuestro formulario de contacto <a href=":link_contact"></a> .',
+        'description' => 'MetaGer y los servicios relacionados son operados por <a href="https://suma-ev.de">SUMA-EV</a>, que es también el autor de esta declaración. En esta declaración, "nosotros" se refiere generalmente a SUMA-EV. Puede encontrar nuestros datos de contacto en nuestro <a href=":link_impress">Pie de imprenta</a>. Puede ponerse en contacto con nosotros por correo electrónico a través de nuestra <a href=":link_contact">página de contacto</a>.',
     ],
     'contexts' => [
         'metager' => [
@@ -201,7 +201,7 @@ return [
             'title' => 'Obligación de notificación en relación con la rectificación o supresión de datos personales o la limitación del tratamiento:',
             'description' => 'De conformidad con el artículo 19 del GDPR; si hubiéramos hecho accesibles a terceros los datos que usted nos ha confiado (cosa que nunca hacemos), estaríamos obligados a informarles de que, a petición suya, los habríamos suprimido, modificado, etc.',
         ],
-        'perception' => 'Para ejercer estos derechos, basta con ponerse en contacto con nosotros a través de nuestro <a href=":contact_link">formulario de contacto</a></b>. Si prefiere el formulario por carta, envíenos un correo a la dirección de nuestra oficina:',
+        'perception' => 'Para ejercer estos derechos, basta con ponerse en contacto con nosotros a través de nuestra <a href=":contact_link">página de contacto</a>. Si prefiere el formulario por carta, envíenos un correo a la dirección de nuestra oficina:',
     ],
     'changes' => [
         'title' => 'Cambios en esta declaración',

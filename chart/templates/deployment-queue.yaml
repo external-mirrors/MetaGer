@@ -161,7 +161,7 @@ spec:
           volumeMounts:
           {{- include "chart.mounts.env" . | nindent 10 }}
           # Same set as the worker beside it, deliberately. A broadcast job has
-          # no use for sumas.json or the blacklists, but nothing stops a future
+          # no use for sumas.json, but nothing stops a future
           # queued job landing here, and a container that differs from its
           # neighbour only in what it will crash on is not worth the saving.
           {{- include "chart.mounts.config" . | nindent 10 }}

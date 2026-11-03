@@ -111,6 +111,7 @@
 				@endforeach
 			</ol>
 			<p>@lang('removal.us.include')</p>
+			<p>@lang('removal.us.identity')</p>
 			<p><a class="removal-contact" href="{{ route('contact') }}">@lang('removal.us.contact')</a></p>
 		</li>
 	</ol>

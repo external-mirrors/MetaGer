@@ -33,13 +33,13 @@ return [
         ],
         'illegal' => [
             'summary' => 'Contingut il·legal',
-            'text' => 'Les representacions d’abús sexual infantil, el contingut perjudicial per a menors, la incitació a l’odi i similars són assumpte de les autoritats, no d’una sol·licitud d’eliminació. Denuncieu-ho a una línia de denúncia: actuen sobre el contingut mateix, al seu allotjament, i col·laboren amb la policia. Si us plau, no ens envieu el contingut ni enllaços cap a ell.',
+            'text' => 'Representacions d’abús sexual infantil, continguts perjudicials per a menors, incitació a l’odi i similars: denuncieu-los primer a una línia de denúncia. Actua contra el contingut mateix, al seu allotjament, i col·labora amb la policia. Si a més voleu que MetaGer deixi de mostrar aquest resultat, envieu-nos només la seva adreça (URL) com a text. No ens envieu mai el contingut mateix, ni captures de pantalla ni fitxers adjunts.',
             'hotlines' => 'Línies de denúncia:',
         ],
     ],
     'providers' => [
         'heading' => 'Pregunteu als cercadors que mostra MetaGer',
-        'text' => 'MetaGer no té cap col·lecció pròpia d’aquests resultats. Consulta els cercadors de sota en el moment de la vostra cerca, mostra el que retornen i en desa la resposta com a màxim una hora. Per això, quan un d’ells elimina un resultat, també desapareix del que MetaGer en rep.',
+        'text' => 'MetaGer no té cap col·lecció pròpia d’aquests resultats. Consulta els cercadors de sota en el moment de la vostra cerca, mostra el que retornen i en desa la resposta unes quantes hores. Per això, quan un d’ells elimina un resultat, també desapareix del que MetaGer en rep.',
         'which' => 'A la pàgina de resultats de MetaGer, sota cada resultat, hi diu de quin cercador prové. Un resultat pot venir de diversos; en aquest cas, pregunteu a cadascun.',
         'shows' => 'A MetaGer a:',
         'kinds' => [
@@ -71,6 +71,7 @@ return [
             'Responem en el termini d’un mes. Si una sol·licitud és especialment complexa, pot trigar fins a dos mesos més; us ho diem dins del primer mes. Si no amaguem un resultat, us en donem els motius. Aleshores podeu presentar una reclamació davant d’una autoritat de control de protecció de dades o acudir als tribunals.',
         ],
         'include' => 'Perquè sigui ràpid, indiqueu les adreces exactes (URL) dels resultats i les cerques en què apareixen.',
+        'identity' => 'Si es tracta de les vostres dades personals, en alguns casos us demanem una prova que sou la persona afectada o que actueu en nom seu, per exemple una còpia del vostre document d’identitat. Si no, qualsevol podria fer-nos amagar qualsevol adreça. A la còpia podeu tapar tot el que no necessitem per comparar-la amb el resultat. La guardem amb la vostra sol·licitud i, un cop tancada, l’esborrem juntament amb la resta de les vostres dades.',
         'contact' => 'A la pàgina de contacte',
     ],
 ];

@@ -33,13 +33,13 @@ return [
         ],
         'illegal' => [
             'summary' => 'Illegal content',
-            'text' => 'Depictions of child sexual abuse, content harmful to minors, incitement to hatred and similar content are a matter for the authorities, not for a removal request. Report it to a hotline: they act on the content itself, at its host, and work with the police. Please do not send us the content or links to it.',
+            'text' => 'Depictions of child sexual abuse, content harmful to minors, incitement to hatred and similar content: please report them to a hotline first. They act on the content itself, at its host, and work with the police. If you also want MetaGer to stop showing such a result, send us only its address (URL) as text. Please never send us the content itself, including screenshots or attachments.',
             'hotlines' => 'Hotlines:',
         ],
     ],
     'providers' => [
         'heading' => 'Ask the search engines MetaGer shows',
-        'text' => 'MetaGer has no collection of these results of its own. It asks the search engines below at the moment you search, shows what they return, and caches their answer for an hour at most. So once one of them removes a result, it is also gone from what MetaGer gets from that engine.',
+        'text' => 'MetaGer has no collection of these results of its own. It asks the search engines below at the moment you search, shows what they return, and caches their answer for a few hours. So once one of them removes a result, it is also gone from what MetaGer gets from that engine.',
         'which' => 'Which search engine a result comes from is written under the result on MetaGer’s result page. One result can come from several of them; then ask each one.',
         'shows' => 'On MetaGer in:',
         'kinds' => [
@@ -71,6 +71,7 @@ return [
             'We answer within one month. If a request is particularly complex, it can take up to two months longer; we tell you so within the first month. If we do not hide a result, we tell you why. You can then complain to a data protection supervisory authority or go to court.',
         ],
         'include' => 'To make this quick, please send the exact addresses (URLs) of the results and the searches they appear for.',
+        'identity' => 'If it concerns your personal data, in some cases we ask for proof that you are the person concerned or act on their behalf, for example a copy of your ID. Otherwise anyone could have us hide any address. You may black out everything on the copy that we do not need to match it with the result. We keep it with your request and, once the request is closed, delete it along with the rest of your details.',
         'contact' => 'To the contact page',
     ],
 ];

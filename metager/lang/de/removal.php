@@ -33,13 +33,13 @@ return [
         ],
         'illegal' => [
             'summary' => 'Strafbare Inhalte',
-            'text' => 'Darstellungen sexuellen Kindesmissbrauchs, jugendgefährdende Inhalte, Volksverhetzung und Ähnliches sind kein Fall für einen Löschantrag, sondern für die zuständigen Stellen. Melden Sie solche Inhalte einer Beschwerdestelle: Sie geht gegen den Inhalt selbst beim Hoster vor und arbeitet mit der Polizei zusammen. Bitte schicken Sie uns weder die Inhalte noch Links darauf.',
+            'text' => 'Darstellungen sexuellen Kindesmissbrauchs, jugendgefährdende Inhalte, Volksverhetzung und Ähnliches melden Sie bitte zuerst einer Beschwerdestelle: Sie geht gegen den Inhalt selbst beim Hoster vor und arbeitet mit der Polizei zusammen. Soll MetaGer ein solches Ergebnis außerdem nicht mehr zeigen, nennen Sie uns nur seine Adresse (URL) als Text. Schicken Sie uns bitte nie die Inhalte selbst, auch keine Bildschirmfotos oder Anhänge.',
             'hotlines' => 'Beschwerdestellen:',
         ],
     ],
     'providers' => [
         'heading' => 'Fragen Sie die Suchmaschinen, die MetaGer zeigt',
-        'text' => 'MetaGer hat keine eigene Sammlung dieser Ergebnisse. Wir fragen die Suchmaschinen unten in dem Moment, in dem Sie suchen, zeigen, was sie liefern, und speichern ihre Antwort höchstens eine Stunde zwischen. Entfernt eine von ihnen ein Ergebnis, fehlt es danach auch in dem, was MetaGer von ihr bekommt.',
+        'text' => 'MetaGer hat keine eigene Sammlung dieser Ergebnisse. Wir fragen die Suchmaschinen unten in dem Moment, in dem Sie suchen, zeigen, was sie liefern, und speichern ihre Antwort für wenige Stunden zwischen. Entfernt eine von ihnen ein Ergebnis, fehlt es danach auch in dem, was MetaGer von ihr bekommt.',
         'which' => 'Von welcher Suchmaschine ein Ergebnis stammt, steht auf MetaGers Ergebnisseite unter dem Ergebnis. Kommt es von mehreren, fragen Sie bitte jede davon.',
         'shows' => 'Bei MetaGer in:',
         'kinds' => [
@@ -71,6 +71,7 @@ return [
             'Wir antworten innerhalb eines Monats. Ist eine Anfrage besonders aufwendig, kann es bis zu zwei Monate länger dauern; das sagen wir Ihnen dann innerhalb des ersten Monats. Blenden wir ein Ergebnis nicht aus, nennen wir Ihnen die Gründe. Sie können sich dann bei einer Datenschutz-Aufsichtsbehörde beschweren oder vor Gericht gehen.',
         ],
         'include' => 'Damit es schnell geht, nennen Sie bitte die genauen Adressen (URLs) der Ergebnisse und die Suchbegriffe, bei denen sie erscheinen.',
+        'identity' => 'Geht es um Ihre persönlichen Daten, bitten wir Sie in manchen Fällen um einen Nachweis, dass Sie die betroffene Person sind oder in ihrem Auftrag handeln, etwa eine Kopie Ihres Ausweises. Sonst könnte jeder verlangen, dass wir beliebige Adressen ausblenden. Auf der Kopie dürfen Sie alles schwärzen, was wir für den Abgleich mit dem Ergebnis nicht brauchen. Wir bewahren sie bei Ihrer Anfrage auf und löschen sie nach deren Abschluss mit Ihren übrigen Angaben.',
         'contact' => 'Zur Kontaktseite',
     ],
 ];

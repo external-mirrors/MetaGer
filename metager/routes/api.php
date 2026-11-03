@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlocklistCheckController;
 use App\Http\Controllers\BlocklistController;
 use App\Http\Middleware\CrmAuthorization;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,7 @@ Route::prefix("api/blocklist")->middleware(CrmAuthorization::class)->group(funct
     Route::get("/", [BlocklistController::class, "index"])->name("blocklist.index");
     Route::post("/", [BlocklistController::class, "store"])->name("blocklist.store");
     Route::post("test", [BlocklistController::class, "test"])->name("blocklist.test");
+    Route::post("check", [BlocklistCheckController::class, "check"])->name("blocklist.check");
     Route::get("{id}", [BlocklistController::class, "show"])->name("blocklist.show");
     Route::patch("{id}", [BlocklistController::class, "update"])->name("blocklist.update");
     Route::delete("{id}", [BlocklistController::class, "destroy"])->name("blocklist.destroy");

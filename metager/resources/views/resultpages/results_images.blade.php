@@ -60,7 +60,7 @@
                     @endif
                 </div>
                 <div class="copyright">@lang('result.image.copyright')</div>
-                <button form="details" type="reset" class="btn btn-default">Schließen</label>
+                <button form="details" type="reset" class="btn btn-default">Schließen</button>
             </div>
         </div>
     @endfor

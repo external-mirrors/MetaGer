@@ -75,5 +75,4 @@ return [
     'file' => "Das Feld :attribute muss eine Datei sein.",
     'mimetypes' => "Das Feld :attribute muss eine Datei vom Typ :values sein.",
     'uploaded' => ":attribute konnte nicht hochgeladen werden.",
-    'pcsrf' => "Das hat leider nicht geklappt. Bitte versuchen Sie es noch einmal.",
 ];

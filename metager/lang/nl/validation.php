@@ -69,7 +69,6 @@ return [
             'rule-name' => 'aangepast bericht',
         ],
     ],
-    'pcsrf' => 'Helaas werkte dit niet. Probeer het opnieuw.',
     'accepted' => 'Het :-attribuut moet worden geaccepteerd.',
     'active_url' => 'Het :attribuut is geen geldige URL.',
     'after' => 'Het :attribuut moet een datum zijn na :date.',

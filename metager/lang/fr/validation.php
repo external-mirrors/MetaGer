@@ -7,7 +7,6 @@ return [
             'rule-name' => 'message personnalisé',
         ],
     ],
-    'pcsrf' => 'Malheureusement, cela n\'a pas fonctionné. Veuillez réessayer.',
     'accepted' => 'L\'attribut :doit être accepté.',
     'active_url' => 'L\'attribut :n\'est pas une URL valide.',
     'after' => 'L\'attribut :doit être une date postérieure à :date.',

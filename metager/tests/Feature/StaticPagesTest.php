@@ -48,7 +48,7 @@ class StaticPagesTest extends TestCase
             "datenschutz" => ["/datenschutz", "titles.datenschutz", "privacy.title"],
             "hilfe" => ["/hilfe", "titles.help", "help/help.title"],
             "impressum" => ["/impressum", "titles.impressum", "impressum.info.9"],
-            "kontakt" => ["/kontakt", "titles.kontakt", "kontakt.form.1"],
+            "kontakt" => ["/kontakt", "titles.kontakt", "kontakt.letter.1"],
             // No body key: the plugin page has no stable body text across
             // browsers. It renders a per-browser, per-version partial, and for
             // an unrecognised browser it discards the shared markup entirely

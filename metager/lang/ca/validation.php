@@ -75,5 +75,4 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
-    'pcsrf'                => 'Malauradament això no ha funcionat. Torneu-ho a provar.',
 ];

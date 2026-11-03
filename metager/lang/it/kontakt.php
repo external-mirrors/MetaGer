@@ -8,28 +8,10 @@ D-30631 Hannover\r
 Germania",
         '1' => 'Per posta ordinaria',
     ],
-    'error' => [
-        '1' => 'Siamo spiacenti, ma purtroppo non abbiamo ricevuto alcun dato con la sua richiesta di contatto. Il messaggio non è stato inviato.',
-        '2' => 'Si è verificato un errore nella consegna del messaggio. Potete contattarci direttamente al seguente indirizzo :email',
-    ],
     'headline' => [
         '1' => 'Contatto',
         '2' => 'Email',
         'pgp' => 'Crittografia',
-    ],
-    'form' => [
-        '1' => 'Modulo di contatto anonimo',
-        '2' => 'Potete inviarci un messaggio anonimo utilizzando questo modulo. Se scegliete di non includere il vostro indirizzo e-mail, non riceverete naturalmente alcuna risposta.',
-        'name' => 'Nome',
-        '5' => 'Indirizzo e-mail (facoltativo)',
-        '6' => 'Il vostro messaggio',
-        '7' => 'Oggetto',
-        '8' => 'Inviare',
-        '9' => 'Fino a 5 allegati (dimensione del file < 5 MB)',
-        'temperror' => 'Al momento abbiamo delle difficoltà. Il nostro modulo di contatto tornerà presto.',
-    ],
-    'success' => [
-        '1' => 'Il messaggio è stato consegnato con successo. È stata inviata una prima risposta automatica a :email.',
     ],
     'email' => [
         'text' => 'Potete contattarci inviando una mail a: <a href="mailto::mail">:mail</a>',

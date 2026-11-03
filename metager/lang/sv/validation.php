@@ -75,5 +75,4 @@ return [
             'rule-name' => 'anpassat meddelande',
         ],
     ],
-    'pcsrf' => 'Tyvärr fungerade inte detta. Vänligen försök igen.',
 ];

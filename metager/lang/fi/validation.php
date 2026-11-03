@@ -75,5 +75,4 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
-    'pcsrf' => 'Valitettavasti tämä ei toiminut. Yritä uudelleen.',
 ];

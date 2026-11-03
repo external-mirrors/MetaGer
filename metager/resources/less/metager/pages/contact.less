@@ -1,22 +1,123 @@
-.form-group.kontakt-form-group {
-  text-align: left;
-  font-size: 1em;
-}
+@import "../variables.less";
 
-form.contact {
-  max-width: 500px;
-}
+// /kontakt — routing first, addresses second.
+//
+// Same column as the removal guide (pages/removal.less) and the key FAQ, so a
+// visitor sent from here to there does not change pages in look. Colour comes
+// from the theme tokens only, so light and dark follow the site's palette
+// switch. No script.
 
-textarea#message {
-  height: 200px;
-}
+#kontakt {
+    max-width: 46rem;
+    margin: 0 auto;
 
-input[name="subject-2"] {
-  position: absolute;
-  max-width: 250px;
-  left: -250px;
-}
+    .contact-intro {
+        font-size: 1.1rem;
+    }
 
-.alert {
-  margin-bottom: 20px;
+    // The one request we get most and can help with least: it gets the
+    // accent, everything else on the page is quieter.
+    .contact-removal {
+        border: 1px solid @border-color;
+        border-left: 4px solid @metager-orange;
+        border-radius: 6px;
+        background-color: @card-background-color;
+        padding: 1rem 1.25rem;
+        margin: 1.5rem 0;
+
+        > h2 {
+            font-size: 1.4rem;
+            margin: 0 0 0.5rem;
+        }
+
+        .contact-removal-link {
+            display: inline-block;
+            margin-top: 0.25rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background-color: @accent-fill-color;
+            // Orange ground in both palettes, so the text on it is dark in
+            // both (variables.less, --on-accent-color).
+            color: @on-accent-color;
+            font-weight: bold;
+            text-decoration: none;
+
+            &:hover,
+            &:focus-visible {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .contact-topics {
+        > h2 {
+            font-size: 1.2rem;
+        }
+
+        > ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+            gap: 0.5rem 1rem;
+
+            > li {
+                border-top: 1px solid @border-color;
+                padding-top: 0.5rem;
+
+                > a {
+                    display: block;
+                    font-weight: bold;
+                }
+
+                > span {
+                    color: @muted-text-color;
+                    font-size: 0.9rem;
+                }
+            }
+        }
+    }
+
+    .contact-reach {
+        font-size: 1.2rem;
+        margin-top: 2rem;
+    }
+
+    .contact-ways {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+        gap: 1rem;
+    }
+
+    .contact-way {
+        border: 1px solid @border-color;
+        border-radius: 6px;
+        padding: 1rem;
+
+        > h3 {
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+
+        > h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        // The key's links run long on a phone.
+        > p {
+            overflow-wrap: anywhere;
+        }
+
+        .contact-fingerprint {
+            font-family: monospace;
+            color: @secondary-text-color;
+        }
+
+        // letter.3 carries its line breaks in the string.
+        > address {
+            white-space: pre-line;
+            font-style: normal;
+        }
+    }
 }

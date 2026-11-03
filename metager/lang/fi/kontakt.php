@@ -21,4 +21,38 @@ Saksa",
             'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'intro' => 'Ennen kuin kirjoitat: moneen kysymykseen löytyy vastaus jo täältä — yleensä nopeammin kuin sähköpostilla.',
+    'removal' => [
+        'heading' => 'Haluatko hakutuloksen poistettavaksi?',
+        'text' => 'Lue ensin ohjeemme. MetaGer näyttää muiden hakukoneiden tuloksia, joten tuloksen voi poistaa vain verkkosivustolla ja näissä hakukoneissa. Ohje kertoo, missä ja miten.',
+        'link' => 'Ohjeeseen',
+    ],
+    'topics' => [
+        'heading' => 'Muita yleisiä kysymyksiä',
+        'key' => [
+            'title' => 'MetaGer-avain ja tokenit',
+            'text' => 'Miten avain toimii, lataaminen ja saldo',
+        ],
+        'orders' => [
+            'title' => 'Tilaukset ja laskut',
+            'text' => 'Löydä tilaus, kuitit ja hyvitykset',
+        ],
+        'donation' => [
+            'title' => 'Lahjoita',
+            'text' => 'Tue MetaGeria lahjoituksella',
+        ],
+        'membership' => [
+            'title' => 'Liity jäseneksi',
+            'text' => 'Liity SUMA-EV:hen, MetaGerin taustalla olevaan yhdistykseen',
+        ],
+        'help' => [
+            'title' => 'Hakuohje',
+            'text' => 'Toiminnot, asetukset ja usein kysytyt kysymykset',
+        ],
+        'privacy' => [
+            'title' => 'Yksityisyys',
+            'text' => 'Mitä tallennamme — ja mitä emme',
+        ],
+    ],
+    'reach' => 'Näin tavoitat meidät',
 ];

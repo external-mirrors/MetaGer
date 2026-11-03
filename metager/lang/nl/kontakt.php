@@ -21,4 +21,38 @@ Duitsland",
             'fingerprint' => 'PGP Vingerafdruk: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'intro' => 'Voordat u schrijft: op veel vragen staat hier al een antwoord — meestal sneller dan per e-mail.',
+    'removal' => [
+        'heading' => 'Wilt u een zoekresultaat laten verwijderen?',
+        'text' => 'Lees eerst onze handleiding. MetaGer toont de resultaten van andere zoekmachines; een resultaat kan daarom alleen bij de website en bij die zoekmachines worden verwijderd. De handleiding laat zien waar en hoe.',
+        'link' => 'Naar de handleiding',
+    ],
+    'topics' => [
+        'heading' => 'Andere veelgestelde vragen',
+        'key' => [
+            'title' => 'MetaGer-sleutel en tokens',
+            'text' => 'Hoe de sleutel werkt, opwaarderen en tegoed',
+        ],
+        'orders' => [
+            'title' => 'Bestellingen en facturen',
+            'text' => 'Een bestelling vinden, bewijzen en terugbetaling',
+        ],
+        'donation' => [
+            'title' => 'Doneer',
+            'text' => 'Steun MetaGer met een donatie',
+        ],
+        'membership' => [
+            'title' => 'Lid worden',
+            'text' => 'Word lid van SUMA-EV, de vereniging achter MetaGer',
+        ],
+        'help' => [
+            'title' => 'Hulp bij zoeken',
+            'text' => 'Functies, instellingen en veelgestelde vragen',
+        ],
+        'privacy' => [
+            'title' => 'Privacy',
+            'text' => 'Wat we opslaan — en wat niet',
+        ],
+    ],
+    'reach' => 'Zo bereikt u ons',
 ];

@@ -21,4 +21,38 @@ Germany",
             'fingerprint' => 'PGP-Fingerabdruck: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'intro' => 'Bevor Sie schreiben: Auf viele Fragen gibt es hier schon eine Antwort — meist schneller als per E-Mail.',
+    'removal' => [
+        'heading' => 'Ein Suchergebnis entfernen lassen?',
+        'text' => 'Bitte lesen Sie zuerst unsere Anleitung. MetaGer zeigt die Ergebnisse anderer Suchmaschinen; entfernen lässt sich ein Ergebnis deshalb nur bei der Webseite und bei diesen Suchmaschinen. Die Anleitung zeigt, wo und wie.',
+        'link' => 'Zur Anleitung',
+    ],
+    'topics' => [
+        'heading' => 'Andere häufige Anliegen',
+        'key' => [
+            'title' => 'MetaGer-Schlüssel und Token',
+            'text' => 'Wie der Schlüssel funktioniert, Aufladen und Guthaben',
+        ],
+        'orders' => [
+            'title' => 'Bestellungen und Rechnungen',
+            'text' => 'Eine Bestellung finden, Belege und Erstattung',
+        ],
+        'donation' => [
+            'title' => 'Spenden',
+            'text' => 'MetaGer mit einer Spende unterstützen',
+        ],
+        'membership' => [
+            'title' => 'Mitglied werden',
+            'text' => 'Im SUMA-EV mitmachen, dem Verein hinter MetaGer',
+        ],
+        'help' => [
+            'title' => 'Hilfe zur Suche',
+            'text' => 'Funktionen, Einstellungen und häufige Fragen',
+        ],
+        'privacy' => [
+            'title' => 'Datenschutz',
+            'text' => 'Was wir speichern — und was nicht',
+        ],
+    ],
+    'reach' => 'So erreichen Sie uns',
 ];

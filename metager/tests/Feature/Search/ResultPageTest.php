@@ -55,6 +55,21 @@ class ResultPageTest extends TestCase
     }
 
     /**
+     * The address under the title is MetaGer's (Search\DisplayUrl), not the
+     * engine's display text, and the full link is on its title for hovering.
+     */
+    public function testTheResultAddressIsTheShortDisplayUrlWithTheFullLinkOnHover(): void
+    {
+        $response = $this->webSearch();
+
+        $response->assertOk();
+        $this->assertMatchesRegularExpression(
+            '~<a class=" result-link"[^>]*title="https://example\.org/kaffee"[^>]*>\s*example\.org › kaffee\s*</a>~u',
+            $response->getContent()
+        );
+    }
+
+    /**
      * The page names the engine behind each result. This is a stated principle
      * of the product — a metasearch that hides its sources is just a search
      * engine — and it is rendered from the same gefVon array the JSON output

@@ -9,7 +9,7 @@
         <img src="/img/news-placeholder.svg" alt="" />
         @endif
 	</a>
-    <a class="result-link" @include('parts.result-href', ['target' => $result]) title="{{ $result->anzeigeLink }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif target="{{ $metager->getNewtab() }}" tabindex="-1" aria-hidden="true">
+    <a class="result-link" @include('parts.result-href', ['target' => $result]) title="{{ $result->link }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif target="{{ $metager->getNewtab() }}" tabindex="-1" aria-hidden="true">
 		{{ $result->anzeigeLink }}
 	</a>
 	<a class="result-headline" title="{{$result->titel}}" @include('parts.result-href', ['target' => $result]) target="{{ $metager->getNewtab() }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif>

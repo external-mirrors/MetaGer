@@ -6,6 +6,7 @@ use App\Http\Controllers\Pictureproxy;
 use App\Models\DeepResults\Button;
 use App\Models\DeepResults\Imagesearchdata;
 use App\Search\Blacklists;
+use App\Search\DisplayUrl;
 use App\SearchSettings;
 
 /* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
@@ -17,7 +18,7 @@ class Result
     public $titel; # Der Groß Angezeigte Name für das Suchergebnis
     public $originalLink;
     public $link; # Der Link auf die Ergebnisseite
-    public $anzeigeLink; # Der tatsächlich angezeigte Link (rein optisch)
+    public $anzeigeLink; # Die angezeigte Adresse, aus $link gebaut (Search\DisplayUrl)
     public $descr; # Die eventuell gekürzte Beschreibung des Suchergebnisses
     public $longDescr; # Die ungekürzte Beschreibung des Suchergebnisses
     public $gefVon = []; # Die Suchmaschine von der dieses Ergebnis stammt
@@ -60,8 +61,11 @@ class Result
         $this->titel = $this->sanitizeText(strip_tags(trim($titel)));
         $this->link = trim($link);
         $this->originalLink = trim($link);
-        $this->anzeigeLink = trim($anzeigeLink);
-        $this->anzeigeLink = preg_replace("/(http[s]{0,1}:\/\/){0,1}(www\.){0,1}/si", "", $this->anzeigeLink);
+        // Built from the link, the same for every engine (Search\DisplayUrl).
+        // What the engine sent is only used when the link has no host, and
+        // such a result is dropped by isValid() anyway.
+        $this->anzeigeLink = DisplayUrl::fromLink($this->link)
+            ?? preg_replace("/(http[s]{0,1}:\/\/){0,1}(www\.){0,1}/si", "", trim($anzeigeLink));
         $this->descr = $this->sanitizeText(strip_tags(trim($descr), '<p>'));
         $this->descr = preg_replace("/\n+/si", " ", $this->descr);
         $this->longDescr = $this->descr;

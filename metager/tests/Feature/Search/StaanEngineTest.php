@@ -185,7 +185,9 @@ class StaanEngineTest extends TestCase
         $kaffee = $results["https://example.org/kaffee"];
         $this->assertSame("Kaffee & Zubereitung", $kaffee["title"]);
         $this->assertSame("Alles über Kaffee, Röstung und Zubereitung.", $kaffee["description"]);
-        $this->assertSame("example.org > kaffee", $kaffee["displayLink"]);
+        // Staan sends "example.org > kaffee"; the address is built from the
+        // link like every other engine's (Search\DisplayUrl).
+        $this->assertSame("example.org › kaffee", $kaffee["displayLink"]);
         $this->assertNotNull($kaffee["date"], "published_date was not read as the result's date.");
 
         $sorten = $results["https://beispiel.de/sorten"];

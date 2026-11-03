@@ -18,7 +18,7 @@
                         src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->additionalInformation['favicon_url']) }}"
                         alt="" loading="lazy">
                 @endif
-                <a class=" result-link" @include('parts.result-href', ['target' => $result]) title="{{ $result->anzeigeLink }}"
+                <a class=" result-link" @include('parts.result-href', ['target' => $result]) title="{{ $result->link }}"
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif target="{{ $metager->getNewtab() }}">
                     {{ $result->strippedHost }}
                 </a>
@@ -34,7 +34,7 @@
                     <span class="date-string">{{ $result->additionalInformation['date_string'] }}</span>
                 @endif
             @else
-                <a class=" result-link" @include('parts.result-href', ['target' => $result]) title="{{ $result->anzeigeLink }}"
+                <a class=" result-link" @include('parts.result-href', ['target' => $result]) title="{{ $result->link }}"
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif target="{{ $metager->getNewtab() }}">
                     {{ $result->anzeigeLink }}
                 </a>

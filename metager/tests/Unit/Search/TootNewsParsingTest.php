@@ -113,26 +113,21 @@ class TootNewsParsingTest extends TestCase
     }
 
     /**
-     * On every entry captured so far, <mg:anzeigeLink> is byte-identical to
-     * <link href>, so this and testFallsBackToTheLinkWhenAnzeigeLinkIsMissing
-     * cannot currently distinguish "reads mg:anzeigeLink" from "always copies
-     * link" by their assertions alone. It's read via children() with the
-     * correct namespace anyway, on the strength of two things the assertions
-     * don't capture: it is what the very first version of this parser
-     * (a7771e7f8) tried to do before a namespace-access mistake made it
-     * always empty, and a field the API bothers to emit separately from
-     * <link> is a field it may one day make differ from it.
+     * The parser still reads <mg:anzeigeLink> (via children() with the right
+     * namespace — the very first version, a7771e7f8, read it with a namespace
+     * mistake that made it always empty), but Result builds the address it
+     * draws from the link for every engine (Search\DisplayUrl), so the feed's
+     * own display text only counts for a link without a host. On every entry
+     * captured so far it was byte-identical to <link href> anyway.
      */
-    public function testUsesTheFeedsOwnAnzeigeLinkRatherThanRepeatingLink(): void
+    public function testTheDisplayUrlIsBuiltFromTheLink(): void
     {
         $engine = $this->engine();
 
         $engine->loadResults(self::REAL_FEED);
 
-        // Result::__construct strips the scheme/www for display, so compare
-        // against that, not the raw <mg:anzeigeLink> text.
         $this->assertSame(
-            "euronews.com/my-europe/2026/08/23/thousands-rally-in-stockholm-over-climate-crisis-weeks-ahead-of-general-election",
+            "euronews.com › my-europe › … › thousands-rally-in-stockholm-ov…",
             $engine->results[0]->anzeigeLink,
         );
     }
@@ -223,7 +218,7 @@ class TootNewsParsingTest extends TestCase
             XML);
 
         $this->assertCount(1, $engine->results);
-        $this->assertSame("example.org/ohne-anzeigelink", $engine->results[0]->anzeigeLink);
+        $this->assertSame("example.org › ohne-anzeigelink", $engine->results[0]->anzeigeLink);
     }
 
     public function testAnEntryMissingATitleOrLinkIsSkippedWithoutBreakingTheRest(): void

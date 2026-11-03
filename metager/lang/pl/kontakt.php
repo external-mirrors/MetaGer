@@ -35,6 +35,9 @@ Niemcy",
     'removal' => [
         'hint' => 'Chodzi o usunięcie wyniku wyszukiwania? Najpierw przeczytaj <a href=":link">nasz poradnik</a>: MetaGer pokazuje wyniki innych wyszukiwarek, więc wynik można zwykle usunąć tylko tam.',
     ],
+    'phone' => [
+        'heading' => 'Telefon',
+    ],
     'topics' => [
         'heading' => 'Częste pytania',
         'key' => [

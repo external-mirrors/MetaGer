@@ -35,6 +35,9 @@ Tyskland",
     'removal' => [
         'hint' => 'Gäller det att få ett sökresultat borttaget? Läs först <a href=":link">vår guide</a>: MetaGer visar andra sökmotorers resultat, så ett resultat kan oftast bara tas bort där.',
     ],
+    'phone' => [
+        'heading' => 'Telefon',
+    ],
     'topics' => [
         'heading' => 'Vanliga frågor',
         'key' => [

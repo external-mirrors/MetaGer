@@ -35,6 +35,9 @@ Germany",
     'removal' => [
         'hint' => 'Geht es um ein Suchergebnis, das entfernt werden soll? Bitte lesen Sie vorher <a href=":link">unsere Anleitung</a>: MetaGer zeigt die Ergebnisse anderer Suchmaschinen, entfernen lässt sich ein Ergebnis deshalb in der Regel nur dort.',
     ],
+    'phone' => [
+        'heading' => 'Telefon',
+    ],
     'topics' => [
         'heading' => 'Häufige Anliegen',
         'key' => [

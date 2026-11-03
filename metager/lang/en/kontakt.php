@@ -32,6 +32,9 @@ return [
     'removal' => [
         'hint' => 'Is this about removing a search result? Please read <a href=":link">our guide</a> first: MetaGer shows other search engines\' results, so a result can usually only be removed there.',
     ],
+    'phone' => [
+        'heading' => 'Phone',
+    ],
     'topics' => [
         'heading' => 'Common questions',
         'key' => [

@@ -32,6 +32,9 @@ return [
     'removal' => [
         'hint' => 'Es tracta d\'eliminar un resultat de cerca? Llegiu primer <a href=":link">la nostra guia</a>: MetaGer mostra resultats d\'altres cercadors, i per això normalment un resultat només es pot eliminar allà.',
     ],
+    'phone' => [
+        'heading' => 'Telèfon',
+    ],
     'topics' => [
         'heading' => 'Consultes habituals',
         'key' => [

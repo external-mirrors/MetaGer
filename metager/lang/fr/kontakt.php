@@ -35,6 +35,9 @@ Allemagne",
     'removal' => [
         'hint' => 'Il s\'agit de faire supprimer un résultat de recherche ? Lisez d\'abord <a href=":link">notre guide</a> : MetaGer affiche les résultats d\'autres moteurs de recherche, un résultat ne peut donc en général être supprimé que chez eux.',
     ],
+    'phone' => [
+        'heading' => 'Téléphone',
+    ],
     'topics' => [
         'heading' => 'Questions fréquentes',
         'key' => [

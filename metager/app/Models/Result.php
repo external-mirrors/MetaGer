@@ -133,10 +133,10 @@ class Result
         $this->rank = $rank;
     }
 
-    # Berechnet den Ranking-Boost durch ??? URL
+    # Berechnet den Ranking-Boost aus der URL (dem Link, nicht der Anzeige-URL)
     public function calcURLBoost($tmpEingabe)
     {
-        $link = $this->anzeigeLink;
+        $link = $this->link;
         if (strpos($link, "http") !== 0) {
             $link = "http://" . $link;
         }

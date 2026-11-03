@@ -7,18 +7,16 @@ use Tests\TestCase;
 
 /**
  * Characterization tests for Result::calcURLBoost(), the URL part of a
- * result's rank. Written before the display URL is generalised, because the
- * boost reads the display URL, and changing what that looks like would
- * otherwise reorder results without anything saying so.
+ * result's rank, written before the display URL was generalised.
  *
- * Two things pinned here are wrong, and are pinned so the change that fixes
- * them is a deliberate one:
+ * It read $anzeigeLink, the text drawn under the title, rather than $link,
+ * so the same page scored differently depending on how its engine chose to
+ * display it: Brave's "host › path › segment" kept a three-byte "›" per
+ * segment, and a Brave result got about a fifth less URL boost than the same
+ * URL from Serper. It reads the link now.
  *
- *  - It reads $anzeigeLink, the text drawn under the title, not $link. The
- *    same page scores differently depending on how its engine chose to
- *    display it: Brave's "host › path › segment" keeps a three-byte "›" per
- *    segment that the stripping below does not remove, so a Brave result
- *    gets about a fifth less URL boost than the same URL from Serper.
+ * One thing pinned here is wrong, and is pinned so the change that fixes it
+ * is a deliberate one:
  *
  *  - It does not compare the query with the URL at all. $tmpLink starts empty
  *    and nothing writes to it, so strpos() is false for every character, and
@@ -76,17 +74,21 @@ class ResultUrlBoostTest extends TestCase
         $this->assertSame(0, $result->calcURLBoost(self::QUERY));
     }
 
-    /**
-     * CHARACTERIZATION — wrong: the same URL, displayed the way Brave displays
-     * it, scores 10 / (29 × 60) instead of 10 / (23 × 60), because the boost
-     * reads the display URL. Fails once the boost reads $link.
-     */
-    public function testCharacterizationTheBoostReadsTheDisplayUrl(): void
+    /** The same page scores the same, however its engine displays it. */
+    public function testTheBoostReadsTheLinkNotTheDisplayUrl(): void
     {
-        $this->assertEqualsWithDelta(
-            10 / (29 * 60),
+        $this->assertSame(
+            $this->boost("https://klexikon.zum.de/wiki/Berlin", "https://klexikon.zum.de/wiki/Berlin"),
             $this->boost("https://klexikon.zum.de/wiki/Berlin", "klexikon.zum.de › wiki › Berlin"),
-            1e-12
+        );
+    }
+
+    /** "www." is not part of the length, as it was not when the display URL was read. */
+    public function testTheWwwPrefixDoesNotCount(): void
+    {
+        $this->assertSame(
+            $this->boost("https://klexikon.zum.de/wiki/Berlin", "x"),
+            $this->boost("https://www.klexikon.zum.de/wiki/Berlin", "x"),
         );
     }
 }

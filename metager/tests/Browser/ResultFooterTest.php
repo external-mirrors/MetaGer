@@ -141,9 +141,21 @@ class ResultFooterTest extends DuskTestCase
                     . "document.querySelector('.result .result-toggle').checked = true;"
                     . "const menu = document.querySelector('.result .result-options ul');"
                     . "const bar = document.querySelector('#research-bar-container');"
-                    . "window.scrollBy(0, menu.getBoundingClientRect().top - bar.getBoundingClientRect().bottom + 20);"
+                    // One scrollBy only lands 20px under the bar if the bar is already where it
+                    // sticks; anything that moves the bar during the scroll leaves the menu below
+                    // it. Repeat until the geometry settles instead of assuming it.
+                    . "for (let i = 0; i < 5; i++) {"
+                    . "  const off = menu.getBoundingClientRect().top - bar.getBoundingClientRect().bottom + 20;"
+                    . "  if (Math.abs(off) < 1) { break; }"
+                    . "  window.scrollBy(0, off);"
+                    . "}"
                     . "const box = menu.getBoundingClientRect();"
-                    . "if (box.top >= bar.getBoundingClientRect().bottom) { return 'not under the bar'; }"
+                    . "const barBox = bar.getBoundingClientRect();"
+                    . "if (box.top >= barBox.bottom) {"
+                    . "  return 'not under the bar: ' + JSON.stringify({scrollY: window.scrollY,"
+                    . "    scrollHeight: document.documentElement.scrollHeight, viewport: [innerWidth, innerHeight],"
+                    . "    bar: [barBox.top, barBox.bottom, getComputedStyle(bar).position], menu: box.top});"
+                    . "}"
                     . "const hit = document.elementFromPoint(box.left + 20, box.top + 5);"
                     . "return hit.closest('#research-bar-container') ? 'bar' : hit.className;"
             )[0];

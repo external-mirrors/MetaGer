@@ -2,63 +2,45 @@
 
 namespace Tests\Unit\Search;
 
+use App\Models\BlocklistEntry;
 use App\Search\Blacklists;
+use Tests\Concerns\UsesInMemorySqlite;
 use Tests\TestCase;
 
 /**
- * Unit tests for the blacklist lookup itself.
+ * The blocklist lookup itself.
  *
- * tests/Feature/Search/BlacklistFilterTest already pins what a search does with
- * these files, end to end. These are the cases that are awkward to reach that
- * way — an exotic host, a repeated line, an edit between two requests — plus the
- * memoization, which by design is invisible from the outside except when it goes
- * wrong.
+ * tests/Feature/Search/BlacklistFilterTest pins what a search does with the
+ * entries, end to end, and BlocklistSnapshotTest how the compiled list is kept
+ * and what it falls back to. These are the cases that are awkward to reach
+ * through a search — an exotic host, a repeated entry, a result without a host.
  *
- * Blacklists takes its directory as a constructor argument for exactly this: a
- * unit test gets a temporary one instead of config/.
+ * Rows are written straight into the table here, already normalised, so these
+ * are about the lookup and not about what the API makes of its input.
  */
 class BlacklistsTest extends TestCase
 {
-    private string $dir;
+    use UsesInMemorySqlite;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dir = sys_get_temp_dir() . "/blacklists-" . uniqid();
-        mkdir($this->dir);
+        $this->setUpInMemorySqlite();
     }
 
-    protected function tearDown(): void
+    private function entry(string $kind, string $value, ?string $terms = null): void
     {
-        foreach (glob($this->dir . "/*") as $file) {
-            unlink($file);
-        }
-        rmdir($this->dir);
-        parent::tearDown();
-    }
-
-    private function write(string $name, string $contents): void
-    {
-        file_put_contents($this->dir . "/" . $name, $contents);
-        // Same reason TestCase::setUp flushes: within one second, two files of
-        // equal length look identical to the stat() the memo is keyed on.
-        Blacklists::flush();
+        BlocklistEntry::create(["kind" => $kind, "value" => $value, "terms" => $terms, "reason" => "other"]);
     }
 
     private function lists(): Blacklists
     {
-        return new Blacklists($this->dir);
+        Blacklists::flush();
+
+        return new Blacklists();
     }
 
-    private function bothFiles(string $domains, string $urls): Blacklists
-    {
-        $this->write("blacklistDomains.txt", $domains);
-        $this->write("blacklistUrl.txt", $urls);
-
-        return $this->lists();
-    }
-
-    public function testWithNoFilesNothingIsBlocked(): void
+    public function testWithNoEntriesNothingIsBlocked(): void
     {
         $this->assertFalse($this->lists()->blocksResult("example.org", "example.org/page", "kaffee"));
         $this->assertFalse($this->lists()->blocksDescription("example.org/page"));
@@ -66,7 +48,8 @@ class BlacklistsTest extends TestCase
 
     public function testAHostIsMatchedExactlyAndNotBySuffix(): void
     {
-        $lists = $this->bothFiles("example.org\n", "");
+        $this->entry("domain", "example.org");
+        $lists = $this->lists();
 
         $this->assertTrue($lists->blocksResult("example.org", "example.org/page", "q"));
         $this->assertFalse($lists->blocksResult("notexample.org", "notexample.org/page", "q"));
@@ -74,36 +57,50 @@ class BlacklistsTest extends TestCase
     }
 
     /**
-     * This is the one behaviour that is deliberately different from before.
-     *
-     * The old check was in_array() without the strict flag, so two numeric
-     * strings were compared as numbers: an entry of `1.20` blocked the host
-     * `1.2`, and `0.0` blocked `0`. Hash lookups compare exactly.
+     * Results keep the host's case as the engine sent it; entries are stored
+     * lowercased. Both sides are folded before the lookup.
+     */
+    public function testTheResultsHostIsCaseFolded(): void
+    {
+        $this->entry("domain", "example.org");
+
+        $this->assertTrue($this->lists()->blocksResult("Example.ORG", "Example.ORG/page", "q"));
+    }
+
+    /**
+     * Long before the database: the check was once in_array() without the
+     * strict flag, so `1.20` blocked the host `1.2`. Hash lookups compare
+     * exactly, and keep doing so.
      */
     public function testANumericLookingEntryIsNotComparedAsANumber(): void
     {
-        $lists = $this->bothFiles("1.20\n", "");
+        $this->entry("domain", "1.20");
+        $lists = $this->lists();
 
         $this->assertTrue($lists->blocksResult("1.20", "1.20/page", "q"));
         $this->assertFalse($lists->blocksResult("1.2", "1.2/page", "q"), "1.20 blocked 1.2 — the comparison went back to being loose.");
     }
 
-    public function testARepeatedLineIsHarmless(): void
+    public function testARepeatedEntryIsHarmless(): void
     {
-        $lists = $this->bothFiles("example.org\nexample.org\nexample.org\n", "");
+        $this->entry("domain", "example.org");
+        $this->entry("domain", "example.org");
 
+        $lists = $this->lists();
         $this->assertTrue($lists->blocksResult("example.org", "example.org/page", "q"));
+        $this->assertCount(2, $lists->blockingEntryIds("example.org", "example.org/page", "q"));
     }
 
     /**
-     * An empty line becomes an empty entry, and every result whose host the url
-     * parser could not read has an empty stripped host. The guard in front of
-     * the lookups is what keeps a stray blank line from blocking all of them —
-     * and a trailing newline means there is nearly always one.
+     * Every result whose host the url parser could not read has an empty
+     * stripped host. The guard in front of the lookups is what keeps a stray
+     * empty value from blocking all of them.
      */
     public function testAResultWithNoReadableHostIsNeverBlocked(): void
     {
-        $lists = $this->bothFiles("\n\n\n", "\n\n\n");
+        $this->entry("domain", "");
+        $this->entry("url", "");
+        $lists = $this->lists();
 
         $this->assertFalse($lists->blocksResult("", "", "q"));
         $this->assertFalse($lists->blocksResult("", "example.org/page", "q"));
@@ -111,7 +108,8 @@ class BlacklistsTest extends TestCase
 
     public function testTheQueryIsMatchedCaseInsensitively(): void
     {
-        $lists = $this->bothFiles("", "example.org/page|kaffee\n");
+        $this->entry("url_terms", "example.org/page", "kaffee");
+        $lists = $this->lists();
 
         $this->assertTrue($lists->blocksResult("example.org", "example.org/page", "KAFFEE"));
         $this->assertTrue($lists->blocksResult("example.org", "example.org/page", "Kaffee"));
@@ -119,100 +117,57 @@ class BlacklistsTest extends TestCase
     }
 
     /**
-     * The url is not lowercased, only the query is. Worth pinning because the
-     * two halves of the same line are treated differently.
+     * Paths are case-sensitive on the web, so the path is not folded — only
+     * the host is.
      */
-    public function testTheUrlHalfOfAScopedEntryIsCaseSensitive(): void
+    public function testThePathIsCaseSensitive(): void
     {
-        $lists = $this->bothFiles("", "example.org/Page|kaffee\n");
+        $this->entry("url", "example.org/Page");
+        $lists = $this->lists();
 
-        $this->assertTrue($lists->blocksResult("example.org", "example.org/Page", "kaffee"));
-        $this->assertFalse($lists->blocksResult("example.org", "example.org/page", "kaffee"));
+        $this->assertTrue($lists->blocksResult("example.org", "example.org/Page", "q"));
+        $this->assertFalse($lists->blocksResult("example.org", "example.org/page", "q"));
     }
 
-    public function testTheDescriptionListIsIndependentOfTheOtherTwo(): void
+    public function testATrailingSlashOnTheResultDoesNotMatter(): void
     {
-        $this->write("blacklistDescriptionUrl.txt", "example.org/page\n");
+        $this->entry("url", "example.org/page");
 
+        $this->assertTrue($this->lists()->blocksResult("example.org", "example.org/page/", "q"));
+    }
+
+    public function testAUrlEntryDoesNotCoverThePagesBelowIt(): void
+    {
+        $this->entry("url", "example.org/page");
+
+        $this->assertFalse($this->lists()->blocksResult("example.org", "example.org/page/sub", "q"));
+    }
+
+    public function testAUrlTermsEntryWithoutTermsBlocksNothing(): void
+    {
+        $this->entry("url_terms", "example.org/page", "");
+
+        $this->assertFalse($this->lists()->blocksResult("example.org", "example.org/page", "q"));
+    }
+
+    public function testTheDescriptionListIsIndependentOfTheOthers(): void
+    {
+        $this->entry("description", "example.org/page");
         $lists = $this->lists();
 
         $this->assertTrue($lists->blocksDescription("example.org/page"));
         $this->assertFalse($lists->blocksResult("example.org", "example.org/page", "q"), "The description list started dropping results.");
     }
 
-    /**
-     * The point of the class: a file is parsed once per process, and every
-     * later request in that process answers from the parsed copy.
-     *
-     * Shown by rewriting the file behind the memo's back — same length, same
-     * mtime, different content — which is the one edit a stat() cannot see. The
-     * old answer surviving is the memo working. Deleting the file would not
-     * show it: the two lists are behind an is_file() gate that runs every time.
-     */
-    public function testAParsedFileIsNotReadAgain(): void
+    public function testBlockingEntryIdsNamesEveryEntryThatApplies(): void
     {
-        $lists = $this->bothFiles("aaa.example\n", "");
-        $this->assertTrue($lists->blocksResult("aaa.example", "aaa.example/page", "q"));
+        $this->entry("domain", "example.org");
+        $this->entry("url", "example.org/page");
+        $this->entry("url_terms", "example.org/page", "max mustermann");
+        $this->entry("url_terms", "example.org/page", "erika");
 
-        $path = $this->dir . "/blacklistDomains.txt";
-        $stamp = filemtime($path);
-        file_put_contents($path, "bbb.example\n");
-        touch($path, $stamp);
+        $ids = $this->lists()->blockingEntryIds("example.org", "example.org/page", "Mustermann Max Anwalt");
 
-        $this->assertTrue(
-            $this->lists()->blocksResult("aaa.example", "aaa.example/page", "q"),
-            "A new request read the file again — the memo no longer spans requests, and every one of them pays for parsing it."
-        );
-        $this->assertFalse($this->lists()->blocksResult("bbb.example", "bbb.example/page", "q"));
-    }
-
-    /**
-     * ...but an edit is picked up by the next request, which is what makes
-     * editing the file on a developer machine work without restarting php-fpm.
-     *
-     * A new instance, because that is what a request gets: the object is a
-     * container singleton and the container is per request.
-     */
-    public function testAnEditToTheFileIsPickedUpByTheNextRequest(): void
-    {
-        $this->assertTrue($this->bothFiles("example.org\n", "")->blocksResult("example.org", "example.org/page", "q"));
-
-        // A different length, so the change is visible to a stat() even within
-        // the same second. Production files are read-only mounts that do not
-        // change at all while the pod lives; see the note on Blacklists::$files.
-        file_put_contents($this->dir . "/blacklistDomains.txt", "somewhere-else.example\n");
-
-        $this->assertFalse(
-            $this->lists()->blocksResult("example.org", "example.org/page", "q"),
-            "A removed entry kept blocking; the memo is not noticing the file changed."
-        );
-    }
-
-    /**
-     * Within one request the answer does not change, however the file does.
-     *
-     * That is the reason the instance holds its own copy: the stat() then costs
-     * one call per request rather than one per result — and half a result page
-     * filtered by the old list and half by the new one would be worse than
-     * either.
-     */
-    public function testOneRequestSeesOneVersionOfTheFile(): void
-    {
-        $lists = $this->bothFiles("example.org\n", "");
-        $this->assertTrue($lists->blocksResult("example.org", "example.org/page", "q"));
-
-        file_put_contents($this->dir . "/blacklistDomains.txt", "somewhere-else.example\n");
-
-        $this->assertTrue($lists->blocksResult("example.org", "example.org/page", "q"));
-    }
-
-    public function testFlushForgetsEverything(): void
-    {
-        $this->assertTrue($this->bothFiles("example.org\n", "")->blocksResult("example.org", "example.org/page", "q"));
-
-        unlink($this->dir . "/blacklistDomains.txt");
-        Blacklists::flush();
-
-        $this->assertFalse($this->lists()->blocksResult("example.org", "example.org/page", "q"));
+        $this->assertSame([1, 2, 3], $ids);
     }
 }

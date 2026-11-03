@@ -2,72 +2,62 @@
 
 namespace Tests\Feature\Search;
 
+use App\Models\BlocklistEntry;
+use App\Search\BlocklistNormalizer;
 use Tests\Concerns\FakesSearchEngines;
+use Tests\Concerns\UsesInMemorySqlite;
 use Tests\TestCase;
 
 /**
- * Characterization tests for the operator blacklists — the three text files
- * MetaGer reads from config/ to drop results the site will not show.
+ * What the operator blocklist does to a real search, end to end.
  *
- *   blacklistDomains.txt        one host per line; a result on that host is
- *                               dropped
- *   blacklistUrl.txt            one host+path per line; that page is dropped,
- *                               and a `page|query` line drops it for one query
- *   blacklistDescriptionUrl.txt one host+path per line; the result stays but
- *                               loses its description
+ * The list is the `blocklist_entries` table (App\Search\Blacklists). It used
+ * to be three text files in config/, and this test began as the
+ * characterization of those files before they moved. The tests whose names
+ * say "now" are the ones that pinned a quirk of the files and were flipped,
+ * on purpose, by the move:
  *
- * None of this was covered before, and all of it is about to move: today the
- * files are read and exploded in MetaGer::__construct on every single request,
- * and Result::isBlackListed then in_array()s the resulting flat arrays once per
- * result. Both costs grow with the length of the files.
+ *   - the url list was not trimmed, so a padded line matched nothing;
+ *   - neither of the domain and url lists loaded unless both files existed;
+ *   - a domain entry written with `www.` or as a full URL matched nothing;
+ *   - a `page|query` line matched only the exact lowercased query, so a
+ *     capitalised entry never matched and a reordered query was not caught.
  *
- * The files are not in the repository. In production they are subPath mounts of
- * keys in the `secrets` Secret (see chart/templates/_helpers.tpl), so a fresh
- * checkout has none and the filter is simply inert. These tests write them.
+ * Comment lines went with the files: the importer skips them
+ * (BlocklistImportFilesTest), and the table has no such thing.
  *
- * Several assertions below pin behaviour that is inconsistent rather than
- * intended — the two lists disagree about trimming, and neither loads unless
- * both files are present. They are marked where they appear. Pinning them is
- * not the same as endorsing them; it is so that a later fix is a decision
- * someone makes on purpose, with a failing test naming what changed.
+ * Entries are written the way the API writes them — normalised by
+ * BlocklistEntry::normalizeValue / BlocklistNormalizer::terms — into an
+ * in-memory database, never the developer's real one.
  */
 class BlacklistFilterTest extends TestCase
 {
     use FakesSearchEngines;
+    use UsesInMemorySqlite;
 
-    /** @var array<string, string|null> path => contents to restore, null if it did not exist */
-    private array $restore = [];
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setUpInMemorySqlite();
+    }
 
     protected function tearDown(): void
     {
-        foreach ($this->restore as $path => $contents) {
-            if ($contents === null) {
-                @unlink($path);
-            } else {
-                file_put_contents($path, $contents);
-            }
-        }
-        $this->restore = [];
-
         $this->forgetSearchUserClaims();
         parent::tearDown();
     }
 
     /**
-     * Write one of the blacklist files for the duration of the test.
-     *
-     * A developer machine may have real ones; the previous contents are put
-     * back in tearDown either way.
+     * @param ?string $terms the query words, for url_terms
      */
-    private function writeBlacklist(string $name, string $contents): void
+    private function block(string $kind, string $value, ?string $terms = null): BlocklistEntry
     {
-        $path = config_path($name);
-
-        if (!array_key_exists($path, $this->restore)) {
-            $this->restore[$path] = is_file($path) ? file_get_contents($path) : null;
-        }
-
-        file_put_contents($path, $contents);
+        return BlocklistEntry::create([
+            "kind" => $kind,
+            "value" => BlocklistEntry::normalizeValue($kind, $value),
+            "terms" => $terms === null ? null : implode(" ", BlocklistNormalizer::terms($terms)),
+            "reason" => "other",
+        ]);
     }
 
     /**
@@ -98,9 +88,9 @@ class BlacklistFilterTest extends TestCase
 
     /**
      * The baseline every other test here is measured against. Without it, a
-     * blacklist test passes just as well when the search returns nothing at all.
+     * blocklist test passes just as well when the search returns nothing at all.
      */
-    public function testWithoutAnyBlacklistFileEveryResultSurvives(): void
+    public function testWithoutAnyEntryEveryResultSurvives(): void
     {
         $links = $this->links($this->search());
 
@@ -108,57 +98,68 @@ class BlacklistFilterTest extends TestCase
         $this->assertContains("https://beispiel.de/sorten", $links);
     }
 
-    public function testAHostOnTheDomainBlacklistIsDropped(): void
+    /**
+     * Also what replaced "neither list loads unless both files exist": a
+     * domain entry is enough on its own.
+     */
+    public function testAHostOnTheDomainListIsDropped(): void
     {
-        // Both files, because neither list loads unless both exist — see the
-        // dedicated test below.
-        $this->writeBlacklist("blacklistDomains.txt", "beispiel.de\n");
-        $this->writeBlacklist("blacklistUrl.txt", "");
+        $this->block("domain", "beispiel.de");
 
         $links = $this->links($this->search());
 
         $this->assertNotContains("https://beispiel.de/sorten", $links);
-        $this->assertContains("https://example.org/kaffee", $links, "The whole search was dropped, not just the blacklisted host.");
+        $this->assertContains("https://example.org/kaffee", $links, "The whole search was dropped, not just the blocked host.");
     }
 
     /**
-     * Entries are matched against the *stripped* host: scheme, `www.`, port,
-     * query and fragment removed. So `https://beispiel.de/sorten` is blocked by
-     * the line `beispiel.de` and by nothing more elaborate.
+     * Used to match nothing: the line was compared with the stripped host
+     * as written. A domain entry is now normalised to the host it names.
      */
-    public function testTheDomainBlacklistMatchesTheStrippedHostAndNotTheFullUrl(): void
+    public function testADomainEntryGivenAsAFullUrlNowBlocksItsHost(): void
     {
-        $this->writeBlacklist("blacklistDomains.txt", "https://beispiel.de/sorten\n");
-        $this->writeBlacklist("blacklistUrl.txt", "");
+        $entry = $this->block("domain", "https://beispiel.de/sorten");
 
-        $this->assertContains("https://beispiel.de/sorten", $this->links($this->search()));
+        $this->assertSame("beispiel.de", $entry->value);
+        $this->assertNotContains("https://beispiel.de/sorten", $this->links($this->search()));
     }
 
-    public function testAPageOnTheUrlBlacklistIsDropped(): void
+    public function testADomainEntryWrittenWithWwwNowBlocks(): void
     {
-        $this->writeBlacklist("blacklistDomains.txt", "");
-        $this->writeBlacklist("blacklistUrl.txt", "example.org/kaffee\n");
+        $this->block("domain", "www.Beispiel.de");
+
+        $this->assertNotContains("https://beispiel.de/sorten", $this->links($this->search()));
+    }
+
+    public function testAPageOnTheUrlListIsDropped(): void
+    {
+        $this->block("url", "example.org/kaffee");
 
         $links = $this->links($this->search());
 
         $this->assertNotContains("https://example.org/kaffee", $links);
-        $this->assertContains("https://example.org/espresso", $links, "The whole host was dropped; the url list is meant to block one page.");
+        $this->assertContains("https://example.org/espresso", $links, "The whole host was dropped; a url entry is meant to block one page.");
     }
 
     /**
-     * `<page>|<query>` blocks a page for one search term only. The query is
-     * lowercased before the comparison, the page is not.
-     *
+     * Used to match nothing: the url file was not trimmed, so neither did an
+     * indented line or any line of a file saved with CRLF endings.
+     */
+    public function testAPaddedUrlEntryNowBlocks(): void
+    {
+        $this->block("url", "  https://www.example.org/kaffee/  ");
+
+        $this->assertNotContains("https://example.org/kaffee", $this->links($this->search()));
+    }
+
+    /**
      * Split over two methods rather than searching twice in one, which cannot
      * work: SearchSettings and QueryTimer are both container singletons and the
-     * container is not rebuilt between two $this->get() calls, so the second
-     * search would run with the first one's query — and QueryTimer would throw
-     * on the repeated event name before it got that far.
+     * container is not rebuilt between two $this->get() calls.
      */
-    public function testAQueryScopedUrlBlacklistEntryBlocksThatQuery(): void
+    public function testAUrlTermsEntryBlocksAQueryContainingItsTerms(): void
     {
-        $this->writeBlacklist("blacklistDomains.txt", "");
-        $this->writeBlacklist("blacklistUrl.txt", "example.org/espresso|kaffee\n");
+        $this->block("url_terms", "example.org/espresso", "kaffee");
 
         $links = $this->links($this->search("kaffee"));
 
@@ -166,134 +167,68 @@ class BlacklistFilterTest extends TestCase
         $this->assertContains("https://example.org/kaffee", $links, "Everything went; the entry is meant to block one page.");
     }
 
-    public function testAQueryScopedUrlBlacklistEntryLeavesOtherQueriesAlone(): void
+    public function testAUrlTermsEntryLeavesOtherQueriesAlone(): void
     {
-        $this->writeBlacklist("blacklistDomains.txt", "");
-        $this->writeBlacklist("blacklistUrl.txt", "example.org/espresso|kaffee\n");
+        $this->block("url_terms", "example.org/espresso", "kaffee");
 
         $this->assertContains("https://example.org/espresso", $this->links($this->search("tee")));
     }
 
-    /**
-     * The query is lowercased before it is compared, so a search typed with
-     * capitals is still caught by a lowercase entry.
-     */
-    public function testTheQueryIsLowercasedBeforeTheComparison(): void
+    public function testTheQueryIsCaseFoldedBeforeTheComparison(): void
     {
-        $this->writeBlacklist("blacklistDomains.txt", "");
-        $this->writeBlacklist("blacklistUrl.txt", "example.org/espresso|kaffee\n");
+        $this->block("url_terms", "example.org/espresso", "kaffee");
 
         $this->assertNotContains("https://example.org/espresso", $this->links($this->search("KaFFee")));
     }
 
     /**
-     * The query part of the entry is *not* lowercased, so an entry written with
-     * a capital letter can never match: the query it is compared against has
-     * already been folded.
+     * Used to never match: the query was lowercased and the entry was not.
      */
-    public function testAQueryScopedEntryWrittenWithCapitalsNeverMatches(): void
+    public function testAUrlTermsEntryWrittenWithCapitalsNowMatches(): void
     {
-        $this->writeBlacklist("blacklistDomains.txt", "");
-        $this->writeBlacklist("blacklistUrl.txt", "example.org/espresso|Kaffee\n");
+        $this->block("url_terms", "example.org/espresso", "Kaffee");
 
-        $this->assertContains(
-            "https://example.org/espresso",
-            $this->links($this->search("Kaffee")),
-            "A capitalised query entry now matches. Sensible, but a change: say so on purpose."
-        );
+        $this->assertNotContains("https://example.org/espresso", $this->links($this->search("Kaffee")));
     }
 
     /**
-     * The query must equal the entry exactly: one more word and the page is
-     * shown again, and so it is with the same words in another order.
+     * Used to need the exact query. Terms are a set now: every one of them
+     * has to be among the query's words, in any order, among others.
      */
-    public function testAQueryScopedEntryNeedsTheExactQuery(): void
+    public function testAUrlTermsEntryNowMatchesItsTermsInAnyOrderAmongOthers(): void
     {
-        $this->writeBlacklist("blacklistDomains.txt", "");
-        $this->writeBlacklist("blacklistUrl.txt", "example.org/espresso|kaffee bohnen\n");
+        $this->block("url_terms", "example.org/espresso", "kaffee bohnen");
 
-        $this->assertContains(
-            "https://example.org/espresso",
-            $this->links($this->search("bohnen kaffee")),
-            "A reordered query now matches the entry."
-        );
+        $this->assertNotContains("https://example.org/espresso", $this->links($this->search("frische Bohnen, Kaffee")));
+    }
+
+    public function testAUrlTermsEntryNeedsEveryTerm(): void
+    {
+        $this->block("url_terms", "example.org/espresso", "kaffee bohnen");
+
+        $this->assertContains("https://example.org/espresso", $this->links($this->search("kaffee")));
+    }
+
+    public function testUmlautsAndTheirSpelledOutFormAreOneTerm(): void
+    {
+        $this->block("url_terms", "example.org/espresso", "Kaffeemühle");
+
+        $this->assertNotContains("https://example.org/espresso", $this->links($this->search("kaffeemuehle")));
     }
 
     /**
-     * Domain entries are compared with the stripped host exactly as written,
-     * so an entry that kept its `www.` matches nothing: the host it would have
-     * to equal has had its `www.` removed.
+     * The description list does not drop the result, it blanks the
+     * description and leaves the link in place.
      */
-    public function testADomainEntryWrittenWithWwwMatchesNothing(): void
+    public function testTheDescriptionListEmptiesTheDescriptionAndKeepsTheResult(): void
     {
-        $this->writeBlacklist("blacklistDomains.txt", "www.beispiel.de\n");
-        $this->writeBlacklist("blacklistUrl.txt", "");
-
-        $this->assertContains(
-            "https://beispiel.de/sorten",
-            $this->links($this->search()),
-            "A `www.` domain entry now blocks. Sensible, but a change: say so on purpose."
-        );
-    }
-
-    public function testACommentLineInTheUrlBlacklistIsNotAnEntry(): void
-    {
-        $this->writeBlacklist("blacklistDomains.txt", "");
-        $this->writeBlacklist("blacklistUrl.txt", "# example.org/kaffee is fine now\n#example.org/espresso\n");
-
-        $links = $this->links($this->search());
-
-        $this->assertContains("https://example.org/kaffee", $links);
-        $this->assertContains("https://example.org/espresso", $links);
-    }
-
-    /**
-     * The two lists disagree, and this is the inconsistency, not a typo:
-     * blacklistDomains.txt runs every line through trim(), blacklistUrl.txt
-     * does not. So an indented domain blocks and an indented url silently does
-     * nothing — which also means a file saved with CRLF line endings blocks
-     * nothing at all through the url list.
-     */
-    public function testTheDomainListIsTrimmedAndTheUrlListIsNot(): void
-    {
-        $this->writeBlacklist("blacklistDomains.txt", "  beispiel.de  \n");
-        $this->writeBlacklist("blacklistUrl.txt", "  example.org/kaffee  \n");
-
-        $links = $this->links($this->search());
-
-        $this->assertNotContains("https://beispiel.de/sorten", $links, "A padded domain no longer blocks — the domain list stopped being trimmed.");
-        $this->assertContains("https://example.org/kaffee", $links, "A padded url now blocks. That is an improvement, but it is a change: say so on purpose.");
-    }
-
-    /**
-     * Both files are behind one `&&`, so an operator who ships only a domain
-     * blacklist gets no filtering whatsoever — including from the file they did
-     * ship.
-     */
-    public function testNeitherListLoadsUnlessBothFilesExist(): void
-    {
-        $this->writeBlacklist("blacklistDomains.txt", "beispiel.de\n");
-
-        $this->assertContains(
-            "https://beispiel.de/sorten",
-            $this->links($this->search()),
-            "The domain list now loads on its own. That is the sensible behaviour, but it is a change in what a half-configured deployment does."
-        );
-    }
-
-    /**
-     * The third list is the odd one out: it does not drop the result, it blanks
-     * the description and leaves the link in place.
-     */
-    public function testTheDescriptionBlacklistEmptiesTheDescriptionAndKeepsTheResult(): void
-    {
-        $this->writeBlacklist("blacklistDescriptionUrl.txt", "example.org/kaffee\n");
+        $this->block("description", "example.org/kaffee");
 
         $results = $this->search();
 
         $kaffee = array_values(array_filter($results, fn(array $r) => $r["link"] === "https://example.org/kaffee"));
 
-        $this->assertCount(1, $kaffee, "The description blacklist dropped the result instead of blanking its description.");
+        $this->assertCount(1, $kaffee, "The description list dropped the result instead of blanking its description.");
         $this->assertSame("", $kaffee[0]["description"]);
 
         $others = array_values(array_filter($results, fn(array $r) => $r["link"] !== "https://example.org/kaffee"));
@@ -302,15 +237,27 @@ class BlacklistFilterTest extends TestCase
     }
 
     /**
-     * Unlike the other two, this one loads on its own.
+     * Soft-deleted entries stay in the table as history and do nothing.
      */
-    public function testTheDescriptionBlacklistLoadsWithoutTheOtherTwoFiles(): void
+    public function testADeletedEntryNoLongerBlocks(): void
     {
-        $this->writeBlacklist("blacklistDescriptionUrl.txt", "example.org/kaffee\n");
+        $this->block("domain", "beispiel.de")->delete();
 
-        $this->assertFileDoesNotExist(config_path("blacklistDomains.txt"));
+        $this->assertContains("https://beispiel.de/sorten", $this->links($this->search()));
+    }
 
-        $kaffee = array_values(array_filter($this->search(), fn(array $r) => $r["link"] === "https://example.org/kaffee"));
-        $this->assertSame("", $kaffee[0]["description"]);
+    /**
+     * The point of moving the list into the database: an edit applies on the
+     * next request, without a deploy or a restart.
+     */
+    public function testAnEntryAddedBetweenTwoSearchesAppliesToTheSecond(): void
+    {
+        $this->assertContains("https://beispiel.de/sorten", $this->links($this->search()));
+
+        $this->block("domain", "beispiel.de");
+        $this->forgetRequestScopedServices();
+        $this->app->forgetInstance(\App\Search\Blacklists::class);
+
+        $this->assertNotContains("https://beispiel.de/sorten", $this->links($this->search()));
     }
 }

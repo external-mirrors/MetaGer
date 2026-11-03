@@ -2,195 +2,386 @@
 
 namespace App\Search;
 
+use App\Models\BlocklistEntry;
+use Illuminate\Support\Facades\Log;
+
 /**
- * The operator blacklists: which results MetaGer will not show, and whose
+ * The operator blocklist: which results MetaGer will not show, and whose
  * descriptions it will not print.
  *
- * Three plain text files in config/, one entry per line:
+ * The entries live in the `blocklist_entries` table (App\Models\BlocklistEntry)
+ * and are edited live by suma-crm through /api/blocklist — docs/blocklist-api.md
+ * is the contract. Four kinds:
  *
- *   blacklistDomains.txt         a host — every result on it is dropped
- *   blacklistUrl.txt             a host+path — that one page is dropped; a
- *                                `page|query` line drops it for one query only
- *   blacklistDescriptionUrl.txt  a host+path — the result stays, its
- *                                description is blanked
+ *   domain       a host — every result on it is dropped
+ *   url          a host+path — that one page is dropped
+ *   url_terms    a host+path plus a set of terms — that page is dropped when
+ *                every term is among the query's words, in any order, among
+ *                others ("max mustermann" also covers "Mustermann Max anwalt")
+ *   description  a host+path — the result stays, its description is blanked
  *
- * None of them is in the repository. In production each is a subPath mount of a
- * key in the `secrets` Secret (chart/templates/_helpers.tpl), so a checkout has
- * none and the filter is simply inert.
+ * ## How a lookup stays cheap
  *
- * This used to live in MetaGer::__construct, which read and exploded all three
- * files on every request, and in Result::isBlackListed, which then ran in_array
- * over the resulting flat arrays three times per result. Both costs were linear
- * in the length of the files: at ten thousand lines the read alone was ~3.4 ms
- * per request and the scans ~0.5 ms per twenty results, and both grew from
- * there. Here the file is read once per worker process and the entries are held
- * as a hash map, so a lookup costs the same whatever the file's length.
+ * The table is compiled into a snapshot of hash maps — host → ids, link → ids,
+ * link → term sets — so a lookup is one isset() per kind whatever the length
+ * of the list, and terms are only looked at for a link that already hit. The
+ * snapshot is stamped with the Redis counter `blocklist:version`
+ * (BlocklistVersion), which every write increments, and kept per worker: in
+ * memory for long-running processes, and as an OPcache-held PHP file per
+ * version for FPM, which keeps nothing in memory between requests (see
+ * directory()). Each request reads the counter once; only a changed counter
+ * costs a database read, once per pod. So the database is off the result path
+ * except right after an edit.
  *
- * ## Two pieces of behaviour that are quirks, not decisions
+ * ## Failure
  *
- * The domain list is trimmed line by line and the url list is not, so an
- * indented url entry matches nothing — and neither does any entry in a file
- * saved with CRLF line endings. And the two lists are behind one `&&`: unless
- * *both* files exist, neither loads, so an operator who ships only a domain
- * blacklist gets no filtering at all. Both are kept as they were and pinned in
- * tests/Feature/Search/BlacklistFilterTest, which names each of them as
- * something a later change may fix on purpose.
+ * If Redis cannot be asked, the last snapshot stays in use; if the database
+ * cannot be read, likewise. The filter falls back to the old state, never to
+ * an empty list — a blocklist that silently empties is a removal request
+ * silently undone. Only a worker that has never managed to load once runs
+ * without one, and logs it on every request until it does.
  *
- * What did change is the comparison. in_array() defaults to loose comparison,
- * which for two numeric strings compares them as numbers — so a line reading
- * `1.20` blocked the host `1.2`. Hash lookups are exact.
+ * ## What changed with the move from the three files
+ *
+ * The files (blacklistDomains.txt, blacklistUrl.txt with its `page|query`
+ * lines, blacklistDescriptionUrl.txt) were imported by
+ * `artisan blocklist:import-files` and are not read any more. Two quirks
+ * went with them, on purpose: the url list was not trimmed, and neither of
+ * the first two lists loaded unless both files existed. Values are also
+ * normalised on both sides now (BlocklistNormalizer) — host lowercased,
+ * `www.` and a trailing slash dropped — so `www.example.org/a/` and
+ * `example.org/a` are one entry, and query terms are compared as words,
+ * folded for case and diacritics, rather than as one exact lowercased string.
  */
 class Blacklists
 {
-    private const DOMAINS = "blacklistDomains.txt";
-    private const URLS = "blacklistUrl.txt";
-    private const DESCRIPTIONS = "blacklistDescriptionUrl.txt";
+    /**
+     * The compiled snapshot, for the lifetime of the process — which under
+     * FPM is one request; see directory() for what carries it further.
+     *
+     * Static, so tests must reset it: Tests\TestCase::setUp calls flush().
+     *
+     * @var ?array{domains: array<string, list<int>>, urls: array<string, list<int>>, descriptions: array<string, list<int>>, terms: array<string, list<array{0: int, 1: list<string>}>>}
+     */
+    private static ?array $snapshot = null;
+
+    /** The `blocklist:version` the snapshot was compiled at; null if unknown. */
+    private static ?string $snapshotVersion = null;
 
     /**
-     * Parsed files, kept for the lifetime of the process rather than the
-     * request. Keyed by path and by the file's mtime and size, so an edit is
-     * picked up without a restart — which matters on a developer machine, and
-     * not in production, where a subPath mount of a Secret key does not change
-     * while the pod lives.
+     * The snapshot as this instance resolved it. The instance is a container
+     * singleton, so the version check happens once per request — and an edit
+     * landing halfway through a request does not apply to half of its results.
      *
-     * Static, so tests must reset it: two tests writing different content of
-     * the same length to the same path within one second are indistinguishable
-     * to a stat(). Tests\TestCase::setUp calls flush().
-     *
-     * @var array<string, array{stamp: string, entries: array<string, true>}>
+     * @var ?array{domains: array<string, list<int>>, urls: array<string, list<int>>, descriptions: array<string, list<int>>, terms: array<string, list<array{0: int, 1: list<string>}>>}
      */
-    private static array $files = [];
+    private ?array $resolved = null;
+
+    /** Set while {@see withoutBlocking} runs. */
+    private bool $bypassed = false;
+
+    /** @var array<string, array<string, true>> the query's normalised tokens, keyed by the raw query */
+    private array $queryTokens = [];
 
     /**
-     * The three lists as this instance resolved them, so the stat() that checks
-     * the memo happens once per instance and not once per result. The instance
-     * is a container singleton, so that means once per request — which is also
-     * the right granularity: a file edited halfway through a request should not
-     * apply to half of its results.
-     *
-     * @var array<string, array<string, true>>
+     * Forget every snapshot, in memory and on disk. For tests: the version
+     * counter lives in a Redis shared by the whole suite while each test has
+     * a database of its own, so a snapshot stored by one test would be
+     * "current" for the next one that writes nothing.
      */
-    private array $resolved = [];
-
-    public function __construct(private ?string $directory = null) {}
-
-    /** Forget every parsed file. For tests; see the note on self::$files. */
     public static function flush(): void
     {
-        self::$files = [];
+        self::$snapshot = null;
+        self::$snapshotVersion = null;
+
+        foreach (glob(self::directory() . DIRECTORY_SEPARATOR . "snapshot-*.php") ?: [] as $file) {
+            @unlink($file);
+        }
     }
 
     /**
-     * Is this result blacklisted?
+     * Is this result blocked?
      *
      * The host has to be readable for any of it to apply: a link the url parser
-     * could not take a host out of is never blacklisted, not even by an exact
-     * url entry. That is how the check has always read — one guard in front of
-     * all three lookups — and it is what stops an empty line in the domain file
-     * from blocking every result whose host failed to parse.
+     * could not take a host out of is never blocked, not even by an exact url
+     * entry.
      *
      * @param string $strippedHost host with scheme, `www.`, port and query removed
      * @param string $strippedLink the same, plus the path
-     * @param string $query the search term, matched case-insensitively
+     * @param string $query the search term
      */
     public function blocksResult(string $strippedHost, string $strippedLink, string $query): bool
     {
-        if ($strippedHost === "") {
+        if ($this->bypassed) {
             return false;
         }
 
-        $domains = $this->domains();
-        if (isset($domains[$strippedHost])) {
-            return true;
-        }
-
-        $urls = $this->urls();
-
-        return isset($urls[$strippedLink])
-            || isset($urls[$strippedLink . "|" . strtolower($query)]);
+        return $this->blockingEntryIds($strippedHost, $strippedLink, $query) !== [];
     }
 
     /**
      * Should this result be shown without its description?
-     *
-     * Unlike the other two lists, this one loads on its own.
      */
     public function blocksDescription(string $strippedLink): bool
     {
-        return isset($this->descriptions()[$strippedLink]);
-    }
+        if ($this->bypassed) {
+            return false;
+        }
 
-    /** @return array<string, true> */
-    private function domains(): array
-    {
-        return $this->resolved[self::DOMAINS] ??= $this->bothListsPresent()
-            ? $this->entries(self::DOMAINS, trim: true)
-            : [];
-    }
-
-    /** @return array<string, true> */
-    private function urls(): array
-    {
-        return $this->resolved[self::URLS] ??= $this->bothListsPresent()
-            ? $this->entries(self::URLS, trim: false, dropComments: true)
-            : [];
-    }
-
-    /** @return array<string, true> */
-    private function descriptions(): array
-    {
-        return $this->resolved[self::DESCRIPTIONS] ??= $this->entries(self::DESCRIPTIONS, trim: false);
+        return $this->descriptionEntryIds($strippedLink) !== [];
     }
 
     /**
-     * The `&&` from the original: one missing file disables the other list too.
+     * Ids of every entry that drops this result for this query, ignoring any
+     * bypass. What /api/blocklist/test and /check report.
+     *
+     * @return list<int>
      */
-    private function bothListsPresent(): bool
+    public function blockingEntryIds(string $strippedHost, string $strippedLink, string $query): array
     {
-        return is_file($this->path(self::DOMAINS)) && is_file($this->path(self::URLS));
-    }
-
-    private function path(string $name): string
-    {
-        return ($this->directory ?? config_path()) . DIRECTORY_SEPARATOR . $name;
-    }
-
-    /**
-     * @return array<string, true> entry => true, for isset() lookups
-     */
-    private function entries(string $name, bool $trim, bool $dropComments = false): array
-    {
-        $path = $this->path($name);
-
-        clearstatcache(true, $path);
-
-        if (!is_file($path)) {
+        if ($strippedHost === "") {
             return [];
         }
 
-        $stamp = filemtime($path) . ":" . filesize($path);
+        $snapshot = $this->snapshot();
+        $host = BlocklistNormalizer::strippedHost($strippedHost);
+        $link = BlocklistNormalizer::strippedLink($strippedLink);
 
-        if ((self::$files[$path]["stamp"] ?? null) === $stamp) {
-            return self::$files[$path]["entries"];
+        $ids = array_merge($snapshot["domains"][$host] ?? [], $snapshot["urls"][$link] ?? []);
+
+        if (isset($snapshot["terms"][$link])) {
+            $tokens = $this->queryTokens[$query] ??= array_fill_keys(BlocklistNormalizer::terms($query), true);
+            foreach ($snapshot["terms"][$link] as [$id, $terms]) {
+                foreach ($terms as $term) {
+                    if (!isset($tokens[$term])) {
+                        continue 2;
+                    }
+                }
+                $ids[] = $id;
+            }
         }
 
-        $lines = explode("\n", (string) file_get_contents($path));
+        sort($ids);
 
-        if ($trim) {
-            $lines = array_map("trim", $lines);
+        return $ids;
+    }
+
+    /**
+     * Ids of every entry that blanks this result's description, ignoring any
+     * bypass.
+     *
+     * @return list<int>
+     */
+    public function descriptionEntryIds(string $strippedLink): array
+    {
+        return $this->snapshot()["descriptions"][BlocklistNormalizer::strippedLink($strippedLink)] ?? [];
+    }
+
+    /**
+     * Run $callback with the filter switched off on this instance — for the
+     * check endpoint, which has to see what upstream returns. Only this
+     * request's instance is affected; every other request filters as usual.
+     *
+     * @template T
+     * @param callable(): T $callback
+     * @return T
+     */
+    public function withoutBlocking(callable $callback): mixed
+    {
+        $previous = $this->bypassed;
+        $this->bypassed = true;
+
+        try {
+            return $callback();
+        } finally {
+            $this->bypassed = $previous;
+        }
+    }
+
+    private function snapshot(): array
+    {
+        return $this->resolved ??= self::current();
+    }
+
+    /**
+     * The snapshot for the current version, from the cheapest place that has it.
+     */
+    private static function current(): array
+    {
+        $version = BlocklistVersion::current();
+
+        if ($version === null) {
+            // Redis is down. Whatever was last current is the best answer.
+            $snapshot = self::$snapshot ?? self::newestStored();
+            if ($snapshot !== null) {
+                return $snapshot;
+            }
+            Log::warning("blocklist: version unreadable and no snapshot stored, reading the table");
+            return self::compileOrEmpty();
         }
 
-        if ($dropComments) {
-            $lines = array_filter($lines, fn(string $line): bool => strpos(trim($line), "#") !== 0);
+        if (self::$snapshot !== null && self::$snapshotVersion === $version) {
+            return self::$snapshot;
         }
 
-        // A set rather than a list: this is what turns three linear scans per
-        // result into three hash lookups. A repeated line collapses onto itself,
-        // which is what a set should do with one.
-        $entries = array_fill_keys($lines, true);
+        $snapshot = self::stored($version);
+        if ($snapshot === null) {
+            try {
+                $snapshot = self::compile();
+            } catch (\Throwable $e) {
+                $fallback = self::$snapshot ?? self::newestStored();
+                if ($fallback !== null) {
+                    Log::warning("blocklist: reload for version $version failed, keeping the previous snapshot: " . $e->getMessage());
+                    return $fallback;
+                }
+                Log::error("blocklist: no snapshot could be loaded, results are unfiltered: " . $e->getMessage());
+                return self::empty();
+            }
+            self::store($version, $snapshot);
+        }
 
-        self::$files[$path] = ["stamp" => $stamp, "entries" => $entries];
+        self::$snapshot = $snapshot;
+        self::$snapshotVersion = $version;
 
-        return $entries;
+        return $snapshot;
+    }
+
+    private static function compileOrEmpty(): array
+    {
+        try {
+            return self::compile();
+        } catch (\Throwable $e) {
+            Log::error("blocklist: no snapshot could be loaded, results are unfiltered: " . $e->getMessage());
+            return self::empty();
+        }
+    }
+
+    /**
+     * Where compiled snapshots are kept between requests.
+     *
+     * PHP-FPM keeps nothing between requests, so the static above only lasts
+     * one request there (it does last in queue workers and in tests). The
+     * snapshot is therefore also written as a PHP file returning the array,
+     * one per version: OPcache keeps a required file in shared memory, so
+     * every request after the first in a pod gets it without a database
+     * query and without even unserializing it. A version's file never
+     * changes, so OPcache's timestamp checks cannot serve a stale one.
+     */
+    private static function directory(): string
+    {
+        return storage_path("framework/cache/blocklist");
+    }
+
+    private static function path(string $version): string
+    {
+        return self::directory() . DIRECTORY_SEPARATOR . "snapshot-" . preg_replace('/[^0-9A-Za-z_-]/', "", $version) . ".php";
+    }
+
+    private static function stored(string $version): ?array
+    {
+        $path = self::path($version);
+        if (!is_file($path)) {
+            return null;
+        }
+
+        $snapshot = @include $path;
+
+        return is_array($snapshot) ? $snapshot : null;
+    }
+
+    /**
+     * The most recently written snapshot, whatever its version.
+     */
+    private static function newestStored(): ?array
+    {
+        $files = glob(self::directory() . DIRECTORY_SEPARATOR . "snapshot-*.php") ?: [];
+        usort($files, fn(string $a, string $b) => (int) @filemtime($b) <=> (int) @filemtime($a));
+
+        foreach ($files as $file) {
+            $snapshot = @include $file;
+            if (is_array($snapshot)) {
+                return $snapshot;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Write the snapshot for $version, atomically, and drop older ones.
+     *
+     * A failure here costs speed, not correctness: the next request compiles
+     * again.
+     */
+    private static function store(string $version, array $snapshot): void
+    {
+        $directory = self::directory();
+        $path = self::path($version);
+
+        try {
+            if (!is_dir($directory) && !@mkdir($directory, 0775, true) && !is_dir($directory)) {
+                throw new \RuntimeException("cannot create $directory");
+            }
+
+            $temporary = $path . "." . bin2hex(random_bytes(4)) . ".tmp";
+            if (@file_put_contents($temporary, "<?php return " . var_export($snapshot, true) . ";\n") === false) {
+                throw new \RuntimeException("cannot write $temporary");
+            }
+            if (!@rename($temporary, $path)) {
+                @unlink($temporary);
+                throw new \RuntimeException("cannot rename $temporary");
+            }
+        } catch (\Throwable $e) {
+            Log::warning("blocklist: snapshot not stored: " . $e->getMessage());
+            return;
+        }
+
+        // Keep a few, not one: a worker that read the version a moment before
+        // the latest write may still be about to require the previous file.
+        $files = glob($directory . DIRECTORY_SEPARATOR . "snapshot-*.php") ?: [];
+        usort($files, fn(string $a, string $b) => (int) @filemtime($b) <=> (int) @filemtime($a));
+        foreach (array_slice($files, 3) as $old) {
+            @unlink($old);
+        }
+    }
+
+    private static function compile(): array
+    {
+        $snapshot = self::empty();
+
+        // toBase(): plain rows, no models — this can be thousands of lines, and
+        // the soft-delete scope is still applied.
+        $rows = BlocklistEntry::query()->toBase()->select(["id", "kind", "value", "terms"])->get();
+
+        foreach ($rows as $row) {
+            $id = (int) $row->id;
+            switch ($row->kind) {
+                case BlocklistEntry::KIND_DOMAIN:
+                    $snapshot["domains"][$row->value][] = $id;
+                    break;
+                case BlocklistEntry::KIND_URL:
+                    $snapshot["urls"][$row->value][] = $id;
+                    break;
+                case BlocklistEntry::KIND_DESCRIPTION:
+                    $snapshot["descriptions"][$row->value][] = $id;
+                    break;
+                case BlocklistEntry::KIND_URL_TERMS:
+                    $terms = $row->terms === null || $row->terms === "" ? [] : explode(" ", $row->terms);
+                    // An entry without terms would block the page for every
+                    // query, which is what `url` is for. The API refuses one;
+                    // skipping it here keeps a hand-edited row from widening.
+                    if ($terms !== []) {
+                        $snapshot["terms"][$row->value][] = [$id, $terms];
+                    }
+                    break;
+            }
+        }
+
+        return $snapshot;
+    }
+
+    private static function empty(): array
+    {
+        return ["domains" => [], "urls" => [], "descriptions" => [], "terms" => []];
     }
 }

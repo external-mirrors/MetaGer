@@ -190,13 +190,18 @@ class EngineOrchestrationTest extends TestCase
      * each discharge is also a synchronous HTTP POST to the keyserver made
      * while the user waits, which this recorder cannot see. See
      * SearchAuthorizationTest::testAllTheEnginesOfASearchArePaidForInOneCall.
+     *
+     * 14 -> 15 when the operator blocklist moved from three files on the pod
+     * into the database: one `get blocklist:version` per search is what tells
+     * the worker whether its stored snapshot is still current, and it is what
+     * keeps the database itself off this path (App\Search\Blacklists).
      */
     public function testTheWholeSearchStaysWithinItsRoundTripBudget(): void
     {
         [, $recorder] = $this->searchRecording();
 
         $this->assertLessThanOrEqual(
-            14,
+            15,
             $recorder->total(),
             "A search got more expensive in round trips, not less. In order:\n" . implode("\n", $recorder->trace())
         );

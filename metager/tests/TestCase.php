@@ -12,14 +12,13 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        // Blacklists parses each file once per *process*, not per request, and
-        // remembers it under the file's mtime and size. That is what makes it
-        // cheap in production, where the files are read-only mounts that never
-        // change while the pod lives — but two tests writing different content
-        // of the same length within one second are indistinguishable to a
-        // stat(), so the whole suite would run against whichever one got there
-        // first. Cleared here rather than in the tests that write the files,
-        // because the test that breaks is never the one that forgot.
+        // Blacklists keeps its compiled snapshot in a static and in a file per
+        // `blocklist:version`. The version lives in the Redis the whole suite
+        // shares, while each test that writes entries has an in-memory
+        // database of its own — so a snapshot left by one test would be
+        // "current" for the next test that writes nothing. Cleared here rather
+        // than in the tests that write entries, because the test that breaks
+        // is never the one that forgot.
         Blacklists::flush();
     }
 }

@@ -86,13 +86,17 @@ class Staan extends Searchengine
             'request-header' => [
                 'Accept' => 'application/json',
             ],
-            // Same weight as the other full web indexes (Brave, Google via
-            // Serper, Mojeek). Staan serves Qwant and Ecosia from its own crawl
-            // and fills gaps from a US fallback index, so for its three
-            // languages it is a primary web index, not a niche source. Ten
-            // results per page need no compensation: Result::rank() scores by
-            // position, so Staan's 10th result scores what Brave's 10th does.
-            'engine-boost' => 1.2,
+            // A step below Brave and Serper (1.2). Measured on 2026-11-03 across 18
+            // de/en/fr queries: Staan's top 10 shared 2.3 URLs with Google's on
+            // average, Brave's 6.2, and only 25 of Staan's 54 top-3 results were
+            // in Google's top 10, against Brave's 50. The results were relevant,
+            // but more often stale on news ("grève SNCF" ranked 2024 articles
+            // first) and weaker on navigational queries. At 1.1, Staan's first
+            // result ranks between Brave's second and third. That keeps the
+            // consensus engines at the top and still gives a user who opted in
+            // a visible share of Staan's results. Ten results per page need no
+            // compensation, because Result::rank() scores by position.
+            'engine-boost' => 1.1,
             // Paid per request, so cache for the default hour (Brave and Serper
             // do the same).
             'cache-duration' => -1,

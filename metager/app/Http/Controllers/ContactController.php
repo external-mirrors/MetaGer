@@ -24,7 +24,7 @@ class ContactController extends Controller
      * Inside these hours almost always, outside them almost never.
      */
     private const OFFICE_OPENS = "09:00";
-    private const OFFICE_CLOSES = "16:00";
+    private const OFFICE_CLOSES = "15:00";
     private const OFFICE_TIMEZONE = "Europe/Berlin";
 
     public function show(): View
@@ -58,7 +58,7 @@ class ContactController extends Controller
 
     /**
      * One office time as a <time> element, written the way the visitor's
-     * locale writes times: 16:00 for de-DE and en-GB, 4:00 PM for en-US.
+     * locale writes times: 15:00 for de-DE and en-GB, 3:00 PM for en-US.
      */
     private static function officeTime(string $time): string
     {

@@ -283,6 +283,13 @@ Docker's WORKDIR, unaffected by the command/args override below.
   {{- include "chart.env" (dict "root" $root "appUrl" .appUrl) | nindent 2 }}
   volumeMounts:
   {{- include "chart.mounts.env" $root | nindent 2 }}
+  # The config files as well, because a migration reads them: the blocklist
+  # table's data migration imports the mounted blacklist files. In production
+  # this container migrates the shared Postgres, and whichever Deployment's
+  # migrate runs first applies that migration for all of them — without the
+  # files here it would record an empty import and the fpm pod would never
+  # run it again.
+  {{- include "chart.mounts.config" $root | nindent 2 }}
   {{- include "chart.mounts.storage" $root | nindent 2 }}
 {{- end -}}
 

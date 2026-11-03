@@ -84,20 +84,81 @@ class RemovalPageTest extends TestCase
         )), "Exactly one website provider: its anchor is the page's first step.");
     }
 
-    public function testEveryProviderAnchorIsAnIdOnThePage(): void
+    /**
+     * provider id => provider, for the providers MetaGer still gets results
+     * from: those with at least one engine in a fokus that its parser does not
+     * switch off (CONFIG_OVERLOAD `disabled`; sumas.json cannot turn it back
+     * on). Mojeek and Staan are only off *by default* — a user can opt in, so
+     * they count. The website step is always there.
+     *
+     * Worked out here independently of RemovalController, from foki.json and
+     * the registry, so the test is not the controller checking itself.
+     *
+     * @return array<string, array>
+     */
+    private function providersInUse(): array
+    {
+        $registry = new SearchEngineRegistry();
+        $providers = config("removal_providers.providers");
+        $inUse = [];
+        foreach ($registry->foki as $fokus) {
+            foreach ($fokus->sumas as $engine) {
+                if (!($registry->sumas->{$engine}->disabled ?? false)) {
+                    $id = config("removal_providers.engines.$engine");
+                    $inUse[$id] = $providers[$id];
+                }
+            }
+        }
+        foreach ($providers as $id => $provider) {
+            if ($provider["type"] === "website") {
+                $inUse[$id] = $provider;
+            }
+        }
+        return $inUse;
+    }
+
+    public function testEveryProviderInUseHasItsAnchorOnThePage(): void
     {
         $page = $this->get("/de-DE/entfernen")->assertOk();
 
-        foreach (config("removal_providers.providers") as $id => $provider) {
+        foreach ($this->providersInUse() as $provider) {
             $page->assertSee('id="' . $provider["anchor"] . '"', false);
         }
+    }
+
+    /**
+     * Yandex, One News Page and One News Page Germany are switched off in
+     * their parsers: MetaGer has no access to Yandex any more, and both One
+     * News Page feeds died in August 2026. Sending someone to a provider whose
+     * results we do not show is a wasted errand, so their cards are gone.
+     * The engine => provider mapping keeps them, so a provider comes back on
+     * its own when its engine is switched on again.
+     */
+    public function testProvidersWeGetNoResultsFromAreNotShown(): void
+    {
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+        $inUse = $this->providersInUse();
+
+        foreach (config("removal_providers.providers") as $id => $provider) {
+            if (!isset($inUse[$id])) {
+                $this->assertStringNotContainsString('id="' . $provider["anchor"] . '"', $content, "[$id] has no engine in use but is on the page.");
+                $this->assertStringNotContainsString(e($provider["name"]), $content, "[$id] has no engine in use but is named on the page.");
+            }
+        }
+
+        // Today's case, spelled out, so the generic loop above cannot pass by
+        // having nothing to check.
+        $this->assertArrayNotHasKey("yandex", $inUse);
+        $this->assertArrayNotHasKey("onenewspage", $inUse);
+        $this->assertStringNotContainsString("Yandex", $content);
+        $this->assertStringNotContainsString("One News Page", $content);
     }
 
     public function testEveryProviderFormIsLinked(): void
     {
         $page = $this->get("/de-DE/entfernen")->assertOk();
 
-        foreach (config("removal_providers.providers") as $provider) {
+        foreach ($this->providersInUse() as $provider) {
             foreach ($provider["links"] as $url) {
                 if ($url !== null) {
                     $page->assertSee('href="' . e($url) . '"', false);

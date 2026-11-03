@@ -20,6 +20,11 @@
 | Tests\Feature\RemovalPageTest fails when an engine in config/foki.json has
 | no entry here, and when an anchor is missing from the page.
 |
+| The page shows a provider only while one of its engines is not switched off
+| in its parser (CONFIG_OVERLOAD `disabled`). Switched-off engines (Yandex,
+| One News Page) stay mapped here, so their provider comes back by itself
+| when the engine does — and suma-crm can still name them.
+|
 | `type`:
 |   - `provider`: a search index or platform with its own removal process.
 |     One card per provider on the page.

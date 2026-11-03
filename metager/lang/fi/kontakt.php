@@ -21,14 +21,11 @@ Saksa",
             'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'intro' => 'Ennen kuin kirjoitat: moneen kysymykseen löytyy vastaus jo täältä — yleensä nopeammin kuin sähköpostilla.',
     'removal' => [
-        'heading' => 'Haluatko hakutuloksen poistettavaksi?',
-        'text' => 'Lue ensin ohjeemme. MetaGer näyttää muiden hakukoneiden tuloksia, joten tuloksen voi poistaa vain verkkosivustolla ja näissä hakukoneissa. Ohje kertoo, missä ja miten.',
-        'link' => 'Ohje: hakutuloksen poistaminen',
+        'hint' => 'Haluatko poistaa hakutuloksen? Lue ensin <a href=":link">ohjeemme</a>: MetaGer näyttää muiden hakukoneiden tuloksia, joten tuloksen voi yleensä poistaa vain niissä.',
     ],
     'topics' => [
-        'heading' => 'Muita yleisiä kysymyksiä',
+        'heading' => 'Yleisiä kysymyksiä',
         'key' => [
             'title' => 'MetaGer-avain ja tokenit',
             'text' => 'Miten avain toimii, lataaminen ja saldo',
@@ -54,5 +51,4 @@ Saksa",
             'text' => 'Mitä tallennamme — ja mitä emme',
         ],
     ],
-    'reach' => 'Näin tavoitat meidät',
 ];

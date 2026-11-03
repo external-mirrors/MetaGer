@@ -18,14 +18,11 @@ return [
         '2' => 'Email gets the fastest answer. By post, you can reach us at:',
         '3' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nGermany",
     ],
-    'intro' => 'Before you write: many questions already have an answer here — usually quicker than by email.',
     'removal' => [
-        'heading' => 'Want a search result removed?',
-        'text' => 'Please read our guide first. MetaGer shows the results of other search engines, so a result can only be removed at the website and at those search engines. The guide shows where and how.',
-        'link' => 'Guide: removing a search result',
+        'hint' => 'Is this about removing a search result? Please read <a href=":link">our guide</a> first: MetaGer shows other search engines\' results, so a result can usually only be removed there.',
     ],
     'topics' => [
-        'heading' => 'Other common questions',
+        'heading' => 'Common questions',
         'key' => [
             'title' => 'MetaGer key and tokens',
             'text' => 'How the key works, topping up and balance',
@@ -51,5 +48,4 @@ return [
             'text' => 'What we store — and what we do not',
         ],
     ],
-    'reach' => 'How to reach us',
 ];

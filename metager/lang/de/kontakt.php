@@ -21,14 +21,11 @@ Germany",
             'fingerprint' => 'PGP-Fingerabdruck: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'intro' => 'Bevor Sie schreiben: Auf viele Fragen gibt es hier schon eine Antwort — meist schneller als per E-Mail.',
     'removal' => [
-        'heading' => 'Ein Suchergebnis entfernen lassen?',
-        'text' => 'Bitte lesen Sie zuerst unsere Anleitung. MetaGer zeigt die Ergebnisse anderer Suchmaschinen; entfernen lässt sich ein Ergebnis deshalb nur bei der Webseite und bei diesen Suchmaschinen. Die Anleitung zeigt, wo und wie.',
-        'link' => 'Anleitung: Suchergebnis entfernen',
+        'hint' => 'Geht es um ein Suchergebnis, das entfernt werden soll? Bitte lesen Sie vorher <a href=":link">unsere Anleitung</a>: MetaGer zeigt die Ergebnisse anderer Suchmaschinen, entfernen lässt sich ein Ergebnis deshalb in der Regel nur dort.',
     ],
     'topics' => [
-        'heading' => 'Andere häufige Anliegen',
+        'heading' => 'Häufige Anliegen',
         'key' => [
             'title' => 'MetaGer-Schlüssel und Token',
             'text' => 'Wie der Schlüssel funktioniert, Aufladen und Guthaben',
@@ -54,5 +51,4 @@ Germany",
             'text' => 'Was wir speichern — und was nicht',
         ],
     ],
-    'reach' => 'So erreichen Sie uns',
 ];

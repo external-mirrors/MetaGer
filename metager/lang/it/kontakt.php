@@ -21,14 +21,11 @@ Germania",
             'fingerprint' => 'Impronta digitale PGP: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'intro' => 'Prima di scriverci: molte domande hanno già una risposta qui — di solito più rapida che via e-mail.',
     'removal' => [
-        'heading' => 'Vuoi far rimuovere un risultato di ricerca?',
-        'text' => 'Leggi prima la nostra guida. MetaGer mostra i risultati di altri motori di ricerca, quindi un risultato può essere rimosso solo sul sito web e presso quei motori di ricerca. La guida spiega dove e come.',
-        'link' => 'Guida: rimuovere un risultato di ricerca',
+        'hint' => 'Si tratta di rimuovere un risultato di ricerca? Leggete prima <a href=":link">la nostra guida</a>: MetaGer mostra i risultati di altri motori di ricerca, quindi di solito un risultato può essere rimosso solo lì.',
     ],
     'topics' => [
-        'heading' => 'Altre richieste frequenti',
+        'heading' => 'Domande frequenti',
         'key' => [
             'title' => 'Chiave MetaGer e token',
             'text' => 'Come funziona la chiave, ricarica e saldo',
@@ -54,5 +51,4 @@ Germania",
             'text' => 'Cosa salviamo — e cosa no',
         ],
     ],
-    'reach' => 'Come contattarci',
 ];

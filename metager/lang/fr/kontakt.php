@@ -21,14 +21,11 @@ Allemagne",
             'fingerprint' => 'Empreinte PGP : 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'intro' => 'Avant de nous écrire : beaucoup de questions trouvent déjà leur réponse ici — généralement plus vite que par e-mail.',
     'removal' => [
-        'heading' => 'Vous souhaitez faire supprimer un résultat de recherche ?',
-        'text' => 'Lisez d’abord notre guide. MetaGer affiche les résultats d’autres moteurs de recherche ; un résultat ne peut donc être supprimé que sur le site web et auprès de ces moteurs. Le guide explique où et comment.',
-        'link' => 'Guide : supprimer un résultat de recherche',
+        'hint' => 'Il s\'agit de faire supprimer un résultat de recherche ? Lisez d\'abord <a href=":link">notre guide</a> : MetaGer affiche les résultats d\'autres moteurs de recherche, un résultat ne peut donc en général être supprimé que chez eux.',
     ],
     'topics' => [
-        'heading' => 'Autres demandes fréquentes',
+        'heading' => 'Questions fréquentes',
         'key' => [
             'title' => 'Clé MetaGer et jetons',
             'text' => 'Fonctionnement de la clé, recharge et solde',
@@ -54,5 +51,4 @@ Allemagne",
             'text' => 'Ce que nous enregistrons — et ce que nous n’enregistrons pas',
         ],
     ],
-    'reach' => 'Comment nous joindre',
 ];

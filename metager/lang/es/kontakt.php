@@ -21,14 +21,11 @@ Germany",
             'fingerprint' => 'Huella PGP: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'intro' => 'Antes de escribirnos: muchas preguntas ya tienen respuesta aquí, normalmente más rápida que por correo electrónico.',
     'removal' => [
-        'heading' => '¿Quiere que se elimine un resultado de búsqueda?',
-        'text' => 'Lea primero nuestra guía. MetaGer muestra los resultados de otros buscadores, por lo que un resultado solo puede eliminarse en el sitio web y en esos buscadores. La guía explica dónde y cómo.',
-        'link' => 'Guía: eliminar un resultado de búsqueda',
+        'hint' => '¿Se trata de eliminar un resultado de búsqueda? Lea primero <a href=":link">nuestra guía</a>: MetaGer muestra resultados de otros buscadores, por lo que normalmente un resultado solo puede eliminarse allí.',
     ],
     'topics' => [
-        'heading' => 'Otras consultas frecuentes',
+        'heading' => 'Consultas frecuentes',
         'key' => [
             'title' => 'Clave de MetaGer y tokens',
             'text' => 'Cómo funciona la clave, recargas y saldo',
@@ -54,5 +51,4 @@ Germany",
             'text' => 'Qué guardamos y qué no',
         ],
     ],
-    'reach' => 'Cómo contactarnos',
 ];

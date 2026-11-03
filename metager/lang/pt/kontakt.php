@@ -21,14 +21,11 @@ Alemanha",
         '2' => 'Correio eletrónico',
         '1' => 'Contacto',
     ],
-    'intro' => 'Antes de nos escrever: muitas perguntas já têm resposta aqui — normalmente mais rápida do que por e-mail.',
     'removal' => [
-        'heading' => 'Pretende que um resultado de pesquisa seja removido?',
-        'text' => 'Leia primeiro o nosso guia. O MetaGer mostra os resultados de outros motores de pesquisa, pelo que um resultado só pode ser removido no sítio web e nesses motores de pesquisa. O guia explica onde e como.',
-        'link' => 'Guia: remover um resultado de pesquisa',
+        'hint' => 'Trata-se de remover um resultado de pesquisa? Leia primeiro <a href=":link">o nosso guia</a>: o MetaGer mostra resultados de outros motores de pesquisa, por isso um resultado normalmente só pode ser removido lá.',
     ],
     'topics' => [
-        'heading' => 'Outros pedidos frequentes',
+        'heading' => 'Perguntas frequentes',
         'key' => [
             'title' => 'Chave MetaGer e tokens',
             'text' => 'Como funciona a chave, carregamento e saldo',
@@ -54,5 +51,4 @@ Alemanha",
             'text' => 'O que guardamos — e o que não guardamos',
         ],
     ],
-    'reach' => 'Como nos contactar',
 ];

@@ -35,6 +35,9 @@ Saksa",
     'removal' => [
         'hint' => 'Haluatko poistaa hakutuloksen? Lue ensin <a href=":link">ohjeemme</a>: MetaGer näyttää muiden hakukoneiden tuloksia, joten tuloksen voi yleensä poistaa vain niissä.',
     ],
+    'phone' => [
+        'heading' => 'Puhelin',
+    ],
     'topics' => [
         'heading' => 'Yleisiä kysymyksiä',
         'key' => [

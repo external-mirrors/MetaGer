@@ -35,6 +35,9 @@ Duitsland",
     'removal' => [
         'hint' => 'Gaat het om het verwijderen van een zoekresultaat? Lees dan eerst <a href=":link">onze handleiding</a>: MetaGer toont resultaten van andere zoekmachines, dus een resultaat kan meestal alleen daar worden verwijderd.',
     ],
+    'phone' => [
+        'heading' => 'Telefoon',
+    ],
     'topics' => [
         'heading' => 'Veelgestelde vragen',
         'key' => [

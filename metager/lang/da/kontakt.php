@@ -35,6 +35,9 @@ Tyskland",
     'removal' => [
         'hint' => 'Handler det om at få fjernet et søgeresultat? Læs først <a href=":link">vores vejledning</a>: MetaGer viser andre søgemaskiners resultater, så et resultat kan som regel kun fjernes dér.',
     ],
+    'phone' => [
+        'heading' => 'Telefon',
+    ],
     'topics' => [
         'heading' => 'Almindelige spørgsmål',
         'key' => [

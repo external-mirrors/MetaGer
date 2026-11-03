@@ -35,6 +35,9 @@ Germania",
     'removal' => [
         'hint' => 'Si tratta di rimuovere un risultato di ricerca? Leggete prima <a href=":link">la nostra guida</a>: MetaGer mostra i risultati di altri motori di ricerca, quindi di solito un risultato può essere rimosso solo lì.',
     ],
+    'phone' => [
+        'heading' => 'Telefono',
+    ],
     'topics' => [
         'heading' => 'Domande frequenti',
         'key' => [

@@ -144,20 +144,32 @@ class ContactPageTest extends TestCase
             ->assertDontSee("contact-removal\"", false);
     }
 
-    /** Email is what most visitors came for: it comes before the topic list. */
-    public function testEmailComesFirst(): void
+    /**
+     * Email is what most visitors came for, so it comes first; the ways to
+     * reach us stay together (email, phone, post), and the topic list follows.
+     */
+    public function testTheWaysToReachUsComeFirstAndTogether(): void
     {
         $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
 
-        $email = strpos($content, 'id="email"');
-        $topics = strpos($content, 'contact-topics"');
-        $post = strpos($content, 'id="post"');
+        $order = [];
+        foreach (['id="email"', 'id="phone"', 'id="post"', 'contact-topics"'] as $marker) {
+            $position = strpos($content, $marker);
+            $this->assertNotFalse($position, "Missing $marker on the contact page.");
+            $order[] = $position;
+        }
 
-        $this->assertNotFalse($email);
-        $this->assertNotFalse($topics);
-        $this->assertNotFalse($post);
-        $this->assertLessThan($topics, $email);
-        $this->assertLessThan($post, $topics);
+        $sorted = $order;
+        sort($sorted);
+        $this->assertSame($sorted, $order, "Expected email, phone, post, then the topic list.");
+    }
+
+    /** The number from the imprint (impressum.info.3), callable from a phone. */
+    public function testThePhoneNumberIsShownAndCallable(): void
+    {
+        $this->get("/de-DE/kontakt")
+            ->assertOk()
+            ->assertSee('<a href="tel:+4951134000070">+49 511 34000070</a>', false);
     }
 
     /**

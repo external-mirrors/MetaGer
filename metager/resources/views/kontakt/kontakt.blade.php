@@ -4,7 +4,8 @@
 
 @section('content')
 {{--
-	/kontakt — email first, for everyone.
+	/kontakt — email first, for everyone; then phone and post; then the
+	pages that answer common questions.
 
 	The mail we can help least with is "please remove this search result":
 	MetaGer shows other engines' results. The page does not advertise that
@@ -41,6 +42,17 @@
 		</details>
 	</section>
 
+	<section class="contact-section contact-phone" id="phone" aria-labelledby="contact-phone-heading">
+		<h2 id="contact-phone-heading">@lang('kontakt.phone.heading')</h2>
+		<p class="contact-address"><a href="{{ $phone_uri }}">{{ $phone }}</a></p>
+	</section>
+
+	<section class="contact-section contact-post" id="post" aria-labelledby="contact-post-heading">
+		<h2 id="contact-post-heading">{!! trans('kontakt.letter.1') !!}</h2>
+		<p>{!! trans('kontakt.letter.2') !!}</p>
+		<address>{!! trans('kontakt.letter.3') !!}</address>
+	</section>
+
 	<section class="contact-section contact-topics" aria-labelledby="contact-topics-heading">
 		<h2 id="contact-topics-heading">@lang('kontakt.topics.heading')</h2>
 		<ul>
@@ -51,12 +63,6 @@
 				</li>
 			@endforeach
 		</ul>
-	</section>
-
-	<section class="contact-section contact-post" id="post" aria-labelledby="contact-post-heading">
-		<h2 id="contact-post-heading">{!! trans('kontakt.letter.1') !!}</h2>
-		<p>{!! trans('kontakt.letter.2') !!}</p>
-		<address>{!! trans('kontakt.letter.3') !!}</address>
 	</section>
 </div>
 @endsection

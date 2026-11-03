@@ -189,6 +189,7 @@ class StaanEngineTest extends TestCase
         $this->assertNotNull($kaffee["date"], "published_date was not read as the result's date.");
 
         $sorten = $results["https://beispiel.de/sorten"];
+        $this->assertSame("Kaffeesorten im Vergleich – Beispiel", $sorten["title"], "A line break inside a title must not reach the page.");
         $this->assertNotNull($sorten["image"], "The thumbnail was not attached to the result.");
         $this->assertNull($sorten["date"]);
     }

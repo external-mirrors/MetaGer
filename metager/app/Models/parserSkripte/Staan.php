@@ -140,7 +140,10 @@ class Staan extends Searchengine
                 $this->counter++;
                 $newResult = new Result(
                     $this->configuration->engineBoost,
-                    html_entity_decode($result->title),
+                    // Staan passes on line breaks inside titles, e.g.
+                    // "Tipps & Tricks\n – Wildkaffee", and Result only
+                    // collapses them in descriptions.
+                    preg_replace('/\s+/u', ' ', html_entity_decode($result->title)),
                     $result->url,
                     $result->display_url ?? $result->url,
                     html_entity_decode($result->snippet ?? ""),

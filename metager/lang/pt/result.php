@@ -22,12 +22,18 @@ return [
         '2' => 'Ocultar :host',
         '6' => 'ABRIR NUM NOVO SEPARADOR',
         '5' => 'ABRIR ANONIMAMENTE',
+        'open' => 'Abrir',
+        'newtab' => 'Abrir numa nova aba',
+        'anonym-short' => 'Anónimamente',
+        'newtab-short' => 'Nova página',
+        'anonym' => 'Abrir anonimamente',
     ],
     'providers' => 'fornecedores',
     'news' => 'Notícias relevantes',
     'image' => [
         'copyright' => 'As imagens podem estar protegidas por direitos de autor.',
         'download' => 'Descarregar imagem',
+        'proxy' => 'Abrir a página de forma anónima',
     ],
     'videos' => 'Vídeos',
     'scroll-back' => 'Recuar',
@@ -37,5 +43,8 @@ return [
     'gefVon' => 'por',
     'alt' => [
         'more' => 'Mais',
+    ],
+    'quicktips' => [
+        'heading' => 'Dicas rápidas',
     ],
 ];

@@ -15,6 +15,25 @@
         font-size: 1.1rem;
     }
 
+    // The page's two actions: open the removal guide, write us an email.
+    .contact-button {
+        display: inline-block;
+        margin-top: 0.25rem;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        background-color: @accent-fill-color;
+        // Orange ground in both palettes, so the text on it is dark in
+        // both (variables.less, --on-accent-color).
+        color: @on-accent-color;
+        font-weight: bold;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            text-decoration: underline;
+        }
+    }
+
     // The one request we get most and can help with least: it gets the
     // accent, everything else on the page is quieter.
     .contact-removal {
@@ -28,24 +47,6 @@
         > h2 {
             font-size: 1.4rem;
             margin: 0 0 0.5rem;
-        }
-
-        .contact-removal-link {
-            display: inline-block;
-            margin-top: 0.25rem;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            background-color: @accent-fill-color;
-            // Orange ground in both palettes, so the text on it is dark in
-            // both (variables.less, --on-accent-color).
-            color: @on-accent-color;
-            font-weight: bold;
-            text-decoration: none;
-
-            &:hover,
-            &:focus-visible {
-                text-decoration: underline;
-            }
         }
     }
 
@@ -99,15 +100,53 @@
             margin-top: 0;
         }
 
-        > h4 {
-            font-size: 1rem;
+        // What most visitors scrolled down for: large, and plain text so it
+        // can be selected and copied; the button below opens the mail program.
+        .contact-address {
+            font-size: 1.3rem;
             font-weight: bold;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.75rem;
+            overflow-wrap: anywhere;
         }
 
-        // The key's links run long on a phone.
-        > p {
-            overflow-wrap: anywhere;
+        // PGP for the few who use it — complete, but folded. Same fold as
+        // the removal guide's (pages/removal.less).
+        .contact-pgp {
+            margin-top: 1.25rem;
+            border: 1px solid @border-color;
+            border-radius: 6px;
+            padding: 0 0.75rem;
+
+            > summary {
+                cursor: pointer;
+                font-weight: bold;
+                padding: 0.6rem 0;
+
+                // The site's base styles hide the native marker on every
+                // <summary>; without one this does not read as something that
+                // opens.
+                &::before {
+                    content: "▸";
+                    display: inline-block;
+                    width: 1.1em;
+                    color: @metager-orange;
+                    transition: transform 0.15s;
+                }
+            }
+
+            &[open] > summary {
+                border-bottom: 1px solid @metager-orange;
+                margin-bottom: 0.5rem;
+
+                &::before {
+                    transform: rotate(90deg);
+                }
+            }
+
+            // The key's links run long on a phone.
+            > p {
+                overflow-wrap: anywhere;
+            }
         }
 
         .contact-fingerprint {

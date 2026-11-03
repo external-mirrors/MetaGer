@@ -124,6 +124,59 @@ class ContactPageTest extends TestCase
         $this->assertLessThan($mail, $guide, "The removal guide has to come before the email address.");
     }
 
+    /**
+     * The address is what most visitors scrolled down for, so it is the email
+     * card's headline and comes with a button that opens their mail program —
+     * not a link inside a sentence under eight lines of PGP explanation.
+     */
+    public function testTheAddressIsTheEmailCardsMainAction(): void
+    {
+        $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression(
+            '#<p class="contact-address">\s*kontakt@example\.org\s*</p>#',
+            $content,
+        );
+        $this->assertMatchesRegularExpression(
+            '#<a class="contact-button" href="mailto:kontakt@example\.org">E-Mail schreiben</a>#',
+            $content,
+        );
+    }
+
+    /**
+     * PGP is for the few who use it. It stays complete — key, keyserver,
+     * fingerprint — but folded, and the fold opens without script.
+     */
+    public function testPgpDetailsAreFoldedAway(): void
+    {
+        $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
+
+        $fold = strpos($content, '<details class="contact-pgp">');
+        $this->assertNotFalse($fold, "The PGP details are not in a <details>.");
+        $this->assertStringContainsString("<summary>Verschlüsselt schreiben (PGP)</summary>", $content);
+
+        $end = strpos($content, "</details>", $fold);
+        $folded = substr($content, $fold, $end - $fold);
+        $this->assertStringContainsString('href="/download/pubkey.asc"', $folded);
+        $this->assertStringContainsString("5FA5 2398 C382 B498 B14A", $folded);
+    }
+
+    public function testTheRemovalButtonSaysWhereItLeads(): void
+    {
+        $this->get("/de-DE/kontakt")
+            ->assertOk()
+            ->assertSeeText("Anleitung: Suchergebnis entfernen");
+    }
+
+    /** Post is welcome; the page just says email is faster. */
+    public function testThePostalCardDoesNotTalkPeopleOutOfWriting(): void
+    {
+        $this->get("/de-DE/kontakt")
+            ->assertOk()
+            ->assertDontSeeText("unbedingt nötig")
+            ->assertSeeText("Am schnellsten antworten wir per E-Mail.");
+    }
+
     /** @return array<string, array{0: string}> */
     public static function topicPaths(): array
     {

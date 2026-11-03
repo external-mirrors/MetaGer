@@ -18,7 +18,7 @@
 	<section class="contact-removal" aria-labelledby="contact-removal-heading">
 		<h2 id="contact-removal-heading">@lang('kontakt.removal.heading')</h2>
 		<p>@lang('kontakt.removal.text')</p>
-		<a class="contact-removal-link" href="{{ route('removal') }}">@lang('kontakt.removal.link')</a>
+		<a class="contact-button" href="{{ route('removal') }}">@lang('kontakt.removal.link')</a>
 	</section>
 
 	<section class="contact-topics" aria-labelledby="contact-topics-heading">
@@ -37,11 +37,14 @@
 	<div class="contact-ways">
 		<section class="contact-way" id="email" aria-labelledby="contact-email-heading">
 			<h3 id="contact-email-heading">@lang('kontakt.headline.2')</h3>
-			<p>@lang('kontakt.email.text', ['mail' => $to_mail])</p>
-			<h4>@lang('kontakt.headline.pgp')</h4>
-			<p>@lang('kontakt.email.pgp.description')</p>
-			<p>@lang('kontakt.email.pgp.pubkey', ['keyserver' => 'https://keys.openpgp.org/search?q=' . urlencode($to_mail)])</p>
-			<p class="contact-fingerprint">@lang('kontakt.email.pgp.fingerprint')</p>
+			<p class="contact-address">{{ $to_mail }}</p>
+			<a class="contact-button" href="mailto:{{ $to_mail }}">@lang('kontakt.email.write')</a>
+			<details class="contact-pgp">
+				<summary>@lang('kontakt.email.pgp.summary')</summary>
+				<p>@lang('kontakt.email.pgp.description')</p>
+				<p>@lang('kontakt.email.pgp.pubkey', ['keyserver' => 'https://keys.openpgp.org/search?q=' . urlencode($to_mail)])</p>
+				<p class="contact-fingerprint">@lang('kontakt.email.pgp.fingerprint')</p>
+			</details>
 		</section>
 		<section class="contact-way" id="post" aria-labelledby="contact-post-heading">
 			<h3 id="contact-post-heading">{!! trans('kontakt.letter.1') !!}</h3>

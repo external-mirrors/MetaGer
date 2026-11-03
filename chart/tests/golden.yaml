@@ -604,6 +604,27 @@ spec:
             mountPath: /metager/metager_app/.env
             subPath: ENV_PRODUCTION
             readOnly: true
+          # The config files as well, because a migration reads them: the blocklist
+          # table's data migration imports the mounted blacklist files. In production
+          # this container migrates the shared Postgres, and whichever Deployment's
+          # migrate runs first applies that migration for all of them — without the
+          # files here it would record an empty import and the fpm pod would never
+          # run it again.
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumas.json
+            subPath: SUMAS_JSON
+          - name: secrets
+            mountPath: /metager/metager_app/config/suggestions.json
+            subPath: SUGGESTIONS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDomains.txt
+            subPath: BLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistUrl.txt
+            subPath: BLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+            subPath: BLACKLIST_DESCRIPTION_URL
           - name: mglogs-persistent-storage
             mountPath: /metager/metager_app/storage/metager
             readOnly: false
@@ -1158,6 +1179,27 @@ spec:
             mountPath: /metager/metager_app/.env
             subPath: ENV_PRODUCTION
             readOnly: true
+          # The config files as well, because a migration reads them: the blocklist
+          # table's data migration imports the mounted blacklist files. In production
+          # this container migrates the shared Postgres, and whichever Deployment's
+          # migrate runs first applies that migration for all of them — without the
+          # files here it would record an empty import and the fpm pod would never
+          # run it again.
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumas.json
+            subPath: SUMAS_JSON
+          - name: secrets
+            mountPath: /metager/metager_app/config/suggestions.json
+            subPath: SUGGESTIONS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDomains.txt
+            subPath: BLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistUrl.txt
+            subPath: BLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+            subPath: BLACKLIST_DESCRIPTION_URL
           - name: mglogs-persistent-storage
             mountPath: /metager/metager_app/storage/metager
             readOnly: false

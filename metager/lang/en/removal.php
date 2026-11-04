@@ -39,7 +39,7 @@ return [
     ],
     'providers' => [
         'heading' => 'Ask the search engines MetaGer shows',
-        'text' => 'MetaGer has no collection of these results of its own. It asks the search engines below at the moment you search, shows what they return, and caches their answer for a few hours. So once one of them removes a result, it is also gone from what MetaGer gets from that engine.',
+        'text' => 'MetaGer does not search the web itself. It asks the search engines below at the moment you search, shows what they return, and caches their answer for a few hours. So once one of them removes a result, it is also gone from what MetaGer gets from that engine.',
         'which' => 'Which search engine a result comes from is written under the result on MetaGer’s result page. One result can come from several of them; then ask each one.',
         'shows' => 'On MetaGer in:',
         'kinds' => [

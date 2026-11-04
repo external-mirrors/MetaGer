@@ -39,7 +39,7 @@ return [
     ],
     'providers' => [
         'heading' => 'Pregunteu als cercadors que mostra MetaGer',
-        'text' => 'MetaGer no té cap col·lecció pròpia d’aquests resultats. Consulta els cercadors de sota en el moment de la vostra cerca, mostra el que retornen i en desa la resposta unes quantes hores. Per això, quan un d’ells elimina un resultat, també desapareix del que MetaGer en rep.',
+        'text' => 'MetaGer no cerca el web pel seu compte. Consulta els cercadors de sota en el moment de la vostra cerca, mostra el que retornen i en desa la resposta unes quantes hores. Per això, quan un d’ells elimina un resultat, també desapareix del que MetaGer en rep.',
         'which' => 'A la pàgina de resultats de MetaGer, sota cada resultat, hi diu de quin cercador prové. Un resultat pot venir de diversos; en aquest cas, pregunteu a cadascun.',
         'shows' => 'A MetaGer a:',
         'kinds' => [

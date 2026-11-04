@@ -310,6 +310,18 @@ class RemovalPageTest extends TestCase
     }
 
     /**
+     * "Eine eigene Sammlung dieser Ergebnisse" is not how anyone in Germany
+     * talks about a search index. The step says what MetaGer does instead.
+     */
+    public function testTheProviderStepSaysWhatMetaGerDoesInPlainWords(): void
+    {
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertDontSeeText("Sammlung")
+            ->assertSeeText("MetaGer durchsucht das Web nicht selbst");
+    }
+
+    /**
      * The card says Google's results come through Serper and what Google
      * removes is gone here too. Whether Google's Europe-only delisting
      * covers Serper's queries is ours to check when someone writes, not a

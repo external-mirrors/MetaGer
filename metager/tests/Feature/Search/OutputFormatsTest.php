@@ -198,10 +198,8 @@ class OutputFormatsTest extends TestCase
     /**
      * The date an engine reports as free text rather than as a timestamp.
      *
-     * This is the normal case, not a fallback: of the parsers that run today
-     * only Minisucher and the two Onenewspage engines produce a real timestamp,
-     * while BraveNews and SerperNews — the two that actually serve
-     * `focus=nachrichten` — set `date_string` alone. `date` was therefore null
+     * This is the normal case, not a fallback: BraveNews and SerperNews, the
+     * two that serve `focus=nachrichten`, set `date_string` alone. `date` was therefore null
      * in every real news response, and a client reading only `date` never had a
      * date to show on the one focus where it matters most.
      */

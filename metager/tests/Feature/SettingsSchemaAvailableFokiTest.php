@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Configuration\SearchEngineRegistry;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -14,8 +15,8 @@ use Tests\TestCase;
  * Exercised against the real engine/fokus config (`config/foki.json`,
  * `App\Searchengines::available_foki`) rather than a fake registry, since the
  * point of the field is what it says about *this* config, not the wiring in
- * the abstract - `science`'s BASE/tuhh/minism_science engines' language
- * restrictions are what make it a genuine positive/negative pair here.
+ * the abstract - `science`'s only engine, BASE, indexes German and English,
+ * which is what makes it a genuine positive/negative pair here.
  */
 class SettingsSchemaAvailableFokiTest extends TestCase
 {
@@ -84,39 +85,26 @@ class SettingsSchemaAvailableFokiTest extends TestCase
     #[Test]
     public function marks_an_engine_unavailable_for_a_language_its_index_does_not_cover(): void
     {
-        // `tuhh` and `minism_science` are German-only indexes sitting in
-        // `science` alongside `BASE`, which covers both. A search already
-        // drops the ones that cannot serve the current locale
+        // Staan indexes German, French and English only. A search already
+        // drops an engine that cannot serve the current locale
         // (`SearchengineConfiguration::applyLocale()`), so a client offering
-        // one as a toggle for a language it cannot serve was offering
-        // something that could never return a result.
-        //
-        // This used to be exercised with `onenewspage`/`onenewspagegermany`
-        // (English-only / German-only, both in `nachrichten`), until both were
-        // disabled outright at the config level (One News Page Ltd.'s feed
-        // broke, see their CONFIG_OVERLOAD) and dropped from the schema
-        // response entirely - see keeps_disabled_engines_out_of_the_schema.
-        $german = $this->engineAvailability('de', 'science');
-        $this->assertTrue($german['tuhh']);
-
-        $english = $this->engineAvailability('en', 'science');
-        $this->assertFalse($english['tuhh']);
+        // it as a toggle for Spanish was offering something that could never
+        // return a result.
+        $this->assertTrue($this->engineAvailability('de', 'web')['staan']);
+        $this->assertFalse($this->engineAvailability('es', 'web')['staan']);
     }
 
     #[Test]
     public function keeps_disabled_engines_out_of_the_schema(): void
     {
-        // onenewspage/onenewspagegermany are disabled at the config level
-        // (One News Page Ltd.'s feed API broke on both hosts) rather than
-        // merely unavailable for a language, so - like Yandex, like any other
-        // retired integration - they are never offered as a toggle at all.
-        $german = $this->engineAvailability('de', 'nachrichten');
-        $this->assertArrayNotHasKey('onenewspage', $german);
-        $this->assertArrayNotHasKey('onenewspagegermany', $german);
+        // An engine disabled at the config level (sanctions, a retired
+        // integration) rather than merely unavailable for a language is never
+        // offered as a toggle at all. No engine is disabled that way today,
+        // so the test disables one.
+        app(SearchEngineRegistry::class)->sumas->staan->disabled = true;
 
-        $english = $this->engineAvailability('en', 'nachrichten');
-        $this->assertArrayNotHasKey('onenewspage', $english);
-        $this->assertArrayNotHasKey('onenewspagegermany', $english);
+        $this->assertArrayNotHasKey('staan', $this->engineAvailability('de', 'web'));
+        $this->assertArrayHasKey('brave', $this->engineAvailability('de', 'web'));
     }
 
     #[Test]

@@ -21,7 +21,7 @@ use Tests\TestCase;
  * scoped to `.result > .result-more-from-host`; the in-list quicktips lost the
  * rule that hides them beside the column, so "Wussten Sie schon?" showed twice.
  *
- * Only Staan, TootNews, Onenewspage and Minisucher set a timestamp. Brave and
+ * Only Staan and TootNews set a timestamp. Brave and
  * Serper — the default engines and every fixture the rendering tests used —
  * set `date_string` at most, which is why the default news search looked fine
  * and why nothing caught it: Staan's tests read `out=json`.

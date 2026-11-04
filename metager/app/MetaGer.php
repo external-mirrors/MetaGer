@@ -493,10 +493,6 @@ class MetaGer
         if ($this->resultCount <= 0 || $this->resultCount > 200) {
             $this->resultCount = 1000;
         }
-        if (\Request::filled('onenewspageAll') || \Request::filled('onenewspageGermanyAll')) {
-            $this->time = 5000;
-            $this->cache = "cache";
-        }
         if (\Request::filled('password')) {
             $this->password = \Request::input('password');
         }

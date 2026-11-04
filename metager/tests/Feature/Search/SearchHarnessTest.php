@@ -112,11 +112,11 @@ class SearchHarnessTest extends TestCase
     /**
      * A characterization of which engines a default web search actually uses.
      *
-     * config/foki.json lists four for the web fokus, but two of them never run
-     * unless something changes: mojeek is disabledByDefault and has to be opted
-     * into, and yandex is disabled in config/sumas.json. So the default search
-     * is brave plus serper_web, and any test that fakes mojeek or yandex is
-     * quietly faking an engine that is never asked.
+     * config/foki.json lists more engines for the web fokus than run by
+     * default: mojeek and staan are disabledByDefault and have to be opted
+     * into. So the default search is brave plus serper_web, and any test that
+     * fakes an opt-in engine without opting in is quietly faking an engine
+     * that is never asked.
      *
      * Worth pinning because D2 removes 28 parsers on the grounds that
      * config/foki.json governs what users can reach — this records that foki.json

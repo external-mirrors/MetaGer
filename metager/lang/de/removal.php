@@ -39,7 +39,7 @@ return [
     ],
     'providers' => [
         'heading' => 'Fragen Sie die Suchmaschinen, die MetaGer zeigt',
-        'text' => 'MetaGer hat keine eigene Sammlung dieser Ergebnisse. Wir fragen die Suchmaschinen unten in dem Moment, in dem Sie suchen, zeigen, was sie liefern, und speichern ihre Antwort für wenige Stunden zwischen. Entfernt eine von ihnen ein Ergebnis, fehlt es danach auch in dem, was MetaGer von ihr bekommt.',
+        'text' => 'MetaGer durchsucht das Web nicht selbst. Wir fragen die Suchmaschinen unten in dem Moment, in dem Sie suchen, zeigen, was sie liefern, und speichern ihre Antwort für wenige Stunden zwischen. Entfernt eine von ihnen ein Ergebnis, fehlt es danach auch in dem, was MetaGer von ihr bekommt.',
         'which' => 'Von welcher Suchmaschine ein Ergebnis stammt, steht auf MetaGers Ergebnisseite unter dem Ergebnis. Kommt es von mehreren, fragen Sie bitte jede davon.',
         'shows' => 'Bei MetaGer in:',
         'kinds' => [

@@ -18,6 +18,13 @@ use Tests\TestCase;
  */
 class RemovalPageTest extends TestCase
 {
+    /**
+     * Engines SUMA-EV no longer uses, though their parsers and foki.json
+     * entries are still there: eBay, TUBdok and the Minisucher. They map to
+     * no provider, so the page sends nobody to them.
+     */
+    private const RETIRED = ["ebay", "tuhh", "minism_science"];
+
     /** @return array<string, array{0: string}> */
     public static function fokiEngines(): array
     {
@@ -34,9 +41,13 @@ class RemovalPageTest extends TestCase
     #[DataProvider("fokiEngines")]
     public function testEveryEngineInAFokusHasAProvider(string $engine): void
     {
+        $this->assertArrayHasKey($engine, config("removal_providers.engines"), "config/removal_providers.php has no entry for engine [$engine] from config/foki.json.");
         $providerId = config("removal_providers.engines.$engine");
+        if ($providerId === null) {
+            $this->assertContains($engine, self::RETIRED, "[$engine] maps to no provider but is not one SUMA-EV has retired.");
+            return;
+        }
 
-        $this->assertNotNull($providerId, "config/removal_providers.php has no entry for engine [$engine] from config/foki.json.");
         $this->assertIsArray(
             config("removal_providers.providers.$providerId"),
             "Engine [$engine] points at provider [$providerId], which config/removal_providers.php does not define."
@@ -103,8 +114,8 @@ class RemovalPageTest extends TestCase
         $inUse = [];
         foreach ($registry->foki as $fokus) {
             foreach ($fokus->sumas as $engine) {
-                if (!($registry->sumas->{$engine}->disabled ?? false)) {
-                    $id = config("removal_providers.engines.$engine");
+                $id = config("removal_providers.engines.$engine");
+                if ($id !== null && !($registry->sumas->{$engine}->disabled ?? false)) {
                     $inUse[$id] = $providers[$id];
                 }
             }
@@ -299,16 +310,77 @@ class RemovalPageTest extends TestCase
     }
 
     /**
-     * Unverified, and for personal data doubtful: Google delists for people
-     * searching from Europe, and Serper does not promise to query from there.
-     * The card must not promise that Google's delisting reaches MetaGer.
+     * The card says Google's results come through Serper and what Google
+     * removes is gone here too. Whether Google's Europe-only delisting
+     * covers Serper's queries is ours to check when someone writes, not a
+     * caveat for the card.
      */
-    public function testTheGoogleCardDoesNotPromiseThatDelistingReachesUs(): void
+    public function testTheGoogleCardDoesNotDiscussSerpersLocation(): void
     {
         $this->get("/de-DE/entfernen")
             ->assertOk()
-            ->assertDontSeeText("fehlt deshalb auch in MetaGers Google-Ergebnissen")
-            ->assertSeeText("Persönliche Daten blendet Google nur für Suchende in Europa aus");
+            ->assertSeeText("MetaGer bezieht Googles Ergebnisse über den Dienst Serper")
+            ->assertDontSeeText("nur für Suchende in Europa")
+            ->assertDontSeeText("können wir nicht zusagen");
+    }
+
+    /** eBay, TUBdok and the Minisucher are no longer used; TootNews still is. */
+    public function testRetiredSourcesAreNotOnThePage(): void
+    {
+        foreach (self::RETIRED as $engine) {
+            $this->assertNull(config("removal_providers.engines.$engine"), "[$engine] still maps to a provider.");
+        }
+        $this->assertArrayNotHasKey("ebay", config("removal_providers.providers"));
+
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+        $start = strpos($content, '<div id="removal">');
+        $page = substr($content, $start);
+
+        foreach (["eBay", "TUBdok", "Minisucher", "VeRO"] as $gone) {
+            $this->assertStringNotContainsStringIgnoringCase($gone, $page, "$gone is still named on the page.");
+        }
+        $this->assertStringContainsString("TootNews", $page);
+        $this->assertStringContainsString("BASE", $page);
+    }
+
+    /** Staan has its own removal form, for personal data only. */
+    public function testTheStaanCardLinksStaansOwnRemovalForm(): void
+    {
+        $this->assertSame("https://staan.ai/removal", config("removal_providers.providers.staan.links.personal_data"));
+        $this->assertSame("Staan", config("removal_providers.providers.staan.name"));
+
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertSee('href="https://staan.ai/removal"', false)
+            ->assertDontSee("report.qwant.com/removal", false);
+    }
+
+    /** @return array<string, array{0: string, 1: string}> */
+    public static function guideAndContactTexts(): array
+    {
+        $cases = [];
+        foreach (glob(dirname(__DIR__, 2) . "/lang/*/{removal,kontakt}.php", GLOB_BRACE) as $file) {
+            if (is_link(dirname($file))) {
+                continue;
+            }
+            $cases[basename(dirname($file)) . "/" . basename($file)] = [$file];
+        }
+        return $cases;
+    }
+
+    /** House style: no em dashes in what the guide and contact pages say. */
+    #[DataProvider("guideAndContactTexts")]
+    public function testTheTextsUseNoEmDash(string $file): void
+    {
+        $strings = [];
+        $data = require $file;
+        array_walk_recursive($data, function ($value) use (&$strings) {
+            $strings[] = $value;
+        });
+
+        foreach ($strings as $string) {
+            $this->assertStringNotContainsString("—", (string) $string, basename(dirname($file)) . "/" . basename($file));
+        }
     }
 
     /**

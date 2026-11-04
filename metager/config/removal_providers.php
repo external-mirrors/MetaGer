@@ -23,7 +23,11 @@
 | The page shows a provider only while one of its engines is not switched off
 | in its parser (CONFIG_OVERLOAD `disabled`). Switched-off engines (Yandex,
 | One News Page) stay mapped here, so their provider comes back by itself
-| when the engine does — and suma-crm can still name them.
+| when the engine does, and suma-crm can still name them.
+|
+| An engine mapped to null is one SUMA-EV no longer uses (eBay, TUBdok, the
+| Minisucher), even though its parser and foki.json entry are still there.
+| It gets no card and sends nobody anywhere.
 |
 | `type`:
 |   - `provider`: a search index or platform with its own removal process.
@@ -66,17 +70,16 @@ return [
         'tootnews' => 'suma',
         // produkte
         'serper_shopping' => 'google',
-        'ebay' => 'ebay',
+        'ebay' => null,
         // science
-        'minism_science' => 'suma',
-        'tuhh' => 'website',
+        'minism_science' => null,
+        'tuhh' => null,
         'BASE' => 'website',
     ],
 
     'providers' => [
         // Serper is an API onto Google's results, so a removal at Google is
-        // a removal from every serper_* engine. Assumed, not verified with
-        // Serper; see the open questions in the removal-requests plan.
+        // a removal from every serper_* engine.
         'google' => [
             'type' => 'provider',
             'name' => 'Google',
@@ -134,19 +137,16 @@ return [
             'contact' => 'https://www.mojeek.com/about/contact',
             'note' => 'removal.providers.mojeek',
         ],
-        // Staan is European Search Perspective's API and runs "on the same
-        // search stack as Qwant Search", the index Qwant and Ecosia share.
-        // Staan has no removal process of its own; Qwant's is the nearest.
-        // That a removal at Qwant reaches Staan is an assumption.
+        // Staan is European Search Perspective's API. Its own form takes
+        // personal data (GDPR Art. 17) and removes from the Staan index
+        // only; for illegal content it points to Qwant's page.
         'staan' => [
             'type' => 'provider',
-            'name' => 'Staan (Qwant, Ecosia)',
+            'name' => 'Staan',
             'anchor' => 'staan',
             'links' => [
-                // Qwant's form covers sensitive, inaccurate, outdated and
-                // excessive personal information.
-                'personal_data' => 'https://report.qwant.com/removal/en',
-                'outdated' => 'https://report.qwant.com/removal/en',
+                'personal_data' => 'https://staan.ai/removal',
+                'outdated' => null,
                 'legal' => 'https://help.qwant.com/en/docs/overview/how-to-report-unlawful-content/',
             ],
             'contact' => null,
@@ -166,19 +166,6 @@ return [
             'contact' => 'https://pixabay.com/service/about/',
             'note' => 'removal.providers.pixabay',
         ],
-        'ebay' => [
-            'type' => 'provider',
-            'name' => 'eBay',
-            'anchor' => 'ebay',
-            'links' => [
-                'personal_data' => null,
-                'outdated' => null,
-                // The Verified Rights Owner programme: rights owners only.
-                'legal' => 'https://pages.ebay.com/vero/index.html',
-            ],
-            'contact' => 'https://www.ebay.com/help/home',
-            'note' => 'removal.providers.ebay',
-        ],
         // A news aggregator: one form for removal, correction and DMCA.
         'onenewspage' => [
             'type' => 'provider',
@@ -192,12 +179,11 @@ return [
             'contact' => null,
             'note' => 'removal.providers.onenewspage',
         ],
-        // TootNews/TroetNews and the Minisucher science index are run by
-        // SUMA-EV. The content still lives elsewhere (a Mastodon instance,
-        // a university site), so the website comes first here too.
+        // TootNews/TroetNews is run by SUMA-EV. The content still lives on
+        // a Mastodon instance, so the website comes first here too.
         'suma' => [
             'type' => 'metager',
-            'name' => 'SUMA-EV (TootNews, Minisucher)',
+            'name' => 'SUMA-EV (TootNews)',
             'anchor' => 'suma-ev',
             'links' => [
                 'personal_data' => null,
@@ -207,11 +193,11 @@ return [
             'contact' => null,
             'note' => 'removal.providers.suma',
         ],
-        // BASE and TUBdok show what the repositories they harvest hold.
-        // Once the repository removes a record, it drops out of them.
+        // BASE shows what the repositories it harvests hold. Once the
+        // repository removes a record, it drops out of BASE.
         'website' => [
             'type' => 'website',
-            'name' => 'BASE, TUBdok',
+            'name' => 'BASE',
             'anchor' => 'website',
             'links' => [
                 'personal_data' => null,

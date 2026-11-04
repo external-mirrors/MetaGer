@@ -2,13 +2,13 @@
 return [
     'title' => 'Suchergebnis entfernen lassen – MetaGer',
     'heading' => 'Suchergebnis entfernen lassen',
-    'lead' => 'MetaGer ist eine Metasuchmaschine: Wir haben keinen eigenen Index, sondern zeigen, was andere Suchmaschinen finden. Wirklich entfernen lässt sich ein Ergebnis deshalb nur dort, wo es herkommt — bei der Webseite und bei den Suchmaschinen, deren Ergebnisse MetaGer zeigt. Diese Seite sagt Ihnen, wo.',
+    'lead' => 'MetaGer ist eine Metasuchmaschine: Wir haben keinen eigenen Index, sondern zeigen, was andere Suchmaschinen finden. Wirklich entfernen lässt sich ein Ergebnis deshalb nur dort, wo es herkommt: bei der Webseite und bei den Suchmaschinen, deren Ergebnisse MetaGer zeigt. Diese Seite sagt Ihnen, wo.',
     'toc' => [
         'label' => 'Auf dieser Seite',
     ],
     'website' => [
         'heading' => 'Wenden Sie sich an die Webseite selbst',
-        'text' => 'Das ist der einzige Weg, der überall wirkt. Ist die Seite gelöscht oder geändert, entfernt oder aktualisiert jede Suchmaschine sie beim nächsten Besuch — MetaGer eingeschlossen, ohne dass Sie jede einzeln fragen müssen.',
+        'text' => 'Das ist der einzige Weg, der überall wirkt. Ist die Seite gelöscht oder geändert, entfernt oder aktualisiert jede Suchmaschine sie beim nächsten Besuch, MetaGer eingeschlossen, ohne dass Sie jede einzeln fragen müssen.',
         'tips' => [
             'Die meisten Webseiten nennen im Impressum oder in der Datenschutzerklärung eine Kontaktadresse. Bitten Sie dort darum, den Inhalt zu löschen, zu berichtigen oder wenigstens Ihren Namen zu entfernen.',
             'Bei personenbezogenen Daten müssen Webseiten in der EU einen Antrag nach Art. 17 DSGVO (Recht auf Löschung) beantworten.',
@@ -20,7 +20,7 @@ return [
         'heading' => 'Worum geht es Ihnen?',
         'intro' => 'Hilft die Webseite nicht, oder können Sie nicht darauf warten, haben die Suchmaschinen eigene Verfahren. Welches passt, hängt davon ab, was Sie erreichen wollen.',
         'personal_data' => [
-            'summary' => 'Persönliche Daten — das Recht auf Vergessenwerden',
+            'summary' => 'Persönliche Daten: das Recht auf Vergessenwerden',
             'text' => 'Ein Ergebnis zu Ihrem Namen verweist auf Angaben über Sie, die unrichtig, veraltet, nicht mehr relevant oder übermäßig sind. Nach Art. 17 DSGVO können Sie eine Suchmaschine bitten, dieses Ergebnis bei der Suche nach Ihrem Namen nicht mehr anzuzeigen. Die Suchmaschine wägt Ihr Interesse gegen das Interesse der Öffentlichkeit an der Information ab; nicht jeder Antrag hat deshalb Erfolg. In den Karten unten steht dafür „Persönliche Daten“.',
         ],
         'outdated' => [
@@ -47,26 +47,25 @@ return [
             'outdated' => 'Veraltete Inhalte',
             'legal' => 'Urheberrecht und Recht',
         ],
-        'no_form' => 'Kein Formular — :name kontaktieren',
+        'no_form' => 'Kein Formular, :name kontaktieren',
         'contact' => ':name kontaktieren',
         'us' => 'Schreiben Sie uns',
-        'google' => 'MetaGer bezieht Googles Ergebnisse über den Dienst Serper. Was Google aus seinem Index entfernt, fehlt danach auch bei MetaGer. Persönliche Daten blendet Google nur für Suchende in Europa aus; ob das bei MetaGers Abfragen über Serper greift, können wir nicht zusagen. Wir prüfen es, wenn Sie uns schreiben.',
+        'google' => 'MetaGer bezieht Googles Ergebnisse über den Dienst Serper. Was Google aus seinem Index entfernt, fehlt danach auch bei MetaGer.',
         'brave' => 'Brave Search betreibt einen eigenen Index. Anträge zu persönlichen Daten gehen per E-Mail an privacy@brave.com mit dem Betreff „RTBF request“; die verlinkte Seite sagt, was die E-Mail enthalten muss.',
         'yandex' => 'Yandex betreibt einen eigenen Index. Für jedes Anliegen gibt es auf den Hilfeseiten ein eigenes Formular.',
         'mojeek' => 'Mojeek betreibt einen eigenen Index und bearbeitet seine Ergebnisse nicht von Hand. Aus rechtlichen Gründen entfernt Mojeek Seiten auf Antrag; schreiben Sie über die Kontaktseite und nennen Sie die genauen Adressen.',
-        'staan' => 'Staan ist die Suchschnittstelle von European Search Perspective, dem Index hinter Qwant und Ecosia. Ein eigenes Verfahren zum Entfernen hat Staan nicht; Qwants Formulare kommen dem am nächsten.',
+        'staan' => 'Staan ist die Suchschnittstelle von European Search Perspective. Anträge zu persönlichen Daten nimmt Staan über ein eigenes Formular entgegen; füllen Sie jedes Feld aus und hängen Sie die Nachweise an. Das Entfernen betrifft nur den Index von Staan.',
         'pixabay' => 'Pixabay stellt die Bilder selbst bereit. Nutzen Sie das Meldeformular oder den Melden-Knopf auf der Seite des Bildes bei Pixabay.',
-        'ebay' => 'Angebote enden von selbst und verschwinden dann auch bei MetaGer. Um ein Angebot zu melden, öffnen Sie es bei eBay und wählen „Artikel melden“; Rechteinhaber nutzen das VeRO-Programm.',
         'onenewspage' => 'One News Page sammelt Nachrichten anderer Verlage. Das Formular deckt Entfernen, Berichtigen und Urheberrecht ab; erste Adresse ist meist der ursprüngliche Verlag.',
-        'suma' => 'TootNews und der Minisucher Wissenschaft werden vom SUMA-EV betrieben, dem Verein hinter MetaGer. Die Inhalte selbst liegen auf einem Mastodon-Server oder einer Hochschulseite; fragen Sie bitte zuerst dort — und schreiben Sie dann uns.',
-        'website' => 'BASE und TUBdok zeigen, was die Repositorien enthalten, die sie durchsuchen. Entfernt das Repositorium einen Eintrag, verschwindet er auch dort.',
+        'suma' => 'TootNews wird vom SUMA-EV betrieben, dem Verein hinter MetaGer. Die Beiträge selbst liegen auf Mastodon-Servern; fragen Sie bitte zuerst dort und schreiben Sie dann uns.',
+        'website' => 'BASE zeigt, was die Repositorien enthalten, die es durchsucht. Entfernt das Repositorium einen Eintrag, verschwindet er auch aus BASE.',
     ],
     'us' => [
         'heading' => 'Wenn Sie uns trotzdem schreiben',
         'text' => 'Das können Sie, und wir antworten. So gehen wir vor:',
         'steps' => [
             'Wir prüfen, ob MetaGer das Ergebnis bei den Suchen zeigt, die Sie nennen, und von welchen Suchmaschinen es stammt.',
-            'Wir antworten mit den passenden Links für genau diese Suchmaschinen — denen auf dieser Seite.',
+            'Wir antworten mit den passenden Links für genau diese Suchmaschinen, also denen auf dieser Seite.',
             'Steht Ihnen gegenüber MetaGer ein Anspruch zu, etwa nach Art. 17 DSGVO bei Suchen nach Ihrem Namen, blenden wir das Ergebnis bei MetaGer aus, auch wenn es an der Quelle stehen bleibt. Dafür müssen Sie sich nicht zuerst an die Webseite oder die Suchmaschinen wenden. Das Ausblenden betrifft nur MetaGer: Auf der Webseite und in allen anderen Suchmaschinen bleibt das Ergebnis stehen.',
             'Wir antworten innerhalb eines Monats. Ist eine Anfrage besonders aufwendig, kann es bis zu zwei Monate länger dauern; das sagen wir Ihnen dann innerhalb des ersten Monats. Blenden wir ein Ergebnis nicht aus, nennen wir Ihnen die Gründe. Sie können sich dann bei einer Datenschutz-Aufsichtsbehörde beschweren oder vor Gericht gehen.',
         ],

@@ -2,13 +2,13 @@
 return [
     'title' => 'Removing a search result – MetaGer',
     'heading' => 'Removing a search result',
-    'lead' => 'MetaGer is a metasearch engine: it has no index of its own, but shows what other search engines find. So a result can only really be removed at the place it comes from — the website, and the search engines whose results MetaGer shows. This page tells you where.',
+    'lead' => 'MetaGer is a metasearch engine: it has no index of its own, but shows what other search engines find. So a result can only really be removed at the place it comes from: the website, and the search engines whose results MetaGer shows. This page tells you where.',
     'toc' => [
         'label' => 'On this page',
     ],
     'website' => [
         'heading' => 'Contact the website itself',
-        'text' => 'This is the only step that works everywhere. Once the page is deleted or changed, every search engine drops or updates it the next time it visits — and MetaGer with them, without anyone having to ask each of them.',
+        'text' => 'This is the only step that works everywhere. Once the page is deleted or changed, every search engine drops or updates it the next time it visits, and MetaGer with them, without anyone having to ask each of them.',
         'tips' => [
             'Most websites name a contact in their legal notice (imprint) or privacy policy. Ask them to delete the content, correct it, or at least remove your name.',
             'For personal data, websites in the EU have to answer a request under Art. 17 GDPR (right to erasure).',
@@ -20,7 +20,7 @@ return [
         'heading' => 'What kind of request is it?',
         'intro' => 'If the website does not help, or you cannot wait for it, the search engines have their own processes. Which one applies depends on what you want.',
         'personal_data' => [
-            'summary' => 'Personal data — the right to be forgotten',
+            'summary' => 'Personal data: the right to be forgotten',
             'text' => 'A result for your name links to information about you that is inaccurate, outdated, irrelevant or excessive. Under Art. 17 GDPR you can ask a search engine to stop showing that result for searches for your name. The search engine weighs your interest against the public’s interest in the information, so not every request succeeds. Look for “Personal data” in the cards below.',
         ],
         'outdated' => [
@@ -47,26 +47,25 @@ return [
             'outdated' => 'Outdated content',
             'legal' => 'Copyright and legal',
         ],
-        'no_form' => 'No form — contact :name',
+        'no_form' => 'No form, contact :name',
         'contact' => 'Contact :name',
         'us' => 'Write to us',
-        'google' => 'MetaGer receives Google’s results through the service Serper. What Google removes from its index is then gone from MetaGer too. Personal data, however, Google only hides from people searching in Europe; we cannot promise that this covers MetaGer’s queries through Serper. We check it when you write to us.',
+        'google' => 'MetaGer receives Google’s results through the service Serper. What Google removes from its index is then gone from MetaGer too.',
         'brave' => 'Brave Search runs its own index. Requests about personal data go by email to privacy@brave.com with the subject “RTBF request”; the linked page says what the email needs to contain.',
         'yandex' => 'Yandex runs its own index. For each request there is a separate form on its support pages.',
         'mojeek' => 'Mojeek runs its own index and does not edit its results by hand. It removes pages for legal reasons on request; write to it through its contact page and name the exact URLs.',
-        'staan' => 'Staan is the search interface of European Search Perspective, the index behind Qwant and Ecosia. Staan has no removal process of its own; Qwant’s forms are the nearest one.',
+        'staan' => 'Staan is the search interface of European Search Perspective. It takes requests about personal data through its own form; fill in every field and attach the supporting documents. The removal only affects the Staan index.',
         'pixabay' => 'Pixabay hosts the pictures itself. Use the report form or the report button on the picture’s page on Pixabay.',
-        'ebay' => 'Listings end by themselves and then disappear from MetaGer. To report a listing, open it on eBay and use “Report item”; rights holders use the VeRO programme.',
         'onenewspage' => 'One News Page collects news from other publishers. Its form covers removal, correction and copyright; the original publisher is usually the better first address.',
-        'suma' => 'TootNews and the Minisucher science index are run by SUMA-EV, the association behind MetaGer. The content itself lives on a Mastodon server or a university website, so ask there first — then write to us.',
-        'website' => 'BASE and TUBdok show what the repositories they search hold. Once the repository removes a record, it disappears from them.',
+        'suma' => 'TootNews is run by SUMA-EV, the association behind MetaGer. The posts themselves live on Mastodon servers, so ask there first, then write to us.',
+        'website' => 'BASE shows what the repositories it searches hold. Once the repository removes a record, it disappears from BASE.',
     ],
     'us' => [
         'heading' => 'If you write to us anyway',
         'text' => 'You can, and we will answer. This is what happens:',
         'steps' => [
             'We check whether MetaGer shows the result for the searches you name, and which search engines it comes from.',
-            'We answer with the right links for exactly those search engines — the ones on this page.',
+            'We answer with the right links for exactly those search engines, the ones on this page.',
             'If you have a claim against MetaGer itself, for example under Art. 17 GDPR for searches for your name, we hide the result on MetaGer, even if it stays up at the source. You do not have to ask the website or the search engines first. Hiding it only affects MetaGer: the result stays on the website and in every other search engine.',
             'We answer within one month. If a request is particularly complex, it can take up to two months longer; we tell you so within the first month. If we do not hide a result, we tell you why. You can then complain to a data protection supervisory authority or go to court.',
         ],

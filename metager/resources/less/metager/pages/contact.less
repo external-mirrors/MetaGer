@@ -15,6 +15,9 @@
 #kontakt {
     max-width: 50rem;
     margin: 0 auto;
+    // The layout puts subpages edge to edge on a phone; this keeps the
+    // text off the screen edges (tests/Browser/NarrowScreenLayoutTest).
+    padding: 0 1rem;
 
     .contact-lead {
         color: @secondary-text-color;

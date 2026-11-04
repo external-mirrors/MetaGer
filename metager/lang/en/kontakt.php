@@ -61,7 +61,7 @@ return [
         ],
         'privacy' => [
             'title' => 'Privacy',
-            'text' => 'What we store — and what we do not',
+            'text' => 'What we store and what we do not',
         ],
     ],
 ];

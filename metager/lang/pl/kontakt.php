@@ -64,7 +64,7 @@ Niemcy",
         ],
         'privacy' => [
             'title' => 'Prywatność',
-            'text' => 'Co zapisujemy — a czego nie',
+            'text' => 'Co zapisujemy, a czego nie',
         ],
     ],
 ];

@@ -64,7 +64,7 @@ Duitsland",
         ],
         'privacy' => [
             'title' => 'Privacy',
-            'text' => 'Wat we opslaan — en wat niet',
+            'text' => 'Wat we opslaan en wat niet',
         ],
     ],
 ];

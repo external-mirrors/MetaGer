@@ -64,7 +64,7 @@ Tyskland",
         ],
         'privacy' => [
             'title' => 'Privatlivets fred',
-            'text' => 'Hvad vi gemmer — og hvad vi ikke gemmer',
+            'text' => 'Hvad vi gemmer, og hvad vi ikke gemmer',
         ],
     ],
 ];

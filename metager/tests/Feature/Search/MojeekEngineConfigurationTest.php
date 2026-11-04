@@ -150,4 +150,25 @@ class MojeekEngineConfigurationTest extends TestCase
             );
         }
     }
+
+    /**
+     * Safesearch off maps to `safe=0`. The value was checked with empty(), and
+     * empty("0") is true in PHP, so the parameter was silently dropped and
+     * the engine searched with its own default.
+     */
+    public function testSafesearchOffIsSentAsZero(): void
+    {
+        $parameters = $this->requestParametersFor("de-DE", "&s=o");
+
+        $this->assertNotNull($parameters);
+        $this->assertSame("0", $parameters["safe"] ?? null);
+    }
+
+    public function testStrictSafesearchIsSentAsOne(): void
+    {
+        $parameters = $this->requestParametersFor("de-DE", "&s=s");
+
+        $this->assertNotNull($parameters);
+        $this->assertSame("1", $parameters["safe"] ?? null);
+    }
 }

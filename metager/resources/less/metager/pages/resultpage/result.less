@@ -2,7 +2,6 @@
 @result-font-medium: 16px;
 @result-font-url: 14px;
 @result-font-small: 12px;
-@result-description-color: @text-color;
 @result-image-border-color: @color-almost-white;
 
 // What a result shows, in order of how much it matters, and how loud each
@@ -364,7 +363,7 @@ a.result-open-proxy {
 
     // 2. The description: three lines at most
     .result-description {
-      color: @secondary-text-color;
+      color: @result-description-color;
       // A `font-size: 1` used to stand in this rule — a length without a unit,
       // which is invalid CSS, so every browser dropped it. lightningcss reads it
       // as 1px instead and emits that, which rendered every description

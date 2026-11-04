@@ -4,6 +4,7 @@ namespace Tests\Browser;
 
 use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Concerns\FakesSearchEngines;
 use Tests\DuskTestCase;
 
 /**
@@ -18,6 +19,82 @@ use Tests\DuskTestCase;
  */
 class RenderedStyleTest extends DuskTestCase
 {
+    use FakesSearchEngines;
+
+    protected function tearDown(): void
+    {
+        $this->forgetSearchUserClaims();
+        // See KeyboardAccessTest::tearDown.
+        $this->forgetQueuedDischarges();
+        parent::tearDown();
+    }
+
+    /**
+     * Regression test for washed-out result descriptions in light mode.
+     *
+     * The result page redesign set descriptions in --secondary-text-color, #444
+     * at 14px. That is 9.7:1 and passes every WCAG level, so AccessibilityTest
+     * never objected, but people reported it as worse to read than before, when
+     * descriptions were black. The floor here is above anything a grey reaches,
+     * which is the point: in light the description is the text colour. Dark
+     * keeps its grey, because near-white running text on the dark card glares.
+     */
+    #[DataProvider("descriptionContrast")]
+    public function testResultDescriptionsReadAsBodyText(string $theme, float $floor): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses([
+            "brave" => $this->engineFixture("brave-web.json"),
+        ]);
+
+        // The same page AccessibilityTest::testTheResultPage audits, for the
+        // same reason: the engines are faked in this process, not in the app
+        // Selenium talks to.
+        $html = $this->get("/de-DE/meta/meta.ger3?eingabe=kaffee&focus=web&dark_mode={$theme}")
+            ->assertOk()
+            ->getContent();
+
+        $this->browse(function (Browser $browser) use ($theme, $floor, $html) {
+            $browser->visit("/de-DE/impressum");
+            $browser->driver->executeScript("document.open(); document.write(arguments[0]); document.close();", [$html]);
+            $browser->waitUntil("document.readyState === 'complete'")
+                ->assertPresent(".result .result-description");
+
+            $colours = $browser->script(
+                "const description = document.querySelector('.result .result-description');"
+                    . "const card = description.closest('.result');"
+                    . "return [getComputedStyle(description).color, getComputedStyle(card).backgroundColor];"
+            )[0];
+
+            $ratio = $this->contrast($colours[0], $colours[1]);
+
+            $this->assertGreaterThanOrEqual(
+                $floor,
+                $ratio,
+                sprintf(
+                    "A result description is %s on %s in the %s palette, %.1f:1. "
+                        . "--result-description-color in resources/less/metager/variables.less "
+                        . "has drifted back towards grey.",
+                    $colours[0],
+                    $colours[1],
+                    $theme,
+                    $ratio
+                )
+            );
+        });
+    }
+
+    public static function descriptionContrast(): array
+    {
+        return [
+            // Black on white is 21:1; #333, the darkest grey that still reads
+            // as grey, is 12.6:1.
+            "light" => ["light", 15.0],
+            // #ccc on the #222 card is 10.4:1. Guard it at AAA.
+            "dark" => ["dark", 7.0],
+        ];
+    }
+
     /**
      * Regression test for the <details> disclosure triangle.
      *

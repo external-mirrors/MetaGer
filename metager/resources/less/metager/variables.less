@@ -71,9 +71,15 @@
   // its ground alone, without a frame, so it reads as quieter than the cards.
   --quiet-surface-color: #efefef;
   --muted-text-color: #666;
-  // Running text that supports a heading — a result's description. Between
-  // the text colour and muted: 9.7:1 on the card here, 10.4:1 in dark.
+  // Running text that supports a heading — a quicktip's body, a footer line.
+  // Between the text colour and muted: 9.7:1 on the card here, 10.4:1 in dark.
   --secondary-text-color: #444;
+  // A result's description is what a result is judged by, and the one stretch
+  // of running text on the page, so in light it is the text colour, as it was
+  // before the redesign: #444 at 14px read as washed out next to the blue
+  // titles, and was reported as such. The title stands apart by colour and
+  // size already; the description does not need to recede as well.
+  --result-description-color: @text;
 
   // Our SVG icons are all black, so light leaves them alone and dark flips them.
   --invert-state: invert(0%);
@@ -179,6 +185,8 @@
   --quiet-surface-color: #1d1d1d;
   --muted-text-color: #aaa;
   --secondary-text-color: #ccc;
+  // Not the text colour here: near-white running text on the dark card glares.
+  --result-description-color: #ccc;
 
   --invert-state: invert(100%);
   --icon-color: 0.9;
@@ -275,6 +283,7 @@
 @quiet-surface-color: var(--quiet-surface-color);
 @muted-text-color: var(--muted-text-color);
 @secondary-text-color: var(--secondary-text-color);
+@result-description-color: var(--result-description-color);
 
 // The result page's spacing scale. Every gap, margin and padding of a result,
 // a news card or a quicktip is one of these, so the page has one rhythm.
@@ -371,8 +380,6 @@
 @result-font-medium: 16px;
 @result-font-url: 14px;
 @result-font-small: 12px;
-// Overridden in pages/resultpage/result.less, which points it at @text-color.
-@result-description-color: @color-black;
 @result-image-border-color: @color-almost-white;
 
 // Background color

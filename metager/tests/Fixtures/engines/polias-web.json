@@ -1,0 +1,87 @@
+{
+  "query": "kaffee",
+  "lang": "de",
+  "results": [
+    {
+      "position": 1,
+      "title": "Kaffee Zubereitung | Zubereitungsarten",
+      "url": "https://example.org/kaffee",
+      "snippet": "Wir vermitteln dir in unserem Ratgeber die gängigsten Methoden der Kaffeezubereitung.",
+      "hostname": "example.org"
+    },
+    {
+      "position": 2,
+      "title": "Kaffeepreise steigen erneut",
+      "url": "https://nachrichten.example.de/wirtschaft/kaffeepreise",
+      "snippet": "Die Preise für Rohkaffee haben im Oktober einen neuen Höchststand erreicht.",
+      "hostname": "nachrichten.example.de",
+      "page_age": "2026-10-20T09:12:05"
+    },
+    {
+      "position": 3,
+      "title": "Kaffeesorten im Vergleich",
+      "url": "https://beispiel.de/sorten",
+      "snippet": "Arabica, Robusta und Liberica: was die Sorten unterscheidet.",
+      "hostname": "beispiel.de"
+    },
+    {
+      "position": 4,
+      "title": "Espresso richtig zubereiten",
+      "url": "https://beispiel.de/espresso",
+      "snippet": "Mahlgrad, Temperatur und Zeit: so gelingt der Espresso.",
+      "hostname": "beispiel.de"
+    },
+    {
+      "position": 5,
+      "title": "Kaffee – Wikipedia",
+      "url": "https://de.wikipedia.example/wiki/Kaffee",
+      "snippet": "Kaffee ist ein schwarzes, psychotropes, koffeinhaltiges Heißgetränk.",
+      "hostname": "de.wikipedia.example"
+    },
+    {
+      "position": 6,
+      "title": "Filterkaffee: Anleitung",
+      "url": "https://example.net/filterkaffee",
+      "snippet": "Wasser 250 ml, Kaffee ca. 16 g, Temperatur 95 °C.",
+      "hostname": "example.net"
+    },
+    {
+      "position": 7,
+      "title": "Kaffeerösterei in Freiburg",
+      "url": "https://roesterei.example.de/",
+      "snippet": "Frisch geröstet in Freiburg im Breisgau.",
+      "hostname": "roesterei.example.de"
+    },
+    {
+      "position": 8,
+      "title": "Kaffee und Gesundheit",
+      "url": "https://gesundheit.example.de/kaffee",
+      "snippet": "Wie Kaffee Stoffwechsel und Gesundheit beeinflusst.",
+      "hostname": "gesundheit.example.de"
+    },
+    {
+      "position": 9,
+      "title": "Kaffee-Abo",
+      "url": "https://shop.example.de/abo",
+      "snippet": "Jeden Monat eine neue Sorte.",
+      "hostname": "shop.example.de"
+    },
+    {
+      "position": 10,
+      "title": "Ein Ergebnis ohne Adresse",
+      "url": "",
+      "snippet": "Ohne URL lässt sich kein Ergebnis verlinken.",
+      "hostname": ""
+    }
+  ],
+  "total": 88215,
+  "corrected": "",
+  "suggestion": "",
+  "took_ms": 180.4,
+  "usage": {
+    "today": 12,
+    "month": 340,
+    "guthaben": 9760,
+    "gueltig_bis": "2026-11-21"
+  }
+}

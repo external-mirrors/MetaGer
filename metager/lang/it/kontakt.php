@@ -64,7 +64,7 @@ Germania",
         ],
         'privacy' => [
             'title' => 'La privacy',
-            'text' => 'Cosa salviamo — e cosa no',
+            'text' => 'Cosa salviamo e cosa no',
         ],
     ],
 ];

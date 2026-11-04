@@ -64,7 +64,7 @@ Germany",
         ],
         'privacy' => [
             'title' => 'Datenschutz',
-            'text' => 'Was wir speichern — und was nicht',
+            'text' => 'Was wir speichern und was nicht',
         ],
     ],
 ];

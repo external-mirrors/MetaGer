@@ -64,7 +64,7 @@ Saksa",
         ],
         'privacy' => [
             'title' => 'Yksityisyys',
-            'text' => 'Mitä tallennamme — ja mitä emme',
+            'text' => 'Mitä tallennamme ja mitä emme',
         ],
     ],
 ];

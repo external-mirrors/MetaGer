@@ -64,7 +64,7 @@ Tyskland",
         ],
         'privacy' => [
             'title' => 'Integritet',
-            'text' => 'Vad vi sparar — och vad vi inte sparar',
+            'text' => 'Vad vi sparar och vad vi inte sparar',
         ],
     ],
 ];

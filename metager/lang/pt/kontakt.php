@@ -14,7 +14,7 @@ return [
                 ],
                 'otherwise' => 'Caso contrário, alguém da nossa equipa confirma-a primeiro manualmente. A partir daí, ciframos tudo o que lhe enviamos, não apenas as respostas.',
                 'tofu' => 'Confiamos na primeira chave que recebermos assim para o seu endereço (Trust on First Use). Não adotamos automaticamente uma nova chave para o mesmo endereço: até a verificarmos, continuamos a cifrar com a anterior.',
-                'never_plain' => 'Nunca respondemos sem cifra a um e-mail cifrado. Sem a sua chave, não podemos responder — por isso, assine sempre os e-mails cifrados que nos enviar.',
+                'never_plain' => 'Nunca respondemos sem cifra a um e-mail cifrado. Sem a sua chave, não podemos responder; por isso, assine sempre os e-mails cifrados que nos enviar.',
             ],
             'pubkey' => 'PGP Publickey: <a href="/download/pubkey.asc" download="0x2185CC8F3CA782EC.asc">0x2185CC8F3CA782EC</a> ou em <a href=":keyserver" target="_blank" rel="noopener">keys.openpgp.org</a>',
             'fingerprint' => 'Impressão digital PGP: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
@@ -64,7 +64,7 @@ Alemanha",
         ],
         'privacy' => [
             'title' => 'Privacidade',
-            'text' => 'O que guardamos — e o que não guardamos',
+            'text' => 'O que guardamos e o que não guardamos',
         ],
     ],
 ];

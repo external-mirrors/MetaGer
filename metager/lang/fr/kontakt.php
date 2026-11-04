@@ -64,7 +64,7 @@ Allemagne",
         ],
         'privacy' => [
             'title' => 'Vie privée',
-            'text' => 'Ce que nous enregistrons — et ce que nous n’enregistrons pas',
+            'text' => 'Ce que nous enregistrons et ce que nous n’enregistrons pas',
         ],
     ],
 ];

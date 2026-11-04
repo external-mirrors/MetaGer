@@ -61,7 +61,7 @@ return [
         ],
         'privacy' => [
             'title' => 'Privadesa',
-            'text' => 'Què desem — i què no',
+            'text' => 'Què desem i què no',
         ],
     ],
 ];

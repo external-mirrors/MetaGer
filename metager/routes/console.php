@@ -30,7 +30,3 @@ Schedule::call(function () {
     DB::table('monthlyrequests')->truncate();
     DB::disconnect('mysql');
 })->monthlyOn(1, '00:00');
-
-// The Logs API's billing — `logs:create-order` and `logs:create-invoice` — is
-// not scheduled: the feature has no customers. The commands are kept for when
-// it is picked up again. See tests/Feature/LogsBillingCronsDisabledTest.

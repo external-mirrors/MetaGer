@@ -3,17 +3,12 @@
 namespace App\Providers;
 
 use App\Localization\LocaleContext;
-use App\Models\Authorization\LogsAuthGuard;
-use App\Models\Authorization\LogsUser;
-use App\Models\Logs\LogsAccountProvider;
 use App\Localization\MetaGerLocalization;
 use App\Queue\FailoverRedisConnector;
 use App\Routing\CookieCarryingUrlGenerator;
 use App\Support\Browser;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 use App\Support\UpstreamUserAgent;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -170,12 +165,6 @@ class AppServiceProvider extends ServiceProvider
          */
         Queue::withoutInterruptionPolling();
 
-        $this->app->bind(LogsUser::class, function ($app) {
-            return new LogsUser();
-        });
-        $this->app->singleton(LogsAccountProvider::class, function ($app) {
-            return new LogsAccountProvider();
-        });
         // One per request: every engine of the fokus asks for it, and resolving
         // it means parsing the client's User-Agent.
         $this->app->singleton(UpstreamUserAgent::class);
@@ -197,13 +186,6 @@ class AppServiceProvider extends ServiceProvider
         // page. Bound against the package's own key, so the facade and every
         // type-hint pick it up.
         $this->app->singleton(LaravelLocalization::class, MetaGerLocalization::class);
-        Auth::provider("logs", function ($app, array $config) {
-            return new LogsUserProvider($app->make(LogsUser::class));
-        });
-
-        Auth::extend('logs', function (Application $app, string $name, array $config) {
-            return new LogsAuthGuard(Auth::createUserProvider($config['provider']), $app->make(\Illuminate\Http\Request::class));
-        });
     }
 
     /**

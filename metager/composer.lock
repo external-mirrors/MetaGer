@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "224b8de1f8331123b0473616dbbe6763",
+    "content-hash": "b57ac8c742b9134361230e745f7ea738",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1567,55 +1567,6 @@
             ],
             "time": "2026-07-17T13:53:03+00:00",
             "published-time": "2026-07-17T13:53:27+00:00"
-        },
-        {
-            "name": "invoiceninja/sdk-php",
-            "version": "v2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/invoiceninja/sdk-php.git",
-                "reference": "b773c72088f2a249964a7dc695b3b19e9e1b2fdf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/invoiceninja/sdk-php/zipball/b773c72088f2a249964a7dc695b3b19e9e1b2fdf",
-                "reference": "b773c72088f2a249964a7dc695b3b19e9e1b2fdf",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^7.16.1 || ^8.3.1",
-                "nesbot/carbon": "^3.15.1",
-                "php": "^8.2"
-            },
-            "require-dev": {
-                "fakerphp/faker": "^1.16",
-                "phpstan/phpstan": "^2.3",
-                "phpunit/phpunit": "^11",
-                "vlucas/phpdotenv": "^5.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "InvoiceNinja\\Sdk\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "David Bomba",
-                    "email": "turbo124@gmail.com"
-                }
-            ],
-            "description": "The Invoice Ninja v5 PHP SDK",
-            "support": {
-                "issues": "https://github.com/invoiceninja/sdk-php/issues",
-                "source": "https://github.com/invoiceninja/sdk-php/tree/v2.0.0"
-            },
-            "time": "2026-11-02T01:12:31+00:00",
-            "published-time": "2026-11-02T01:13:40+00:00"
         },
         {
             "name": "jean85/pretty-package-versions",

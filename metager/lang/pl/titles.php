@@ -30,17 +30,10 @@ return [
     'membership' => 'Twoje członkostwo w SUMA-EV',
     'adblocker' => 'Adblockery - MetaGer',
     'help-glossary' => 'Słowniczek - MetaGer',
-    'logs' => [
-        'admin' => "Logi administratora - MetaGer",
-        'overview' => 'Logi - MetaGer',
-        'login' => "Logi administratora - MetaGer",
-    ],
     'price' => 'Ceny - MetaGer',
     'agb' => 'Ogólne warunki handlowe - MetaGer',
     'help-key' => 'Klucz MetaGer - MetaGer',
     'anonymous-token' => 'Anonimowe tokeny - MetaGer',
-    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
-    // die Logs-API, nicht der Schlüssel.
     'login' => 'Zaloguj się - MetaGer',
     'key-create' => 'Utwórz klucz - MetaGer',
 

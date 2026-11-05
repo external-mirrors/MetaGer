@@ -30,17 +30,10 @@ return [
     'prevention' => 'Hilfe bei Selbstmordgedanken – MetaGer',
     'membership' => 'Ihre Mitgliedschaft im SUMA-EV',
     'adblocker' => 'Werbeblocker – MetaGer',
-    'logs' => [
-        'admin' => "Protokolle Verwaltung – MetaGer",
-        'overview' => 'Protokolle – MetaGer',
-        'login' => "Protokolle Verwaltung – MetaGer",
-    ],
     'price' => 'Preise – MetaGer',
     'agb' => 'AGB – MetaGer',
     'help-key' => 'Der MetaGer-Schlüssel – MetaGer',
     'anonymous-token' => 'Anonyme Token – MetaGer',
-    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
-    // die Logs-API, nicht der Schlüssel.
     'login' => 'Anmelden – MetaGer',
     // Die Seite zum Erstellen eines Schlüssels, aus /keys/key/create.
     'key-create' => 'Schlüssel erstellen – MetaGer',

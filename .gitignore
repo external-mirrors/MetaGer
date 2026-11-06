@@ -11,3 +11,6 @@ chart/charts/*.tgz
 
 # Sqlite databases left behind by the test suite (--parallel writes one per worker)
 metager/database/databases/
+
+# Editor swap and lock files (vim .*.swp, nano writes the same name as a lock)
+.*.sw[a-p]

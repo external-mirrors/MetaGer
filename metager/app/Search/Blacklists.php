@@ -2,16 +2,18 @@
 
 namespace App\Search;
 
-use App\Models\BlocklistEntry;
 use Illuminate\Support\Facades\Log;
 
 /**
  * The operator blocklist: which results MetaGer will not show, and whose
  * descriptions it will not print.
  *
- * The entries live in the `blocklist_entries` table (App\Models\BlocklistEntry)
- * and are edited live by suma-crm through /api/blocklist — docs/blocklist-api.md
- * is the contract. Four kinds:
+ * The list is MetaGer's list in the blocklist service (open-source/blocklist),
+ * which suma-crm edits. `artisan blocklist:sync` (BlocklistSync) fetches it
+ * every minute, and at once when the service calls /api/blocklist-changed, and
+ * stores the snapshot in Valkey (BlocklistStore). The service's
+ * docs/matching.md is the matching rule; its worked examples run here too
+ * (Tests\Unit\Search\BlocklistWorkedExamplesTest). Four kinds:
  *
  *   domain       a host — every result on it is dropped
  *   url          a host+path — that one page is dropped
@@ -22,36 +24,30 @@ use Illuminate\Support\Facades\Log;
  *
  * ## How a lookup stays cheap
  *
- * The table is compiled into a snapshot of hash maps — host → ids, link → ids,
+ * The snapshot is compiled into hash maps — host → ids, link → ids,
  * link → term sets — so a lookup is one isset() per kind whatever the length
  * of the list, and terms are only looked at for a link that already hit. The
- * snapshot is stamped with the Redis counter `blocklist:version`
- * (BlocklistVersion), which every write increments, and kept per worker: in
- * memory for long-running processes, and as an OPcache-held PHP file per
- * version for FPM, which keeps nothing in memory between requests (see
- * directory()). Each request reads the counter once; only a changed counter
- * costs a database read, once per pod. So the database is off the result path
- * except right after an edit.
+ * compiled list is stamped with the Valkey counter `blocklist:version`
+ * (BlocklistVersion), which every sync that stores a new snapshot increments,
+ * and kept per worker: in memory for long-running processes, and as an
+ * OPcache-held PHP file per version for FPM, which keeps nothing in memory
+ * between requests (see directory()). Each request reads the counter once;
+ * only a changed counter costs reading and compiling the snapshot, once per
+ * pod.
  *
  * ## Failure
  *
- * If Redis cannot be asked, the last snapshot stays in use; if the database
- * cannot be read, likewise. The filter falls back to the old state, never to
- * an empty list — a blocklist that silently empties is a removal request
- * silently undone. Only a worker that has never managed to load once runs
- * without one, and logs it on every request until it does.
+ * If Valkey cannot be asked, or has lost the snapshot, the last compiled list
+ * stays in use. The filter falls back to the old state, never to an empty list
+ * — a blocklist that silently empties is a removal request silently undone.
  *
- * ## What changed with the move from the three files
+ * ## Before the first sync
  *
- * The files (blacklistDomains.txt, blacklistUrl.txt with its `page|query`
- * lines, blacklistDescriptionUrl.txt) were imported by
- * `artisan blocklist:import-files` and are not read any more. Two quirks
- * went with them, on purpose: the url list was not trimmed, and neither of
- * the first two lists loaded unless both files existed. Values are also
- * normalised on both sides now (BlocklistNormalizer) — host lowercased,
- * `www.` and a trailing slash dropped — so `www.example.org/a/` and
- * `example.org/a` are one entry, and query terms are compared as words,
- * folded for case and diacritics, rather than as one exact lowercased string.
+ * Until a sync has stored a snapshot, the list is read from the three legacy
+ * files in config/ (LegacyBlocklistFiles), which production still mounts. The
+ * blocklist service imported the same files, so the switch changes nothing
+ * that is blocked. Once anything was compiled from a snapshot, the files are
+ * never read again on that pod.
  */
 class Blacklists
 {
@@ -76,9 +72,6 @@ class Blacklists
      * @var ?array{domains: array<string, list<int>>, urls: array<string, list<int>>, descriptions: array<string, list<int>>, terms: array<string, list<array{0: int, 1: list<string>}>>}
      */
     private ?array $resolved = null;
-
-    /** Set while {@see withoutBlocking} runs. */
-    private bool $bypassed = false;
 
     /** @var array<string, array<string, true>> the query's normalised tokens, keyed by the raw query */
     private array $queryTokens = [];
@@ -112,10 +105,6 @@ class Blacklists
      */
     public function blocksResult(string $strippedHost, string $strippedLink, string $query): bool
     {
-        if ($this->bypassed) {
-            return false;
-        }
-
         return $this->blockingEntryIds($strippedHost, $strippedLink, $query) !== [];
     }
 
@@ -124,16 +113,12 @@ class Blacklists
      */
     public function blocksDescription(string $strippedLink): bool
     {
-        if ($this->bypassed) {
-            return false;
-        }
-
         return $this->descriptionEntryIds($strippedLink) !== [];
     }
 
     /**
-     * Ids of every entry that drops this result for this query, ignoring any
-     * bypass. What /api/blocklist/test and /check report.
+     * Ids of every entry that drops this result for this query, for a log
+     * line or a test that has to say which entry applied.
      *
      * @return list<int>
      */
@@ -167,35 +152,13 @@ class Blacklists
     }
 
     /**
-     * Ids of every entry that blanks this result's description, ignoring any
-     * bypass.
+     * Ids of every entry that blanks this result's description.
      *
      * @return list<int>
      */
     public function descriptionEntryIds(string $strippedLink): array
     {
         return $this->snapshot()["descriptions"][BlocklistNormalizer::strippedLink($strippedLink)] ?? [];
-    }
-
-    /**
-     * Run $callback with the filter switched off on this instance — for the
-     * check endpoint, which has to see what upstream returns. Only this
-     * request's instance is affected; every other request filters as usual.
-     *
-     * @template T
-     * @param callable(): T $callback
-     * @return T
-     */
-    public function withoutBlocking(callable $callback): mixed
-    {
-        $previous = $this->bypassed;
-        $this->bypassed = true;
-
-        try {
-            return $callback();
-        } finally {
-            $this->bypassed = $previous;
-        }
     }
 
     private function snapshot(): array
@@ -216,7 +179,7 @@ class Blacklists
             if ($snapshot !== null) {
                 return $snapshot;
             }
-            Log::warning("blocklist: version unreadable and no snapshot stored, reading the table");
+            Log::warning("blocklist: version unreadable and no list stored, reading the legacy files");
             return self::compileOrEmpty();
         }
 
@@ -246,12 +209,16 @@ class Blacklists
         return $snapshot;
     }
 
+    /**
+     * Valkey is down and nothing was ever compiled here: the legacy files are
+     * all there is, if they are mounted.
+     */
     private static function compileOrEmpty(): array
     {
         try {
-            return self::compile();
+            return self::compileLegacy();
         } catch (\Throwable $e) {
-            Log::error("blocklist: no snapshot could be loaded, results are unfiltered: " . $e->getMessage());
+            Log::error("blocklist: no list could be loaded, results are unfiltered: " . $e->getMessage());
             return self::empty();
         }
     }
@@ -345,35 +312,75 @@ class Blacklists
         }
     }
 
+    /**
+     * The list from the snapshot `blocklist:sync` stored in Valkey.
+     *
+     * Without one, it depends on what came before. If this worker or this pod
+     * has compiled a list already, the snapshot was lost (Valkey restarted),
+     * and throwing makes current() keep that list until the next sync. If
+     * nothing was ever compiled here, there has been no sync yet, and the
+     * legacy files are the list.
+     *
+     * @throws \Throwable when Valkey cannot be read, or has lost the snapshot
+     */
     private static function compile(): array
+    {
+        $snapshot = BlocklistStore::snapshot();
+        if ($snapshot !== null) {
+            return self::compileEntries($snapshot["entries"]);
+        }
+
+        if (self::$snapshot !== null || self::newestStored() !== null) {
+            throw new \RuntimeException("no synced snapshot in Valkey");
+        }
+
+        return self::compileLegacy();
+    }
+
+    private static function compileLegacy(): array
+    {
+        $directory = config("metager.metager.blocklist.legacy_directory") ?? config_path();
+
+        return self::compileEntries(LegacyBlocklistFiles::entries($directory));
+    }
+
+    /**
+     * Hash maps from a snapshot's entries (open-source/blocklist,
+     * docs/snapshot.md). Values there are already normalised.
+     *
+     * @param list<array{id: int, kind: string, value: string, terms: ?list<string>}> $entries
+     */
+    private static function compileEntries(array $entries): array
     {
         $snapshot = self::empty();
 
-        // toBase(): plain rows, no models — this can be thousands of lines, and
-        // the soft-delete scope is still applied.
-        $rows = BlocklistEntry::query()->toBase()->select(["id", "kind", "value", "terms"])->get();
-
-        foreach ($rows as $row) {
-            $id = (int) $row->id;
-            switch ($row->kind) {
-                case BlocklistEntry::KIND_DOMAIN:
-                    $snapshot["domains"][$row->value][] = $id;
+        foreach ($entries as $entry) {
+            $id = (int) ($entry["id"] ?? 0);
+            $value = (string) ($entry["value"] ?? "");
+            if ($value === "") {
+                continue;
+            }
+            switch ($entry["kind"] ?? null) {
+                case "domain":
+                    $snapshot["domains"][$value][] = $id;
                     break;
-                case BlocklistEntry::KIND_URL:
-                    $snapshot["urls"][$row->value][] = $id;
+                case "url":
+                    $snapshot["urls"][$value][] = $id;
                     break;
-                case BlocklistEntry::KIND_DESCRIPTION:
-                    $snapshot["descriptions"][$row->value][] = $id;
+                case "description":
+                    $snapshot["descriptions"][$value][] = $id;
                     break;
-                case BlocklistEntry::KIND_URL_TERMS:
-                    $terms = $row->terms === null || $row->terms === "" ? [] : explode(" ", $row->terms);
+                case "url_terms":
+                    $terms = array_values(array_filter((array) ($entry["terms"] ?? []), fn($t) => is_string($t) && $t !== ""));
                     // An entry without terms would block the page for every
-                    // query, which is what `url` is for. The API refuses one;
-                    // skipping it here keeps a hand-edited row from widening.
+                    // query, which is what `url` is for; the service never
+                    // sends one, and one that arrives anyway must not widen.
                     if ($terms !== []) {
-                        $snapshot["terms"][$row->value][] = [$id, $terms];
+                        $snapshot["terms"][$value][] = [$id, $terms];
                     }
                     break;
+                // A kind this code does not know is skipped: a newer service
+                // may send one (docs/matching.md there).
             }
         }
 

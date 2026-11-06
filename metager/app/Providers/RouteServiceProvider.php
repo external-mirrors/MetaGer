@@ -90,8 +90,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * Not the framework's `api` group either: its throttle keys on
      * `$request->user()`, which here would resolve the default guard for a
-     * caller that is not a user. The one endpoint that needs a limit sets its
-     * own (BlocklistCheckController).
+     * caller that is not a user.
      *
      * @return void
      */

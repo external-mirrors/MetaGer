@@ -109,11 +109,6 @@ return [
         // .env.example.
         "internal_url" => env("CRM_INTERNAL_URL", env("CRM_BASE_URL")),
         "token" => env("CRM_TOKEN"),
-        // The other direction: what suma-crm must send as its bearer token
-        // to /api/blocklist (App\Http\Middleware\CrmAuthorization). Kept
-        // apart from `token`, which authorises this app's calls *to*
-        // suma-crm, so neither side can act as the other.
-        "admin_token" => env("CRM_ADMIN_TOKEN"),
     ],
     // The blocklist service (open-source/blocklist), which holds MetaGer's
     // list of results not to show. `blocklist:sync` fetches it; the service
@@ -123,6 +118,9 @@ return [
         "token" => env("BLOCKLIST_TOKEN"),
         "webhook_token" => env("BLOCKLIST_WEBHOOK_TOKEN"),
         "timeout" => 5,
+        // Where the legacy blacklist*.txt files are read from before the
+        // first sync (App\Search\LegacyBlocklistFiles). Null: config/.
+        "legacy_directory" => null,
     ],
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),

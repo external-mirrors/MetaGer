@@ -2,9 +2,8 @@
 
 namespace Tests\Unit\Search;
 
-use App\Models\BlocklistEntry;
 use App\Search\Blacklists;
-use Tests\Concerns\UsesInMemorySqlite;
+use Tests\Concerns\FakesBlocklist;
 use Tests\TestCase;
 
 /**
@@ -15,22 +14,16 @@ use Tests\TestCase;
  * and what it falls back to. These are the cases that are awkward to reach
  * through a search — an exotic host, a repeated entry, a result without a host.
  *
- * Rows are written straight into the table here, already normalised, so these
- * are about the lookup and not about what the API makes of its input.
+ * Entries go in as the blocklist service sends them, already normalised, so
+ * these are about the lookup and not about normalising input.
  */
 class BlacklistsTest extends TestCase
 {
-    use UsesInMemorySqlite;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->setUpInMemorySqlite();
-    }
+    use FakesBlocklist;
 
     private function entry(string $kind, string $value, ?string $terms = null): void
     {
-        BlocklistEntry::create(["kind" => $kind, "value" => $value, "terms" => $terms, "reason" => "other"]);
+        $this->blocklistEntry($kind, $value, $terms);
     }
 
     private function lists(): Blacklists

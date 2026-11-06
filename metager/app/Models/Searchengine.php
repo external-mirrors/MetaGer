@@ -35,13 +35,6 @@ abstract class Searchengine
     /** @var Result[] */
     public $videos = [];
     public $loaded = false; # wahr, sobald die Ergebnisse geladen wurden
-    /**
-     * The fetcher answered "no-result": upstream errored, timed out or
-     * answered outside 2xx. Loaded all the same — the page treats it as an
-     * empty answer — but a caller that has to qualify "not found"
-     * (App\Search\ListingCheck) needs to tell the two apart.
-     */
-    public bool $failed = false;
     public $cached = false;
 
     public $ip; # Die IP aus der metager
@@ -266,7 +259,6 @@ abstract class Searchengine
         }
 
         if ($body === "no-result") {
-            $this->failed = true;
             $body = "";
         }
 

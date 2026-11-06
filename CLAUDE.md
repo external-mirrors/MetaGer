@@ -253,22 +253,21 @@ rather than fixed — `ResultDeduplicator`'s `changed` flag and the double-encod
 
 ## Blocklist
 
-The operator blocklist — results MetaGer will not show, descriptions it blanks — is the
-`blocklist_entries` table (`App\Models\BlocklistEntry`), not files any more. suma-crm edits it
-live through `/api/blocklist`; `docs/blocklist-api.md` is the contract both sides test against
-(`BlocklistApiTest`, `BlocklistCheckTest`), so change it and both sides together. The routes are
-in `routes/api.php`, outside the `web` group, behind `CrmAuthorization` and `CRM_ADMIN_TOKEN`.
+The operator blocklist (results MetaGer will not show, descriptions it blanks) is MetaGer's list
+in the blocklist service, `open-source/blocklist`, which suma-crm edits. MetaGer only reads it:
+`artisan blocklist:sync` runs every minute (and when the service calls `/api/blocklist-changed`),
+fetches `GET /api/lists/metager` with the last ETag and stores the snapshot in Valkey
+(`BlocklistStore`, keys `blocklist:snapshot` and `blocklist:etag`). The service's `docs/` are the
+contract: `consumers.md` for fetching, `snapshot.md` for the JSON, `matching.md` for the rule.
 
-`App\Search\Blacklists` compiles the table into a snapshot keyed by the Redis counter
-`blocklist:version`, which every model write bumps. FPM keeps nothing between requests, so the
-snapshot is also written as an OPcache-held PHP file per version under
-`storage/framework/cache/blocklist`: a search costs one `GET`, the database is read once per pod
-per edit, and with Redis or the database down the last snapshot stays — never an empty list.
-Values are normalised on both sides by `BlocklistNormalizer`; write entries through
-`normalizeValue`/`normalizeTerms`, never raw. Tests that touch entries use `UsesInMemorySqlite`;
-`TestCase::setUp` flushes the snapshot because the counter is shared by the whole suite.
-`POST /api/blocklist/check` runs real searches with the filter bypassed (`ListingCheck`) — it is
-the one place a request runs several searches, by swapping the request-scoped singletons.
+`App\Search\Blacklists` compiles the snapshot into a lookup keyed by the Valkey counter
+`blocklist:version`, which a sync bumps when it stores a new snapshot. FPM keeps nothing between
+requests, so the compiled list is also written as an OPcache-held PHP file per version under
+`storage/framework/cache/blocklist`: a search costs one `GET`, and with Valkey down or the
+snapshot lost the last compiled list stays, never an empty one. Before the first sync the three
+legacy files in `config/` are the list (`LegacyBlocklistFiles`). Tests put entries in with
+`Tests\Concerns\FakesBlocklist`; `TestCase::setUp` flushes the compiled list because the counter is
+shared by the whole suite.
 
 ## What the result page actually spends its time on
 

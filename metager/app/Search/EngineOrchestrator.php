@@ -162,25 +162,17 @@ class EngineOrchestrator
      * `brpop` consumes what it returns, so the answer goes straight back on the
      * list for load-more to find. Those two commands are pipelined; nothing
      * between them depends on the other.
-     *
-     * @param bool $everyEngine wait for every enabled engine, not only the main ones
-     * @param ?float $budget seconds to wait at most; WAIT_SECONDS when null
      */
-    public function waitForMainResults(MetaGer $metager, bool $everyEngine = false, ?float $budget = null): void
+    public function waitForMainResults(MetaGer $metager): void
     {
         $engines = $this->engines();
-        $waitingFor = $everyEngine
-            ? $this->hashesNotLoaded($engines)
-            : $this->hashesToWaitFor($engines);
+        $waitingFor = $this->hashesToWaitFor($engines);
 
         $timeStart = microtime(true);
         while (sizeof($waitingFor) > 0) {
-            $left = ($budget ?? self::WAIT_SECONDS) - (microtime(true) - $timeStart);
-            if ($left <= 0) {
+            if ((microtime(true) - $timeStart) >= self::WAIT_SECONDS) {
                 break;
             }
-            // brpop's timeout is whole seconds, and 0 would mean "forever".
-            $timeout = $budget === null ? self::WAIT_SECONDS : max(1, (int) ceil($left));
 
             // A failover mid-wait must not cost the page. Retrying reconnects
             // through HAProxy, which by then has seen the promotion; giving up
@@ -188,7 +180,7 @@ class EngineOrchestrator
             // whatever loaded from the cache is still worth rendering and
             // collectResults gets one more chance at the rest.
             try {
-                $answer = RedisFailover::retry(fn() => Redis::brpop($waitingFor, $timeout));
+                $answer = RedisFailover::retry(fn() => Redis::brpop($waitingFor, self::WAIT_SECONDS));
             } catch (PredisException $e) {
                 Log::warning('Stopped waiting for engine results: ' . $e->getMessage());
                 return;
@@ -355,26 +347,6 @@ class EngineOrchestrator
         $hashes = [];
         foreach ($main as $engine) {
             $hashes[$engine->getHash()] = true;
-        }
-
-        return array_keys($hashes);
-    }
-
-    /**
-     * Every enabled engine that has not answered yet — for a caller that needs
-     * all of them rather than the ones that define the page
-     * (App\Search\ListingCheck).
-     *
-     * @param iterable<Searchengine> $engines
-     * @return list<string>
-     */
-    private function hashesNotLoaded(iterable $engines): array
-    {
-        $hashes = [];
-        foreach ($engines as $engine) {
-            if (!$engine->loaded) {
-                $hashes[$engine->getHash()] = true;
-            }
         }
 
         return array_keys($hashes);

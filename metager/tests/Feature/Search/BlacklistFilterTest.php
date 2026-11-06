@@ -2,17 +2,16 @@
 
 namespace Tests\Feature\Search;
 
-use App\Models\BlocklistEntry;
 use App\Search\BlocklistNormalizer;
 use Tests\Concerns\FakesSearchEngines;
-use Tests\Concerns\UsesInMemorySqlite;
+use Tests\Concerns\FakesBlocklist;
 use Tests\TestCase;
 
 /**
  * What the operator blocklist does to a real search, end to end.
  *
- * The list is the `blocklist_entries` table (App\Search\Blacklists). It used
- * to be three text files in config/, and this test began as the
+ * The list comes from the blocklist service (App\Search\Blacklists,
+ * BlocklistSync). It used to be three text files in config/, and this test began as the
  * characterization of those files before they moved. The tests whose names
  * say "now" are the ones that pinned a quirk of the files and were flipped,
  * on purpose, by the move:
@@ -23,22 +22,20 @@ use Tests\TestCase;
  *   - a `page|query` line matched only the exact lowercased query, so a
  *     capitalised entry never matched and a reordered query was not caught.
  *
- * Comment lines went with the files: the importer skips them
- * (BlocklistImportFilesTest), and the table has no such thing.
+ * Comment lines went with the files: the blocklist service's import skips
+ * them, and a snapshot has no such thing.
  *
- * Entries are written the way the API writes them — normalised by
- * BlocklistEntry::normalizeValue / BlocklistNormalizer::terms — into an
- * in-memory database, never the developer's real one.
+ * Entries are put into Valkey the way `blocklist:sync` stores them, with the
+ * values normalised as the blocklist service normalises them.
  */
 class BlacklistFilterTest extends TestCase
 {
     use FakesSearchEngines;
-    use UsesInMemorySqlite;
+    use FakesBlocklist;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpInMemorySqlite();
     }
 
     protected function tearDown(): void
@@ -50,19 +47,19 @@ class BlacklistFilterTest extends TestCase
     /**
      * @param ?string $terms the query words, for url_terms
      */
-    private function block(string $kind, string $value, ?string $terms = null): BlocklistEntry
+    /**
+     * An entry as the blocklist service would send it: the value normalised
+     * the way the service normalises what suma-crm sends.
+     */
+    private function block(string $kind, string $value, ?string $terms = null): int
     {
-        return BlocklistEntry::create([
-            "kind" => $kind,
-            "value" => BlocklistEntry::normalizeValue($kind, $value),
-            "terms" => $terms === null ? null : implode(" ", BlocklistNormalizer::terms($terms)),
-            "reason" => "other",
-        ]);
+        return $this->blocklistEntry(
+            $kind,
+            $kind === "domain" ? BlocklistNormalizer::host($value) : BlocklistNormalizer::link($value),
+            $terms === null ? null : implode(" ", BlocklistNormalizer::terms($terms))
+        );
     }
 
-    /**
-     * @return array<int, array<string, mixed>>
-     */
     private function search(string $query = "kaffee"): array
     {
         $this->actingAsSearchUser();
@@ -118,9 +115,8 @@ class BlacklistFilterTest extends TestCase
      */
     public function testADomainEntryGivenAsAFullUrlNowBlocksItsHost(): void
     {
-        $entry = $this->block("domain", "https://beispiel.de/sorten");
+        $this->block("domain", "https://beispiel.de/sorten");
 
-        $this->assertSame("beispiel.de", $entry->value);
         $this->assertNotContains("https://beispiel.de/sorten", $this->links($this->search()));
     }
 
@@ -241,7 +237,7 @@ class BlacklistFilterTest extends TestCase
      */
     public function testADeletedEntryNoLongerBlocks(): void
     {
-        $this->block("domain", "beispiel.de")->delete();
+        $this->removeBlocklistEntry($this->block("domain", "beispiel.de"));
 
         $this->assertContains("https://beispiel.de/sorten", $this->links($this->search()));
     }

@@ -115,6 +115,15 @@ return [
         // suma-crm, so neither side can act as the other.
         "admin_token" => env("CRM_ADMIN_TOKEN"),
     ],
+    // The blocklist service (open-source/blocklist), which holds MetaGer's
+    // list of results not to show. `blocklist:sync` fetches it; the service
+    // calls /api/blocklist-changed with `webhook_token` when it changes.
+    "blocklist" => [
+        "url" => env("BLOCKLIST_URL"),
+        "token" => env("BLOCKLIST_TOKEN"),
+        "webhook_token" => env("BLOCKLIST_WEBHOOK_TOKEN"),
+        "timeout" => 5,
+    ],
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),
         "key" => env("WEBDRIVER_KEY", ""),

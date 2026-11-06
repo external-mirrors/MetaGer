@@ -25,6 +25,10 @@ Schedule::command("logs:gather")->everyMinute();
 // without overlapping because a keyserver that answers slowly must not leave
 // two of these racing over the same queue.
 Schedule::command("keys:settle-discharges")->everyMinute()->runInBackground()->withoutOverlapping();
+// MetaGer's list from the blocklist service (App\Search\BlocklistSync). A 304
+// when nothing changed, so every minute is cheap; in the background for the
+// same reason as above.
+Schedule::command("blocklist:sync")->everyMinute()->runInBackground()->withoutOverlapping();
 Schedule::command("logs:truncate")->daily()->onOneServer();
 Schedule::call(function () {
     DB::table('monthlyrequests')->truncate();

@@ -28,6 +28,12 @@ class RemovalController extends Controller
     /** The request kinds every provider entry carries a link (or null) for. */
     public const KINDS = ["personal_data", "outdated", "legal"];
 
+    /** suma-crm's public form, in the visitor's language. */
+    public static function formUrl(): string
+    {
+        return config("metager.metager.crm.url") . "/entfernung?lang=" . urlencode(app()->getLocale());
+    }
+
     public function show(Translator $translator, SearchEngineRegistry $registry): View
     {
         // The page is written in de, en and ca. Everywhere else the app falls
@@ -54,7 +60,7 @@ class RemovalController extends Controller
             ),
             "foki" => $foki,
             "hotlines" => config("removal_providers.hotlines"),
-            "form" => config("metager.metager.crm.url") . "/entfernung?lang=" . urlencode(app()->getLocale()),
+            "form" => self::formUrl(),
         ]);
     }
 

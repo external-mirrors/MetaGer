@@ -33,7 +33,10 @@ Saksa",
         ],
     ],
     'removal' => [
-        'hint' => 'Haluatko poistaa hakutuloksen? Lue ensin <a href=":link">ohjeemme</a>: MetaGer näyttää muiden hakukoneiden tuloksia, joten tuloksen voi yleensä poistaa vain niissä.',
+        'heading' => 'Poisto',
+        'only' => 'Voit pyytää hakutulosten poistamista meiltä vain lomakkeellamme. Emme ota tällaisia pyyntöjä vastaan sähköpostitse, puhelimitse tai postitse.',
+        'form' => 'Lomakkeeseen',
+        'guide' => 'Lomake koskee omia hakuindeksejämme. MetaGer näyttää muiden hakukoneiden tuloksia; <a href=":link">ohjeemme</a> kertoo, missä poisto niiden kohdalla toimii.',
     ],
     'phone' => [
         'heading' => 'Puhelin',

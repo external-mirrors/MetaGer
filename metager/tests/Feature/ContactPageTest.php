@@ -108,45 +108,40 @@ class ContactPageTest extends TestCase
     }
 
     /**
-     * The most frequent mail we cannot act on is "please remove this result":
-     * MetaGer shows other engines' results. The page must not advertise that
-     * request — no headline, no call to action at the top — but whoever is
-     * about to write it meets a pointer to the removal guide right at the
-     * button that opens their mail program: the very next thing under it,
-     * before the PGP fold. Everyone else just writes.
+     * Removal requests are only taken through the form, so this is not a hint
+     * beside the mail button any more: it is the first row, with the form as
+     * its own button, and it says the other ways on this page do not work.
+     * The guide stays linked, because the form is for SUMA-EV's own indexes
+     * and most people ask about results MetaGer gets from other engines.
      */
-    public function testTheRemovalGuideIsPointedToRightAtTheButton(): void
+    public function testRemovalRequestsAreSentToTheFormBeforeTheAddress(): void
     {
+        config(["metager.metager.crm.url" => "https://my.suma-ev.de"]);
+
         $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
 
+        $removal = strpos($content, 'class="contact-section contact-removal"');
+        $email = strpos($content, 'class="contact-section contact-email"');
+        $this->assertNotFalse($removal, "The contact page has no removal row.");
+        $this->assertLessThan($email, $removal, "It has to come before the address people would write to.");
+
+        $row = substr($content, $removal, $email - $removal);
+        $this->assertStringContainsString("nur über unser Formular", $row);
+        $this->assertStringContainsString("E-Mail, Telefon oder Post", $row);
         $this->assertMatchesRegularExpression(
-            '#E-Mail schreiben</a>\s*</div>\s*<p class="contact-removal-hint">#',
-            $content,
-            "The removal hint has to be the next thing after the address and its button.",
+            '#<a class="contact-button" href="https://my\.suma-ev\.de/entfernung\?lang=de-DE">#',
+            $row,
         );
-
-        $hint = strpos($content, '<p class="contact-removal-hint">');
-        $guide = strpos($content, '/de-DE/entfernen"');
-        $fold = strpos($content, '<details class="contact-pgp">');
-
-        $this->assertNotFalse($guide, "The contact page does not link to the removal guide.");
-        $this->assertLessThan($guide, $hint);
-        $this->assertLessThan($fold, $guide, "The guide has to come before the PGP fold.");
-        $this->assertSame(
-            1,
-            substr_count($content, '/de-DE/entfernen"'),
-            "The guide is linked once, from the hint — not from a call to action of its own.",
-        );
+        $this->assertStringContainsString('/de-DE/entfernen"', $row);
     }
 
-    /** Characterization of what the first redesign did, and must not come back. */
-    public function testTheRemovalRequestIsNotAdvertised(): void
+    /** "Read this first" is gone: nothing about removals is left at the mail button. */
+    public function testTheMailButtonNoLongerCarriesARemovalHint(): void
     {
         $this->get("/de-DE/kontakt")
             ->assertOk()
-            ->assertDontSeeText("Ein Suchergebnis entfernen lassen?")
-            ->assertDontSeeText("Anleitung: Suchergebnis entfernen")
-            ->assertDontSee("contact-removal\"", false);
+            ->assertDontSee("contact-removal-hint", false)
+            ->assertDontSeeText("Bitte lesen Sie vorher");
     }
 
     /**
@@ -274,7 +269,7 @@ class ContactPageTest extends TestCase
     /**
      * The address and the button that writes to it sit together, so the
      * button reads as "write to this address" rather than as a separate
-     * call to action under the removal hint.
+     * call to action.
      */
     public function testTheAddressAndItsButtonSitTogether(): void
     {

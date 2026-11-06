@@ -33,7 +33,10 @@ Tyskland",
         ],
     ],
     'removal' => [
-        'hint' => 'Gäller det att få ett sökresultat borttaget? Läs först <a href=":link">vår guide</a>: MetaGer visar andra sökmotorers resultat, så ett resultat kan oftast bara tas bort där.',
+        'heading' => 'Borttagning',
+        'only' => 'Du kan bara be oss ta bort sökresultat via vårt formulär. Vi tar inte emot sådana begäranden via e-post, telefon eller brev.',
+        'form' => 'Till formuläret',
+        'guide' => 'Formuläret gäller våra egna sökindex. MetaGer visar resultat från andra sökmotorer; <a href=":link">vår guide</a> förklarar var en borttagning fungerar för dem.',
     ],
     'phone' => [
         'heading' => 'Telefon',

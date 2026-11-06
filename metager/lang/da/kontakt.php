@@ -33,7 +33,10 @@ Tyskland",
         ],
     ],
     'removal' => [
-        'hint' => 'Handler det om at få fjernet et søgeresultat? Læs først <a href=":link">vores vejledning</a>: MetaGer viser andre søgemaskiners resultater, så et resultat kan som regel kun fjernes dér.',
+        'heading' => 'Fjernelse',
+        'only' => 'Du kan kun bede os om at fjerne søgeresultater via vores formular. Vi modtager ikke sådanne anmodninger pr. e-mail, telefon eller post.',
+        'form' => 'Til formularen',
+        'guide' => 'Formularen gælder vores egne søgeindeks. MetaGer viser resultater fra andre søgemaskiner; <a href=":link">vores vejledning</a> forklarer, hvor en fjernelse virker for dem.',
     ],
     'phone' => [
         'heading' => 'Telefon',

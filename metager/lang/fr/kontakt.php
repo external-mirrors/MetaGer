@@ -32,11 +32,16 @@ Allemagne",
             'fingerprint' => 'Empreinte PGP : 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'reason' => [
+        'legend' => 'De quoi s’agit-il ?',
+        'general' => 'Une question ou une demande',
+        'removal' => 'Retirer un résultat de recherche',
+    ],
     'removal' => [
         'heading' => 'Retrait',
         'only' => 'Vous ne pouvez nous demander de retirer des résultats de recherche que via notre formulaire. Nous n’acceptons pas ces demandes par e-mail, téléphone ou courrier.',
-        'form' => 'Aller au formulaire',
-        'guide' => 'Le formulaire concerne nos propres index de recherche. MetaGer affiche les résultats d’autres moteurs de recherche ; <a href=":link">notre guide</a> explique où un retrait est efficace pour ceux-ci.',
+        'first' => 'Le formulaire se trouve à la fin de notre guide. Veuillez d’abord le lire : MetaGer affiche les résultats d’autres moteurs de recherche, un retrait y est donc généralement efficace.',
+        'button' => 'Aller au guide',
     ],
     'phone' => [
         'heading' => 'Téléphone',

@@ -32,11 +32,16 @@ Saksa",
             'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'reason' => [
+        'legend' => 'Mitä asiasi koskee?',
+        'general' => 'Kysymys tai pyyntö',
+        'removal' => 'Hakutuloksen poisto',
+    ],
     'removal' => [
         'heading' => 'Poisto',
         'only' => 'Voit pyytää hakutulosten poistamista meiltä vain lomakkeellamme. Emme ota tällaisia pyyntöjä vastaan sähköpostitse, puhelimitse tai postitse.',
-        'form' => 'Lomakkeeseen',
-        'guide' => 'Lomake koskee omia hakuindeksejämme. MetaGer näyttää muiden hakukoneiden tuloksia; <a href=":link">ohjeemme</a> kertoo, missä poisto niiden kohdalla toimii.',
+        'first' => 'Lomake on ohjeemme lopussa. Lue ohje ensin: MetaGer näyttää muiden hakukoneiden tuloksia, joten poisto toimii yleensä niissä.',
+        'button' => 'Ohjeeseen',
     ],
     'phone' => [
         'heading' => 'Puhelin',

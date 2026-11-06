@@ -108,41 +108,45 @@ class ContactPageTest extends TestCase
     }
 
     /**
-     * Removal requests are only taken through the form, so this is not a hint
-     * beside the mail button any more: it is the first row, with the form as
-     * its own button, and it says the other ways on this page do not work.
-     * The guide stays linked, because the form is for SUMA-EV's own indexes
-     * and most people ask about results MetaGer gets from other engines.
+     * Nearly everyone comes for the address, so it is there without a click.
+     * The choice above it is the one place a removal request turns off that
+     * path: without script, it swaps the mail, phone and post rows for the
+     * removal row (Browser/ProgressiveEnhancementTest does the swapping).
      */
-    public function testRemovalRequestsAreSentToTheFormBeforeTheAddress(): void
+    public function testTheReasonForContactIsChosenAboveTheAddressWhichIsShownByDefault(): void
+    {
+        $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
+
+        $chooser = strpos($content, '<fieldset class="contact-reason">');
+        $general = strpos($content, '<div class="contact-general">');
+        $this->assertNotFalse($chooser, "The contact page has no choice of reason.");
+        $this->assertLessThan($general, $chooser);
+        $this->assertMatchesRegularExpression('#<input[^>]*id="contact-reason-general"[^>]*\\schecked#', $content);
+        $this->assertDoesNotMatchRegularExpression('#<input[^>]*id="contact-reason-removal"[^>]*\\schecked#', $content);
+        $this->assertStringContainsString('class="contact-address"', substr($content, $general));
+    }
+
+    /**
+     * Removal requests are only taken through the form, but people read the
+     * guide first: it says where a removal works and leads to the form at its
+     * end. So this row sends them to the guide and never to the form itself.
+     */
+    public function testARemovalRequestIsSentToTheGuideNeverDirectlyToTheForm(): void
     {
         config(["metager.metager.crm.url" => "https://my.suma-ev.de"]);
 
         $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
 
-        $removal = strpos($content, 'class="contact-section contact-removal"');
-        $email = strpos($content, 'class="contact-section contact-email"');
+        $removal = strpos($content, '<section class="contact-section contact-removal"');
         $this->assertNotFalse($removal, "The contact page has no removal row.");
-        $this->assertLessThan($email, $removal, "It has to come before the address people would write to.");
+        $row = substr($content, $removal, strpos($content, "</section>", $removal) - $removal);
 
-        $row = substr($content, $removal, $email - $removal);
         $this->assertStringContainsString("nur über unser Formular", $row);
         $this->assertStringContainsString("E-Mail, Telefon oder Post", $row);
-        $this->assertMatchesRegularExpression(
-            '#<a class="contact-button" href="https://my\.suma-ev\.de/entfernung\?lang=de-DE">#',
-            $row,
-        );
-        $this->assertStringContainsString('/de-DE/entfernen"', $row);
+        $this->assertMatchesRegularExpression('#<a class="contact-button" href="[^"]*/de-DE/entfernen">#', $row);
+        $this->assertStringNotContainsString("/entfernung", $content, "The form is only reached through the guide.");
     }
 
-    /** "Read this first" is gone: nothing about removals is left at the mail button. */
-    public function testTheMailButtonNoLongerCarriesARemovalHint(): void
-    {
-        $this->get("/de-DE/kontakt")
-            ->assertOk()
-            ->assertDontSee("contact-removal-hint", false)
-            ->assertDontSeeText("Bitte lesen Sie vorher");
-    }
 
     /**
      * Email is what most visitors came for, so it comes first; the ways to

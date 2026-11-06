@@ -1,6 +1,6 @@
 @import "../variables.less";
 
-// /kontakt — the one thing we do not take here first, then email for everyone.
+// /kontakt — email for everyone, behind a choice that defaults to it.
 //
 // An address card: each way to reach us is one row, its <h2> a short label in
 // a narrow column beside the content, rows divided by a hairline. On a phone
@@ -25,20 +25,64 @@
         margin: 0.25rem 0 2rem;
     }
 
+    .contact-email,
     .contact-removal {
         border-top: 2px solid @text-color;
     }
 
-    // Plain body size and full text colour: this is a rule, not a side note.
-    .contact-removal-only {
-        font-weight: bold;
-        margin-bottom: 0.75rem;
+    // Two labels for two radios, the checked one filled. The radios stay in
+    // the tab order, so the focus ring goes on their label.
+    .contact-reason {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0 0 1.5rem;
+        padding: 0;
+        border: 0;
+
+        legend {
+            margin-bottom: 0.5rem;
+            padding: 0;
+            font-weight: bold;
+        }
+
+        input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        label {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+            box-sizing: border-box;
+            padding: 0 1rem;
+            border: 1px solid @border-color;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        input:checked + label {
+            border-color: @accent-fill-color;
+            background-color: @accent-fill-color;
+            color: @on-accent-color;
+            font-weight: bold;
+        }
+
+        input:focus-visible + label {
+            outline: 2px solid @text-color;
+            outline-offset: 2px;
+        }
     }
 
-    .contact-removal-guide {
-        color: @secondary-text-color;
-        font-size: 0.95rem;
-        margin-top: 0.75rem;
+    // Written so that a browser without :has() shows both, not neither.
+    &:has(#contact-reason-removal:checked) .contact-general,
+    &:has(#contact-reason-general:checked) .contact-removal {
+        display: none;
+    }
+
+    .contact-removal-only {
+        font-weight: bold;
     }
 
     .contact-section {

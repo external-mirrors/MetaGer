@@ -29,11 +29,16 @@ return [
         '1' => 'Post',
         '3' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nGermany",
     ],
+    'reason' => [
+        'legend' => 'What is this about?',
+        'general' => 'A question or request',
+        'removal' => 'Remove a search result',
+    ],
     'removal' => [
         'heading' => 'Removal',
         'only' => 'You can only ask us to remove search results through our form. We do not accept such requests by email, phone or post.',
-        'form' => 'Go to the form',
-        'guide' => 'The form covers our own search indexes. MetaGer shows other search engines\' results; <a href=":link">our guide</a> explains where a removal works for those.',
+        'first' => 'You will find the form at the end of our guide. Please read it first: MetaGer shows other search engines\' results, so a removal usually works there.',
+        'button' => 'Go to the guide',
     ],
     'phone' => [
         'heading' => 'Phone',

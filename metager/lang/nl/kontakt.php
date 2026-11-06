@@ -32,11 +32,16 @@ Duitsland",
             'fingerprint' => 'PGP Vingerafdruk: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'reason' => [
+        'legend' => 'Waar gaat het over?',
+        'general' => 'Een vraag of verzoek',
+        'removal' => 'Zoekresultaat verwijderen',
+    ],
     'removal' => [
         'heading' => 'Verwijdering',
         'only' => 'U kunt ons alleen via ons formulier vragen zoekresultaten te verwijderen. Per e-mail, telefoon of post nemen we zulke verzoeken niet aan.',
-        'form' => 'Naar het formulier',
-        'guide' => 'Het formulier geldt voor onze eigen zoekindexen. MetaGer toont resultaten van andere zoekmachines; in <a href=":link">onze handleiding</a> staat waar een verwijdering daarvoor werkt.',
+        'first' => 'Het formulier staat aan het einde van onze handleiding. Lees die eerst: MetaGer toont resultaten van andere zoekmachines, dus een verwijdering werkt meestal daar.',
+        'button' => 'Naar de handleiding',
     ],
     'phone' => [
         'heading' => 'Telefoon',

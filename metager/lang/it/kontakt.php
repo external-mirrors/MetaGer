@@ -32,11 +32,16 @@ Germania",
             'fingerprint' => 'Impronta digitale PGP: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'reason' => [
+        'legend' => 'Di cosa si tratta?',
+        'general' => 'Una domanda o richiesta',
+        'removal' => 'Rimuovere un risultato di ricerca',
+    ],
     'removal' => [
         'heading' => 'Rimozione',
         'only' => 'Può chiederci di rimuovere risultati di ricerca solo tramite il nostro modulo. Non accettiamo queste richieste via e-mail, telefono o posta.',
-        'form' => 'Vai al modulo',
-        'guide' => 'Il modulo riguarda i nostri indici di ricerca. MetaGer mostra i risultati di altri motori di ricerca; <a href=":link">la nostra guida</a> spiega dove una rimozione è efficace per questi.',
+        'first' => 'Trova il modulo alla fine della nostra guida. La legga prima: MetaGer mostra i risultati di altri motori di ricerca, quindi di solito una rimozione è efficace lì.',
+        'button' => 'Vai alla guida',
     ],
     'phone' => [
         'heading' => 'Telefono',

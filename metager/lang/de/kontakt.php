@@ -32,11 +32,16 @@ Germany",
             'fingerprint' => 'PGP-Fingerabdruck: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'reason' => [
+        'legend' => 'Worum geht es?',
+        'general' => 'Frage oder Anliegen',
+        'removal' => 'Suchergebnis entfernen',
+    ],
     'removal' => [
         'heading' => 'Entfernung',
         'only' => 'Suchergebnisse entfernen lassen können Sie bei uns nur über unser Formular. Per E-Mail, Telefon oder Post nehmen wir solche Anträge nicht an.',
-        'form' => 'Zum Formular',
-        'guide' => 'Das Formular gilt für unsere eigenen Suchindizes. MetaGer zeigt Ergebnisse anderer Suchmaschinen; wo eine Entfernung dort wirkt, steht in <a href=":link">unserer Anleitung</a>.',
+        'first' => 'Das Formular finden Sie am Ende unserer Anleitung. Bitte lesen Sie diese zuerst: MetaGer zeigt Ergebnisse anderer Suchmaschinen, darum wirkt eine Entfernung meist dort.',
+        'button' => 'Zur Anleitung',
     ],
     'phone' => [
         'heading' => 'Telefon',

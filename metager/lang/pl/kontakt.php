@@ -32,11 +32,16 @@ Niemcy",
             'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'reason' => [
+        'legend' => 'Czego dotyczy sprawa?',
+        'general' => 'Pytanie lub prośba',
+        'removal' => 'Usunięcie wyniku wyszukiwania',
+    ],
     'removal' => [
         'heading' => 'Usuwanie',
         'only' => 'O usunięcie wyników wyszukiwania możesz nas poprosić tylko przez nasz formularz. Nie przyjmujemy takich wniosków e-mailem, telefonicznie ani pocztą.',
-        'form' => 'Przejdź do formularza',
-        'guide' => 'Formularz dotyczy naszych własnych indeksów wyszukiwania. MetaGer pokazuje wyniki innych wyszukiwarek; <a href=":link">nasz przewodnik</a> wyjaśnia, gdzie usunięcie jest w ich przypadku skuteczne.',
+        'first' => 'Formularz znajdziesz na końcu naszego przewodnika. Przeczytaj go najpierw: MetaGer pokazuje wyniki innych wyszukiwarek, więc usunięcie zwykle działa właśnie tam.',
+        'button' => 'Przejdź do przewodnika',
     ],
     'phone' => [
         'heading' => 'Telefon',

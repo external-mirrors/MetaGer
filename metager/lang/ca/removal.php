@@ -66,7 +66,7 @@ return [
             'Comprovem si MetaGer mostra el resultat per a les cerques que indiqueu i de quins cercadors prové.',
             'Us responem amb els enllaços adequats per a exactament aquests cercadors, els d’aquesta pàgina.',
             'Si teniu un dret davant de MetaGer mateix, per exemple segons l’art. 17 del RGPD en les cerques del vostre nom, amaguem el resultat a MetaGer, encara que continuï a l’origen. No cal que abans us adreceu al lloc web ni als cercadors. Amagar-lo només afecta MetaGer: el resultat continua al lloc web i a tots els altres cercadors.',
-            'Responem en el termini d’un mes. Si una sol·licitud és especialment complexa, pot trigar fins a dos mesos més; us ho diem dins del primer mes. Si no amaguem un resultat, us en donem els motius. Aleshores podeu presentar una reclamació davant d’una autoritat de control de protecció de dades o acudir als tribunals.',
+            'Responem en el termini d’un mes. Si una sol·licitud és especialment complexa, pot trigar fins a dos mesos més; us ho diem dins del primer mes. Si no amaguem un resultat, us en donem els motius.',
         ],
         'include' => 'Perquè sigui ràpid, indiqueu les adreces exactes (URL) dels resultats i les cerques en què apareixen.',
         'identity' => 'Si es tracta de les vostres dades personals, en alguns casos us demanem una prova que sou la persona afectada o que actueu en nom seu, per exemple una còpia del vostre document d’identitat. Si no, qualsevol podria fer-nos amagar qualsevol adreça. A la còpia podeu tapar tot el que no necessitem per comparar-la amb el resultat. La guardem amb la vostra sol·licitud i, un cop tancada, l’esborrem juntament amb la resta de les vostres dades.',

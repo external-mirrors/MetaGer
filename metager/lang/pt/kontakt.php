@@ -33,7 +33,10 @@ Alemanha",
         '1' => 'Contacto',
     ],
     'removal' => [
-        'hint' => 'Trata-se de remover um resultado de pesquisa? Leia primeiro <a href=":link">o nosso guia</a>: o MetaGer mostra resultados de outros motores de pesquisa, por isso um resultado normalmente só pode ser removido lá.',
+        'heading' => 'Remoção',
+        'only' => 'Só nos pode pedir a remoção de resultados de pesquisa através do nosso formulário. Não aceitamos estes pedidos por e-mail, telefone ou correio.',
+        'form' => 'Ir para o formulário',
+        'guide' => 'O formulário destina-se aos nossos próprios índices de pesquisa. O MetaGer mostra resultados de outros motores de busca; <a href=":link">o nosso guia</a> explica onde uma remoção é eficaz nesses casos.',
     ],
     'phone' => [
         'heading' => 'Telefone',

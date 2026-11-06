@@ -33,7 +33,10 @@ Duitsland",
         ],
     ],
     'removal' => [
-        'hint' => 'Gaat het om het verwijderen van een zoekresultaat? Lees dan eerst <a href=":link">onze handleiding</a>: MetaGer toont resultaten van andere zoekmachines, dus een resultaat kan meestal alleen daar worden verwijderd.',
+        'heading' => 'Verwijdering',
+        'only' => 'U kunt ons alleen via ons formulier vragen zoekresultaten te verwijderen. Per e-mail, telefoon of post nemen we zulke verzoeken niet aan.',
+        'form' => 'Naar het formulier',
+        'guide' => 'Het formulier geldt voor onze eigen zoekindexen. MetaGer toont resultaten van andere zoekmachines; in <a href=":link">onze handleiding</a> staat waar een verwijdering daarvoor werkt.',
     ],
     'phone' => [
         'heading' => 'Telefoon',

@@ -4,13 +4,13 @@
 
 @section('content')
 {{--
-	/kontakt — email first, for everyone; then phone and post; then the
-	pages that answer common questions.
+	/kontakt — first what does not go through us here, then email, phone and
+	post, then the pages that answer common questions.
 
-	The mail we can help least with is "please remove this search result":
-	MetaGer shows other engines' results. The page does not advertise that
-	request; whoever is about to write it meets one line pointing to the
-	removal guide right under the button that opens their mail program.
+	Removal requests are only taken through suma-crm's form, not by any way
+	listed on this page, so that row comes before the address people would
+	write to. The guide stays linked: MetaGer shows other engines' results, and
+	the form is for SUMA-EV's own indexes.
 	One row per way to reach us, so a fold opening in one never stretches
 	another.
 	No script on this page.
@@ -21,6 +21,15 @@
 
 	{{-- An address card: each way to reach us is one row, its h2 a short
 	     label beside the content (pages/contact.less), stacked on a phone. --}}
+	<section class="contact-section contact-removal" id="removal" aria-labelledby="contact-removal-heading">
+		<h2 id="contact-removal-heading">@lang('kontakt.removal.heading')</h2>
+		<div class="contact-section-body">
+			<p class="contact-removal-only">@lang('kontakt.removal.only')</p>
+			<a class="contact-button" href="{{ $removal_form }}">@lang('kontakt.removal.form')</a>
+			<p class="contact-removal-guide">@lang('kontakt.removal.guide', ['link' => route('removal')])</p>
+		</div>
+	</section>
+
 	<section class="contact-section contact-email" id="email" aria-labelledby="contact-email-heading">
 		<h2 id="contact-email-heading">@lang('kontakt.headline.2')</h2>
 		<div class="contact-section-body">
@@ -28,7 +37,6 @@
 				<p class="contact-address">{{ $to_mail }}</p>
 				<a class="contact-button" href="mailto:{{ $to_mail }}">@lang('kontakt.email.write')</a>
 			</div>
-			<p class="contact-removal-hint">@lang('kontakt.removal.hint', ['link' => route('removal')])</p>
 			<details class="contact-pgp">
 				<summary>@lang('kontakt.email.pgp.summary')</summary>
 				{{-- How suma-crm decides to answer encrypted: App\Pgp\KeyDiscovery

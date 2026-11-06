@@ -33,7 +33,10 @@ Germany",
         ],
     ],
     'removal' => [
-        'hint' => 'Geht es um ein Suchergebnis, das entfernt werden soll? Bitte lesen Sie vorher <a href=":link">unsere Anleitung</a>: MetaGer zeigt die Ergebnisse anderer Suchmaschinen, entfernen lässt sich ein Ergebnis deshalb in der Regel nur dort.',
+        'heading' => 'Entfernung',
+        'only' => 'Suchergebnisse entfernen lassen können Sie bei uns nur über unser Formular. Per E-Mail, Telefon oder Post nehmen wir solche Anträge nicht an.',
+        'form' => 'Zum Formular',
+        'guide' => 'Das Formular gilt für unsere eigenen Suchindizes. MetaGer zeigt Ergebnisse anderer Suchmaschinen; wo eine Entfernung dort wirkt, steht in <a href=":link">unserer Anleitung</a>.',
     ],
     'phone' => [
         'heading' => 'Telefon',

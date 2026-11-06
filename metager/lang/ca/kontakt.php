@@ -30,7 +30,10 @@ return [
         '3' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nAlemanya",
     ],
     'removal' => [
-        'hint' => 'Es tracta d\'eliminar un resultat de cerca? Llegiu primer <a href=":link">la nostra guia</a>: MetaGer mostra resultats d\'altres cercadors, i per això normalment un resultat només es pot eliminar allà.',
+        'heading' => 'Retirada',
+        'only' => 'Només ens podeu demanar que retirem resultats de cerca mitjançant el nostre formulari. No acceptem aquestes sol·licituds per correu electrònic, telèfon ni correu postal.',
+        'form' => 'Ves al formulari',
+        'guide' => 'El formulari és per als nostres índexs de cerca propis. MetaGer mostra resultats d’altres cercadors; <a href=":link">la nostra guia</a> explica on és efectiva una retirada en aquests casos.',
     ],
     'phone' => [
         'heading' => 'Telèfon',

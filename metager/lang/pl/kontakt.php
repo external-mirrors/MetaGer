@@ -33,7 +33,10 @@ Niemcy",
         ],
     ],
     'removal' => [
-        'hint' => 'Chodzi o usunięcie wyniku wyszukiwania? Najpierw przeczytaj <a href=":link">nasz poradnik</a>: MetaGer pokazuje wyniki innych wyszukiwarek, więc wynik można zwykle usunąć tylko tam.',
+        'heading' => 'Usuwanie',
+        'only' => 'O usunięcie wyników wyszukiwania możesz nas poprosić tylko przez nasz formularz. Nie przyjmujemy takich wniosków e-mailem, telefonicznie ani pocztą.',
+        'form' => 'Przejdź do formularza',
+        'guide' => 'Formularz dotyczy naszych własnych indeksów wyszukiwania. MetaGer pokazuje wyniki innych wyszukiwarek; <a href=":link">nasz przewodnik</a> wyjaśnia, gdzie usunięcie jest w ich przypadku skuteczne.',
     ],
     'phone' => [
         'heading' => 'Telefon',

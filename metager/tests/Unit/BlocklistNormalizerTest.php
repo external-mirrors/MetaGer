@@ -85,4 +85,25 @@ class BlocklistNormalizerTest extends TestCase
     {
         $this->assertSame([], BlocklistNormalizer::terms(" ,.;- "));
     }
+
+    /**
+     * The blocklist service lowercases a host Unicode-aware (its
+     * docs/matching.md), so a result on BÜCHER.example has to fold to the
+     * same `bücher.example` here, or an entry for it never matches.
+     */
+    public function testAHostWithNonAsciiLettersIsLowercasedLikeTheServiceDoes(): void
+    {
+        $this->assertSame("bücher.example", BlocklistNormalizer::strippedHost("BÜCHER.example"));
+        $this->assertSame("bücher.example/A", BlocklistNormalizer::strippedLink("BÜCHER.example/A"));
+        $this->assertSame("bücher.example", BlocklistNormalizer::host("https://BÜCHER.example/a"));
+    }
+
+    /**
+     * "Starts with http" was taken for "has a scheme", so a legacy file line
+     * such as httpbin.org/a lost its host.
+     */
+    public function testAHostThatStartsWithHttpKeepsItsHost(): void
+    {
+        $this->assertSame("httpbin.org/a", BlocklistNormalizer::link("httpbin.org/a"));
+    }
 }

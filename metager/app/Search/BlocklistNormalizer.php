@@ -12,8 +12,10 @@ namespace App\Search;
  *
  * Hosts and links are cut the way Result::getUrlElements cuts them — a scheme
  * is assumed when missing, `www.` is dropped, port, query and fragment go — and
- * then made comparable: the host is lowercased (hosts are case-insensitive; the
- * path is not, so it keeps its case) and a trailing slash is dropped.
+ * then made comparable: the host is lowercased, Unicode-aware like the
+ * blocklist service does it (hosts are case-insensitive; the path is not, so
+ * it keeps its case) and a trailing slash is dropped. The service's
+ * docs/matching.md is the rule; BlocklistWorkedExamplesTest runs its examples.
  * Tests\Unit\BlocklistNormalizerTest pins the agreement with Result.
  */
 class BlocklistNormalizer
@@ -39,17 +41,17 @@ class BlocklistNormalizer
      */
     public static function strippedHost(string $strippedHost): string
     {
-        return strtolower($strippedHost);
+        return mb_strtolower($strippedHost, "UTF-8");
     }
 
     public static function strippedLink(string $strippedLink): string
     {
         $slash = strpos($strippedLink, "/");
         if ($slash === false) {
-            return strtolower($strippedLink);
+            return mb_strtolower($strippedLink, "UTF-8");
         }
 
-        return strtolower(substr($strippedLink, 0, $slash)) . rtrim(substr($strippedLink, $slash), "/");
+        return mb_strtolower(substr($strippedLink, 0, $slash), "UTF-8") . rtrim(substr($strippedLink, $slash), "/");
     }
 
     /**
@@ -90,12 +92,14 @@ class BlocklistNormalizer
     private static function parts(string $url): array
     {
         $url = trim($url);
-        if (stripos($url, "http") !== 0) {
+        // Not "starts with http": that took httpbin.org/a for an address with
+        // a scheme, and parse_url() then found no host in it.
+        if (!preg_match('#^[a-z][a-z0-9+.-]*://#i', $url)) {
             $url = "http://" . $url;
         }
 
         $parts = parse_url($url) ?: [];
-        $host = strtolower($parts["host"] ?? "");
+        $host = mb_strtolower($parts["host"] ?? "", "UTF-8");
         if (str_starts_with($host, "www.")) {
             $host = substr($host, 4);
         }

@@ -17,7 +17,7 @@ use Illuminate\View\View;
  * in config/foki.json. suma-crm links its replies to the anchors on this page.
  *
  * Only providers MetaGer still gets results from get a card: an engine its
- * parser switches off (CONFIG_OVERLOAD `disabled`, e.g. Yandex) sends nobody
+ * parser switches off (CONFIG_OVERLOAD `disabled`) sends nobody
  * anywhere. The mapping in the config keeps such engines, so a provider comes
  * back by itself when its engine is switched on again.
  */
@@ -61,7 +61,7 @@ class RemovalController extends Controller
      * engines that are not switched off count; a provider missing here gets
      * no card.
      *
-     * Mojeek and Staan are off only *by default* (`disabledByDefault`): a
+     * Mojeek, Staan and Polias are off only *by default* (`disabledByDefault`): a
      * user can opt in, so their results can be on MetaGer and they count.
      *
      * @return array<string, string[]>

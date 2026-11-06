@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Usuwanie wyniku wyszukiwania – MetaGer',
+    'meta_description' => 'Jak usunąć wynik wyszukiwania: prawo do bycia zapomnianym, nieaktualne treści, prawo autorskie. Gdzie złożyć wniosek: Google, Brave i inne.',
     'heading' => 'Usuwanie wyniku wyszukiwania',
     'lead' => 'MetaGer to metawyszukiwarka: nie mamy własnego indeksu, tylko pokazujemy to, co znajdują inne wyszukiwarki. Dlatego wynik można naprawdę usunąć tylko tam, skąd pochodzi: na stronie internetowej i w wyszukiwarkach, których wyniki pokazuje MetaGer. Ta strona wyjaśnia, gdzie to zrobić.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Usuwanie z naszych własnych wyszukiwarek',
-        'text' => 'SUMA-EV prowadzi własne indeksy wyszukiwania: Nolm oraz TootNews / TrötNews. Przyjmujemy wnioski tylko dla nich i tylko przez nasz formularz, nie e-mailem. MetaGer do nich nie należy: nie ma własnego indeksu, dlatego ta strona pokazuje, gdzie usunięcie zadziała. Tak wygląda wniosek:',
+        'text' => 'W przypadku własnych wyszukiwarek SUMA-EV możesz złożyć wniosek o usunięcie bezpośrednio u nas: Nolm oraz TootNews / TrötNews. Tak wygląda wniosek:',
         'steps' => [
             'Wybierasz wyszukiwarkę, której dotyczy sprawa, i potwierdzasz swój adres e-mail przez link, który Ci wysyłamy.',
             'Przesyłasz dowód tożsamości i dla każdej strony podajesz adres, wyszukiwane hasła i powód.',

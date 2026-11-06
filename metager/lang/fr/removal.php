@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Faire retirer un résultat de recherche – MetaGer',
+    'meta_description' => 'Comment faire retirer un résultat de recherche : droit à l’oubli, contenu obsolète, droit d’auteur. Où agir : Google, Brave et d’autres moteurs.',
     'heading' => 'Faire retirer un résultat de recherche',
     'lead' => 'MetaGer est un métamoteur de recherche : nous n’avons pas d’index propre, nous affichons ce que trouvent d’autres moteurs de recherche. Un résultat ne peut donc être réellement retiré que là d’où il vient : sur le site web et auprès des moteurs de recherche dont MetaGer affiche les résultats. Cette page vous indique où.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Retrait de nos propres recherches',
-        'text' => 'SUMA-EV exploite ses propres index de recherche : Nolm et TootNews / TrötNews. Nous n’acceptons de demandes que pour ceux-ci, et uniquement via notre formulaire, pas par courriel. MetaGer n’en fait pas partie : il n’a pas d’index propre, c’est pourquoi cette page indique où un retrait agit à la place. Voici comment se déroule une demande :',
+        'text' => 'Pour les moteurs de recherche de SUMA-EV, vous pouvez demander le retrait directement auprès de nous : Nolm et TootNews / TrötNews. Voici comment se déroule une demande :',
         'steps' => [
             'Vous choisissez la recherche concernée et confirmez votre adresse de courriel via un lien que nous vous envoyons.',
             'Vous téléversez votre justificatif et indiquez pour chaque page l’adresse, les termes de recherche et le motif.',

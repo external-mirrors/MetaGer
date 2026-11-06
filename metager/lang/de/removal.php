@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Suchergebnis entfernen lassen – MetaGer',
+    'meta_description' => 'So lassen Sie ein Suchergebnis entfernen: Recht auf Vergessenwerden, veraltete Inhalte, Urheberrecht. Wo Ihr Antrag bei Google, Brave und anderen wirkt.',
     'heading' => 'Suchergebnis entfernen lassen',
     'lead' => 'MetaGer ist eine Metasuchmaschine: Wir haben keinen eigenen Index, sondern zeigen, was andere Suchmaschinen finden. Wirklich entfernen lässt sich ein Ergebnis deshalb nur dort, wo es herkommt: bei der Webseite und bei den Suchmaschinen, deren Ergebnisse MetaGer zeigt. Diese Seite sagt Ihnen, wo.',
     'toc' => [
@@ -12,7 +13,7 @@ return [
         'tips' => [
             'Die meisten Webseiten nennen im Impressum oder in der Datenschutzerklärung eine Kontaktadresse. Bitten Sie dort darum, den Inhalt zu löschen, zu berichtigen oder wenigstens Ihren Namen zu entfernen.',
             'Bei personenbezogenen Daten müssen Webseiten in der EU einen Antrag nach Art. 17 DSGVO (Recht auf Löschung) beantworten.',
-            'Betreiben Sie die Webseite selbst: Löschen Sie die Seite, sodass sie mit „404“ oder „410“ antwortet, oder kennzeichnen Sie sie mit „noindex“. Suchmaschinen nehmen sie dann von selbst heraus.',
+            'Betreiben Sie die Webseite selbst: Löschen Sie die Seite, sodass sie mit „404“ oder „410“ antwortet, oder kennzeichnen Sie sie mit „noindex“. Suchmaschinen entfernen sie dann von selbst.',
         ],
         'sources' => 'Für Ergebnisse aus :sources ist das der einzige Weg.',
     ],
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Entfernen aus unseren eigenen Suchen',
-        'text' => 'Der SUMA-EV betreibt eigene Suchindizes: Nolm und TootNews / TrötNews. Nur für diese nehmen wir Anträge an, und nur über unser Formular, nicht per E-Mail. MetaGer gehört nicht dazu: Es hat keinen eigenen Index, deshalb steht auf dieser Seite, wo eine Entfernung stattdessen wirkt. So läuft ein Antrag:',
+        'text' => 'Für die eigenen Suchmaschinen des SUMA-EV können Sie die Entfernung direkt bei uns beantragen: Nolm und TootNews / TrötNews. So läuft ein Antrag:',
         'steps' => [
             'Sie wählen die Suche, um die es geht, und bestätigen Ihre E-Mail-Adresse über einen Link, den wir Ihnen schicken.',
             'Sie laden Ihren Nachweis hoch und nennen je Seite die Adresse, die Suchbegriffe und den Grund.',

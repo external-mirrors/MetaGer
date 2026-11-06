@@ -44,7 +44,7 @@ Germany",
         'button' => 'Entfernung beantragen',
         'why' => [
             'heading' => 'Warum Suchmaschinen Ergebnisse entfernen',
-            'text' => 'Suchmaschinen nehmen Ergebnisse heraus, wenn es dafür einen rechtlichen Grund gibt. Führt ein Ergebnis zum Namen einer Person zu Angaben, die falsch, veraltet oder nicht mehr relevant sind, kann diese Person verlangen, dass es nicht mehr angezeigt wird (Recht auf Vergessenwerden, Art. 17 DSGVO). Dabei zählt auch das Interesse der Öffentlichkeit an der Information. Auch Urheberrechtsverletzungen und strafbare Inhalte können ein Grund sein. Deshalb kann bei MetaGer ein Ergebnis fehlen, das Sie anderswo finden.',
+            'text' => 'Suchmaschinen entfernen Ergebnisse, wenn es dafür einen rechtlichen Grund gibt. Führt ein Ergebnis zum Namen einer Person zu Angaben, die falsch, veraltet oder nicht mehr relevant sind, kann diese Person verlangen, dass es nicht mehr angezeigt wird (Recht auf Vergessenwerden, Art. 17 DSGVO). Dabei zählt auch das Interesse der Öffentlichkeit an der Information. Auch Urheberrechtsverletzungen und strafbare Inhalte können ein Grund sein. Deshalb kann bei MetaGer ein Ergebnis fehlen, das Sie anderswo finden.',
         ],
     ],
     'phone' => [

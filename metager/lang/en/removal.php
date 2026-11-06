@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Removing a search result – MetaGer',
+    'meta_description' => 'How to get a search result removed: the right to be forgotten, outdated content, copyright. Where a request works at Google, Brave and others.',
     'heading' => 'Removing a search result',
     'lead' => 'MetaGer is a metasearch engine: it has no index of its own, but shows what other search engines find. So a result can only really be removed at the place it comes from: the website, and the search engines whose results MetaGer shows. This page tells you where.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Removal from our own searches',
-        'text' => 'SUMA-EV runs search indexes of its own: Nolm and TootNews / TrötNews. We only take requests for those, and only through our form, not by email. MetaGer is not one of them: it has no index of its own, which is why this page shows where removal works instead. This is how a request goes:',
+        'text' => 'For SUMA-EV’s own search engines you can request removal directly from us: Nolm and TootNews / TrötNews. This is how a request goes:',
         'steps' => [
             'You choose the search it is about and confirm your email address through a link we send you.',
             'You upload your proof and name the address, search terms and reason for each page.',

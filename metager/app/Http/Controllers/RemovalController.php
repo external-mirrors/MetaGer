@@ -33,6 +33,7 @@ class RemovalController extends Controller
 
         return view("removal.index", [
             "title" => __("removal.title"),
+            "metaDescription" => __("removal.meta_description"),
             "navbarFocus" => "kontakt",
             "css" => [Vite::asset("resources/less/metager/pages/removal.less")],
             "kinds" => self::KINDS,

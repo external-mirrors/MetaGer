@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Hakutuloksen poistaminen – MetaGer',
+    'meta_description' => 'Näin poistat hakutuloksen: oikeus tulla unohdetuksi, vanhentunut sisältö, tekijänoikeudet. Missä pyyntö tehoaa: Google, Brave ja muut.',
     'heading' => 'Hakutuloksen poistaminen',
     'lead' => 'MetaGer on metahakukone: meillä ei ole omaa hakemistoa, vaan näytämme, mitä muut hakukoneet löytävät. Siksi tuloksen voi todella poistaa vain sieltä, mistä se on peräisin: verkkosivustolta ja niistä hakukoneista, joiden tuloksia MetaGer näyttää. Tämä sivu kertoo, mistä.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Poistaminen omista hauistamme',
-        'text' => 'SUMA-EV ylläpitää omia hakemistojaan: Nolm ja TootNews / TrötNews. Otamme pyyntöjä vastaan vain näitä varten ja vain lomakkeellamme, emme sähköpostitse. MetaGer ei kuulu niihin: sillä ei ole omaa hakemistoa, ja siksi tällä sivulla kerrotaan, missä poistaminen sen sijaan toimii. Pyyntö etenee näin:',
+        'text' => 'SUMA-EV:n omien hakukoneiden osalta voit pyytää poistoa suoraan meiltä: Nolm ja TootNews / TrötNews. Pyyntö etenee näin:',
         'steps' => [
             'Valitset haun, jota asia koskee, ja vahvistat sähköpostiosoitteesi lähettämämme linkin kautta.',
             'Lataat todisteesi ja ilmoitat jokaisesta sivusta osoitteen, hakusanat ja syyn.',

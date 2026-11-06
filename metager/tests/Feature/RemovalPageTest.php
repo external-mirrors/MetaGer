@@ -203,18 +203,19 @@ class RemovalPageTest extends TestCase
     }
 
     /**
-     * The page exists in de, en and ca. The app's fallback locale is `de`,
-     * which for this page is the wrong answer to a French visitor; the
-     * controller switches the fallback to English where removal.php is
-     * missing.
+     * The guide once existed only in de, en and ca, and the controller sent
+     * everyone else to English. Every locale now has its own text, so a
+     * regional URL renders that language, and nothing falls back.
      */
-    public function testALanguageWithoutTheTextFallsBackToEnglish(): void
+    public function testAFrenchVisitorGetsTheGuideInFrench(): void
     {
-        $this->assertFileDoesNotExist(lang_path("fr/removal.php"));
+        $french = trans("removal.website.heading", [], "fr");
+        $this->assertNotSame(trans("removal.website.heading", [], "en"), $french);
 
         $this->get("/fr-FR/entfernen")
             ->assertOk()
-            ->assertSeeText(trans("removal.website.heading", [], "en"))
+            ->assertSeeText($french)
+            ->assertDontSeeText(trans("removal.website.heading", [], "en"))
             ->assertDontSeeText(trans("removal.website.heading", [], "de"));
     }
 

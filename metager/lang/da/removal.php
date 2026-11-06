@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Få et søgeresultat fjernet – MetaGer',
+    'meta_description' => 'Sådan får du et søgeresultat fjernet: retten til at blive glemt, forældet indhold, ophavsret. Hvor din anmodning virker: Google, Brave og andre.',
     'heading' => 'Få et søgeresultat fjernet',
     'lead' => 'MetaGer er en metasøgemaskine: Vi har ikke vores eget indeks, men viser, hvad andre søgemaskiner finder. Et resultat kan derfor kun fjernes rigtigt dér, hvor det kommer fra: på hjemmesiden og hos de søgemaskiner, hvis resultater MetaGer viser. Denne side fortæller dig hvor.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Fjernelse fra vores egne søgninger',
-        'text' => 'SUMA-EV driver sine egne søgeindekser: Nolm og TootNews / TrötNews. Vi modtager kun anmodninger for dem, og kun via vores formular, ikke pr. e-mail. MetaGer hører ikke til dem: Det har intet eget indeks, og derfor står der på denne side, hvor en fjernelse virker i stedet. Sådan foregår en anmodning:',
+        'text' => 'For SUMA-EV’s egne søgemaskiner kan du anmode om fjernelse direkte hos os: Nolm og TootNews / TrötNews. Sådan foregår en anmodning:',
         'steps' => [
             'Du vælger den søgning, det drejer sig om, og bekræfter din e-mailadresse via et link, vi sender dig.',
             'Du uploader din dokumentation og angiver adresse, søgeord og begrundelse for hver side.',

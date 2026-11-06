@@ -128,6 +128,21 @@ class RemovalTranslationsTest extends TestCase
         $this->assertSame([], $problems);
     }
 
+    /** Search engines cut a description off at about 160 characters. */
+    public function testTheDescriptionFitsASearchResult(): void
+    {
+        $problems = [];
+
+        foreach ($this->locales() as $locale) {
+            $description = $this->flatten($locale)['meta_description'] ?? '';
+            if ($description === '' || mb_strlen($description) > 160) {
+                $problems[] = "$locale removal.meta_description has ".mb_strlen($description).' characters';
+            }
+        }
+
+        $this->assertSame([], $problems);
+    }
+
     /** @return list<string> */
     private function locales(): array
     {

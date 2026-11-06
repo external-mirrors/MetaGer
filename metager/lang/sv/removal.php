@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Få ett sökresultat borttaget – MetaGer',
+    'meta_description' => 'Så får du ett sökresultat borttaget: rätten att bli bortglömd, föråldrat innehåll, upphovsrätt. Var din begäran fungerar: Google, Brave och andra.',
     'heading' => 'Få ett sökresultat borttaget',
     'lead' => 'MetaGer är en metasökmotor: vi har inget eget index utan visar vad andra sökmotorer hittar. Ett resultat kan därför bara tas bort på riktigt där det kommer ifrån: på webbplatsen och hos de sökmotorer vars resultat MetaGer visar. Den här sidan berättar var.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Borttagning från våra egna sökningar',
-        'text' => 'SUMA-EV driver egna sökindex: Nolm och TootNews / TrötNews. Vi tar bara emot begäranden för dessa, och bara via vårt formulär, inte med e-post. MetaGer hör inte dit: det har inget eget index, och därför står det på den här sidan var en borttagning fungerar i stället. Så här går en begäran till:',
+        'text' => 'För SUMA-EV:s egna sökmotorer kan du begära borttagning direkt hos oss: Nolm och TootNews / TrötNews. Så här går en begäran till:',
         'steps' => [
             'Du väljer den sökning det gäller och bekräftar din e-postadress via en länk som vi skickar till dig.',
             'Du laddar upp ditt underlag och anger adress, sökord och skäl för varje sida.',

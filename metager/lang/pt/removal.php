@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Remover um resultado de pesquisa – MetaGer',
+    'meta_description' => 'Como remover um resultado de pesquisa: direito ao esquecimento, conteúdo desatualizado, direitos de autor. Onde pedir: Google, Brave e outros.',
     'heading' => 'Remover um resultado de pesquisa',
     'lead' => 'O MetaGer é um metamotor de busca: não temos um índice próprio, mostramos o que outros motores de busca encontram. Por isso, um resultado só pode ser realmente removido no local de onde vem: no site e nos motores de busca cujos resultados o MetaGer mostra. Esta página indica-lhe onde.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Remoção das nossas próprias pesquisas',
-        'text' => 'A SUMA-EV gere índices de pesquisa próprios: Nolm e TootNews / TrötNews. Só aceitamos pedidos para estes, e apenas através do nosso formulário, não por e-mail. O MetaGer não é um deles: não tem índice próprio, e por isso esta página indica onde uma remoção tem efeito. Um pedido decorre assim:',
+        'text' => 'Para os motores de busca da SUMA-EV, pode pedir a remoção diretamente a nós: Nolm e TootNews / TrötNews. Um pedido decorre assim:',
         'steps' => [
             'Escolhe a pesquisa em causa e confirma o seu endereço de e-mail através de uma ligação que lhe enviamos.',
             'Carrega o seu comprovativo e indica, para cada página, o endereço, os termos de pesquisa e o motivo.',

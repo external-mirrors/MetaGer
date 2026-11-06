@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Eliminar un resultat de cerca – MetaGer',
+    'meta_description' => 'Com fer retirar un resultat de cerca: dret a l’oblit, contingut obsolet, drets d’autor. On funciona una sol·licitud: Google, Brave i altres.',
     'heading' => 'Eliminar un resultat de cerca',
     'lead' => 'MetaGer és un metacercador: no té cap índex propi, sinó que mostra el que troben altres cercadors. Per això un resultat només es pot eliminar de debò allà d’on ve: al lloc web i als cercadors els resultats dels quals mostra MetaGer. Aquesta pàgina us diu on.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Retirada de les nostres pròpies cerques',
-        'text' => 'SUMA-EV gestiona índexs de cerca propis: Nolm i TootNews / TrötNews. Només acceptem sol·licituds per a aquests, i només mitjançant el nostre formulari, no per correu. MetaGer no n’és un: no té cap índex propi, i per això aquesta pàgina indica on funciona la retirada. Una sol·licitud funciona així:',
+        'text' => 'Per als cercadors propis de SUMA-EV pot sol·licitar la retirada directament a nosaltres: Nolm i TootNews / TrötNews. Una sol·licitud funciona així:',
         'steps' => [
             'Trieu la cerca de què es tracta i confirmeu la vostra adreça electrònica amb un enllaç que us enviem.',
             'Pugeu el vostre comprovant i indiqueu per a cada pàgina l’adreça, els termes de cerca i el motiu.',

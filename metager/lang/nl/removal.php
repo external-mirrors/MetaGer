@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Een zoekresultaat laten verwijderen – MetaGer',
+    'meta_description' => 'Zo laat u een zoekresultaat verwijderen: recht op vergetelheid, verouderde inhoud, auteursrecht. Waar uw verzoek werkt: Google, Brave en anderen.',
     'heading' => 'Een zoekresultaat laten verwijderen',
     'lead' => 'MetaGer is een metazoekmachine: we hebben geen eigen index, maar tonen wat andere zoekmachines vinden. Een resultaat kan daarom alleen echt worden verwijderd op de plek waar het vandaan komt: bij de website en bij de zoekmachines waarvan MetaGer de resultaten toont. Deze pagina vertelt u waar.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Verwijderen uit onze eigen zoekdiensten',
-        'text' => 'SUMA-EV beheert eigen zoekindexen: Nolm en TootNews / TrötNews. Alleen daarvoor nemen we verzoeken aan, en alleen via ons formulier, niet per e-mail. MetaGer hoort daar niet bij: het heeft geen eigen index, en daarom staat op deze pagina waar een verwijdering wel werkt. Zo verloopt een verzoek:',
+        'text' => 'Voor de eigen zoekmachines van SUMA-EV kunt u verwijdering rechtstreeks bij ons aanvragen: Nolm en TootNews / TrötNews. Zo verloopt een verzoek:',
         'steps' => [
             'U kiest de zoekdienst waar het om gaat en bevestigt uw e-mailadres via een link die we u sturen.',
             'U uploadt uw bewijs en noemt per pagina het adres, de zoektermen en de reden.',

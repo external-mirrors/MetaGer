@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => 'Retirar un resultado de búsqueda – MetaGer',
+    'meta_description' => 'Cómo retirar un resultado de búsqueda: derecho al olvido, contenido desactualizado, derechos de autor. Dónde pedirlo: Google, Brave y otros.',
     'heading' => 'Retirar un resultado de búsqueda',
     'lead' => 'MetaGer es un metabuscador: no tenemos índice propio, sino que mostramos lo que encuentran otros buscadores. Por eso, un resultado solo se puede retirar de verdad allí de donde procede: en el sitio web y en los buscadores cuyos resultados muestra MetaGer. Esta página le indica dónde.',
     'toc' => [
@@ -61,7 +62,7 @@ return [
     ],
     'us' => [
         'heading' => 'Retirada de nuestras propias búsquedas',
-        'text' => 'SUMA-EV gestiona índices de búsqueda propios: Nolm y TootNews / TrötNews. Solo aceptamos solicitudes para estos, y únicamente a través de nuestro formulario, no por correo electrónico. MetaGer no es uno de ellos: no tiene índice propio, y por eso esta página indica dónde sí surte efecto una retirada. Una solicitud se desarrolla así:',
+        'text' => 'Para los buscadores propios de SUMA-EV puede solicitar la retirada directamente a nosotros: Nolm y TootNews / TrötNews. Una solicitud se desarrolla así:',
         'steps' => [
             'Elige la búsqueda de la que se trata y confirma su dirección de correo electrónico mediante un enlace que le enviamos.',
             'Sube su justificante e indica para cada página la dirección, los términos de búsqueda y el motivo.',

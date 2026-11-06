@@ -245,13 +245,30 @@ class RemovalPageTest extends TestCase
         $this->assertStringNotContainsString('href="' . route("contact") . '"', substr($section, 0, strpos($section, "</li>\n\t</ol>")));
     }
 
-    public function testThePageSaysWhichSearchesTheFormTakesAndWhyNotMetaGer(): void
+    /** It says what a reader can do here, not what we refuse. */
+    public function testThePageSaysWhichSearchesTheFormTakes(): void
     {
         $this->get("/de-DE/entfernen")
             ->assertOk()
             ->assertSeeText("Nolm und TootNews / TrötNews")
-            ->assertSeeText("nicht per E-Mail")
-            ->assertSeeText("MetaGer gehört nicht dazu: Es hat keinen eigenen Index");
+            ->assertDontSeeText("nicht per E-Mail")
+            ->assertDontSeeText("gehört nicht dazu");
+    }
+
+    /** People search for this page; the generic MetaGer description says nothing about it. */
+    public function testThePageHasItsOwnDescription(): void
+    {
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertSee('<meta name="description" content="' . e(trans("removal.meta_description", [], "de")) . '"', false)
+            ->assertDontSee('<meta name="description" content="' . e(trans("staticPages.meta.Description", [], "de")) . '"', false);
+    }
+
+    public function testOtherPagesKeepTheGenericDescription(): void
+    {
+        $this->get("/de-DE/kontakt")
+            ->assertOk()
+            ->assertSee('<meta name="description" content="' . e(trans("staticPages.meta.Description", [], "de")) . '"', false);
     }
 
     public function testTheTootNewsCardLeadsToTheForm(): void

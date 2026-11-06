@@ -14,10 +14,10 @@ return [
         ],
         'removal' => [
             'title' => 'Pyynnöt hakutulosten poistamisesta',
-            'description' => 'Jos pyydät meitä piilottamaan hakutuloksen MetaGerissä (ks. <a href=":link_removal">Hakutuloksen poistaminen</a>), avaamme sähköpostistasi asian, jossa tutkimme pyyntösi ja teemme päätöksen. Oikeusperuste on GDPR:n 6 artiklan 1 kohdan c alakohta yhdessä 17 artiklan kanssa. Itse sähköposteihisi sovelletaan kohtaa ”Yhteydenotto sähköpostitse”. Asiassa syntyy seuraavia tietoja:',
-            'contact' => 'Poistamme nimesi ja sähköpostiosoitteesi asiasta 6 kuukautta sen päättymisen jälkeen.',
-            'message' => 'Kyseiset osoitteet (URL-osoitteet) ja hakusanat sekä liitteet, kuten kopio henkilöllisyystodistuksestasi, jos pyydämme sitä: hakusanat ja liitteet poistamme viimeistään 6 kuukautta asian päättymisen jälkeen, paitsi piilotetun tuloksen osalta (ks. alla).',
-            'block' => 'Jos piilotamme tuloksen, säilytämme sen osoitteen, hakusanat, joilla se on piilotettu (yleensä nimesi), ja päätöksemme perustelut niin kauan kuin tulos pysyy piilotettuna. Tarvitsemme niitä, jotta piilotus toimii ja jotta voimme perustella sen, jos se riitautetaan (GDPR:n 17 artiklan 3 kohdan e alakohta ja 6 artiklan 1 kohdan f alakohta).',
+            'description' => 'Jos pyydät lomakkeellamme meitä poistamaan hakutuloksen jostakin omasta hakuindeksistämme, kuten Nolmista tai TootNewsista (katso <a href=":link_removal">Hakutuloksen poistaminen</a>), avaamme asian, jossa tutkimme pyyntösi ja teemme päätöksen. Lomake toimii osoitteessa my.suma-ev.de, jota ylläpidämme myös itse. Oikeusperusta on GDPR:n 6 artiklan 1 kohdan c alakohta yhdessä 17 artiklan kanssa. Meille lähetettyihin sähköposteihin sovelletaan kohtaa ”Yhteydenotto sähköpostitse”. Asiaan kuuluvat seuraavat tiedot:',
+            'contact' => 'Poistamme asiasta nimesi ja sähköpostiosoitteesi, jonka vahvistat linkillä, 6 kuukautta asian päättymisen jälkeen. Lomakkeen, jota et lähetä, poistamme 7 päivän kuluttua.',
+            'message' => 'Asiaan liittyvät osoitteet (URL) ja hakusanat, perustelusi ja kopio henkilöllisyystodistuksestasi; toisen puolesta tehdyssä pyynnössä myös valtakirja. Säilytämme kopion salattuna. Poistamme sen ja perustelusi viimeistään 6 kuukautta asian päättymisen jälkeen, samoin hakusanat, paitsi piilotetun tuloksen kohdalla (katso alla).',
+            'block' => 'Jos piilotamme tuloksen, säilytämme sen osoitteen, hakusanat, joilta se on piilotettu (yleensä nimesi), ja päätöksemme perustelut niin kauan kuin tulos pysyy piilotettuna. Osoite ja hakusanat ovat tätä varten estolistapalvelussamme, jota ylläpidämme itse ja josta kyseinen haku noutaa ne. Tarvitsemme niitä, jotta piilotus toimii ja jotta voimme perustella sen, jos se riitautetaan (GDPR:n 17 artiklan 3 kohdan e alakohta ja 6 artiklan 1 kohdan f alakohta).',
         ],
         'title' => 'Saapuvat tiedot asiayhteyden mukaan',
         'metager' => [

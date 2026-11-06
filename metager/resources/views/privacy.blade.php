@@ -336,6 +336,6 @@
         <div class="section">
             <h1>@lang('privacy.changes.title')</h1>
             <div>@lang('privacy.changes.description')</div>
-            <div>@lang('privacy.changes.date', ['date' => '2026-11-03'])</div>
+            <div>@lang('privacy.changes.date', ['date' => '2026-11-06'])</div>
         </div>
 @endsection

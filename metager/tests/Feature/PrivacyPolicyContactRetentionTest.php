@@ -12,9 +12,9 @@ use Tests\TestCase;
  *
  * - a ticket and its mails and attachments go three months after it closed
  *   (`crm:prune-tickets`, the support group's `retention_months`);
- * - a removal case forgets who asked six months after closing
- *   (`crm:anonymise-removal-requests`, `REMOVAL_RETENTION_MONTHS`);
- * - a blocked URL keeps its terms (in MetaGer's blocklist) and the reason
+ * - a removal case forgets who asked six months after closing, its ID files
+ *   included (`crm:anonymise-removal-requests`, `REMOVAL_RETENTION_MONTHS`);
+ * - a blocked URL keeps its terms (in the blocklist service) and the reason
  *   for the decision while the block exists.
  *
  * If one of those periods changes in suma-crm, this text has to change too.
@@ -44,6 +44,23 @@ class PrivacyPolicyContactRetentionTest extends TestCase
         $this->assertStringContainsString("Ausweiskopie", $section);
         $this->assertStringContainsString("solange das Ergebnis ausgeblendet bleibt", $section);
         $this->assertStringContainsString("Art. 17 Abs. 3 lit. e", $section);
+    }
+
+    /**
+     * Version C: the form on my.suma-ev.de, the ID upload (encrypted, gone
+     * with the case) and the blocklist service that holds what is hidden.
+     * A form never sent goes after a week (`crm:prune-removal-drafts`).
+     */
+    public function testTheSectionCoversTheFormTheUploadAndTheBlocklistService(): void
+    {
+        $content = $this->get("/de-DE/datenschutz")->assertOk()->getContent();
+        $start = strpos($content, 'id="removal-requests"');
+        $section = substr($content, $start, strpos($content, "</article>", $start) - $start);
+
+        $this->assertStringContainsString("my.suma-ev.de", $section);
+        $this->assertStringContainsString("Ausweiskopie speichern wir verschlüsselt", $section);
+        $this->assertStringContainsString("Sperrlisten-Dienst", $section);
+        $this->assertStringContainsString("nach 7 Tagen", $section);
     }
 
     public function testTheEnglishPolicyHasTheSectionToo(): void

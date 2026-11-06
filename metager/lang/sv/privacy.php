@@ -23,10 +23,10 @@ return [
         ],
         'removal' => [
             'title' => 'Begäranden om att ta bort sökresultat',
-            'description' => 'Ber du oss att dölja ett sökresultat på MetaGer (se <a href=":link_removal">Få ett sökresultat borttaget</a>) öppnar vi ett ärende för ditt e-postmeddelande där vi prövar och beslutar om din begäran. Rättslig grund är artikel 6.1 c jämförd med artikel 17 i GDPR. För själva e-postmeddelandena gäller avsnittet ”Kontakt via e-post”. I ärendet uppstår följande uppgifter:',
-            'contact' => 'Ditt namn och din e-postadress raderar vi ur ärendet 6 månader efter att det avslutats.',
-            'message' => 'De berörda adresserna (URL:er) och söktermerna samt bilagor som en kopia av din id-handling om vi ber om det: söktermer och bilagor raderar vi senast 6 månader efter att ärendet avslutats, utom för ett dolt resultat (se nedan).',
-            'block' => 'Döljer vi ett resultat sparar vi dess adress, de söktermer det är dolt för (oftast ditt namn) och skälen för vårt beslut så länge resultatet förblir dolt. Vi behöver dem för att döljandet ska fungera och för att kunna motivera det om det ifrågasätts (artikel 17.3 e och artikel 6.1 f i GDPR).',
+            'description' => 'Om du via vårt formulär ber oss ta bort ett sökresultat från ett av våra egna sökindex, som Nolm eller TootNews (se <a href=":link_removal">Få ett sökresultat borttaget</a>), öppnar vi ett ärende där vi prövar din begäran och beslutar. Formuläret körs på my.suma-ev.de, som vi också själva driver. Den rättsliga grunden är art. 6.1 c jämförd med art. 17 GDPR. För e-post till oss gäller avsnittet ”Kontakt via e-post”. Ärendet omfattar följande uppgifter:',
+            'contact' => 'Vi raderar ditt namn och din e-postadress, som du bekräftar via en länk, från ärendet 6 månader efter att det avslutats. Ett formulär som du inte skickar raderar vi efter 7 dagar.',
+            'message' => 'De berörda adresserna (URL:er) och söktermerna, din motivering och en kopia av din id-handling; vid en begäran för någon annans räkning även en fullmakt. Vi lagrar kopian krypterad. Vi raderar den och din motivering senast 6 månader efter att ärendet avslutats, liksom söktermerna, utom för ett dolt resultat (se nedan).',
+            'block' => 'Om vi döljer ett resultat sparar vi dess adress, söktermerna det är dolt för (oftast ditt namn) och motiveringen till vårt beslut så länge resultatet förblir dolt. Adress och söktermer finns för detta i vår blockeringslisttjänst, som vi själva driver och som den berörda sökningen hämtar dem från. Vi behöver dem för att döljandet ska fungera och för att kunna motivera det om det ifrågasätts (art. 17.3 e och art. 6.1 f GDPR).',
         ],
         'donate' => [
             'title' => 'Användning av donationsformuläret',

@@ -25,10 +25,10 @@ return [
         ],
         'removal' => [
             'title' => 'Anmodninger om fjernelse af søgeresultater',
-            'description' => 'Beder du os om at skjule et søgeresultat på MetaGer (se <a href=":link_removal">Få et søgeresultat fjernet</a>), opretter vi en sag for din e-mail, hvor vi undersøger og træffer afgørelse om din anmodning. Retsgrundlaget er art. 6, stk. 1, litra c, sammenholdt med art. 17 i GDPR. For selve dine e-mails gælder afsnittet „Kontakt via e-mail“. I sagen opstår følgende data:',
-            'contact' => 'Vi sletter dit navn og din e-mailadresse fra sagen 6 måneder efter, at sagen er afsluttet.',
-            'message' => 'De pågældende adresser (URL’er) og søgeord samt vedhæftede filer som en kopi af dit ID, hvis vi beder om det: søgeord og vedhæftede filer sletter vi senest 6 måneder efter, at sagen er afsluttet, undtagen ved et skjult resultat (se nedenfor).',
-            'block' => 'Skjuler vi et resultat, opbevarer vi dets adresse, de søgeord, det er skjult for (som regel dit navn), og begrundelsen for vores afgørelse, så længe resultatet forbliver skjult. Vi har brug for dem, for at skjulningen virker, og for at kunne begrunde den, hvis den anfægtes (art. 17, stk. 3, litra e, og art. 6, stk. 1, litra f, i GDPR).',
+            'description' => 'Hvis du via vores formular beder os om at fjerne et søgeresultat fra et af vores egne søgeindekser, som Nolm eller TootNews (se <a href=":link_removal">Få et søgeresultat fjernet</a>), opretter vi en sag, hvor vi vurderer din anmodning og træffer afgørelse. Formularen kører på my.suma-ev.de, som vi også selv driver. Retsgrundlaget er art. 6, stk. 1, litra c, sammenholdt med art. 17 i GDPR. For e-mails til os gælder afsnittet »Kontakt via e-mail«. Sagen omfatter følgende data:',
+            'contact' => 'Vi sletter dit navn og din e-mailadresse, som du bekræfter via et link, fra sagen 6 måneder efter, at den er afsluttet. En formular, du ikke sender, sletter vi efter 7 dage.',
+            'message' => 'De berørte adresser (URL’er) og søgeord, din begrundelse og en kopi af dit ID; ved en anmodning på vegne af en anden også en fuldmagt. Vi opbevarer ID-kopien krypteret. Vi sletter den og din begrundelse senest 6 måneder efter, at sagen er afsluttet, og ligeledes søgeordene, undtagen ved et skjult resultat (se nedenfor).',
+            'block' => 'Hvis vi skjuler et resultat, gemmer vi dets adresse, de søgeord, det er skjult for (som regel dit navn), og begrundelsen for vores afgørelse, så længe resultatet forbliver skjult. Adresse og søgeord ligger til det formål i vores blokeringslistetjeneste, som vi selv driver, og hvorfra den berørte søgning henter dem. Vi har brug for dem, for at skjulningen virker, og for at kunne begrunde den, hvis den anfægtes (art. 17, stk. 3, litra e, og art. 6, stk. 1, litra f, i GDPR).',
         ],
         'donate' => [
             'title' => 'Brug af donationsformularen',

@@ -65,12 +65,12 @@ return [
         'text' => 'Pour les moteurs de recherche de SUMA-EV, vous pouvez demander le retrait directement auprès de nous : Nolm et TootNews / TrötNews. Voici comment se déroule une demande :',
         'steps' => [
             'Vous choisissez la recherche concernée et confirmez votre adresse de courriel via un lien que nous vous envoyons.',
-            'Vous téléversez votre justificatif et indiquez pour chaque page l’adresse, les termes de recherche et le motif.',
-            'Nous vérifions d’abord le justificatif, puis chaque page. Si vous avez un droit à faire valoir, par exemple au titre de l’art. 17 du RGPD pour les recherches sur votre nom, nous masquons le résultat dans cette recherche. Il reste présent sur le site web et dans tous les autres moteurs de recherche.',
+            'Vous indiquez pour chaque page l’adresse, les termes de recherche et le motif. Lorsqu’un justificatif est nécessaire, le formulaire vous le demande.',
+            'Nous vérifions d’abord l’éventuel justificatif, puis chaque page. Si vous avez un droit à faire valoir, par exemple au titre de l’art. 17 du RGPD pour les recherches sur votre nom, nous masquons le résultat dans cette recherche. Il reste présent sur le site web et dans tous les autres moteurs de recherche.',
             'Nous répondons dans un délai d’un mois. Si une demande est particulièrement complexe, cela peut prendre jusqu’à deux mois de plus ; nous vous en informons alors au cours du premier mois. Si nous ne masquons pas un résultat, nous vous en donnons les raisons.',
         ],
         'include' => 'Nous avons besoin des adresses exactes (URL) de pages précises. Nous ne pouvons pas retirer des sites web entiers ni « tout ce qui concerne mon nom ».',
-        'identity' => 'Comme justificatif, il nous faut une copie de votre pièce d’identité et, pour une demande au nom d’une autre personne, également une procuration et une copie de sa pièce d’identité. Sinon, n’importe qui pourrait exiger que nous masquions n’importe quelle adresse. Sur la copie, vous pouvez noircir tout ce dont nous n’avons pas besoin pour la vérification. Nous la conservons chiffrée et la supprimons 6 mois après la clôture du dossier, avec le reste de vos données.',
+        'identity' => 'Nous n’avons besoin d’un justificatif que lorsqu’il importe de savoir qui fait la demande. Pour les données personnelles, il s’agit d’une copie de votre pièce d’identité et, pour une demande au nom d’une autre personne, également d’une procuration et d’une copie de sa pièce d’identité. Sur la copie, vous pouvez noircir tout ce dont nous n’avons pas besoin pour la vérification. Pour le droit d’auteur, vous déclarez détenir les droits ; si vous agissez pour une autre personne, il nous faut une procuration. Pour les contenus obsolètes ou illicites, nous n’avons pas besoin de justificatif. Dans certains cas, nous pouvons vous en demander un. Nous conservons les justificatifs chiffrés et les supprimons 6 mois après la clôture du dossier, avec le reste de vos données.',
         'contact' => 'Vers le formulaire',
     ],
 ];

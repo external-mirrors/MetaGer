@@ -65,12 +65,12 @@ return [
         'text' => 'SUMA-EV:n omien hakukoneiden osalta voit pyytää poistoa suoraan meiltä: Nolm ja TootNews / TrötNews. Pyyntö etenee näin:',
         'steps' => [
             'Valitset haun, jota asia koskee, ja vahvistat sähköpostiosoitteesi lähettämämme linkin kautta.',
-            'Lataat todisteesi ja ilmoitat jokaisesta sivusta osoitteen, hakusanat ja syyn.',
-            'Tarkistamme ensin todisteen ja sitten jokaisen sivun. Jos sinulla on oikeus poistoon, esimerkiksi tietosuoja-asetuksen 17 artiklan nojalla nimelläsi tehdyissä hauissa, piilotamme tuloksen kyseisessä haussa. Verkkosivustolla ja kaikissa muissa hakukoneissa se säilyy.',
+            'Ilmoitat jokaisesta sivusta osoitteen, hakusanat ja syyn. Jos tarvitsemme todisteen, lomake pyytää sitä.',
+            'Tarkistamme ensin mahdollisen todisteen ja sitten jokaisen sivun. Jos sinulla on oikeus poistoon, esimerkiksi tietosuoja-asetuksen 17 artiklan nojalla nimelläsi tehdyissä hauissa, piilotamme tuloksen kyseisessä haussa. Verkkosivustolla ja kaikissa muissa hakukoneissa se säilyy.',
             'Vastaamme kuukauden kuluessa. Jos pyyntö on erityisen työläs, se voi kestää enintään kaksi kuukautta pidempään; kerromme siitä sinulle ensimmäisen kuukauden aikana. Jos emme piilota tulosta, kerromme sinulle syyt.',
         ],
         'include' => 'Tarvitsemme yksittäisten sivujen tarkat osoitteet (URL). Emme voi poistaa kokonaisia verkkosivustoja tai ”kaikkea nimeeni liittyvää”.',
-        'identity' => 'Todisteeksi tarvitsemme kopion henkilöllisyystodistuksestasi, ja toisen puolesta tehdyssä pyynnössä lisäksi valtakirjan ja kopion tämän henkilöllisyystodistuksesta. Muuten kuka tahansa voisi vaatia meitä piilottamaan mitä tahansa osoitteita. Kopiosta saat peittää kaiken, mitä emme tarvitse vertailuun. Säilytämme sen salattuna ja poistamme sen 6 kuukautta asian päättymisen jälkeen muiden tietojesi kanssa.',
+        'identity' => 'Tarvitsemme todisteen vain silloin, kun on merkitystä sillä, kuka pyytää. Henkilötietojen kohdalla se on kopio henkilöllisyystodistuksestasi, ja toisen puolesta tehdyssä pyynnössä lisäksi valtakirja ja kopio tämän henkilöllisyystodistuksesta. Kopiosta saat peittää kaiken, mitä emme tarvitse vertailuun. Tekijänoikeusasioissa ilmoitat, että sinulla on oikeudet; jos toimit toisen puolesta, tarvitsemme valtakirjan. Vanhentuneen tai laittoman sisällön kohdalla emme tarvitse todistetta. Yksittäistapauksissa voimme kysyä. Säilytämme todisteet salattuina ja poistamme ne 6 kuukautta asian päättymisen jälkeen muiden tietojesi kanssa.',
         'contact' => 'Lomakkeeseen',
     ],
 ];

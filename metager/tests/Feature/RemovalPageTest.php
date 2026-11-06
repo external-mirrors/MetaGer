@@ -479,6 +479,9 @@ class RemovalPageTest extends TestCase
         $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
 
         $this->assertStringContainsString("eine Kopie Ihres Ausweises", $content);
+        $this->assertStringContainsString("Beim Urheberrecht", $content);
+        $this->assertStringContainsString("eine Vollmacht", $content);
+        $this->assertStringContainsString("nur, wo es darauf ankommt", $content);
         $this->assertStringContainsString("schwärzen", $content);
         $this->assertStringContainsString("mit Ihren übrigen Angaben", $content);
         $this->assertLessThan(

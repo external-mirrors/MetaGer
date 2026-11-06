@@ -65,12 +65,12 @@ return [
         'text' => 'W przypadku własnych wyszukiwarek SUMA-EV możesz złożyć wniosek o usunięcie bezpośrednio u nas: Nolm oraz TootNews / TrötNews. Tak wygląda wniosek:',
         'steps' => [
             'Wybierasz wyszukiwarkę, której dotyczy sprawa, i potwierdzasz swój adres e-mail przez link, który Ci wysyłamy.',
-            'Przesyłasz dowód tożsamości i dla każdej strony podajesz adres, wyszukiwane hasła i powód.',
-            'Najpierw sprawdzamy dowód, a potem każdą stronę. Jeśli przysługuje Ci roszczenie, na przykład na podstawie art. 17 RODO przy wyszukiwaniu Twojego nazwiska, ukrywamy wynik w tej wyszukiwarce. Na witrynie i we wszystkich innych wyszukiwarkach pozostaje on bez zmian.',
+            'Dla każdej strony podajesz adres, wyszukiwane hasła i powód. Gdy potrzebujemy dowodu, formularz o niego poprosi.',
+            'Najpierw sprawdzamy ewentualny dowód, a potem każdą stronę. Jeśli przysługuje Ci roszczenie, na przykład na podstawie art. 17 RODO przy wyszukiwaniu Twojego nazwiska, ukrywamy wynik w tej wyszukiwarce. Na witrynie i we wszystkich innych wyszukiwarkach pozostaje on bez zmian.',
             'Odpowiadamy w ciągu miesiąca. Jeśli wniosek jest szczególnie skomplikowany, może to potrwać do dwóch miesięcy dłużej; poinformujemy Cię o tym w ciągu pierwszego miesiąca. Jeśli nie ukryjemy wyniku, podamy Ci powody.',
         ],
         'include' => 'Potrzebujemy dokładnych adresów (URL) pojedynczych stron. Nie możemy usuwać całych witryn ani „wszystkiego o moim nazwisku”.',
-        'identity' => 'Jako dowód potrzebujemy kopii Twojego dokumentu tożsamości, a przy wniosku w imieniu innej osoby także pełnomocnictwa i kopii jej dokumentu tożsamości. W przeciwnym razie każdy mógłby żądać ukrycia dowolnych adresów. Na kopii możesz zaczernić wszystko, czego nie potrzebujemy do weryfikacji. Przechowujemy ją w postaci zaszyfrowanej i usuwamy 6 miesięcy po zakończeniu sprawy wraz z pozostałymi Twoimi danymi.',
+        'identity' => 'Dowodu potrzebujemy tylko wtedy, gdy ma znaczenie, kto składa wniosek. Przy danych osobowych jest to kopia Twojego dokumentu tożsamości, a przy wniosku w imieniu innej osoby także pełnomocnictwo i kopia jej dokumentu tożsamości. Na kopii możesz zaczernić wszystko, czego nie potrzebujemy do weryfikacji. Przy prawach autorskich oświadczasz, że je posiadasz; jeśli działasz w czyimś imieniu, potrzebujemy pełnomocnictwa. Przy treściach nieaktualnych lub nielegalnych dowód nie jest potrzebny. W pojedynczych przypadkach możemy o niego poprosić. Dowody przechowujemy w postaci zaszyfrowanej i usuwamy 6 miesięcy po zakończeniu sprawy wraz z pozostałymi Twoimi danymi.',
         'contact' => 'Do formularza',
     ],
 ];

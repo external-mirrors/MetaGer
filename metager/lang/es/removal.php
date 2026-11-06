@@ -65,12 +65,12 @@ return [
         'text' => 'Para los buscadores propios de SUMA-EV puede solicitar la retirada directamente a nosotros: Nolm y TootNews / TrötNews. Una solicitud se desarrolla así:',
         'steps' => [
             'Elige la búsqueda de la que se trata y confirma su dirección de correo electrónico mediante un enlace que le enviamos.',
-            'Sube su justificante e indica para cada página la dirección, los términos de búsqueda y el motivo.',
-            'Comprobamos primero el justificante y después cada página. Si le asiste un derecho, por ejemplo según el art. 17 del RGPD en las búsquedas de su nombre, ocultamos el resultado en esa búsqueda. Seguirá estando en el sitio web y en todos los demás buscadores.',
+            'Indica para cada página la dirección, los términos de búsqueda y el motivo. Cuando necesitamos un justificante, el formulario se lo pide.',
+            'Comprobamos primero el justificante, si hace falta, y después cada página. Si le asiste un derecho, por ejemplo según el art. 17 del RGPD en las búsquedas de su nombre, ocultamos el resultado en esa búsqueda. Seguirá estando en el sitio web y en todos los demás buscadores.',
             'Respondemos en el plazo de un mes. Si una solicitud es especialmente compleja, puede tardar hasta dos meses más; en ese caso se lo comunicamos dentro del primer mes. Si no ocultamos un resultado, le explicamos los motivos.',
         ],
         'include' => 'Necesitamos las direcciones exactas (URL) de páginas concretas. No podemos retirar sitios web enteros ni «todo sobre mi nombre».',
-        'identity' => 'Como justificante necesitamos una copia de su documento de identidad y, en una solicitud en nombre de otra persona, además un poder y una copia de su documento de identidad. De lo contrario, cualquiera podría exigirnos ocultar direcciones arbitrarias. En la copia puede tachar todo lo que no necesitemos para la comprobación. La guardamos cifrada y la borramos 6 meses después de cerrar el caso, junto con el resto de sus datos.',
+        'identity' => 'Solo necesitamos un justificante cuando importa quién pregunta. Para datos personales es una copia de su documento de identidad y, en una solicitud en nombre de otra persona, además un poder y una copia de su documento de identidad. En la copia puede tachar todo lo que no necesitemos para la comprobación. En derechos de autor declara que tiene los derechos; si actúa en nombre de otra persona, necesitamos un poder. Para contenidos desactualizados o ilegales no necesitamos justificante. En casos concretos podemos preguntar. Guardamos los justificantes cifrados y los borramos 6 meses después de cerrar el caso, junto con el resto de sus datos.',
         'contact' => 'Ir al formulario',
     ],
 ];

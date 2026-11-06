@@ -65,12 +65,12 @@ return [
         'text' => 'För SUMA-EV:s egna sökmotorer kan du begära borttagning direkt hos oss: Nolm och TootNews / TrötNews. Så här går en begäran till:',
         'steps' => [
             'Du väljer den sökning det gäller och bekräftar din e-postadress via en länk som vi skickar till dig.',
-            'Du laddar upp ditt underlag och anger adress, sökord och skäl för varje sida.',
-            'Vi kontrollerar först underlaget och sedan varje sida. Har du rätt till borttagning, till exempel enligt art. 17 GDPR vid sökningar på ditt namn, döljer vi resultatet i den sökningen. På webbplatsen och i alla andra sökmotorer finns det kvar.',
+            'Du anger adress, sökord och skäl för varje sida. Där vi behöver underlag frågar formuläret efter det.',
+            'Vi kontrollerar först eventuellt underlag och sedan varje sida. Har du rätt till borttagning, till exempel enligt art. 17 GDPR vid sökningar på ditt namn, döljer vi resultatet i den sökningen. På webbplatsen och i alla andra sökmotorer finns det kvar.',
             'Vi svarar inom en månad. Är en begäran särskilt omfattande kan det ta upp till två månader längre; det får du då veta inom den första månaden. Döljer vi inte ett resultat berättar vi varför.',
         ],
         'include' => 'Vi behöver de exakta adresserna (URL:er) till enskilda sidor. Hela webbplatser eller ”allt om mitt namn” kan vi inte ta bort.',
-        'identity' => 'Som underlag behöver vi en kopia av din id-handling, och vid en begäran för någon annans räkning dessutom en fullmakt och en kopia av den personens id-handling. Annars skulle vem som helst kunna kräva att vi döljer godtyckliga adresser. På kopian får du maskera allt som vi inte behöver för jämförelsen. Vi lagrar den krypterad och raderar den 6 månader efter att ärendet avslutats, tillsammans med dina övriga uppgifter.',
+        'identity' => 'Vi behöver bara underlag när det spelar roll vem som frågar. För personuppgifter är det en kopia av din id-handling, och vid en begäran för någon annans räkning dessutom en fullmakt och en kopia av den personens id-handling. På kopian får du maskera allt som vi inte behöver för jämförelsen. Vid upphovsrätt intygar du att du har rättigheterna; agerar du för någon annan behöver vi en fullmakt. För föråldrat eller olagligt innehåll behöver vi inget underlag. I enskilda fall kan vi fråga efter det. Vi lagrar underlag krypterat och raderar det 6 månader efter att ärendet avslutats, tillsammans med dina övriga uppgifter.',
         'contact' => 'Till formuläret',
     ],
 ];

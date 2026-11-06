@@ -65,12 +65,12 @@ return [
         'text' => 'For SUMA-EV’s egne søgemaskiner kan du anmode om fjernelse direkte hos os: Nolm og TootNews / TrötNews. Sådan foregår en anmodning:',
         'steps' => [
             'Du vælger den søgning, det drejer sig om, og bekræfter din e-mailadresse via et link, vi sender dig.',
-            'Du uploader din dokumentation og angiver adresse, søgeord og begrundelse for hver side.',
-            'Vi kontrollerer først dokumentationen og derefter hver side. Har du et krav, for eksempel efter GDPR art. 17 ved søgninger på dit navn, skjuler vi resultatet i den søgning. På hjemmesiden og i alle andre søgemaskiner bliver det stående.',
+            'Du angiver adresse, søgeord og begrundelse for hver side. Hvor vi har brug for dokumentation, spørger formularen om det.',
+            'Vi kontrollerer først eventuel dokumentation og derefter hver side. Har du et krav, for eksempel efter GDPR art. 17 ved søgninger på dit navn, skjuler vi resultatet i den søgning. På hjemmesiden og i alle andre søgemaskiner bliver det stående.',
             'Vi svarer inden for en måned. Er en anmodning særlig omfattende, kan det tage op til to måneder længere; det får du i så fald at vide inden for den første måned. Skjuler vi ikke et resultat, oplyser vi dig om grundene.',
         ],
         'include' => 'Vi har brug for de præcise adresser (URL’er) på de enkelte sider. Hele hjemmesider eller ”alt om mit navn” kan vi ikke fjerne.',
-        'identity' => 'Som dokumentation har vi brug for en kopi af dit ID, og ved en anmodning på vegne af en anden desuden en fuldmagt og en kopi af vedkommendes ID. Ellers kunne enhver kræve, at vi skjuler vilkårlige adresser. På kopien må du overstrege alt, hvad vi ikke behøver til sammenligningen. Vi gemmer den krypteret og sletter den 6 måneder efter sagens afslutning sammen med dine øvrige oplysninger.',
+        'identity' => 'Vi har kun brug for dokumentation, hvor det betyder noget, hvem der spørger. Ved personoplysninger er det en kopi af dit ID, og ved en anmodning på vegne af en anden desuden en fuldmagt og en kopi af vedkommendes ID. På kopien må du overstrege alt, hvad vi ikke behøver til sammenligningen. Ved ophavsret erklærer du, at du har rettighederne; handler du for en anden, har vi brug for en fuldmagt. Ved forældet eller strafbart indhold har vi ikke brug for dokumentation. I enkelte tilfælde kan vi spørge. Vi gemmer dokumentation krypteret og sletter den 6 måneder efter sagens afslutning sammen med dine øvrige oplysninger.',
         'contact' => 'Til formularen',
     ],
 ];

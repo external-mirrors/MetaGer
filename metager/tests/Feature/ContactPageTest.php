@@ -124,29 +124,56 @@ class ContactPageTest extends TestCase
         $this->assertMatchesRegularExpression('#<input[^>]*id="contact-reason-general"[^>]*\\schecked#', $content);
         $this->assertDoesNotMatchRegularExpression('#<input[^>]*id="contact-reason-removal"[^>]*\\schecked#', $content);
         $this->assertStringContainsString('class="contact-address"', substr($content, $general));
+        $this->assertLessThan(
+            strpos($content, 'class="contact-lead"'),
+            strpos($content, 'class="contact-address"'),
+            "The address comes straight after the choice, before anything about it.",
+        );
     }
 
     /**
-     * Removal requests are only taken through the form, but people read the
-     * guide first: it says where a removal works and leads to the form at its
-     * end. So this row sends them to the guide and never to the form itself.
+     * Removal requests are only taken online, and that starts with reading the
+     * guide: it says where a removal works and ends in the form. To the visitor
+     * this is one process, so the row names neither part, links only to its
+     * start and never to the form itself.
      */
-    public function testARemovalRequestIsSentToTheGuideNeverDirectlyToTheForm(): void
+    public function testARemovalRequestIsSentToTheStartOfTheProcessNeverDirectlyToTheForm(): void
     {
         config(["metager.metager.crm.url" => "https://my.suma-ev.de"]);
 
         $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
+        $row = $this->removalRow($content);
 
-        $removal = strpos($content, '<section class="contact-section contact-removal"');
-        $this->assertNotFalse($removal, "The contact page has no removal row.");
-        $row = substr($content, $removal, strpos($content, "</section>", $removal) - $removal);
-
-        $this->assertStringContainsString("nur über unser Formular", $row);
-        $this->assertStringContainsString("E-Mail, Telefon oder Post", $row);
-        $this->assertMatchesRegularExpression('#<a class="contact-button" href="[^"]*/de-DE/entfernen">#', $row);
+        $this->assertStringContainsString("Per E-Mail, Telefon oder Post können wir solche Anträge nicht annehmen.", $row);
+        $this->assertMatchesRegularExpression('#<a class="contact-button" href="[^"]*/de-DE/entfernen">Entfernung beantragen</a>#', $row);
+        $this->assertStringNotContainsString("Formular", $row);
+        $this->assertStringNotContainsString("Anleitung", $row);
         $this->assertStringNotContainsString("/entfernung", $content, "The form is only reached through the guide.");
     }
 
+    /**
+     * Not everyone who opens this row wants to file a request, and people
+     * search for these words: it says why a search engine removes anything,
+     * under a heading of its own.
+     */
+    public function testTheRemovalRowExplainsWhySearchEnginesRemoveResults(): void
+    {
+        $row = $this->removalRow($this->get("/de-DE/kontakt")->assertOk()->getContent());
+
+        $this->assertStringContainsString("<h2", $row);
+        $this->assertStringContainsString("Suchergebnis entfernen lassen", $row);
+        $this->assertMatchesRegularExpression("#<h3>Warum Suchmaschinen Ergebnisse entfernen</h3>#", $row);
+        $this->assertStringContainsString("Recht auf Vergessenwerden, Art. 17 DSGVO", $row);
+        $this->assertStringContainsString("Interesse der Öffentlichkeit", $row);
+    }
+
+    private function removalRow(string $content): string
+    {
+        $removal = strpos($content, '<section class="contact-section contact-removal"');
+        $this->assertNotFalse($removal, "The contact page has no removal row.");
+
+        return substr($content, $removal, strpos($content, "</section>", $removal) - $removal);
+    }
 
     /**
      * Email is what most visitors came for, so it comes first; the ways to
@@ -239,9 +266,9 @@ class ContactPageTest extends TestCase
     }
 
     /**
-     * Post is welcome; the page says once, under the title, that email is
-     * faster — not again inside the postal section, where it read as talking
-     * people out of writing a letter.
+     * Post is welcome; the page says once, in the email row, that email is
+     * faster — not inside the postal section, where it read as talking people
+     * out of writing a letter.
      */
     public function testThePostalCardDoesNotTalkPeopleOutOfWriting(): void
     {
@@ -252,7 +279,8 @@ class ContactPageTest extends TestCase
             ->getContent();
 
         $this->assertSame(1, substr_count($content, "Am schnellsten antworten wir per E-Mail."));
-        $this->assertLessThan(strpos($content, 'id="email"'), strpos($content, 'class="contact-lead"'));
+        $this->assertLessThan(strpos($content, 'class="contact-lead"'), strpos($content, 'id="email"'));
+        $this->assertLessThan(strpos($content, 'id="phone"'), strpos($content, 'class="contact-lead"'));
     }
 
     /**

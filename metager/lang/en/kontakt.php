@@ -35,10 +35,14 @@ return [
         'removal' => 'Remove a search result',
     ],
     'removal' => [
-        'heading' => 'Removal',
-        'only' => 'You can only ask us to remove search results through our form. We do not accept such requests by email, phone or post.',
-        'first' => 'You will find the form at the end of our guide. Please read it first: MetaGer shows other search engines\' results, so a removal usually works there.',
-        'button' => 'Go to the guide',
+        'heading' => 'Removing a search result',
+        'how' => 'Removal requests are made online: we guide you through yours step by step and show you where it has the most effect.',
+        'only' => 'We cannot accept such requests by email, phone or post.',
+        'button' => 'Request a removal',
+        'why' => [
+            'heading' => 'Why search engines remove results',
+            'text' => 'Search engines take a result out when there is a legal reason to. If a result for a person\'s name leads to information that is wrong, out of date or no longer relevant, that person can demand that it is no longer shown (right to be forgotten, Art. 17 GDPR). The public\'s interest in the information counts too. Copyright infringement and criminal content can also be reasons. That is why a result you find elsewhere may be missing from MetaGer.',
+        ],
     ],
     'phone' => [
         'heading' => 'Phone',

@@ -94,6 +94,25 @@ class AccessibilityTest extends DuskTestCase
     }
 
     /**
+     * Both of the page's states: which reason is chosen decides what is shown.
+     * The legend above the choice inherited a form style's dark text on the
+     * dark palette, and nothing looked at this page in that palette.
+     */
+    #[DataProvider("themes")]
+    public function testTheContactPage(string $theme): void
+    {
+        $this->browse(function (Browser $browser) use ($theme) {
+            $browser->visit("/de-DE/kontakt?dark_mode={$theme}")
+                ->assertVisible(".contact-address");
+            $this->assertNoViolations($browser, "contact-{$theme}");
+
+            $browser->click('label[for="contact-reason-removal"]')
+                ->assertVisible(".contact-removal");
+            $this->assertNoViolations($browser, "contact-removal-{$theme}");
+        });
+    }
+
+    /**
      * The result page cannot be visited: CI points the browser at a deployed
      * review pod, and no engine behind it answers with anything a test could
      * rely on. So it is rendered here, in-process, from the engine fixtures

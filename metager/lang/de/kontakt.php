@@ -38,10 +38,14 @@ Germany",
         'removal' => 'Suchergebnis entfernen',
     ],
     'removal' => [
-        'heading' => 'Entfernung',
-        'only' => 'Suchergebnisse entfernen lassen können Sie bei uns nur über unser Formular. Per E-Mail, Telefon oder Post nehmen wir solche Anträge nicht an.',
-        'first' => 'Das Formular finden Sie am Ende unserer Anleitung. Bitte lesen Sie diese zuerst: MetaGer zeigt Ergebnisse anderer Suchmaschinen, darum wirkt eine Entfernung meist dort.',
-        'button' => 'Zur Anleitung',
+        'heading' => 'Suchergebnis entfernen lassen',
+        'how' => 'Anträge auf Entfernung stellen Sie bei uns online: Wir führen Sie Schritt für Schritt durch Ihren Antrag und zeigen Ihnen, wo er am meisten bewirkt.',
+        'only' => 'Per E-Mail, Telefon oder Post können wir solche Anträge nicht annehmen.',
+        'button' => 'Entfernung beantragen',
+        'why' => [
+            'heading' => 'Warum Suchmaschinen Ergebnisse entfernen',
+            'text' => 'Suchmaschinen nehmen Ergebnisse heraus, wenn es dafür einen rechtlichen Grund gibt. Führt ein Ergebnis zum Namen einer Person zu Angaben, die falsch, veraltet oder nicht mehr relevant sind, kann diese Person verlangen, dass es nicht mehr angezeigt wird (Recht auf Vergessenwerden, Art. 17 DSGVO). Dabei zählt auch das Interesse der Öffentlichkeit an der Information. Auch Urheberrechtsverletzungen und strafbare Inhalte können ein Grund sein. Deshalb kann bei MetaGer ein Ergebnis fehlen, das Sie anderswo finden.',
+        ],
     ],
     'phone' => [
         'heading' => 'Telefon',

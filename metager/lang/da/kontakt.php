@@ -38,10 +38,14 @@ Tyskland",
         'removal' => 'Fjern et søgeresultat',
     ],
     'removal' => [
-        'heading' => 'Fjernelse',
-        'only' => 'Du kan kun bede os om at fjerne søgeresultater via vores formular. Vi modtager ikke sådanne anmodninger pr. e-mail, telefon eller post.',
-        'first' => 'Du finder formularen sidst i vores vejledning. Læs den først: MetaGer viser resultater fra andre søgemaskiner, så en fjernelse virker som regel der.',
-        'button' => 'Til vejledningen',
+        'heading' => 'Få et søgeresultat fjernet',
+        'how' => 'Anmodninger om fjernelse foregår online: Vi fører dig trin for trin gennem din anmodning og viser dig, hvor den virker bedst.',
+        'only' => 'Vi kan ikke modtage sådanne anmodninger pr. e-mail, telefon eller post.',
+        'button' => 'Anmod om fjernelse',
+        'why' => [
+            'heading' => 'Hvorfor søgemaskiner fjerner resultater',
+            'text' => 'Søgemaskiner fjerner et resultat, når der er en juridisk grund til det. Fører et resultat for en persons navn til oplysninger, der er forkerte, forældede eller ikke længere relevante, kan personen kræve, at det ikke længere vises (retten til at blive glemt, GDPR art. 17). Offentlighedens interesse i oplysningerne tæller også med. Krænkelse af ophavsret og strafbart indhold kan også være en grund. Derfor kan der mangle et resultat på MetaGer, som du finder andre steder.',
+        ],
     ],
     'phone' => [
         'heading' => 'Telefon',

@@ -21,13 +21,10 @@
 | no entry here, and when an anchor is missing from the page.
 |
 | The page shows a provider only while one of its engines is not switched off
-| in its parser (CONFIG_OVERLOAD `disabled`). Switched-off engines (Yandex,
-| One News Page) stay mapped here, so their provider comes back by itself
-| when the engine does, and suma-crm can still name them.
-|
-| An engine mapped to null is one SUMA-EV no longer uses (eBay, TUBdok, the
-| Minisucher), even though its parser and foki.json entry are still there.
-| It gets no card and sends nobody anywhere.
+| in its parser (CONFIG_OVERLOAD `disabled`). A switched-off engine stays
+| mapped here, so its provider comes back by itself when the engine does,
+| and suma-crm can still name it. An engine removed from foki.json takes its
+| mapping with it; the test fails on a mapping no fokus uses.
 |
 | `type`:
 |   - `provider`: a search index or platform with its own removal process.
@@ -56,8 +53,8 @@ return [
         'brave' => 'brave',
         'serper_web' => 'google',
         'mojeek' => 'mojeek',
-        'yandex' => 'yandex',
         'staan' => 'staan',
+        'polias' => 'polias',
         // bilder
         'brave_images' => 'brave',
         'serper_images' => 'google',
@@ -65,15 +62,10 @@ return [
         // nachrichten
         'brave_news' => 'brave',
         'serper_news' => 'google',
-        'onenewspage' => 'onenewspage',
-        'onenewspagegermany' => 'onenewspage',
         'tootnews' => 'suma',
         // produkte
         'serper_shopping' => 'google',
-        'ebay' => null,
         // science
-        'minism_science' => null,
-        'tuhh' => null,
         'BASE' => 'website',
     ],
 
@@ -109,20 +101,6 @@ return [
             'contact' => 'https://search.brave.com/help/contact',
             'note' => 'removal.providers.brave',
         ],
-        'yandex' => [
-            'type' => 'provider',
-            'name' => 'Yandex',
-            'anchor' => 'yandex',
-            'links' => [
-                'personal_data' => 'https://yandex.com/support/abuse/en/troubleshooting/oblivion',
-                // "Information was removed from the source website but still
-                // appears in Yandex search results".
-                'outdated' => 'https://yandex.com/support/abuse/en/troubleshooting/search/default',
-                'legal' => null,
-            ],
-            'contact' => 'https://yandex.com/support/abuse/en/',
-            'note' => 'removal.providers.yandex',
-        ],
         // Mojeek does not curate its results and has no form; it removes for
         // legal reasons on request through its contact page.
         'mojeek' => [
@@ -152,6 +130,20 @@ return [
             'contact' => null,
             'note' => 'removal.providers.staan',
         ],
+        // Polias (Beyer Software) has no form. Its FAQ asks for an email to
+        // hallo@polias.eu with the page's address and the reason.
+        'polias' => [
+            'type' => 'provider',
+            'name' => 'Polias',
+            'anchor' => 'polias',
+            'links' => [
+                'personal_data' => null,
+                'outdated' => null,
+                'legal' => null,
+            ],
+            'contact' => 'https://polias.eu/fragen',
+            'note' => 'removal.providers.polias',
+        ],
         'pixabay' => [
             'type' => 'provider',
             'name' => 'Pixabay',
@@ -165,19 +157,6 @@ return [
             ],
             'contact' => 'https://pixabay.com/service/about/',
             'note' => 'removal.providers.pixabay',
-        ],
-        // A news aggregator: one form for removal, correction and DMCA.
-        'onenewspage' => [
-            'type' => 'provider',
-            'name' => 'One News Page',
-            'anchor' => 'onenewspage',
-            'links' => [
-                'personal_data' => 'https://www.onenewspage.com/contact/?type=removal',
-                'outdated' => 'https://www.onenewspage.com/contact/?type=removal',
-                'legal' => 'https://www.onenewspage.com/contact/?type=removal',
-            ],
-            'contact' => null,
-            'note' => 'removal.providers.onenewspage',
         ],
         // TootNews/TroetNews is run by SUMA-EV. The content still lives on
         // a Mastodon instance, so the website comes first here too.

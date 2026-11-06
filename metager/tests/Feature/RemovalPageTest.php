@@ -18,12 +18,8 @@ use Tests\TestCase;
  */
 class RemovalPageTest extends TestCase
 {
-    /**
-     * Engines SUMA-EV no longer uses, though their parsers and foki.json
-     * entries are still there: eBay, TUBdok and the Minisucher. They map to
-     * no provider, so the page sends nobody to them.
-     */
-    private const RETIRED = ["ebay", "tuhh", "minism_science"];
+    /** Sources whose engines were removed from MetaGer in November 2026. */
+    private const GONE = ["yandex", "onenewspage", "onenewspagegermany", "ebay", "tuhh", "minism_science"];
 
     /** @return array<string, array{0: string}> */
     public static function fokiEngines(): array
@@ -38,15 +34,28 @@ class RemovalPageTest extends TestCase
         return $engines;
     }
 
+    /** An engine that left foki.json takes its mapping with it. */
+    public function testEveryMappedEngineIsInAFokus(): void
+    {
+        foreach (array_keys(config("removal_providers.engines")) as $engine) {
+            $this->assertArrayHasKey($engine, self::fokiEngines(), "config/removal_providers.php maps [$engine], which no fokus in config/foki.json uses.");
+        }
+    }
+
+    /** And a provider no engine points at has nobody to send anyone to. */
+    public function testEveryProviderHasAnEngine(): void
+    {
+        $used = array_unique(array_values(config("removal_providers.engines")));
+        foreach (array_keys(config("removal_providers.providers")) as $id) {
+            $this->assertContains($id, $used, "Provider [$id] has no engine mapped to it.");
+        }
+    }
+
     #[DataProvider("fokiEngines")]
     public function testEveryEngineInAFokusHasAProvider(string $engine): void
     {
         $this->assertArrayHasKey($engine, config("removal_providers.engines"), "config/removal_providers.php has no entry for engine [$engine] from config/foki.json.");
         $providerId = config("removal_providers.engines.$engine");
-        if ($providerId === null) {
-            $this->assertContains($engine, self::RETIRED, "[$engine] maps to no provider but is not one SUMA-EV has retired.");
-            return;
-        }
 
         $this->assertIsArray(
             config("removal_providers.providers.$providerId"),
@@ -138,12 +147,10 @@ class RemovalPageTest extends TestCase
     }
 
     /**
-     * Yandex, One News Page and One News Page Germany are switched off in
-     * their parsers: MetaGer has no access to Yandex any more, and both One
-     * News Page feeds died in August 2026. Sending someone to a provider whose
-     * results we do not show is a wasted errand, so their cards are gone.
-     * The engine => provider mapping keeps them, so a provider comes back on
-     * its own when its engine is switched on again.
+     * An engine switched off in its parser (CONFIG_OVERLOAD `disabled`) sends
+     * no results, so its provider gets no card until it is switched on again.
+     * No engine is switched off today; Yandex and One News Page were, until
+     * they were removed.
      */
     public function testProvidersWeGetNoResultsFromAreNotShown(): void
     {
@@ -156,13 +163,6 @@ class RemovalPageTest extends TestCase
                 $this->assertStringNotContainsString(e($provider["name"]), $content, "[$id] has no engine in use but is named on the page.");
             }
         }
-
-        // Today's case, spelled out, so the generic loop above cannot pass by
-        // having nothing to check.
-        $this->assertArrayNotHasKey("yandex", $inUse);
-        $this->assertArrayNotHasKey("onenewspage", $inUse);
-        $this->assertStringNotContainsString("Yandex", $content);
-        $this->assertStringNotContainsString("One News Page", $content);
     }
 
     public function testEveryProviderFormIsLinked(): void
@@ -336,23 +336,44 @@ class RemovalPageTest extends TestCase
             ->assertDontSeeText("können wir nicht zusagen");
     }
 
-    /** eBay, TUBdok and the Minisucher are no longer used; TootNews still is. */
-    public function testRetiredSourcesAreNotOnThePage(): void
+    /** Removed sources leave no card, no mapping and no text; TootNews stays. */
+    public function testRemovedSourcesAreNotOnThePage(): void
     {
-        foreach (self::RETIRED as $engine) {
-            $this->assertNull(config("removal_providers.engines.$engine"), "[$engine] still maps to a provider.");
+        foreach (self::GONE as $engine) {
+            $this->assertArrayNotHasKey($engine, config("removal_providers.engines"), "[$engine] is still mapped.");
         }
-        $this->assertArrayNotHasKey("ebay", config("removal_providers.providers"));
+        foreach (["yandex", "onenewspage", "ebay"] as $provider) {
+            $this->assertArrayNotHasKey($provider, config("removal_providers.providers"));
+            $this->assertArrayNotHasKey($provider, __("removal.providers"));
+        }
 
         $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
         $start = strpos($content, '<div id="removal">');
         $page = substr($content, $start);
 
-        foreach (["eBay", "TUBdok", "Minisucher", "VeRO"] as $gone) {
+        foreach (["eBay", "TUBdok", "Minisucher", "VeRO", "Yandex", "One News Page"] as $gone) {
             $this->assertStringNotContainsStringIgnoringCase($gone, $page, "$gone is still named on the page.");
         }
         $this->assertStringContainsString("TootNews", $page);
         $this->assertStringContainsString("BASE", $page);
+    }
+
+    /**
+     * Polias has no form. Its FAQ ("Wie lasse ich eine Seite aus den
+     * Ergebnissen entfernen?", polias.eu/fragen, checked 2026-11-06) asks
+     * for an email to hallo@polias.eu with the page's address and the reason.
+     */
+    public function testThePoliasCardSaysToWriteToPolias(): void
+    {
+        $this->assertSame("polias", config("removal_providers.engines.polias"));
+        $polias = config("removal_providers.providers.polias");
+        $this->assertSame("https://polias.eu/fragen", $polias["contact"]);
+        $this->assertSame([null], array_values(array_unique($polias["links"])));
+
+        $page = $this->get("/de-DE/entfernen")->assertOk();
+        $page->assertSee('id="polias"', false);
+        $page->assertSee('href="https://polias.eu/fragen"', false);
+        $page->assertSeeText("hallo@polias.eu");
     }
 
     /** Staan has its own removal form, for personal data only. */

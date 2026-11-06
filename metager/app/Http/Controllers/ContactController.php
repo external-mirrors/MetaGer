@@ -36,7 +36,6 @@ class ContactController extends Controller
         return view("kontakt.kontakt", [
             "title" => trans("titles.kontakt"),
             "to_mail" => $to_mail,
-            "removal_form" => RemovalController::formUrl(),
             "phone" => self::PHONE,
             "phone_uri" => "tel:" . str_replace(" ", "", self::PHONE),
             "office_hours" => [

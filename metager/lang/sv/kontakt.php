@@ -32,11 +32,16 @@ Tyskland",
             'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'reason' => [
+        'legend' => 'Vad gäller det?',
+        'general' => 'En fråga eller ett ärende',
+        'removal' => 'Ta bort ett sökresultat',
+    ],
     'removal' => [
         'heading' => 'Borttagning',
         'only' => 'Du kan bara be oss ta bort sökresultat via vårt formulär. Vi tar inte emot sådana begäranden via e-post, telefon eller brev.',
-        'form' => 'Till formuläret',
-        'guide' => 'Formuläret gäller våra egna sökindex. MetaGer visar resultat från andra sökmotorer; <a href=":link">vår guide</a> förklarar var en borttagning fungerar för dem.',
+        'first' => 'Formuläret finns i slutet av vår guide. Läs den först: MetaGer visar resultat från andra sökmotorer, så en borttagning fungerar oftast där.',
+        'button' => 'Till guiden',
     ],
     'phone' => [
         'heading' => 'Telefon',

@@ -4,32 +4,31 @@
 
 @section('content')
 {{--
-	/kontakt — first what does not go through us here, then email, phone and
-	post, then the pages that answer common questions.
-
-	Removal requests are only taken through suma-crm's form, not by any way
-	listed on this page, so that row comes before the address people would
-	write to. The guide stays linked: MetaGer shows other engines' results, and
-	the form is for SUMA-EV's own indexes.
+	/kontakt — nearly everyone comes for the address, so email, phone and post
+	show without a click. Above them, a choice of reason: removal requests are
+	only taken through suma-crm's form, so that choice swaps those rows for
+	one saying so. It leads to the guide and not to the form, because people
+	read the guide first; the form is at its end. Radios and :has(), no script;
+	without :has() both show, which is still right.
 	One row per way to reach us, so a fold opening in one never stretches
 	another.
 	No script on this page.
 --}}
 <div id="kontakt">
 	<h1 class="page-title">{!! trans('kontakt.headline.1') !!}</h1>
+	<fieldset class="contact-reason">
+		<legend>@lang('kontakt.reason.legend')</legend>
+		<input type="radio" name="contact-reason" id="contact-reason-general" checked>
+		<label for="contact-reason-general">@lang('kontakt.reason.general')</label>
+		<input type="radio" name="contact-reason" id="contact-reason-removal">
+		<label for="contact-reason-removal">@lang('kontakt.reason.removal')</label>
+	</fieldset>
+
+	<div class="contact-general">
 	<p class="contact-lead">@lang('kontakt.lead')</p>
 
 	{{-- An address card: each way to reach us is one row, its h2 a short
 	     label beside the content (pages/contact.less), stacked on a phone. --}}
-	<section class="contact-section contact-removal" id="removal" aria-labelledby="contact-removal-heading">
-		<h2 id="contact-removal-heading">@lang('kontakt.removal.heading')</h2>
-		<div class="contact-section-body">
-			<p class="contact-removal-only">@lang('kontakt.removal.only')</p>
-			<a class="contact-button" href="{{ $removal_form }}">@lang('kontakt.removal.form')</a>
-			<p class="contact-removal-guide">@lang('kontakt.removal.guide', ['link' => route('removal')])</p>
-		</div>
-	</section>
-
 	<section class="contact-section contact-email" id="email" aria-labelledby="contact-email-heading">
 		<h2 id="contact-email-heading">@lang('kontakt.headline.2')</h2>
 		<div class="contact-section-body">
@@ -72,6 +71,17 @@
 		<h2 id="contact-post-heading">{!! trans('kontakt.letter.1') !!}</h2>
 		<div class="contact-section-body">
 			<address>{!! trans('kontakt.letter.3') !!}</address>
+		</div>
+	</section>
+
+	</div>
+
+	<section class="contact-section contact-removal" id="removal" aria-labelledby="contact-removal-heading">
+		<h2 id="contact-removal-heading">@lang('kontakt.removal.heading')</h2>
+		<div class="contact-section-body">
+			<p class="contact-removal-only">@lang('kontakt.removal.only')</p>
+			<p>@lang('kontakt.removal.first')</p>
+			<a class="contact-button" href="{{ route('removal') }}">@lang('kontakt.removal.button')</a>
 		</div>
 	</section>
 

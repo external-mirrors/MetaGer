@@ -32,11 +32,16 @@ Germany",
             'fingerprint' => 'Huella PGP: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
+    'reason' => [
+        'legend' => '¿De qué se trata?',
+        'general' => 'Una pregunta o petición',
+        'removal' => 'Retirar un resultado de búsqueda',
+    ],
     'removal' => [
         'heading' => 'Retirada',
         'only' => 'Solo puede pedirnos que retiremos resultados de búsqueda mediante nuestro formulario. No aceptamos estas solicitudes por correo electrónico, teléfono ni correo postal.',
-        'form' => 'Ir al formulario',
-        'guide' => 'El formulario es para nuestros propios índices de búsqueda. MetaGer muestra resultados de otros buscadores; <a href=":link">nuestra guía</a> explica dónde surte efecto una retirada en esos casos.',
+        'first' => 'Encontrará el formulario al final de nuestra guía. Léala primero: MetaGer muestra resultados de otros buscadores, por lo que una retirada suele surtir efecto allí.',
+        'button' => 'Ir a la guía',
     ],
     'phone' => [
         'heading' => 'Teléfono',

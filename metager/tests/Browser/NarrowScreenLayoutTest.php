@@ -26,10 +26,14 @@ class NarrowScreenLayoutTest extends DuskTestCase
     /** @return array<string, array{0: string, 1: string}> */
     public static function pages(): array
     {
-        return [
-            "removal guide" => ["/de-DE/entfernen", "#removal"],
-            "contact page" => ["/de-DE/kontakt", "#kontakt"],
-        ];
+        $pages = ["contact page" => ["/de-DE/kontakt", "#kontakt"]];
+
+        // Every language: the long words are in Finnish and Polish, not German.
+        foreach (["ca-ES", "da-DK", "de-DE", "en-US", "es-ES", "fi-FI", "fr-FR", "it-IT", "nl-NL", "pl-PL", "pt-PT", "sv-SE"] as $locale) {
+            $pages["removal guide $locale"] = ["/$locale/entfernen", "#removal"];
+        }
+
+        return $pages;
     }
 
     #[DataProvider("pages")]
@@ -40,6 +44,8 @@ class NarrowScreenLayoutTest extends DuskTestCase
 
             [$viewport, $scrollWidth, $boxes] = $browser->script(
                 "const root = document.querySelector('$root');"
+                    // A closed <details> has no width to measure.
+                    . "root.querySelectorAll('details').forEach((details) => { details.open = true; });"
                     . "const boxes = Array.from(root.querySelectorAll('h1, h2, h3, p, li, dt, dd, summary, section, details'))"
                     . ".filter((el) => el.getClientRects().length)"
                     . ".map((el) => { const r = el.getBoundingClientRect();"

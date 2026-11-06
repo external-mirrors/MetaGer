@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Localization;
 use App\Models\Configuration\SearchEngineRegistry;
 use Illuminate\Support\Facades\Vite;
-use Illuminate\Translation\Translator;
 use Illuminate\View\View;
 
 /**
@@ -28,16 +26,8 @@ class RemovalController extends Controller
     /** The request kinds every provider entry carries a link (or null) for. */
     public const KINDS = ["personal_data", "outdated", "legal"];
 
-    public function show(Translator $translator, SearchEngineRegistry $registry): View
+    public function show(SearchEngineRegistry $registry): View
     {
-        // The page is written in de, en and ca. Everywhere else the app falls
-        // back to `de` (config/app.php), and a German page is the wrong
-        // answer for a French visitor asking how to get a result removed:
-        // English is the one they are likelier to read.
-        if (!file_exists(lang_path(Localization::getLanguage() . "/removal.php"))) {
-            $translator->setFallback("en");
-        }
-
         $providers = config("removal_providers.providers");
         $foki = $this->fokiPerProvider($registry);
 

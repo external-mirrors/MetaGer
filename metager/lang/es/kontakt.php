@@ -38,10 +38,14 @@ Germany",
         'removal' => 'Retirar un resultado de búsqueda',
     ],
     'removal' => [
-        'heading' => 'Retirada',
-        'only' => 'Solo puede pedirnos que retiremos resultados de búsqueda mediante nuestro formulario. No aceptamos estas solicitudes por correo electrónico, teléfono ni correo postal.',
-        'first' => 'Encontrará el formulario al final de nuestra guía. Léala primero: MetaGer muestra resultados de otros buscadores, por lo que una retirada suele surtir efecto allí.',
-        'button' => 'Ir a la guía',
+        'heading' => 'Retirar un resultado de búsqueda',
+        'how' => 'Las solicitudes de retirada se hacen en línea: le guiamos paso a paso por su solicitud y le mostramos dónde tiene más efecto.',
+        'only' => 'No podemos aceptar estas solicitudes por correo electrónico, teléfono ni correo postal.',
+        'button' => 'Solicitar una retirada',
+        'why' => [
+            'heading' => 'Por qué los buscadores retiran resultados',
+            'text' => 'Los buscadores retiran un resultado cuando hay un motivo legal para ello. Si un resultado para el nombre de una persona lleva a información incorrecta, desactualizada o que ya no es pertinente, esa persona puede exigir que deje de mostrarse (derecho al olvido, art. 17 del RGPD). También cuenta el interés del público en la información. Las infracciones de derechos de autor y los contenidos delictivos también pueden ser un motivo. Por eso puede faltar en MetaGer un resultado que encuentre en otros sitios.',
+        ],
     ],
     'phone' => [
         'heading' => 'Teléfono',

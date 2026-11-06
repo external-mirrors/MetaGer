@@ -38,10 +38,14 @@ Niemcy",
         'removal' => 'Usunięcie wyniku wyszukiwania',
     ],
     'removal' => [
-        'heading' => 'Usuwanie',
-        'only' => 'O usunięcie wyników wyszukiwania możesz nas poprosić tylko przez nasz formularz. Nie przyjmujemy takich wniosków e-mailem, telefonicznie ani pocztą.',
-        'first' => 'Formularz znajdziesz na końcu naszego przewodnika. Przeczytaj go najpierw: MetaGer pokazuje wyniki innych wyszukiwarek, więc usunięcie zwykle działa właśnie tam.',
-        'button' => 'Przejdź do przewodnika',
+        'heading' => 'Usuwanie wyniku wyszukiwania',
+        'how' => 'Wnioski o usunięcie składa się online: przeprowadzimy Cię krok po kroku przez wniosek i pokażemy, gdzie przyniesie największy efekt.',
+        'only' => 'Nie możemy przyjmować takich wniosków e-mailem, telefonicznie ani pocztą.',
+        'button' => 'Złóż wniosek o usunięcie',
+        'why' => [
+            'heading' => 'Dlaczego wyszukiwarki usuwają wyniki',
+            'text' => 'Wyszukiwarki usuwają wynik, gdy istnieje ku temu podstawa prawna. Jeśli wynik dla nazwiska danej osoby prowadzi do informacji nieprawdziwych, nieaktualnych lub już nieistotnych, osoba ta może żądać, by przestał być wyświetlany (prawo do bycia zapomnianym, art. 17 RODO). Liczy się także interes publiczny w dostępie do informacji. Powodem mogą być również naruszenia praw autorskich i treści przestępcze. Dlatego w MetaGer może brakować wyniku, który znajdziesz gdzie indziej.',
+        ],
     ],
     'phone' => [
         'heading' => 'Telefon',

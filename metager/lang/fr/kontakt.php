@@ -38,10 +38,14 @@ Allemagne",
         'removal' => 'Retirer un résultat de recherche',
     ],
     'removal' => [
-        'heading' => 'Retrait',
-        'only' => 'Vous ne pouvez nous demander de retirer des résultats de recherche que via notre formulaire. Nous n’acceptons pas ces demandes par e-mail, téléphone ou courrier.',
-        'first' => 'Le formulaire se trouve à la fin de notre guide. Veuillez d’abord le lire : MetaGer affiche les résultats d’autres moteurs de recherche, un retrait y est donc généralement efficace.',
-        'button' => 'Aller au guide',
+        'heading' => 'Faire retirer un résultat de recherche',
+        'how' => 'Les demandes de retrait se font en ligne : nous vous guidons pas à pas dans votre demande et vous montrons où elle a le plus d’effet.',
+        'only' => 'Nous ne pouvons pas accepter ces demandes par e-mail, téléphone ou courrier.',
+        'button' => 'Demander un retrait',
+        'why' => [
+            'heading' => 'Pourquoi les moteurs de recherche retirent des résultats',
+            'text' => 'Les moteurs de recherche retirent un résultat lorsqu’un motif juridique le justifie. Si un résultat pour le nom d’une personne mène à des informations fausses, obsolètes ou qui ne sont plus pertinentes, cette personne peut exiger qu’il ne soit plus affiché (droit à l’oubli, art. 17 du RGPD). L’intérêt du public pour l’information compte aussi. Les atteintes au droit d’auteur et les contenus illicites peuvent également être un motif. C’est pourquoi un résultat que vous trouvez ailleurs peut manquer sur MetaGer.',
+        ],
     ],
     'phone' => [
         'heading' => 'Téléphone',

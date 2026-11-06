@@ -38,10 +38,14 @@ Saksa",
         'removal' => 'Hakutuloksen poisto',
     ],
     'removal' => [
-        'heading' => 'Poisto',
-        'only' => 'Voit pyytää hakutulosten poistamista meiltä vain lomakkeellamme. Emme ota tällaisia pyyntöjä vastaan sähköpostitse, puhelimitse tai postitse.',
-        'first' => 'Lomake on ohjeemme lopussa. Lue ohje ensin: MetaGer näyttää muiden hakukoneiden tuloksia, joten poisto toimii yleensä niissä.',
-        'button' => 'Ohjeeseen',
+        'heading' => 'Hakutuloksen poistaminen',
+        'how' => 'Poistopyynnöt tehdään verkossa: opastamme sinut pyynnön läpi vaihe vaiheelta ja näytämme, missä sillä on eniten vaikutusta.',
+        'only' => 'Emme voi ottaa tällaisia pyyntöjä vastaan sähköpostitse, puhelimitse tai postitse.',
+        'button' => 'Pyydä poistoa',
+        'why' => [
+            'heading' => 'Miksi hakukoneet poistavat tuloksia',
+            'text' => 'Hakukoneet poistavat tuloksen, kun siihen on oikeudellinen peruste. Jos henkilön nimellä löytyvä tulos johtaa tietoihin, jotka ovat virheellisiä, vanhentuneita tai eivät enää ole merkityksellisiä, henkilö voi vaatia, ettei sitä enää näytetä (oikeus tulla unohdetuksi, tietosuoja-asetuksen 17 artikla). Myös yleisön etu saada tieto otetaan huomioon. Myös tekijänoikeusloukkaukset ja rikollinen sisältö voivat olla peruste. Siksi MetaGerista voi puuttua tulos, jonka löydät muualta.',
+        ],
     ],
     'phone' => [
         'heading' => 'Puhelin',

@@ -38,10 +38,14 @@ Duitsland",
         'removal' => 'Zoekresultaat verwijderen',
     ],
     'removal' => [
-        'heading' => 'Verwijdering',
-        'only' => 'U kunt ons alleen via ons formulier vragen zoekresultaten te verwijderen. Per e-mail, telefoon of post nemen we zulke verzoeken niet aan.',
-        'first' => 'Het formulier staat aan het einde van onze handleiding. Lees die eerst: MetaGer toont resultaten van andere zoekmachines, dus een verwijdering werkt meestal daar.',
-        'button' => 'Naar de handleiding',
+        'heading' => 'Een zoekresultaat laten verwijderen',
+        'how' => 'Verzoeken om verwijdering doet u online: we leiden u stap voor stap door uw verzoek en laten zien waar het het meeste effect heeft.',
+        'only' => 'Per e-mail, telefoon of post kunnen we zulke verzoeken niet aannemen.',
+        'button' => 'Verwijdering aanvragen',
+        'why' => [
+            'heading' => 'Waarom zoekmachines resultaten verwijderen',
+            'text' => 'Zoekmachines halen een resultaat weg als daar een juridische reden voor is. Leidt een resultaat voor iemands naam naar informatie die onjuist, verouderd of niet meer relevant is, dan kan die persoon eisen dat het niet meer wordt getoond (recht op vergetelheid, art. 17 AVG). Ook het belang van het publiek bij de informatie telt mee. Ook auteursrechtschending en strafbare inhoud kunnen een reden zijn. Daarom kan op MetaGer een resultaat ontbreken dat u elders wel vindt.',
+        ],
     ],
     'phone' => [
         'heading' => 'Telefoon',

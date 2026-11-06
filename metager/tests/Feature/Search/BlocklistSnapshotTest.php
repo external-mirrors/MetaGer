@@ -2,38 +2,46 @@
 
 namespace Tests\Feature\Search;
 
-use App\Models\BlocklistEntry;
 use App\Search\Blacklists;
+use App\Search\BlocklistStore;
 use App\Search\BlocklistVersion;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
-use Tests\Concerns\UsesInMemorySqlite;
+use Tests\Concerns\FakesBlocklist;
 use Tests\TestCase;
 
 /**
- * How Blacklists keeps its snapshot, and what it falls back to.
+ * How Blacklists keeps its compiled list, and what it falls back to.
  *
- * The rule under test: when Redis or the database cannot be asked, the filter
- * keeps the last list it had. It never falls back to an empty one, because an
- * empty blocklist is every removal silently undone.
+ * The rule under test: when Valkey cannot be asked or has lost the synced
+ * snapshot, the filter keeps the last list it had. It never falls back to an
+ * empty one, because an empty blocklist is every removal silently undone.
+ * Before the very first sync it reads the legacy blacklist files.
  *
  * "A new request" is simulated by a fresh instance with the in-memory static
  * forgotten, which is what PHP-FPM gives each request; what carries the
- * snapshot across is then the stored file alone.
+ * compiled list across is then the stored file alone.
  */
 class BlocklistSnapshotTest extends TestCase
 {
-    use UsesInMemorySqlite;
+    use FakesBlocklist;
+
+    private string $legacy;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpInMemorySqlite();
+        $this->legacy = sys_get_temp_dir() . "/blocklist-legacy-" . uniqid();
+        mkdir($this->legacy);
+        config(["metager.metager.blocklist.legacy_directory" => $this->legacy]);
     }
 
     protected function tearDown(): void
     {
+        // Back to the real Valkey before FakesBlocklist cleans up in it.
+        $this->app->forgetInstance("redis");
         Redis::clearResolvedInstances();
+        array_map("unlink", glob($this->legacy . "/*") ?: []);
+        rmdir($this->legacy);
         parent::tearDown();
     }
 
@@ -67,9 +75,14 @@ class BlocklistSnapshotTest extends TestCase
         Redis::clearResolvedInstances();
     }
 
-    private function blockBeispiel(): BlocklistEntry
+    private function blockBeispiel(): int
     {
-        return BlocklistEntry::create(["kind" => "domain", "value" => "beispiel.de", "reason" => "other"]);
+        return $this->blocklistEntry("domain", "beispiel.de");
+    }
+
+    private function legacyFileBlocksBeispiel(): void
+    {
+        file_put_contents($this->legacy . "/blacklistDomains.txt", "beispiel.de\n");
     }
 
     public function testAnEntryBlocksFromTheNextRequestOn(): void
@@ -91,75 +104,78 @@ class BlocklistSnapshotTest extends TestCase
         $this->assertFalse($this->blocksBeispiel($blacklists), "An edit applied halfway through a request.");
     }
 
-    public function testAnUnchangedVersionDoesNotReadTheTable(): void
+    public function testAnUnchangedVersionDoesNotReadTheSnapshotAgain(): void
     {
         $this->blockBeispiel();
         $this->assertTrue($this->blocksBeispiel($this->nextRequest()));
 
-        DB::enableQueryLog();
-        $this->assertTrue($this->blocksBeispiel($this->nextRequest()));
+        // Gone without a bump: only a re-read would notice.
+        Redis::connection()->del(BlocklistStore::SNAPSHOT);
 
-        $this->assertSame([], DB::getQueryLog(), "The stored snapshot was not used; every search would query the database.");
+        $this->assertTrue($this->blocksBeispiel($this->nextRequest()), "The stored compiled list was not used; every search would read and compile the snapshot.");
     }
 
-    public function testWithRedisDownTheLastSnapshotStays(): void
+    public function testWithRedisDownTheLastListStays(): void
     {
         $this->blockBeispiel();
         $this->assertTrue($this->blocksBeispiel($this->nextRequest()));
 
         $this->breakRedis();
-        // Even with the table emptied behind its back: the snapshot is what counts.
-        DB::table("blocklist_entries")->delete();
 
         $this->assertTrue($this->blocksBeispiel($this->nextRequest()), "Redis down emptied the blocklist.");
     }
 
-    public function testWithTheDatabaseDownTheLastSnapshotStays(): void
+    public function testWithTheSyncedSnapshotLostTheLastListStays(): void
     {
         $this->blockBeispiel();
         $this->assertTrue($this->blocksBeispiel($this->nextRequest()));
 
+        Redis::connection()->del(BlocklistStore::SNAPSHOT);
         BlocklistVersion::bump();
-        DB::statement("DROP TABLE blocklist_entries");
 
-        $this->assertTrue($this->blocksBeispiel($this->nextRequest()), "A failed reload emptied the blocklist.");
+        $this->assertTrue($this->blocksBeispiel($this->nextRequest()), "Losing the snapshot emptied the blocklist.");
     }
 
-    public function testWithNothingEverLoadedAndNoDatabaseNothingIsBlockedAndNothingThrows(): void
+    public function testBeforeTheFirstSyncTheLegacyFilesApply(): void
     {
-        DB::statement("DROP TABLE blocklist_entries");
+        $this->legacyFileBlocksBeispiel();
 
-        $this->assertFalse($this->blocksBeispiel($this->nextRequest()));
+        $this->assertTrue($this->blocksBeispiel($this->nextRequest()));
     }
 
-    /**
-     * Valkey losing its data must not resurrect an old snapshot: a counter
-     * restarting from zero would name a file stored long ago as current.
-     */
-    public function testALostVersionCounterDoesNotReviveAnOldSnapshot(): void
+    public function testTheFirstSyncReplacesTheLegacyFiles(): void
     {
-        $entry = $this->blockBeispiel();
+        $this->legacyFileBlocksBeispiel();
         $this->assertTrue($this->blocksBeispiel($this->nextRequest()));
 
-        Redis::connection()->del(BlocklistVersion::KEY);
-        // Removed without a bump, as if the bump had been lost with the data.
-        DB::table("blocklist_entries")->where("id", $entry->id)->delete();
+        $this->blocklistEntry("domain", "anderes.example");
 
+        $this->assertFalse($this->blocksBeispiel($this->nextRequest()), "The legacy files still applied after a sync.");
+    }
+
+    public function testALostSnapshotFallsBackToTheLastListNotToTheLegacyFiles(): void
+    {
+        $this->legacyFileBlocksBeispiel();
+        $id = $this->blockBeispiel();
+        $this->removeBlocklistEntry($id);
+        $this->assertFalse($this->blocksBeispiel($this->nextRequest()));
+
+        Redis::connection()->del(BlocklistStore::SNAPSHOT);
+        BlocklistVersion::bump();
+
+        $this->assertFalse($this->blocksBeispiel($this->nextRequest()), "A removal was undone by the old files.");
+    }
+
+    public function testWithNothingAnywhereNothingIsBlockedAndNothingThrows(): void
+    {
         $this->assertFalse($this->blocksBeispiel($this->nextRequest()));
     }
 
-    public function testTheBypassAppliesToOneInstanceOnly(): void
+    public function testWithRedisDownAndNothingStoredTheLegacyFilesApply(): void
     {
-        $this->blockBeispiel();
-        $bypassed = $this->nextRequest();
+        $this->legacyFileBlocksBeispiel();
+        $this->breakRedis();
 
-        $inside = $bypassed->withoutBlocking(fn() => [
-            $this->blocksBeispiel($bypassed),
-            $this->blocksBeispiel(new Blacklists()),
-            $bypassed->blockingEntryIds("beispiel.de", "beispiel.de/sorten", "kaffee") !== [],
-        ]);
-
-        $this->assertSame([false, true, true], $inside);
-        $this->assertTrue($this->blocksBeispiel($bypassed), "The bypass outlived its callback.");
+        $this->assertTrue($this->blocksBeispiel($this->nextRequest()));
     }
 }

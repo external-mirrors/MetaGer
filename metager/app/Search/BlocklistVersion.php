@@ -5,9 +5,9 @@ namespace App\Search;
 use Illuminate\Support\Facades\Redis;
 
 /**
- * The Redis counter `blocklist:version`: incremented after every write to
- * `blocklist_entries`, read once per request by Blacklists to decide whether
- * its snapshot is still current.
+ * The Valkey counter `blocklist:version`: incremented whenever
+ * `blocklist:sync` stores a new snapshot (BlocklistStore::put), read once per
+ * request by Blacklists to decide whether its compiled list is still current.
  *
  * It does not start at 0. A snapshot is stored on disk under its version
  * (Blacklists::store), so a counter that restarted from 0 after Valkey lost

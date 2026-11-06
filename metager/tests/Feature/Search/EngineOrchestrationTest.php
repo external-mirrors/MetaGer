@@ -51,6 +51,9 @@ class EngineOrchestrationTest extends TestCase
             "brave" => $this->engineFixture("brave-web.json"),
             "serper_web" => $this->engineFixture("serper-web.json"),
         ]);
+        // A worker compiles the blocklist once per version, not once per
+        // search; done here so the recording is of the search that follows.
+        (new \App\Search\Blacklists())->blocksDescription("warm.example");
         $recorder = $this->recordRedisTraffic();
 
         $response = $this->get("/meta/meta.ger3?eingabe=" . urlencode($query) . "&focus=web&out=json");
@@ -192,9 +195,10 @@ class EngineOrchestrationTest extends TestCase
      * SearchAuthorizationTest::testAllTheEnginesOfASearchArePaidForInOneCall.
      *
      * 14 -> 15 when the operator blocklist moved from three files on the pod
-     * into the database: one `get blocklist:version` per search is what tells
-     * the worker whether its stored snapshot is still current, and it is what
-     * keeps the database itself off this path (App\Search\Blacklists).
+     * to the blocklist service: one `get blocklist:version` per search is what
+     * tells the worker whether its compiled list is still current. Reading
+     * and compiling the snapshot happens once per version and pod, not per
+     * search (App\Search\Blacklists), so searchRecording() does it first.
      */
     public function testTheWholeSearchStaysWithinItsRoundTripBudget(): void
     {

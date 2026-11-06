@@ -255,25 +255,28 @@ class RemovalPageTest extends TestCase
     }
 
     /**
-     * Art. 12(3) and (4) GDPR: an answer within a month, and if we do not act,
-     * the reasons and where to complain. suma-crm's removal cases run on the
-     * same one-month deadline (RemovalRequest::deadline_at).
+     * Art. 12(3) GDPR: an answer within a month. suma-crm's removal cases run
+     * on the same deadline (RemovalRequest::deadline_at). Where to complain
+     * (Art. 12(4)) belongs in the reply that refuses a request, not on this
+     * page (team feedback, 2026-11-04).
      */
-    public function testWritingToUsNamesTheDeadlineAndWhereToComplain(): void
+    public function testWritingToUsNamesTheDeadline(): void
     {
         $this->get("/de-DE/entfernen")
             ->assertOk()
             ->assertSeeText("innerhalb eines Monats")
-            ->assertSeeText("Datenschutz-Aufsichtsbehörde");
+            ->assertDontSeeText("Aufsichtsbehörde")
+            ->assertDontSeeText("vor Gericht");
     }
 
     /** One request per test: a second one is routed against the first one's locale-stripped state and 404s. */
-    public function testWritingToUsNamesTheDeadlineAndWhereToComplainInEnglish(): void
+    public function testWritingToUsNamesTheDeadlineInEnglish(): void
     {
         $this->followingRedirects()->get("/en-US/entfernen", ["Sec-Fetch-Mode" => "navigate"])
             ->assertOk()
             ->assertSeeText("within one month")
-            ->assertSeeText("data protection supervisory authority");
+            ->assertDontSeeText("supervisory authority")
+            ->assertDontSeeText("go to court");
     }
 
     /**

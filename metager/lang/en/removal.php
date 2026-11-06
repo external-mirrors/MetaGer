@@ -66,7 +66,7 @@ return [
             'We check whether MetaGer shows the result for the searches you name, and which search engines it comes from.',
             'We answer with the right links for exactly those search engines, the ones on this page.',
             'If you have a claim against MetaGer itself, for example under Art. 17 GDPR for searches for your name, we hide the result on MetaGer, even if it stays up at the source. You do not have to ask the website or the search engines first. Hiding it only affects MetaGer: the result stays on the website and in every other search engine.',
-            'We answer within one month. If a request is particularly complex, it can take up to two months longer; we tell you so within the first month. If we do not hide a result, we tell you why. You can then complain to a data protection supervisory authority or go to court.',
+            'We answer within one month. If a request is particularly complex, it can take up to two months longer; we tell you so within the first month. If we do not hide a result, we tell you why.',
         ],
         'include' => 'To make this quick, please send the exact addresses (URLs) of the results and the searches they appear for.',
         'identity' => 'If it concerns your personal data, in some cases we ask for proof that you are the person concerned or act on their behalf, for example a copy of your ID. Otherwise anyone could have us hide any address. You may black out everything on the copy that we do not need to match it with the result. We keep it with your request and, once the request is closed, delete it along with the rest of your details.',

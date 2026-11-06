@@ -229,29 +229,46 @@ class RemovalPageTest extends TestCase
         $this->assertStringContainsString("<details", $content);
     }
 
-    public function testThePageLinksToTheContactPage(): void
+    /**
+     * Version C: requests come in through suma-crm's form only, in the
+     * visitor's language, so the guide no longer ends at the contact page.
+     */
+    public function testThePageEndsAtTheFormNotTheContactPage(): void
     {
-        $this->get("/de-DE/entfernen")
-            ->assertOk()
-            ->assertSee('href="' . route("contact") . '"', false);
+        config(["metager.metager.crm.url" => "https://my.suma-ev.de"]);
+
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+        $section = substr($content, strpos($content, 'id="write-to-us"'));
+
+        $this->assertStringContainsString('href="https://my.suma-ev.de/entfernung?lang=de-DE"', $section);
+        $this->assertStringNotContainsString('href="' . route("contact") . '"', substr($section, 0, strpos($section, "</li>\n\t</ol>")));
     }
 
-    /**
-     * The page recommends asking at the source first, but it must not make
-     * that a condition for us to act. A search engine's duty to delist under
-     * Art. 17 GDPR stands on its own: the person need not go to the publisher
-     * first, and the duty holds even when the page stays up (CJEU C-131/12,
-     * Google Spain, paras. 85-88). The first version said we only hide a
-     * result "where removal at the source is not possible", which read as
-     * turning valid requests away.
-     */
-    public function testWritingToUsDoesNotRequireAskingTheSourceFirst(): void
+    public function testThePageSaysWhichSearchesTheFormTakesAndWhyNotMetaGer(): void
     {
         $this->get("/de-DE/entfernen")
             ->assertOk()
-            ->assertDontSeeText("an der Quelle nicht möglich ist")
-            ->assertSeeText("Steht Ihnen gegenüber MetaGer ein Anspruch zu")
-            ->assertSeeText("müssen Sie sich nicht zuerst an die Webseite oder die Suchmaschinen wenden");
+            ->assertSeeText("Nolm und TootNews / TrötNews")
+            ->assertSeeText("nicht per E-Mail")
+            ->assertSeeText("MetaGer gehört nicht dazu: Es hat keinen eigenen Index");
+    }
+
+    public function testTheTootNewsCardLeadsToTheForm(): void
+    {
+        config(["metager.metager.crm.url" => "https://my.suma-ev.de"]);
+
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+        $card = substr($content, strpos($content, 'id="suma-ev"'), 900);
+
+        $this->assertStringContainsString('href="https://my.suma-ev.de/entfernung?lang=de-DE"', $card);
+    }
+
+    /** The page used to say we only hide a result where removal at the source fails. */
+    public function testThePageDoesNotTurnRequestsAwayOverTheSource(): void
+    {
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertDontSeeText("an der Quelle nicht möglich ist");
     }
 
     /**
@@ -434,7 +451,7 @@ class RemovalPageTest extends TestCase
     }
 
     /**
-     * suma-crm may ask for proof of identity and keeps it with the case;
+     * suma-crm asks for proof of identity and keeps it with the case;
      * otherwise anyone could have any address removed. The page says so up
      * front, with what we need it for and that it can be blacked out
      * (Art. 12(6) GDPR, data minimisation), right after what to include.
@@ -443,13 +460,13 @@ class RemovalPageTest extends TestCase
     {
         $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
 
-        $this->assertStringContainsString("etwa eine Kopie Ihres Ausweises", $content);
+        $this->assertStringContainsString("eine Kopie Ihres Ausweises", $content);
         $this->assertStringContainsString("schwärzen", $content);
         $this->assertStringContainsString("mit Ihren übrigen Angaben", $content);
         $this->assertLessThan(
             strpos($content, "Kopie Ihres Ausweises"),
             strpos($content, "die genauen Adressen (URLs)"),
-            "The identity note belongs after what to include in the mail.",
+            "The identity note belongs after what the form asks for.",
         );
     }
 }

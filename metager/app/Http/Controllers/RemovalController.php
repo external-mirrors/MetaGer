@@ -14,7 +14,9 @@ use Illuminate\View\View;
  * MetaGer shows other engines' results, so the only removals that work are at
  * the website and at those engines. This page says where; the providers and
  * their forms are in config/removal_providers.php, keyed by the engine names
- * in config/foki.json. suma-crm links its replies to the anchors on this page.
+ * in config/foki.json. suma-crm links its form and replies to the anchors on
+ * this page, and the page ends at that form: the one way to ask SUMA-EV itself,
+ * for its own indexes.
  *
  * Only providers MetaGer still gets results from get a card: an engine its
  * parser switches off (CONFIG_OVERLOAD `disabled`) sends nobody
@@ -52,6 +54,7 @@ class RemovalController extends Controller
             ),
             "foki" => $foki,
             "hotlines" => config("removal_providers.hotlines"),
+            "form" => config("metager.metager.crm.url") . "/entfernung?lang=" . urlencode(app()->getLocale()),
         ]);
     }
 

@@ -7,8 +7,8 @@
 	/entfernen — where a search result can actually be removed.
 
 	Providers, anchors and form URLs come from config/removal_providers.php.
-	The anchors are public: suma-crm links its replies to /entfernen#<anchor>,
-	so an id here is not just markup.
+	The anchors are public: suma-crm's form and replies link to
+	/entfernen#<anchor>, so an id here is not just markup.
 
 	No script on this page: the request kinds are <details>, the table of
 	contents is plain anchors.
@@ -75,7 +75,7 @@
 						@endif
 						<p>{{ __($provider['note']) }}</p>
 						@if($provider['type'] === 'metager')
-							<p class="removal-provider-links"><a href="{{ route('contact') }}">@lang('removal.providers.us')</a></p>
+							<p class="removal-provider-links"><a href="{{ $form }}">@lang('removal.providers.us')</a></p>
 						@elseif(empty(array_filter($provider['links'])))
 							{{-- No form for anything: one contact line, not three identical ones. --}}
 							<p class="removal-provider-links"><a href="{{ $provider['contact'] }}" rel="noopener noreferrer">@lang('removal.providers.no_form', ['name' => $provider['name']])</a></p>
@@ -112,7 +112,7 @@
 			</ol>
 			<p>@lang('removal.us.include')</p>
 			<p>@lang('removal.us.identity')</p>
-			<p><a class="removal-contact" href="{{ route('contact') }}">@lang('removal.us.contact')</a></p>
+			<p><a class="removal-contact" href="{{ $form }}">@lang('removal.us.contact')</a></p>
 		</li>
 	</ol>
 </div>

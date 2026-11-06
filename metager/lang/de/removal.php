@@ -65,12 +65,12 @@ return [
         'text' => 'Für die eigenen Suchmaschinen des SUMA-EV können Sie die Entfernung direkt bei uns beantragen: Nolm und TootNews / TrötNews. So läuft ein Antrag:',
         'steps' => [
             'Sie wählen die Suche, um die es geht, und bestätigen Ihre E-Mail-Adresse über einen Link, den wir Ihnen schicken.',
-            'Sie laden Ihren Nachweis hoch und nennen je Seite die Adresse, die Suchbegriffe und den Grund.',
-            'Wir prüfen zuerst den Nachweis und dann jede Seite. Steht Ihnen ein Anspruch zu, etwa nach Art. 17 DSGVO bei Suchen nach Ihrem Namen, blenden wir das Ergebnis in dieser Suche aus. Auf der Webseite und in allen anderen Suchmaschinen bleibt es stehen.',
+            'Sie nennen je Seite die Adresse, die Suchbegriffe und den Grund. Wo wir einen Nachweis brauchen, fragt das Formular danach.',
+            'Wir prüfen zuerst einen Nachweis, falls einer nötig ist, und dann jede Seite. Steht Ihnen ein Anspruch zu, etwa nach Art. 17 DSGVO bei Suchen nach Ihrem Namen, blenden wir das Ergebnis in dieser Suche aus. Auf der Webseite und in allen anderen Suchmaschinen bleibt es stehen.',
             'Wir antworten innerhalb eines Monats. Ist ein Antrag besonders aufwendig, kann es bis zu zwei Monate länger dauern; das sagen wir Ihnen dann innerhalb des ersten Monats. Blenden wir ein Ergebnis nicht aus, nennen wir Ihnen die Gründe.',
         ],
         'include' => 'Wir brauchen die genauen Adressen (URLs) einzelner Seiten. Ganze Webseiten oder „alles über meinen Namen“ können wir nicht entfernen.',
-        'identity' => 'Als Nachweis brauchen wir eine Kopie Ihres Ausweises, bei einem Antrag für jemand anderen zusätzlich eine Vollmacht und deren Ausweis. Sonst könnte jeder verlangen, dass wir beliebige Adressen ausblenden. Auf der Kopie dürfen Sie alles schwärzen, was wir für den Abgleich nicht brauchen. Wir speichern sie verschlüsselt und löschen sie 6 Monate nach Abschluss des Vorgangs mit Ihren übrigen Angaben.',
+        'identity' => 'Einen Nachweis brauchen wir nur, wo es darauf ankommt, wer fragt. Bei persönlichen Daten ist das eine Kopie Ihres Ausweises, bei einem Antrag für jemand anderen zusätzlich eine Vollmacht und deren Ausweis. Auf der Kopie dürfen Sie alles schwärzen, was wir für den Abgleich nicht brauchen. Beim Urheberrecht erklären Sie, dass Sie die Rechte haben; handeln Sie für jemand anderen, brauchen wir eine Vollmacht. Bei veralteten und strafbaren Inhalten brauchen wir keinen Nachweis. Im Einzelfall können wir nachfragen. Wir speichern Nachweise verschlüsselt und löschen sie 6 Monate nach Abschluss des Vorgangs mit Ihren übrigen Angaben.',
         'contact' => 'Zum Formular',
     ],
 ];

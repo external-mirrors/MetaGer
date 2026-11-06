@@ -62,15 +62,15 @@ return [
     ],
     'us' => [
         'heading' => 'Retirada de les nostres pròpies cerques',
-        'text' => 'Per als cercadors propis de SUMA-EV pot sol·licitar la retirada directament a nosaltres: Nolm i TootNews / TrötNews. Una sol·licitud funciona així:',
+        'text' => 'Per als cercadors propis de SUMA-EV podeu sol·licitar la retirada directament a nosaltres: Nolm i TootNews / TrötNews. Una sol·licitud funciona així:',
         'steps' => [
             'Trieu la cerca de què es tracta i confirmeu la vostra adreça electrònica amb un enllaç que us enviem.',
-            'Pugeu el vostre comprovant i indiqueu per a cada pàgina l’adreça, els termes de cerca i el motiu.',
-            'Primer comprovem el comprovant i després cada pàgina. Si teniu un dret, per exemple segons l’art. 17 del RGPD en les cerques del vostre nom, amaguem el resultat en aquesta cerca. Continua al lloc web i a tots els altres cercadors.',
+            'Indiqueu per a cada pàgina l’adreça, els termes de cerca i el motiu. Quan necessitem un comprovant, el formulari us el demana.',
+            'Primer revisem el comprovant, si cal, i després cada pàgina. Si teniu un dret, per exemple segons l’art. 17 del RGPD en les cerques del vostre nom, amaguem el resultat en aquesta cerca. Continua al lloc web i a tots els altres cercadors.',
             'Responem en el termini d’un mes. Si una sol·licitud és especialment complexa, pot trigar fins a dos mesos més; us ho diem dins del primer mes. Si no amaguem un resultat, us en donem els motius.',
         ],
         'include' => 'Necessitem les adreces exactes (URL) de pàgines concretes. No podem retirar llocs web sencers ni «tot sobre el meu nom».',
-        'identity' => 'Com a comprovant necessitem una còpia del vostre document d’identitat; en una sol·licitud en nom d’una altra persona, també un poder i una còpia del seu document. Si no, qualsevol podria fer-nos amagar qualsevol adreça. A la còpia podeu tapar tot el que no necessitem per a la comparació. La desem xifrada i l’esborrem 6 mesos després de tancar el cas, juntament amb la resta de les vostres dades.',
+        'identity' => 'Només necessitem un comprovant quan importa qui fa la sol·licitud. Per a dades personals és una còpia del vostre document d’identitat; en una sol·licitud en nom d’una altra persona, també un poder i una còpia del seu document. A la còpia podeu tapar tot el que no necessitem per a la comparació. Per als drets d’autor declareu que teniu els drets; si actueu en nom d’una altra persona, necessitem un poder. Per a continguts obsolets o il·legals no necessitem cap comprovant. En casos concrets us ho podem demanar. Desem els comprovants xifrats i els esborrem 6 mesos després de tancar el cas, juntament amb la resta de les vostres dades.',
         'contact' => 'Al formulari',
     ],
 ];

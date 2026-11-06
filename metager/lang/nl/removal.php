@@ -65,12 +65,12 @@ return [
         'text' => 'Voor de eigen zoekmachines van SUMA-EV kunt u verwijdering rechtstreeks bij ons aanvragen: Nolm en TootNews / TrötNews. Zo verloopt een verzoek:',
         'steps' => [
             'U kiest de zoekdienst waar het om gaat en bevestigt uw e-mailadres via een link die we u sturen.',
-            'U uploadt uw bewijs en noemt per pagina het adres, de zoektermen en de reden.',
-            'We controleren eerst het bewijs en daarna elke pagina. Hebt u recht op verwijdering, bijvoorbeeld op grond van art. 17 AVG bij zoekopdrachten op uw naam, dan verbergen we het resultaat in die zoekdienst. Op de website en in alle andere zoekmachines blijft het staan.',
+            'U noemt per pagina het adres, de zoektermen en de reden. Waar we bewijs nodig hebben, vraagt het formulier daarom.',
+            'We controleren eerst eventueel bewijs en daarna elke pagina. Hebt u recht op verwijdering, bijvoorbeeld op grond van art. 17 AVG bij zoekopdrachten op uw naam, dan verbergen we het resultaat in die zoekdienst. Op de website en in alle andere zoekmachines blijft het staan.',
             'We antwoorden binnen een maand. Is een verzoek bijzonder bewerkelijk, dan kan het tot twee maanden langer duren; dat laten we u dan binnen de eerste maand weten. Verbergen we een resultaat niet, dan noemen we u de redenen.',
         ],
         'include' => 'We hebben de exacte adressen (URL’s) van afzonderlijke pagina’s nodig. Hele websites of ‘alles over mijn naam’ kunnen we niet verwijderen.',
-        'identity' => 'Als bewijs hebben we een kopie van uw identiteitsbewijs nodig, en bij een verzoek namens iemand anders ook een volmacht en een kopie van diens identiteitsbewijs. Anders zou iedereen kunnen eisen dat we willekeurige adressen verbergen. Op de kopie mag u alles afschermen wat we voor de vergelijking niet nodig hebben. We bewaren haar versleuteld en verwijderen haar 6 maanden na afsluiting van de zaak, samen met uw overige gegevens.',
+        'identity' => 'We hebben alleen bewijs nodig als het ertoe doet wie het vraagt. Bij persoonsgegevens is dat een kopie van uw identiteitsbewijs, en bij een verzoek namens iemand anders ook een volmacht en een kopie van diens identiteitsbewijs. Op de kopie mag u alles afschermen wat we voor de vergelijking niet nodig hebben. Bij auteursrecht verklaart u dat u de rechten hebt; treedt u op voor iemand anders, dan hebben we een volmacht nodig. Bij verouderde of strafbare inhoud hebben we geen bewijs nodig. In een enkel geval kunnen we ernaar vragen. We bewaren bewijs versleuteld en verwijderen het 6 maanden na afsluiting van de zaak, samen met uw overige gegevens.',
         'contact' => 'Naar het formulier',
     ],
 ];

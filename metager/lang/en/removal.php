@@ -65,12 +65,12 @@ return [
         'text' => 'For SUMA-EV’s own search engines you can request removal directly from us: Nolm and TootNews / TrötNews. This is how a request goes:',
         'steps' => [
             'You choose the search it is about and confirm your email address through a link we send you.',
-            'You upload your proof and name the address, search terms and reason for each page.',
-            'We check the proof first, then each page. If you have a claim, for example under Art. 17 GDPR for searches for your name, we hide the result in that search. It stays on the website and in every other search engine.',
+            'You name the address, search terms and reason for each page. Where we need proof, the form asks for it.',
+            'We check any proof first, then each page. If you have a claim, for example under Art. 17 GDPR for searches for your name, we hide the result in that search. It stays on the website and in every other search engine.',
             'We answer within one month. If a request is particularly complex, it can take up to two months longer; we tell you so within the first month. If we do not hide a result, we tell you why.',
         ],
         'include' => 'We need the exact addresses (URLs) of single pages. We cannot remove whole websites or “everything about my name”.',
-        'identity' => 'As proof we need a copy of your ID; for a request on someone else’s behalf, also a power of attorney and a copy of their ID. Otherwise anyone could have us hide any address. You may black out everything on the copy that we do not need for the comparison. We store it encrypted and delete it 6 months after the case is closed, along with the rest of your details.',
+        'identity' => 'We only need proof where it matters who is asking. For personal data that is a copy of your ID; for a request on someone else’s behalf, also a power of attorney and a copy of their ID. You may black out everything on the copy that we do not need for the comparison. For copyright you declare that you hold the rights; if you act for someone else, we need a power of attorney. For outdated or illegal content we need no proof. In individual cases we may ask. We store proof encrypted and delete it 6 months after the case is closed, along with the rest of your details.',
         'contact' => 'To the form',
     ],
 ];

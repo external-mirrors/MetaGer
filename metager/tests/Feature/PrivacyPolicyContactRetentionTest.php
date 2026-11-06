@@ -58,7 +58,8 @@ class PrivacyPolicyContactRetentionTest extends TestCase
         $section = substr($content, $start, strpos($content, "</article>", $start) - $start);
 
         $this->assertStringContainsString("my.suma-ev.de", $section);
-        $this->assertStringContainsString("Ausweiskopie speichern wir verschlüsselt", $section);
+        $this->assertStringContainsString("Ausweiskopie und Vollmacht speichern wir verschlüsselt", $section);
+        $this->assertStringContainsString("je nach Antrag", $section);
         $this->assertStringContainsString("Sperrlisten-Dienst", $section);
         $this->assertStringContainsString("nach 7 Tagen", $section);
     }

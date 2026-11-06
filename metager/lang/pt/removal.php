@@ -65,12 +65,12 @@ return [
         'text' => 'Para os motores de busca da SUMA-EV, pode pedir a remoção diretamente a nós: Nolm e TootNews / TrötNews. Um pedido decorre assim:',
         'steps' => [
             'Escolhe a pesquisa em causa e confirma o seu endereço de e-mail através de uma ligação que lhe enviamos.',
-            'Carrega o seu comprovativo e indica, para cada página, o endereço, os termos de pesquisa e o motivo.',
-            'Verificamos primeiro o comprovativo e depois cada página. Se lhe assistir um direito, por exemplo ao abrigo do art.º 17.º do RGPD nas pesquisas pelo seu nome, ocultamos o resultado nessa pesquisa. Continua no site e em todos os outros motores de busca.',
+            'Indica, para cada página, o endereço, os termos de pesquisa e o motivo. Quando precisamos de um comprovativo, o formulário pede-lho.',
+            'Verificamos primeiro o eventual comprovativo e depois cada página. Se lhe assistir um direito, por exemplo ao abrigo do art.º 17.º do RGPD nas pesquisas pelo seu nome, ocultamos o resultado nessa pesquisa. Continua no site e em todos os outros motores de busca.',
             'Respondemos no prazo de um mês. Se um pedido for particularmente complexo, pode demorar até mais dois meses; nesse caso informamo-lo dentro do primeiro mês. Se não ocultarmos um resultado, indicamos-lhe os motivos.',
         ],
         'include' => 'Precisamos dos endereços exatos (URL) de páginas individuais. Não podemos remover sites inteiros nem «tudo sobre o meu nome».',
-        'identity' => 'Como comprovativo precisamos de uma cópia do seu documento de identificação e, num pedido em nome de outra pessoa, também de uma procuração e de uma cópia do documento de identificação dessa pessoa. Caso contrário, qualquer pessoa poderia exigir que ocultássemos quaisquer endereços. Na cópia pode rasurar tudo o que não precisarmos para a verificação. Guardamo-la cifrada e apagamo-la 6 meses após o encerramento do processo, juntamente com os seus restantes dados.',
+        'identity' => 'Só precisamos de um comprovativo quando importa quem faz o pedido. Para dados pessoais é uma cópia do seu documento de identificação e, num pedido em nome de outra pessoa, também uma procuração e uma cópia do documento de identificação dessa pessoa. Na cópia pode rasurar tudo o que não precisarmos para a verificação. Para direitos de autor declara que detém os direitos; se atuar em nome de outra pessoa, precisamos de uma procuração. Para conteúdos desatualizados ou ilegais não precisamos de comprovativo. Em casos concretos podemos pedi-lo. Guardamos os comprovativos cifrados e apagamo-los 6 meses após o encerramento do processo, juntamente com os seus restantes dados.',
         'contact' => 'Ir para o formulário',
     ],
 ];

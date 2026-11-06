@@ -65,12 +65,12 @@ return [
         'text' => 'Per i motori di ricerca di SUMA-EV può chiedere la rimozione direttamente a noi: Nolm e TootNews / TrötNews. Una richiesta si svolge così:',
         'steps' => [
             'Sceglie la ricerca interessata e conferma il Suo indirizzo email tramite un link che Le inviamo.',
-            'Carica la Sua prova e indica per ogni pagina l’indirizzo, i termini di ricerca e il motivo.',
-            'Controlliamo prima la prova e poi ogni pagina. Se ha diritto alla rimozione, ad esempio in base all’art. 17 del GDPR per le ricerche sul Suo nome, nascondiamo il risultato in quella ricerca. Rimane sul sito web e in tutti gli altri motori di ricerca.',
+            'Indica per ogni pagina l’indirizzo, i termini di ricerca e il motivo. Se ci serve una prova, il modulo gliela chiede.',
+            'Controlliamo prima l’eventuale prova e poi ogni pagina. Se ha diritto alla rimozione, ad esempio in base all’art. 17 del GDPR per le ricerche sul Suo nome, nascondiamo il risultato in quella ricerca. Rimane sul sito web e in tutti gli altri motori di ricerca.',
             'Rispondiamo entro un mese. Se una richiesta è particolarmente complessa, possono servire fino a due mesi in più; in tal caso glielo comunichiamo entro il primo mese. Se non nascondiamo un risultato, Le indichiamo i motivi.',
         ],
         'include' => 'Ci servono gli indirizzi esatti (URL) delle singole pagine. Non possiamo rimuovere interi siti web o «tutto ciò che riguarda il mio nome».',
-        'identity' => 'Come prova ci serve una copia del Suo documento d’identità e, per una richiesta per conto di un’altra persona, anche una procura e una copia del suo documento d’identità. Altrimenti chiunque potrebbe pretendere che nascondiamo indirizzi a piacere. Sulla copia può oscurare tutto ciò che non ci serve per il confronto. La conserviamo cifrata e la cancelliamo 6 mesi dopo la chiusura della pratica, insieme agli altri Suoi dati.',
+        'identity' => 'Ci serve una prova solo quando conta chi fa la richiesta. Per i dati personali è una copia del Suo documento d’identità e, per una richiesta per conto di un’altra persona, anche una procura e una copia del suo documento d’identità. Sulla copia può oscurare tutto ciò che non ci serve per il confronto. Per il diritto d’autore dichiara di detenere i diritti; se agisce per conto di un’altra persona, ci serve una procura. Per contenuti superati o illeciti non serve alcuna prova. In singoli casi possiamo chiederla. Conserviamo le prove in forma cifrata e le cancelliamo 6 mesi dopo la chiusura della pratica, insieme agli altri Suoi dati.',
         'contact' => 'Vai al modulo',
     ],
 ];

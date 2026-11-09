@@ -113,6 +113,23 @@ class AccessibilityTest extends DuskTestCase
     }
 
     /**
+     * Every <details> open, because axe skips what is not rendered. The muted
+     * labels on the provider cards were 4.46:1 on --card-background-color in
+     * the dark palette, which is why the cards use the result-card pair.
+     */
+    #[DataProvider("themes")]
+    public function testTheRemovalGuide(string $theme): void
+    {
+        $this->browse(function (Browser $browser) use ($theme) {
+            $browser->visit("/de-DE/entfernen?dark_mode={$theme}")
+                ->assertPresent("#removal")
+                ->script("document.querySelectorAll('#removal details').forEach((details) => { details.open = true; });");
+
+            $this->assertNoViolations($browser, "removal-{$theme}");
+        });
+    }
+
+    /**
      * The result page cannot be visited: CI points the browser at a deployed
      * review pod, and no engine behind it answers with anything a test could
      * rely on. So it is rendered here, in-process, from the engine fixtures

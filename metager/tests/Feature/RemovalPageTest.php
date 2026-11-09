@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Http\Controllers\RemovalController;
 use App\Models\Configuration\SearchEngineRegistry;
+use Illuminate\Support\Facades\Vite;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -219,8 +220,8 @@ class RemovalPageTest extends TestCase
             ->assertDontSeeText(trans("removal.website.heading", [], "de"));
     }
 
-    /** No script on the page: it has to work without JS. */
-    public function testThePageNeedsNoScriptOfItsOwn(): void
+    /** The guide is complete in the markup; its script only adds hints. */
+    public function testTheGuideWorksWithoutItsScript(): void
     {
         $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
         $start = strpos($content, '<div id="removal">');
@@ -228,6 +229,48 @@ class RemovalPageTest extends TestCase
         $this->assertNotFalse($start);
         $this->assertStringNotContainsString("<script", substr($content, $start));
         $this->assertStringContainsString("<details", $content);
+        $this->assertStringNotContainsString("removal-row-active", $content, "Marking a row is the script's job.");
+        $this->assertStringNotContainsString("aria-current", substr($content, $start), "Marking a step is the script's job.");
+    }
+
+    public function testTheGuideLoadsItsScriptAsAModule(): void
+    {
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertSee('<script type="module" src="' . Vite::asset("resources/js/removal.js") . '"></script>', false);
+    }
+
+    /** The script pairs a kind in step 2 with its row on the cards by this name. */
+    public function testEveryRequestKindNamesTheRowsItMarks(): void
+    {
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+
+        foreach (RemovalController::KINDS as $kind) {
+            $this->assertStringContainsString('class="removal-kind" id="kind-' . str_replace("_", "-", $kind) . '" data-removal-kind="' . $kind . '"', $content);
+            $this->assertStringContainsString('<div data-removal-kind="' . $kind . '">', $content);
+        }
+    }
+
+    /** One kind starts open, so the page shows that these open at all. */
+    public function testOnlyTheFirstRequestKindStartsOpen(): void
+    {
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+
+        $this->assertSame(1, preg_match_all('/<details[^>]*\bopen\b/', $content));
+        $this->assertMatchesRegularExpression('/id="kind-personal-data"[^>]*\bopen\b/', $content);
+    }
+
+    public function testTheContentsCoverEveryStep(): void
+    {
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+
+        preg_match('/<nav class="removal-toc".*?<\/nav>/s', $content, $toc);
+        $this->assertNotEmpty($toc);
+        preg_match_all('/href="#([^"]+)"/', $toc[0], $targets);
+        preg_match_all('/<li class="removal-step" id="([^"]+)"/', $content, $steps);
+
+        $this->assertCount(4, $steps[1]);
+        $this->assertSame($steps[1], $targets[1]);
     }
 
     /**

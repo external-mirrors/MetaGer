@@ -25,8 +25,22 @@ use LaravelLocalization;
 
 class SettingsController extends Controller
 {
-
-
+    /**
+     * The "back to the last page" URL every settings route takes as `url`.
+     *
+     * Every link MetaGer generates sends it as a string, but a hand-built
+     * `?url[]=…` arrives as an array, which crashed the settings page with
+     * "Array to string conversion" and the all-settings page and the reset
+     * redirects with TypeErrors (GlitchTip METAGER-18L). Anything that is not
+     * a non-empty string counts as absent. That also covers an empty `?url=`,
+     * which ConvertEmptyStringsToNull turns into a present-but-null input
+     * that `input()`'s default does not catch.
+     */
+    private function backUrl(Request $request, string $default = ''): string
+    {
+        $url = $request->input('url');
+        return is_string($url) && $url !== '' ? $url : $default;
+    }
 
     public function index(Request $request)
     {
@@ -41,10 +55,7 @@ class SettingsController extends Controller
         // made is gone again. carryIntoUrl() is a no-op for an empty $url and
         // for one that already carries everything current, so this is safe
         // to call unconditionally.
-        // ConvertEmptyStringsToNull turns an empty `?url=` into a present-but-
-        // null input, which `input('url', '')`'s default does not catch —
-        // the default only applies when the key is missing entirely.
-        $url = CookieSupport::carryIntoUrl((string) $request->input('url', ''), $request);
+        $url = CookieSupport::carryIntoUrl($this->backUrl($request), $request);
 
         // Check if any setting is active. Populated further as we build
         // per-fokus data below (loadParameterFilter()/engine settings touch
@@ -177,7 +188,7 @@ class SettingsController extends Controller
     public function disableSearchEngine(Request $request)
     {
         $sumaName = $request->input('suma', '');
-        $url = $request->input('url', '');
+        $url = $this->backUrl($request);
 
         if (empty($sumaName)) {
             abort(404);
@@ -213,7 +224,7 @@ class SettingsController extends Controller
     public function enableSearchEngine(Request $request)
     {
         $sumaName = $request->input('suma', '');
-        $url = $request->input('url', '');
+        $url = $this->backUrl($request);
 
         if (empty($sumaName)) {
             abort(404);
@@ -248,7 +259,7 @@ class SettingsController extends Controller
     public function enableFilter(Request $request)
     {
         $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $url = $this->backUrl($request);
         if (empty($fokus)) {
             abort(404);
         }
@@ -332,7 +343,7 @@ class SettingsController extends Controller
     public function enableSetting(Request $request)
     {
         $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $url = $this->backUrl($request);
 
         if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_provider", self::SETTING_INPUT($request, 'suggestion_provider'))) {
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#suggest-settings";
@@ -492,7 +503,7 @@ class SettingsController extends Controller
     public function deleteSettings(Request $request)
     {
         $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $url = $this->backUrl($request);
         if (empty($fokus)) {
             abort(404);
         }
@@ -734,7 +745,7 @@ class SettingsController extends Controller
 
         return view('settings.allSettings')
             ->with('title', trans('titles.allSettings'))
-            ->with('url', $request->input('url', ''))
+            ->with('url', $this->backUrl($request))
             ->with('settings', $settings)
             ->with('sumaFile', $sumaFile);
     }
@@ -745,7 +756,7 @@ class SettingsController extends Controller
         Cookie::queue(Cookie::forget($key, "/"));
         app(SettingsCarry::class)->forget($key);
 
-        $redirect_url = $request->input('url', 'https://metager.de');
+        $redirect_url = $this->backUrl($request, 'https://metager.de');
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);
@@ -796,7 +807,7 @@ class SettingsController extends Controller
             $carry->forget($key);
         }
 
-        $redirect_url = $request->input('url', 'https://metager.de');
+        $redirect_url = $this->backUrl($request, 'https://metager.de');
         if ($request->wantsJson()) {
             return response()->json($this->cookiesToJsonResponse($redirect_url));
         }
@@ -806,7 +817,7 @@ class SettingsController extends Controller
     public function newBlacklist(Request $request)
     {
         $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $url = $this->backUrl($request);
 
         $blacklist = $request->input('blacklist');
         $blacklist = substr($blacklist, 0, 2048);
@@ -887,7 +898,7 @@ class SettingsController extends Controller
     public function deleteBlacklist(Request $request)
     {
         $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $url = $this->backUrl($request);
         $cookieKey = $request->input('cookieKey');
 
         Cookie::queue(Cookie::forget($cookieKey, "/"));
@@ -906,7 +917,7 @@ class SettingsController extends Controller
     {
         //function to clear the whole black list
         $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $url = $this->backUrl($request);
         $settings = Cookie::get();
         if ($request->wantsJson()) {
             // The webextension keeps the settings in its own storage and sends

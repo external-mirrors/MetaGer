@@ -90,4 +90,42 @@ class PictureproxyTest extends TestCase
 
         $this->assertFalse(Cache::has(md5($url)));
     }
+
+    /**
+     * GlitchTip METAGER-1A3: an upstream answered an AVIF labelled
+     * image/jpeg. Imagick decoded it fine, and processJPEG() then asked it
+     * to write the image back out in the format it was read in, which this
+     * ImageMagick can decode but not encode: "Failed to get the image
+     * contents", a 500 instead of an image. The proxy says image/jpeg, so
+     * what it sends has to be a JPEG.
+     */
+    public function testAnAvifLabelledJpegIsConvertedToJpeg(): void
+    {
+        $response = $this->get($this->proxied('/avif-labelled-jpeg'));
+
+        $response->assertOk();
+        $this->assertSame('image/jpeg', $response->headers->get('Content-Type'));
+        $this->assertSame('image/jpeg', (new \finfo(FILEINFO_MIME_TYPE))->buffer($response->getContent()));
+    }
+
+    public function testAnAvifLabelledJpegIsStillThumbnailed(): void
+    {
+        $response = $this->get($this->proxied('/avif-labelled-jpeg') . '&thumbnail_width=100');
+
+        $response->assertOk();
+        $this->assertSame(100, getimagesizefromstring($response->getContent())[0]);
+    }
+
+    /**
+     * A JPEG Imagick cannot decode at all is the upstream's problem, not a
+     * 500 of ours: it is served as received, the way every non-JPEG image
+     * already is, and the browser makes of it what it can.
+     */
+    public function testAJpegImagickCannotReadIsServedUnprocessed(): void
+    {
+        $response = $this->get($this->proxied('/truncated-jpeg'));
+
+        $response->assertOk();
+        $this->assertSame(20, strlen($response->getContent()));
+    }
 }

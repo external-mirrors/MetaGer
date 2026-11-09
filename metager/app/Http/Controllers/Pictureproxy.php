@@ -122,18 +122,35 @@ class Pictureproxy extends Controller
         return $response;
     }
 
+    /**
+     * Thumbnails an upstream image labelled image/jpeg and re-encodes it as
+     * progressive JPEG.
+     *
+     * The label is the upstream's word, not a fact: GlitchTip METAGER-1A3 was
+     * an AVIF served as image/jpeg, which Imagick decodes but this build
+     * cannot encode, so writing it back out "as read" threw. The output format
+     * is therefore set explicitly — the response says image/jpeg, so it has to
+     * be one. And processing is only an optimisation: bytes Imagick cannot
+     * handle at all (a truncated download, say) are served as received, the
+     * way every non-JPEG image already is.
+     */
     private function processJPEG(string $jpeg, $thumbnail_width)
     {
-        $src_image = new \Imagick();
-        $src_image->readImageBlob($jpeg);
+        try {
+            $src_image = new \Imagick();
+            $src_image->readImageBlob($jpeg);
 
-        $src_width = $src_image->getImageWidth();
-        if ($thumbnail_width !== null && $src_width > $thumbnail_width) {
-            $src_image->thumbnailImage($thumbnail_width, 0);
+            $src_width = $src_image->getImageWidth();
+            if ($thumbnail_width !== null && $src_width > $thumbnail_width) {
+                $src_image->thumbnailImage($thumbnail_width, 0);
+            }
+
+            $src_image->setImageFormat("jpeg");
+            $src_image->setInterlaceScheme(\Imagick::INTERLACE_PLANE);
+            return $src_image->getImageBlob();
+        } catch (\ImagickException $e) {
+            return $jpeg;
         }
-
-        $src_image->setInterlaceScheme(\Imagick::INTERLACE_PLANE);
-        return $src_image->getImageBlob();
     }
 
     public static function generateUrl($link)

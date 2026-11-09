@@ -49,10 +49,6 @@ return [
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
-        ],
-        'logs' => [
-            'driver' => 'logs',
-            'provider' => 'logs',
         ]
     ],
 
@@ -81,10 +77,6 @@ return [
         'users' => [
             'driver' => 'keycloak-users',
             'model' => Vizir\KeycloakWebGuard\Models\KeycloakUser::class,
-        ],
-        'logs' => [
-            'driver' => 'logs',
-            'model' => App\Models\Authorization\LogsUser::class
         ]
 
         // 'users' => [

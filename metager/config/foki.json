@@ -3,10 +3,10 @@
     "display-name": "index.foki.web",
     "sumas": [
       "mojeek",
-      "yandex",
       "brave",
       "serper_web",
-      "staan"
+      "staan",
+      "polias"
     ],
     "main": [
       "brave"
@@ -27,8 +27,6 @@
   "nachrichten": {
     "display-name": "index.foki.nachrichten",
     "sumas": [
-      "onenewspage",
-      "onenewspagegermany",
       "brave_news",
       "serper_news",
       "tootnews"
@@ -40,7 +38,6 @@
   "produkte": {
     "display-name": "index.foki.produkte",
     "sumas": [
-      "ebay",
       "serper_shopping"
     ],
     "main": [
@@ -50,13 +47,9 @@
   "science": {
     "display-name": "Wissenschaft",
     "sumas": [
-      "minism_science",
-      "tuhh",
       "BASE"
     ],
     "main": [
-      "minism_science",
-      "tuhh",
       "BASE"
     ]
   }

@@ -30,17 +30,10 @@ return [
     'membership' => 'Jouw lidmaatschap bij SUMA-EV',
     'adblocker' => 'Adblockers - MetaGer',
     'help-glossary' => 'Woordenlijst - MetaGer',
-    'logs' => [
-        'admin' => "Logboeken beheerder - MetaGer",
-        'overview' => 'Logboeken - MetaGer',
-        'login' => "Logboeken beheerder - MetaGer",
-    ],
     'price' => 'Prijzen - MetaGer',
     'agb' => 'Algemene voorwaarden - MetaGer',
     'help-key' => 'De MetaGer-sleutel - MetaGer',
     'anonymous-token' => 'Anonieme tokens - MetaGer',
-    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
-    // die Logs-API, nicht der Schlüssel.
     'login' => 'Aanmelden - MetaGer',
     'key-create' => 'Sleutel aanmaken - MetaGer',
 

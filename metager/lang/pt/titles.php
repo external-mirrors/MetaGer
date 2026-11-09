@@ -1,10 +1,5 @@
 <?php
 return [
-    'logs' => [
-        'overview' => 'Registos - MetaGer',
-        'admin' => "Administrador de registos - MetaGer",
-        'login' => "Iniciar sessão - MetaGer",
-    ],
     'adblocker' => 'Bloqueadores de anúncios - MetaGer',
     'help-glossary' => 'Glossário - MetaGer',
     'impressum' => 'Aviso do site - MetaGer',
@@ -39,8 +34,6 @@ return [
     'agb' => 'Condições gerais - MetaGer',
     'help-key' => 'A chave MetaGer - MetaGer',
     'anonymous-token' => 'Tokens anónimos - MetaGer',
-    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
-    // die Logs-API, nicht der Schlüssel.
     'login' => 'Iniciar sessão - MetaGer',
     'key-create' => 'Criar uma chave - MetaGer',
 

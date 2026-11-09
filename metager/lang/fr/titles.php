@@ -30,17 +30,10 @@ return [
     'lang-selector' => 'Sélection de la langue',
     'adblocker' => 'Bloqueurs de publicité - MetaGer',
     'help-glossary' => 'Glossaire - MetaGer',
-    'logs' => [
-        'admin' => "Logs Admin - MetaGer",
-        'overview' => 'Journaux - MetaGer',
-        'login' => "Logs Admin - MetaGer",
-    ],
     'price' => 'Tarifs - MetaGer',
     'agb' => 'Conditions générales - MetaGer',
     'help-key' => 'La clé MetaGer - MetaGer',
     'anonymous-token' => 'Jetons anonymes - MetaGer',
-    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
-    // die Logs-API, nicht der Schlüssel.
     'login' => 'Se connecter - MetaGer',
     'key-create' => 'Créer une clé - MetaGer',
 

@@ -1,8 +1,6 @@
 <?php
 use App\Http\Controllers\AdminInterface;
-use App\Http\Controllers\LogsApiController;
 use App\Http\Middleware\AdminAuthenticate;
-use App\Mail\LogsLoginCode;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
 
@@ -22,8 +20,6 @@ Route::get('callback', [Vizir\KeycloakWebGuard\Controllers\AuthController::class
  * environment actually serving the request later.
  */
 Route::group(['middleware' => [StartSession::class, AdminAuthenticate::class], 'prefix' => 'admin'], function () {
-    Route::match(["get", "post"], "logs", [LogsApiController::class, "admin"])->name("logs:admin");
-    Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');
     Route::get('count/count-data', [AdminInterface::class, 'getCountData']);

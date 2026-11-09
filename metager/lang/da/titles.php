@@ -30,17 +30,10 @@ return [
     'membership' => 'Dit medlemskab af SUMA-EV',
     'adblocker' => 'Adblockere - MetaGer',
     'help-glossary' => 'Ordliste - MetaGer',
-    'logs' => [
-        'admin' => "Administrator af logfiler - MetaGer",
-        'overview' => 'Logfiler - MetaGer',
-        'login' => "Administrator af logfiler - MetaGer",
-    ],
     'price' => 'Priser - MetaGer',
     'agb' => 'Almindelige forretningsbetingelser - MetaGer',
     'help-key' => 'MetaGer-nøglen - MetaGer',
     'anonymous-token' => 'Anonyme tokens - MetaGer',
-    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
-    // die Logs-API, nicht der Schlüssel.
     'login' => 'Log ind - MetaGer',
     'key-create' => 'Opret nøgle - MetaGer',
 

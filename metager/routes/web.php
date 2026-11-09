@@ -304,9 +304,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      * zeigt und ein Fehlversuch ohne zweiten URL zurückfindet.
      *
      * `login` als Name ist der, auf den Laravels Authenticate-Middleware ohne
-     * weiteres Zutun zeigt. Das ist hier richtig und trotzdem eine Notiz wert:
-     * die Logs-API hat ihre eigene Anmeldung unter `logs:login`, und die beiden
-     * haben nichts miteinander zu tun.
+     * weiteres Zutun zeigt.
      */
     Route::get('anmelden', [LoginController::class, 'show'])->name('login');
     Route::post('anmelden', [LoginController::class, 'submit'])->name('login.submit');

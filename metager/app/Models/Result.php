@@ -717,8 +717,7 @@ class Result
      * Das ist kein Notnagel neben `date`, sondern für die Nachrichtensuche der
      * einzige Weg: BraveNews und SerperNews — die beiden Engines, die
      * `fokus=nachrichten` tatsächlich bedienen — setzen ausschließlich
-     * `date_string`. Einen Zeitstempel legen nur Minisucher, Onenewspage und
-     * Onenewspagegermany ab, also gerade die, die dort nicht laufen. `date`
+     * `date_string`. Einen Zeitstempel legen nur Staan und TootNews ab. `date`
      * war deshalb in jeder echten Nachrichten-Antwort null, und ein Client, der
      * nur `date` kennt, zeigt bei Nachrichten nie ein Datum an.
      *

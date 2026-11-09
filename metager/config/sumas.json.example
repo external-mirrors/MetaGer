@@ -8,5 +8,10 @@
         "request-header": {
             "Authorization": "Bearer your-secret-api-key"
         }
+    },
+    "polias": {
+        "request-header": {
+            "Authorization": "Bearer your-secret-api-key"
+        }
     }
 }

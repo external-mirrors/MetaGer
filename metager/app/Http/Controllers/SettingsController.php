@@ -632,7 +632,7 @@ class SettingsController extends Controller
                 }
                 // `disabled`/`disabledByDefault` are not on the registry's raw merged
                 // config - `disabled` there is only ever the hardcoded CONFIG_OVERLOAD
-                // value (e.g. Yandex, retired), and `disabledByDefault` (e.g. Mojeek) is
+                // value, and `disabledByDefault` (e.g. Mojeek) is
                 // set imperatively in the parser class's own constructor, the same way
                 // Searchengines::__construct() discovers it. Constructing the parser
                 // instance here - without running Searchengines' later request-context
@@ -670,13 +670,11 @@ class SettingsController extends Controller
                     // everything to on and leaving a client to guess.
                     "enabledByDefault" => !$engine->configuration->disabledByDefault,
                     // Whether this engine can serve the requested language at all.
-                    // Engines are indexed per language, not globally: `onenewspage`
-                    // only covers English, `onenewspagegermany` only German. A search
+                    // Engines are indexed per language, not globally: Staan covers
+                    // German, French and English, Polias only German. A search
                     // already drops the ones that cannot serve the current locale
                     // (`SearchengineConfiguration::applyLocale()`), so without this a
-                    // client would show a toggle with nothing behind it — and for
-                    // `onenewspage` on a German device, one that implied German news
-                    // came out of an English-only index.
+                    // client would show a toggle with nothing behind it.
                     //
                     // Additive like the fokus-level `available` above, and for the
                     // same reason (SettingsSchemaAvailableFokiTest): a client that

@@ -30,17 +30,10 @@ return [
     'membership' => 'Jäsenyytesi SUMA-EV:ssä',
     'adblocker' => 'Mainostenestimet - MetaGer',
     'help-glossary' => 'Sanasto - MetaGer',
-    'logs' => [
-        'admin' => "Lokit Admin - MetaGer",
-        'overview' => 'Lokit - MetaGer',
-        'login' => "Lokit Admin - MetaGer",
-    ],
     'price' => 'Hinnat - MetaGer',
     'agb' => 'Yleiset sopimusehdot - MetaGer',
     'help-key' => 'MetaGer-avain - MetaGer',
     'anonymous-token' => 'Anonyymit tokenit - MetaGer',
-    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
-    // die Logs-API, nicht der Schlüssel.
     'login' => 'Kirjaudu sisään - MetaGer',
     'key-create' => 'Luo avain - MetaGer',
 

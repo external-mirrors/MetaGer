@@ -116,7 +116,7 @@ class Searchengines
                     continue;
                 }
                 // We need to check if the searchengine supports the parameter value, too
-                if ($filter->value !== null && (empty($filter->sumas->{$suma->name}) || empty($filter->sumas->{$suma->name}->values->{$filter->value}))) {
+                if ($filter->value !== null && (empty($filter->sumas->{$suma->name}) || !isset($filter->sumas->{$suma->name}->values->{$filter->value}))) {
                     $suma->configuration->disabled = true;
                     $suma->configuration->disabledReasons[] = DisabledReason::INCOMPATIBLE_FILTER;
                     $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_FILTER;

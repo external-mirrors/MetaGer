@@ -99,7 +99,9 @@ abstract class Searchengine
         foreach (app(SearchSettings::class)->parameterFilter as $filterName => $filter) {
             $inputParameter = $filter->value;
 
-            if (empty($inputParameter) || empty($filter->sumas->{$this->name}->values->{$inputParameter})) {
+            // isset, not empty: an engine value can be "0" (safesearch off
+            // is `safe=0`), and empty("0") is true.
+            if ($inputParameter === null || $inputParameter === "" || !isset($filter->sumas->{$this->name}->values->{$inputParameter})) {
                 continue;
             }
             $engineParameterKey = $filter->sumas->{$this->name}->{"get-parameter"};

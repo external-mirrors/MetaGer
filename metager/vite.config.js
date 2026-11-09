@@ -76,7 +76,6 @@ const assets = laravel({
         "resources/less/metager/pages/voucher.less",
         "resources/less/metager/pages/account.less",
         "resources/less/metager/pages/checkout.less",
-        "resources/less/metager/pages/logs.less",
         "resources/less/metager/pages/help-easy-language.less",
         "resources/less/metager/pages/prevention-information.less",
         "resources/less/metager/pages/count/style.less",
@@ -85,7 +84,6 @@ const assets = laravel({
         "resources/less/metager/pages/spende/base-dark.less",
         "resources/less/metager/pages/widget/widget.less",
         "resources/less/metager/pages/widget/widget-template.less",
-        "resources/less/metager/pages/admin/logs.less",
 
         // -- scripts ------------------------------------------------
         "resources/js/utility.js",

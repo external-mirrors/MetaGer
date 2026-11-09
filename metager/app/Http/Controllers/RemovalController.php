@@ -36,6 +36,7 @@ class RemovalController extends Controller
             "metaDescription" => __("removal.meta_description"),
             "navbarFocus" => "kontakt",
             "css" => [Vite::asset("resources/less/metager/pages/removal.less")],
+            "js" => [Vite::asset("resources/js/removal.js")],
             "kinds" => self::KINDS,
             "website" => $providers["website"],
             "providers" => array_filter(

@@ -2,11 +2,14 @@
 
 // /entfernen — where a search result can actually be removed.
 //
-// Same column and numbered steps as the key FAQ (pages/help.less, #key-faq),
-// so the help pages read as one family. Only the theme tokens from
-// variables.less carry colour, so light and dark follow the site's palette
-// switch without a second stylesheet. No script: the request kinds are
+// Same numbered steps as the key FAQ (pages/help.less, #key-faq), so the help
+// pages read as one family. Only the theme tokens from variables.less carry
+// colour, so light and dark follow the site's palette switch without a second
+// stylesheet. resources/js/removal.js only adds hints: the request kinds are
 // <details>, the table of contents is anchors.
+//
+// Media queries measure rem against the browser's 16px, not the 3.8mm on
+// <html>, so 36rem is 576px and 70rem is 1120px.
 
 #removal {
     max-width: 46rem;
@@ -15,22 +18,82 @@
     // text off the screen edges (tests/Browser/NarrowScreenLayoutTest).
     padding: 0 1rem;
 
+    // Beside the steps there is room for the contents and the column of text
+    // stays the width it has everywhere else.
+    @media (min-width: 70rem) {
+        max-width: 70rem;
+    }
+
+    // Left, not the centre .page-title has elsewhere: everything under it
+    // starts at this edge.
+    .page-title {
+        font-size: 2.2rem;
+        line-height: 1.2;
+        text-align: left;
+        border: 0;
+
+        @media (max-width: 36rem) {
+            font-size: 1.8rem;
+        }
+    }
+
     .removal-lead {
         font-size: 1.1rem;
+        max-width: 53rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .removal-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+        // The button ending the page would otherwise sit on the footer.
+        padding-bottom: 3rem;
+
+        @media (min-width: 70rem) {
+            grid-template-columns: 15rem minmax(0, 1fr);
+            column-gap: 3rem;
+            align-items: start;
+        }
     }
 
     .removal-toc {
-        border-left: 3px solid @metager-orange;
-        padding: 0.25rem 0 0.25rem 1rem;
-        margin: 1.5rem 0;
+        background-color: @highlight-color;
+        border-radius: 6px;
+        padding: 0.85rem 1rem;
 
         .removal-toc-label {
             font-weight: bold;
         }
 
         ol {
-            margin: 0.25rem 0 0;
+            margin: 0.4rem 0 0;
             padding-left: 1.25rem;
+            display: grid;
+            gap: 0.4rem;
+        }
+
+        // A phone's finger needs the whole line, and 44px of it.
+        @media (max-width: 36rem) {
+            ol {
+                gap: 0;
+            }
+
+            a {
+                display: block;
+                padding: 11px 0;
+            }
+        }
+
+        @media (min-width: 70rem) {
+            background-color: transparent;
+            padding: 0;
+            position: sticky;
+            top: 1rem;
+
+            a[aria-current] {
+                font-weight: bold;
+            }
         }
     }
 
@@ -42,18 +105,23 @@
     }
 
     .removal-steps {
+        @number-size: 2.25rem;
+        @step-gap: 2.5rem;
+
         list-style: none;
         padding: 0;
         margin: 0;
+        min-width: 0;
         display: grid;
-        gap: 2rem;
+        gap: @step-gap;
         counter-reset: removal-step;
 
         > .removal-step {
             counter-increment: removal-step;
+            position: relative;
             display: grid;
-            grid-template-columns: 2.5rem minmax(0, 1fr);
-            column-gap: 0.75rem;
+            grid-template-columns: @number-size minmax(0, 1fr);
+            column-gap: 1.1rem;
 
             &::before {
                 content: counter(removal-step);
@@ -62,9 +130,8 @@
                 align-self: start;
                 display: grid;
                 place-items: center;
-                width: 2rem;
+                width: @number-size;
                 aspect-ratio: 1 / 1;
-                margin-top: 0.15rem;
                 background-color: @accent-fill-color;
                 // Orange ground in both palettes, so the digit on it is dark
                 // in both, as in #key-faq.
@@ -74,6 +141,18 @@
                 border-radius: 50%;
             }
 
+            // The line from one number to the next, across the gap between
+            // the steps.
+            &:not(:last-child)::after {
+                content: "";
+                position: absolute;
+                top: @number-size + 0.5rem;
+                bottom: 0.5rem - @step-gap;
+                left: (@number-size / 2);
+                width: 1px;
+                background-color: @result-card-border-color;
+            }
+
             > * {
                 grid-column: 2;
             }
@@ -81,7 +160,12 @@
             > h2 {
                 grid-row: 1;
                 font-size: 1.4rem;
-                margin: 0 0 0.5rem;
+                line-height: 1.25;
+                margin: 0.2rem 0 0.6rem;
+            }
+
+            > :last-child {
+                margin-bottom: 0;
             }
 
             // On a phone a column beside the number costs every line of the
@@ -94,6 +178,10 @@
                 &::before {
                     width: 1.75rem;
                     margin-top: 0.1rem;
+                }
+
+                &:not(:last-child)::after {
+                    display: none;
                 }
 
                 > * {
@@ -126,34 +214,48 @@
         gap: 0.5rem;
 
         > details {
-            border: 1px solid @border-color;
+            background-color: @result-card-color;
+            border: 1px solid @result-card-border-color;
             border-radius: 6px;
-            padding: 0 0.75rem;
+            padding: 0 1rem;
 
             > summary {
+                display: flex;
+                align-items: center;
+                min-height: 44px;
+                box-sizing: border-box;
+                margin: 0 -1rem;
+                padding: 0.6rem 1rem;
                 cursor: pointer;
                 font-weight: bold;
-                padding: 0.6rem 0;
 
                 // The site's base styles hide the native marker on every
                 // <summary>; without one this does not read as something that
                 // opens.
                 &::before {
                     content: "▸";
-                    display: inline-block;
+                    flex: none;
                     width: 1.1em;
-                    color: @metager-orange;
+                    margin-right: 0.3em;
+                    // Centred, so a quarter turn stays on the spot.
+                    text-align: center;
+                    line-height: 1;
+                    color: @accent-fill-color;
                     transition: transform 0.15s;
                 }
             }
 
             &[open] > summary {
-                border-bottom: 1px solid @metager-orange;
-                margin-bottom: 0.5rem;
+                border-bottom: 1px solid @accent-fill-color;
+                margin-bottom: 0.75rem;
 
                 &::before {
                     transform: rotate(90deg);
                 }
+            }
+
+            > :last-child {
+                margin-bottom: 0.85rem;
             }
 
             &:target {
@@ -171,10 +273,18 @@
     }
 
     .removal-provider {
-        background-color: @card-background-color;
-        border: 1px solid @border-color;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        background-color: @result-card-color;
+        border: 1px solid @result-card-border-color;
         border-radius: 6px;
         padding: 1rem;
+
+        // An odd card out takes the whole row instead of leaving a hole.
+        &:last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+        }
 
         // Arriving from a reply's link: mark the provider that was meant.
         &:target {
@@ -187,17 +297,51 @@
             margin: 0 0 0.25rem;
         }
 
+        > p {
+            margin: 0;
+        }
+
         > .removal-provider-foki {
             color: @muted-text-color;
             font-size: 0.9rem;
-            margin-top: 0;
+            margin-bottom: 0.75rem;
+        }
+
+        // Pushed down so the links of cards in one row start level.
+        > .removal-provider-links {
+            margin-top: auto;
+            padding-top: 0.75rem;
+        }
+
+        // A line of its own, like the links in the rows, not a link in running
+        // text that has to stand out from it.
+        > p.removal-provider-links a {
+            text-decoration: none;
         }
     }
 
     dl.removal-provider-links {
-        margin: 0.75rem 0 0;
+        margin-bottom: 0;
+        // The rows carry their own padding for the marked state; this keeps
+        // their text on the card's left edge.
+        margin-inline: -0.55rem;
         display: grid;
-        gap: 0.5rem;
+        gap: 2px;
+
+        > div {
+            padding: 0.4rem 0.55rem;
+            border-radius: 4px;
+
+            // Set by resources/js/removal/enhance.js.
+            &.removal-row-active {
+                background-color: @highlight-color;
+
+                dt {
+                    color: @text-color;
+                    font-weight: bold;
+                }
+            }
+        }
 
         dt {
             font-size: 0.85rem;
@@ -218,9 +362,27 @@
         }
     }
 
+    // What the form will ask for, right before the button that leads to it.
+    .removal-us-note {
+        background-color: @highlight-color;
+        border-radius: 6px;
+        padding: 1rem;
+        margin: 1rem 0;
+
+        > p {
+            margin: 0;
+        }
+
+        > p + p {
+            margin-top: 0.75rem;
+        }
+    }
+
     a.removal-contact {
         display: inline-block;
-        padding: 0.5rem 1rem;
+        box-sizing: border-box;
+        min-height: 44px;
+        padding: 11px 20px;
         border-radius: 6px;
         background-color: @accent-fill-color;
         color: @on-accent-color;
@@ -230,6 +392,11 @@
         &:hover,
         &:focus-visible {
             text-decoration: underline;
+        }
+
+        @media (max-width: 36rem) {
+            display: block;
+            text-align: center;
         }
     }
 }

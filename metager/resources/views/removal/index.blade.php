@@ -10,13 +10,15 @@
 	The anchors are public: suma-crm's form and replies link to
 	/entfernen#<anchor>, so an id here is not just markup.
 
-	No script on this page: the request kinds are <details>, the table of
-	contents is plain anchors.
+	The page is complete without a script: the request kinds are <details>, the
+	table of contents is plain anchors. resources/js/removal.js only adds hints,
+	and pairs a kind with its row on the cards through data-removal-kind.
 --}}
 <div id="removal">
 	<h1 class="page-title">@lang('removal.heading')</h1>
 	<p class="removal-lead">@lang('removal.lead')</p>
 
+	<div class="removal-layout">
 	<nav class="removal-toc" aria-labelledby="removal-toc-label">
 		<span id="removal-toc-label" class="removal-toc-label">@lang('removal.toc.label')</span>
 		<ol>
@@ -44,7 +46,7 @@
 			<p>@lang('removal.kind.intro')</p>
 			<div class="removal-kinds">
 				@foreach(['personal_data', 'outdated', 'legal'] as $kind)
-					<details class="removal-kind" id="kind-{{ str_replace('_', '-', $kind) }}">
+					<details class="removal-kind" id="kind-{{ str_replace('_', '-', $kind) }}" data-removal-kind="{{ $kind }}" @if($loop->first) open @endif>
 						<summary>@lang("removal.kind.$kind.summary")</summary>
 						<p>@lang("removal.kind.$kind.text")</p>
 					</details>
@@ -82,7 +84,7 @@
 						@else
 							<dl class="removal-provider-links">
 								@foreach($kinds as $kind)
-									<div>
+									<div data-removal-kind="{{ $kind }}">
 										<dt>@lang("removal.providers.kinds.$kind")</dt>
 										<dd>
 											@if(!empty($provider['links'][$kind]))
@@ -110,10 +112,13 @@
 					<li>{{ $step }}</li>
 				@endforeach
 			</ol>
-			<p>@lang('removal.us.include')</p>
-			<p>@lang('removal.us.identity')</p>
+			<div class="removal-us-note">
+				<p>@lang('removal.us.include')</p>
+				<p>@lang('removal.us.identity')</p>
+			</div>
 			<p><a class="removal-contact" href="{{ $form }}">@lang('removal.us.contact')</a></p>
 		</li>
 	</ol>
+	</div>
 </div>
 @endsection

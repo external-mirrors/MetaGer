@@ -8,6 +8,7 @@ use Auth;
 use DeviceDetector\Cache\LaravelCache;
 use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
+use DeviceDetector\Yaml\Pecl;
 use App\Models\Tile;
 use App\SearchSettings;
 use Request;
@@ -47,6 +48,11 @@ class TilesController extends Controller
         ) {
             $dd = new DeviceDetector(Request::header("user-agent"), ClientHints::factory($_SERVER));
             $dd->setCache(new LaravelCache());
+            // As in App\Support\Browser: the bundled YAML parser costs about a
+            // second of CPU here whenever the regex lists are not cached.
+            if (extension_loaded("yaml")) {
+                $dd->setYamlParser(new Pecl());
+            }
             $dd->parse();
             $plugin_url = route("plugin");
             $browser = $dd->getClient("name");

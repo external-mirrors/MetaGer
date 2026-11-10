@@ -20,9 +20,15 @@ There is **no local PHP or Composer toolchain**. Everything runs through the com
 
 ```bash
 docker compose build fpm                     # build the image first
-docker compose run --rm -T --entrypoint /usr/local/bin/php fpm artisan test
+docker compose run --rm -T -e XDEBUG_MODE=off --entrypoint /usr/local/bin/php fpm artisan test --parallel --processes=8 --exclude-group=serial
+docker compose run --rm -T -e XDEBUG_MODE=off --entrypoint /usr/local/bin/php fpm artisan test --without-tty --group=serial
 docker compose run --rm --entrypoint /usr/bin/composer composer install
 ```
+
+`XDEBUG_MODE=off` matters locally: the development image loads Xdebug, which cost the suite
+about 30 % of its runtime. The `serial` group is what cannot share a machine with other workers:
+files written into `config/`, and real child processes that do not know their worker's Redis
+database (`tests/Support/BootCache`).
 
 No `--no-deps` on that middle line: `fpm` depends on `valkey` (`condition: service_healthy`), and
 nothing user-facing works without it — the authorization path and the search path's

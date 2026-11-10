@@ -168,7 +168,13 @@ test:
     # a constant, so the cache is safe — and running the suite against a warm one is the check that
     # it stays that way, since production serves every request from it
     # (build/fpm/entrypoint/entrypoint_production.sh).
-    - php artisan test --without-tty
+    #
+    # Eight workers: each gets its own Redis database (tests/Support/BootCache),
+    # and the server has sixteen. The `serial` group shares something a worker
+    # cannot have its own copy of: files in config/, or a real child process.
+    # --without-tty is rejected together with --parallel.
+    - php artisan test --parallel --processes=8 --exclude-group=serial
+    - php artisan test --without-tty --group=serial
 
 # Dusk browser suite (phpunit.dusk.xml). Split out from `test` because it is the only
 # part of the suite that needs a real browser; keeping it separate means a Selenium

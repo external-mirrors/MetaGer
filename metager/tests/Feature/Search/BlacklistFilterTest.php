@@ -3,6 +3,7 @@
 namespace Tests\Feature\Search;
 
 use Tests\Concerns\FakesSearchEngines;
+use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
 
 /**
@@ -31,6 +32,7 @@ use Tests\TestCase;
  * not the same as endorsing them; it is so that a later fix is a decision
  * someone makes on purpose, with a failing test naming what changed.
  */
+#[Group('serial')]
 class BlacklistFilterTest extends TestCase
 {
     use FakesSearchEngines;

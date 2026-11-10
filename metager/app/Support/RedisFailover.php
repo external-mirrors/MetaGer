@@ -8,6 +8,7 @@ use Predis\CommunicationException;
 use Predis\Connection\Resource\Exception\StreamInitException;
 use Predis\PredisException;
 use Predis\Response\ServerException;
+use Illuminate\Support\Sleep;
 use Throwable;
 
 /**
@@ -116,7 +117,7 @@ class RedisFailover
                     throw $e;
                 }
 
-                usleep($backoff);
+                Sleep::usleep($backoff);
                 $backoff *= 2;
             }
         }

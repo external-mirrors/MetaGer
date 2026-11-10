@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
 
 /**
@@ -40,6 +41,7 @@ use Tests\TestCase;
  * hourly job is running. This test sidesteps it by waiting for schedule:run to
  * go quiet before signalling, rather than fixing that deeper race.
  */
+#[Group('serial')]
 class ScheduleWorkerSignalTest extends TestCase
 {
     #[DataProvider('signals')]

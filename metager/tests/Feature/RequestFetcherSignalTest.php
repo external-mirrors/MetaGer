@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Console\Commands\RequestFetcher;
 use Illuminate\Support\Facades\Redis;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
 
 /**
@@ -37,6 +38,7 @@ use Tests\TestCase;
  * test is genuine OS signal delivery and the Redis-backed gate, neither of
  * which an in-process PHPUnit call can exercise.
  */
+#[Group('serial')]
 class RequestFetcherSignalTest extends TestCase
 {
     #[DataProvider('signals')]

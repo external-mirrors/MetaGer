@@ -190,6 +190,15 @@ class Searchengines
         return $sumas;
     }
 
+    /**
+     * Whether an engine came out of the cache without its parser class, which
+     * reading any property of it would turn into an error.
+     */
+    public function hasEngineMissingItsClass(): bool
+    {
+        return array_any($this->sumas, fn($suma) => $suma instanceof \__PHP_Incomplete_Class);
+    }
+
     public function getEnabledSearchengines()
     {
         $sumas = [];

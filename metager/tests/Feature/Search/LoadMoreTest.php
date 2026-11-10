@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Search;
 
+use Illuminate\Support\Facades\Cache;
 use Tests\Concerns\FakesSearchEngines;
 use Tests\TestCase;
 
@@ -199,6 +200,41 @@ class LoadMoreTest extends TestCase
         $this->actingAsSearchUser();
 
         $response = $this->get("/meta/loadMore?eingabe=kaffee&focus=web&loadMore=loader_does-not-exist&script=yes");
+
+        $response->assertOk();
+        $this->assertTrue($response->json("finished"));
+    }
+
+    /**
+     * The search state holds every engine as a serialized parser object. An
+     * engine whose parser file the running image does not have comes back from
+     * the cache as a __PHP_Incomplete_Class, and reading a property of that is
+     * an error: a pod whose image removed the engine polling a search started
+     * on a pod that still had it (Ebay, the deploy of 2026-11-09), or the other
+     * way round for a newly added engine (Staan, 2026-11-03). GlitchTip
+     * METAGER-1A2. Such a state is as gone as an expired one.
+     */
+    public function testAStateNamingAnEngineThisImageDoesNotHaveIsAnsweredAsFinished(): void
+    {
+        $this->actingAsSearchUser();
+        $fetcher = $this->fakeEngineResponses([
+            "brave" => $this->engineFixture("brave-web.json"),
+            "serper_web" => fn() => null,
+        ]);
+
+        $query = "eingabe=kaffee&focus=web";
+        $page = $this->get("/meta/meta.ger3?" . $query);
+        $page->assertOk();
+
+        $key = "loader_" . $this->searchKeyOf($page->getContent(), "");
+        $state = Cache::get($key);
+        $this->assertNotNull($state, "The search left no state behind, so this test would prove nothing.");
+
+        $removed = 'app\Models\parserSkripte\RemovedEngine';
+        $state["metager"]["searchengines"]->sumas["removed"] = unserialize(sprintf('O:%d:"%s":0:{}', strlen($removed), $removed));
+        Cache::put($key, $state, 60);
+
+        $response = $this->get("/meta/loadMore?" . $query . "&loadMore=" . $key . "&script=yes");
 
         $response->assertOk();
         $this->assertTrue($response->json("finished"));

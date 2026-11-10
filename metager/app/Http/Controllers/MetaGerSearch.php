@@ -272,6 +272,13 @@ class MetaGerSearch extends Controller
         }
 
         $cached = Cache::get($hash);
+        // A deploy that adds or removes a parser leaves searches behind whose
+        // state names a class this image does not have. It unserializes without
+        // complaint and fails on first use, so it is treated here as what it
+        // is: state this pod cannot continue from, the same as an expired one.
+        if ($cached !== null && $cached["metager"]["searchengines"]->hasEngineMissingItsClass()) {
+            $cached = null;
+        }
         if ($cached === null) {
             if ($request->header("If-Modified-Since") !== null) {
                 return response("", 304, [

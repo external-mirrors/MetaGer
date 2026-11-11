@@ -32,20 +32,6 @@ Germania",
             'fingerprint' => 'Impronta digitale PGP: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'reason' => [
-        'legend' => 'Di cosa si tratta?',
-        'general' => 'Una domanda o richiesta',
-        'removal' => 'Rimuovere un risultato di ricerca',
-    ],
-    'removal' => [
-        'heading' => 'Far rimuovere un risultato di ricerca',
-        'how' => 'Un risultato di ricerca si rimuove là da dove proviene: sul sito web e presso il motore di ricerca che lo ha trovato. La nostra guida Le mostra, per ogni fonte che MetaGer mostra, a chi rivolgersi.',
-        'button' => 'Dove chiedere la rimozione',
-        'why' => [
-            'heading' => 'Perché i motori di ricerca rimuovono risultati',
-            'text' => 'I motori di ricerca rimuovono un risultato quando esiste un motivo giuridico. Se un risultato per il nome di una persona porta a informazioni errate, superate o non più pertinenti, quella persona può esigere che non venga più mostrato (diritto all’oblio, art. 17 del GDPR). Conta anche l’interesse del pubblico all’informazione. Anche le violazioni del diritto d’autore e i contenuti illeciti possono essere un motivo. Per questo su MetaGer può mancare un risultato che trova altrove.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Telefono',
         'hours' => 'Dal lunedì al venerdì, dalle :from alle :to (ora tedesca)',
@@ -53,6 +39,10 @@ Germania",
     ],
     'topics' => [
         'heading' => 'Domande frequenti',
+        'removal' => [
+            'title' => 'Rimuovere un risultato di ricerca',
+            'text' => 'A chi rivolgersi, per ogni fonte che MetaGer mostra',
+        ],
         'key' => [
             'title' => 'Chiave MetaGer e token',
             'text' => 'Come funziona la chiave, ricarica e saldo',

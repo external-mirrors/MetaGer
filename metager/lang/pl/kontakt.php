@@ -32,20 +32,6 @@ Niemcy",
             'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'reason' => [
-        'legend' => 'Czego dotyczy sprawa?',
-        'general' => 'Pytanie lub prośba',
-        'removal' => 'Usunięcie wyniku wyszukiwania',
-    ],
-    'removal' => [
-        'heading' => 'Usuwanie wyniku wyszukiwania',
-        'how' => 'Wynik wyszukiwania usuwa się tam, skąd pochodzi: na stronie internetowej i w wyszukiwarce, która go znalazła. Nasz poradnik pokazuje dla każdego źródła, które wyświetla MetaGer, gdzie o to poprosić.',
-        'button' => 'Gdzie złożyć wniosek o usunięcie',
-        'why' => [
-            'heading' => 'Dlaczego wyszukiwarki usuwają wyniki',
-            'text' => 'Wyszukiwarki usuwają wynik, gdy istnieje ku temu podstawa prawna. Jeśli wynik dla nazwiska danej osoby prowadzi do informacji nieprawdziwych, nieaktualnych lub już nieistotnych, osoba ta może żądać, by przestał być wyświetlany (prawo do bycia zapomnianym, art. 17 RODO). Liczy się także interes publiczny w dostępie do informacji. Powodem mogą być również naruszenia praw autorskich i treści przestępcze. Dlatego w MetaGer może brakować wyniku, który znajdziesz gdzie indziej.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Telefon',
         'hours' => 'Od poniedziałku do piątku, :from–:to (czasu niemieckiego)',
@@ -53,6 +39,10 @@ Niemcy",
     ],
     'topics' => [
         'heading' => 'Częste pytania',
+        'removal' => [
+            'title' => 'Usuwanie wyniku wyszukiwania',
+            'text' => 'Gdzie o to poprosić, dla każdego źródła w MetaGer',
+        ],
         'key' => [
             'title' => 'Klucz MetaGer i tokeny',
             'text' => 'Jak działa klucz, doładowanie i saldo',

@@ -32,20 +32,6 @@ Duitsland",
             'fingerprint' => 'PGP Vingerafdruk: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'reason' => [
-        'legend' => 'Waar gaat het over?',
-        'general' => 'Een vraag of verzoek',
-        'removal' => 'Zoekresultaat verwijderen',
-    ],
-    'removal' => [
-        'heading' => 'Een zoekresultaat laten verwijderen',
-        'how' => 'Een zoekresultaat wordt verwijderd waar het vandaan komt: op de website en bij de zoekmachine die het heeft gevonden. Onze handleiding laat u voor elke bron die MetaGer toont zien waar u het vraagt.',
-        'button' => 'Waar u verwijdering aanvraagt',
-        'why' => [
-            'heading' => 'Waarom zoekmachines resultaten verwijderen',
-            'text' => 'Zoekmachines halen een resultaat weg als daar een juridische reden voor is. Leidt een resultaat voor iemands naam naar informatie die onjuist, verouderd of niet meer relevant is, dan kan die persoon eisen dat het niet meer wordt getoond (recht op vergetelheid, art. 17 AVG). Ook het belang van het publiek bij de informatie telt mee. Ook auteursrechtschending en strafbare inhoud kunnen een reden zijn. Daarom kan op MetaGer een resultaat ontbreken dat u elders wel vindt.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Telefoon',
         'hours' => 'Maandag tot en met vrijdag, :from–:to uur (Duitse tijd)',
@@ -53,6 +39,10 @@ Duitsland",
     ],
     'topics' => [
         'heading' => 'Veelgestelde vragen',
+        'removal' => [
+            'title' => 'Een zoekresultaat laten verwijderen',
+            'text' => 'Waar u het vraagt, voor elke bron die MetaGer toont',
+        ],
         'key' => [
             'title' => 'MetaGer-sleutel en tokens',
             'text' => 'Hoe de sleutel werkt, opwaarderen en tegoed',

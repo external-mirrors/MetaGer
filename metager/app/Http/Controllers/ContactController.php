@@ -46,6 +46,8 @@ class ContactController extends Controller
             "css" => [Vite::asset("resources/less/metager/pages/contact.less")],
             // kontakt.topics.<key> => where that question is answered.
             "topics" => [
+                // We remove no results ourselves; the guide says where.
+                "removal" => route("removal"),
                 "key" => route("key-faq"),
                 "orders" => route("account.orders"),
                 "donation" => route("spende"),

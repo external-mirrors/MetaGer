@@ -32,20 +32,6 @@ Germany",
             'fingerprint' => 'PGP-Fingerabdruck: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'reason' => [
-        'legend' => 'Worum geht es?',
-        'general' => 'Frage oder Anliegen',
-        'removal' => 'Suchergebnis entfernen',
-    ],
-    'removal' => [
-        'heading' => 'Suchergebnis entfernen lassen',
-        'how' => 'Ein Suchergebnis wird dort entfernt, wo es herkommt: auf der Webseite und bei der Suchmaschine, die es gefunden hat. Unsere Anleitung zeigt Ihnen für jede Quelle, die MetaGer zeigt, wo Sie fragen.',
-        'button' => 'Wo Sie die Entfernung beantragen',
-        'why' => [
-            'heading' => 'Warum Suchmaschinen Ergebnisse entfernen',
-            'text' => 'Suchmaschinen entfernen Ergebnisse, wenn es dafür einen rechtlichen Grund gibt. Führt ein Ergebnis zum Namen einer Person zu Angaben, die falsch, veraltet oder nicht mehr relevant sind, kann diese Person verlangen, dass es nicht mehr angezeigt wird (Recht auf Vergessenwerden, Art. 17 DSGVO). Dabei zählt auch das Interesse der Öffentlichkeit an der Information. Auch Urheberrechtsverletzungen und strafbare Inhalte können ein Grund sein. Deshalb kann bei MetaGer ein Ergebnis fehlen, das Sie anderswo finden.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Telefon',
         'hours' => 'Montag bis Freitag, :from–:to Uhr (deutsche Zeit)',
@@ -53,6 +39,10 @@ Germany",
     ],
     'topics' => [
         'heading' => 'Häufige Anliegen',
+        'removal' => [
+            'title' => 'Suchergebnis entfernen lassen',
+            'text' => 'Wo Sie fragen, für jede Quelle, die MetaGer zeigt',
+        ],
         'key' => [
             'title' => 'MetaGer-Schlüssel und Token',
             'text' => 'Wie der Schlüssel funktioniert, Aufladen und Guthaben',

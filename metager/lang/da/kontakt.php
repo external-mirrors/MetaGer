@@ -32,20 +32,6 @@ Tyskland",
             'fingerprint' => 'PGP-fingeraftryk: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'reason' => [
-        'legend' => 'Hvad drejer det sig om?',
-        'general' => 'Et spørgsmål eller en henvendelse',
-        'removal' => 'Fjern et søgeresultat',
-    ],
-    'removal' => [
-        'heading' => 'Få et søgeresultat fjernet',
-        'how' => 'Et søgeresultat fjernes der, hvor det kommer fra: på hjemmesiden og hos den søgemaskine, der har fundet det. Vores vejledning viser dig for hver kilde, MetaGer viser, hvor du skal spørge.',
-        'button' => 'Hvor du anmoder om fjernelse',
-        'why' => [
-            'heading' => 'Hvorfor søgemaskiner fjerner resultater',
-            'text' => 'Søgemaskiner fjerner et resultat, når der er en juridisk grund til det. Fører et resultat for en persons navn til oplysninger, der er forkerte, forældede eller ikke længere relevante, kan personen kræve, at det ikke længere vises (retten til at blive glemt, GDPR art. 17). Offentlighedens interesse i oplysningerne tæller også med. Krænkelse af ophavsret og strafbart indhold kan også være en grund. Derfor kan der mangle et resultat på MetaGer, som du finder andre steder.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Telefon',
         'hours' => 'Mandag til fredag kl. :from–:to (tysk tid)',
@@ -53,6 +39,10 @@ Tyskland",
     ],
     'topics' => [
         'heading' => 'Almindelige spørgsmål',
+        'removal' => [
+            'title' => 'Få et søgeresultat fjernet',
+            'text' => 'Hvor du spørger, for hver kilde MetaGer viser',
+        ],
         'key' => [
             'title' => 'MetaGer-nøgle og tokens',
             'text' => 'Sådan virker nøglen, optankning og saldo',

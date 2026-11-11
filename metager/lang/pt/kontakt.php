@@ -32,20 +32,6 @@ Alemanha",
         '2' => 'Correio eletrónico',
         '1' => 'Contacto',
     ],
-    'reason' => [
-        'legend' => 'De que se trata?',
-        'general' => 'Uma pergunta ou pedido',
-        'removal' => 'Remover um resultado de pesquisa',
-    ],
-    'removal' => [
-        'heading' => 'Remover um resultado de pesquisa',
-        'how' => 'Um resultado de pesquisa é removido na sua origem: no site e no motor de busca que o encontrou. O nosso guia mostra-lhe, para cada fonte que o MetaGer apresenta, onde pedir.',
-        'button' => 'Onde pedir a remoção',
-        'why' => [
-            'heading' => 'Porque é que os motores de busca removem resultados',
-            'text' => 'Os motores de busca removem um resultado quando há um motivo legal para isso. Se um resultado para o nome de uma pessoa levar a informações incorretas, desatualizadas ou que já não são relevantes, essa pessoa pode exigir que deixe de ser mostrado (direito ao esquecimento, art.º 17.º do RGPD). O interesse do público na informação também conta. As violações de direitos de autor e os conteúdos criminosos também podem ser um motivo. Por isso, pode faltar no MetaGer um resultado que encontra noutros sítios.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Telefone',
         'hours' => 'De segunda a sexta-feira, das :from às :to (hora alemã)',
@@ -53,6 +39,10 @@ Alemanha",
     ],
     'topics' => [
         'heading' => 'Perguntas frequentes',
+        'removal' => [
+            'title' => 'Remover um resultado de pesquisa',
+            'text' => 'Onde pedir, para cada fonte que o MetaGer mostra',
+        ],
         'key' => [
             'title' => 'Chave MetaGer e tokens',
             'text' => 'Como funciona a chave, carregamento e saldo',

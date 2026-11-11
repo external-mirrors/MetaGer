@@ -32,20 +32,6 @@ Tyskland",
             'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'reason' => [
-        'legend' => 'Vad gäller det?',
-        'general' => 'En fråga eller ett ärende',
-        'removal' => 'Ta bort ett sökresultat',
-    ],
-    'removal' => [
-        'heading' => 'Få ett sökresultat borttaget',
-        'how' => 'Ett sökresultat tas bort där det kommer ifrån: på webbplatsen och hos sökmotorn som hittade det. Vår guide visar för varje källa som MetaGer visar var du ska fråga.',
-        'button' => 'Var du begär borttagning',
-        'why' => [
-            'heading' => 'Varför sökmotorer tar bort resultat',
-            'text' => 'Sökmotorer tar bort ett resultat när det finns ett rättsligt skäl. Leder ett resultat för en persons namn till uppgifter som är felaktiga, föråldrade eller inte längre relevanta kan personen kräva att det inte längre visas (rätten att bli bortglömd, art. 17 GDPR). Allmänhetens intresse av informationen räknas också. Upphovsrättsintrång och brottsligt innehåll kan också vara skäl. Därför kan ett resultat som du hittar på annat håll saknas på MetaGer.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Telefon',
         'hours' => 'Måndag till fredag kl. :from–:to (tysk tid)',
@@ -53,6 +39,10 @@ Tyskland",
     ],
     'topics' => [
         'heading' => 'Vanliga frågor',
+        'removal' => [
+            'title' => 'Ta bort ett sökresultat',
+            'text' => 'Var du frågar, för varje källa som MetaGer visar',
+        ],
         'key' => [
             'title' => 'MetaGer-nyckel och tokens',
             'text' => 'Hur nyckeln fungerar, påfyllning och saldo',

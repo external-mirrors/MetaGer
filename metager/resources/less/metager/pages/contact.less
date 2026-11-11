@@ -28,73 +28,6 @@
         margin: 0 0 0.9rem;
     }
 
-    // Two labels for two radios, the checked one marked by colour and an
-    // underline on the strip's rule. On a phone the labels wrap inside the
-    // strip instead of dropping to a second row. The radios stay in the tab
-    // order, so the focus ring goes on their label.
-    .contact-reason {
-        position: relative;
-        display: flex;
-        gap: 1.5rem;
-        min-width: 0;
-        margin: 0;
-        padding: 0;
-        border: 0;
-        border-bottom: 1px solid @border-color;
-
-        // The form styles (general/forms.less) give every legend a large dark
-        // heading with a rule of its own.
-        legend {
-            width: auto;
-            margin: 0;
-            padding: 0;
-            border: 0;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: @secondary-text-color;
-        }
-
-        input {
-            position: absolute;
-            opacity: 0;
-        }
-
-        label {
-            flex: 0 1 auto;
-            display: inline-flex;
-            align-items: center;
-            min-height: 48px;
-            box-sizing: border-box;
-            margin: 0 0 -1px;
-            padding: 0.5rem 0;
-            border-bottom: 3px solid transparent;
-            color: @secondary-text-color;
-            font-weight: bold;
-            cursor: pointer;
-
-            &:hover {
-                color: @text-color;
-                border-bottom-color: @border-color;
-            }
-        }
-
-        input:checked + label {
-            color: @text-color;
-            border-bottom-color: @accent-fill-color;
-        }
-
-        input:focus-visible + label {
-            outline: 2px solid @focus-ring-color;
-            outline-offset: 2px;
-        }
-    }
-
-    // Written so that a browser without :has() shows both, not neither.
-    &:has(#contact-reason-removal:checked) .contact-general,
-    &:has(#contact-reason-general:checked) .contact-removal {
-        display: none;
-    }
-
     .contact-section {
         display: flex;
         flex-wrap: wrap;
@@ -123,40 +56,6 @@
 
             > :last-child {
                 margin-bottom: 0;
-            }
-        }
-    }
-
-    // Unlike the address rows it is text to read, so it gets a real heading and
-    // the whole column. The orange button is the page's one action, as in the
-    // email row; why results get removed follows for those reading on.
-    .contact-removal {
-        display: block;
-        border-bottom: 0;
-
-        > h2 {
-            margin-bottom: 0.5rem;
-            padding: 0;
-            font-size: 1.3rem;
-            text-transform: none;
-            letter-spacing: normal;
-            color: inherit;
-        }
-
-        .contact-removal-why {
-            margin-top: 1.75rem;
-            padding-top: 1.25rem;
-            border-top: 1px solid @border-color;
-
-            > h3 {
-                margin: 0 0 0.25rem;
-                font-size: 1rem;
-                font-weight: bold;
-            }
-
-            > p {
-                margin: 0;
-                color: @secondary-text-color;
             }
         }
     }

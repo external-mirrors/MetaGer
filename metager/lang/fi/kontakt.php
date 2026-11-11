@@ -32,20 +32,6 @@ Saksa",
             'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'reason' => [
-        'legend' => 'Mitä asiasi koskee?',
-        'general' => 'Kysymys tai pyyntö',
-        'removal' => 'Hakutuloksen poisto',
-    ],
-    'removal' => [
-        'heading' => 'Hakutuloksen poistaminen',
-        'how' => 'Hakutulos poistetaan siellä, mistä se on peräisin: verkkosivustolla ja hakukoneessa, joka sen löysi. Ohjeemme näyttää jokaisesta MetaGerin näyttämästä lähteestä, mistä pyyntö tehdään.',
-        'button' => 'Mistä poistoa pyydetään',
-        'why' => [
-            'heading' => 'Miksi hakukoneet poistavat tuloksia',
-            'text' => 'Hakukoneet poistavat tuloksen, kun siihen on oikeudellinen peruste. Jos henkilön nimellä löytyvä tulos johtaa tietoihin, jotka ovat virheellisiä, vanhentuneita tai eivät enää ole merkityksellisiä, henkilö voi vaatia, ettei sitä enää näytetä (oikeus tulla unohdetuksi, tietosuoja-asetuksen 17 artikla). Myös yleisön etu saada tieto otetaan huomioon. Myös tekijänoikeusloukkaukset ja rikollinen sisältö voivat olla peruste. Siksi MetaGerista voi puuttua tulos, jonka löydät muualta.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Puhelin',
         'hours' => 'Maanantaista perjantaihin klo :from–:to Saksan aikaa',
@@ -53,6 +39,10 @@ Saksa",
     ],
     'topics' => [
         'heading' => 'Yleisiä kysymyksiä',
+        'removal' => [
+            'title' => 'Hakutuloksen poistaminen',
+            'text' => 'Mistä pyytää, jokaisesta MetaGerin näyttämästä lähteestä',
+        ],
         'key' => [
             'title' => 'MetaGer-avain ja tokenit',
             'text' => 'Miten avain toimii, lataaminen ja saldo',

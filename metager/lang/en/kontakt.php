@@ -29,20 +29,6 @@ return [
         '1' => 'Post',
         '3' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nGermany",
     ],
-    'reason' => [
-        'legend' => 'What is this about?',
-        'general' => 'A question or request',
-        'removal' => 'Remove a search result',
-    ],
-    'removal' => [
-        'heading' => 'Removing a search result',
-        'how' => 'A search result is removed where it comes from: at the website and at the search engine that found it. Our guide shows you where to ask, for every source MetaGer shows.',
-        'button' => 'Where to ask for removal',
-        'why' => [
-            'heading' => 'Why search engines remove results',
-            'text' => 'Search engines take a result out when there is a legal reason to. If a result for a person\'s name leads to information that is wrong, out of date or no longer relevant, that person can demand that it is no longer shown (right to be forgotten, Art. 17 GDPR). The public\'s interest in the information counts too. Copyright infringement and criminal content can also be reasons. That is why a result you find elsewhere may be missing from MetaGer.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Phone',
         'hours' => 'Monday to Friday, :from–:to German time',
@@ -50,6 +36,10 @@ return [
     ],
     'topics' => [
         'heading' => 'Common questions',
+        'removal' => [
+            'title' => 'Removing a search result',
+            'text' => 'Where to ask, for every source MetaGer shows',
+        ],
         'key' => [
             'title' => 'MetaGer key and tokens',
             'text' => 'How the key works, topping up and balance',

@@ -202,22 +202,6 @@ class ProgressiveEnhancementTest extends DuskTestCase
         });
     }
 
-    /** The reason for contact swaps the rows with radios and :has(), no script. */
-    public function testTheContactReasonSwapsTheRowsWithoutJavascript(): void
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit("/de-DE/kontakt")
-                ->assertVisible(".contact-address")
-                ->assertMissing(".contact-removal")
-                ->click('label[for="contact-reason-removal"]')
-                ->assertVisible(".contact-removal")
-                ->assertMissing(".contact-address")
-                ->click('label[for="contact-reason-general"]')
-                ->assertVisible(".contact-address")
-                ->assertMissing(".contact-removal");
-        });
-    }
-
     /**
      * Opening the sidebar is half a disclosure; closing it again is the other
      * half, and it is the half that broke.

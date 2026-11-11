@@ -4,26 +4,16 @@
 
 @section('content')
 {{--
-	/kontakt — nearly everyone comes for the address, so email, phone and post
-	show without a click. Above them, a choice of reason: a search result is
-	removed where it comes from, not by writing to us, so that choice swaps
-	those rows for one that leads to the guide saying where. Radios and :has(),
-	no script; without :has() both show, which is still right.
+	/kontakt — how to reach us: email, phone and post, without a click. We
+	remove no search results ourselves, so removal is not a reason to contact
+	us but one of the frequent questions below, leading to the guide that says
+	where results are removed (/entfernen).
 	One row per way to reach us, so a fold opening in one never stretches
 	another.
 	No script on this page.
 --}}
 <div id="kontakt">
 	<h1 class="page-title">{!! trans('kontakt.headline.1') !!}</h1>
-	<fieldset class="contact-reason">
-		<legend>@lang('kontakt.reason.legend')</legend>
-		<input type="radio" name="contact-reason" id="contact-reason-general" checked>
-		<label for="contact-reason-general">@lang('kontakt.reason.general')</label>
-		<input type="radio" name="contact-reason" id="contact-reason-removal">
-		<label for="contact-reason-removal">@lang('kontakt.reason.removal')</label>
-	</fieldset>
-
-	<div class="contact-general">
 	{{-- An address card: each way to reach us is one row, its h2 a short
 	     label beside the content (pages/contact.less), stacked on a phone. --}}
 	<section class="contact-section contact-email" id="email" aria-labelledby="contact-email-heading">
@@ -69,20 +59,6 @@
 		<h2 id="contact-post-heading">{!! trans('kontakt.letter.1') !!}</h2>
 		<div class="contact-section-body">
 			<address>{!! trans('kontakt.letter.3') !!}</address>
-		</div>
-	</section>
-
-	</div>
-
-	<section class="contact-section contact-removal" id="removal" aria-labelledby="contact-removal-heading">
-		<h2 id="contact-removal-heading">@lang('kontakt.removal.heading')</h2>
-		<div class="contact-section-body">
-			<p>@lang('kontakt.removal.how')</p>
-			<a class="contact-button" href="{{ route('removal') }}">@lang('kontakt.removal.button')</a>
-			<div class="contact-removal-why">
-				<h3>@lang('kontakt.removal.why.heading')</h3>
-				<p>@lang('kontakt.removal.why.text')</p>
-			</div>
 		</div>
 	</section>
 

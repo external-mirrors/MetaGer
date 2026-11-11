@@ -108,76 +108,26 @@ class ContactPageTest extends TestCase
     }
 
     /**
-     * Nearly everyone comes for the address, so it is there without a click.
-     * The choice above it is the one place a removal request turns off that
-     * path: without script, it swaps the mail, phone and post rows for the
-     * removal row (Browser/ProgressiveEnhancementTest does the swapping).
+     * We remove no search results ourselves (2026-11-11), so removal is not a
+     * reason to contact us. The page used to open with a choice between
+     * "Frage oder Anliegen" and "Suchergebnis entfernen" that swapped the
+     * address for a removal row; now the address is simply there, and
+     * removal is one of the frequent questions, leading to the guide.
      */
-    public function testTheReasonForContactIsChosenAboveTheAddressWhichIsShownByDefault(): void
-    {
-        $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
-
-        $chooser = strpos($content, '<fieldset class="contact-reason">');
-        $general = strpos($content, '<div class="contact-general">');
-        $this->assertNotFalse($chooser, "The contact page has no choice of reason.");
-        $this->assertLessThan($general, $chooser);
-        $this->assertMatchesRegularExpression('#<input[^>]*id="contact-reason-general"[^>]*\\schecked#', $content);
-        $this->assertDoesNotMatchRegularExpression('#<input[^>]*id="contact-reason-removal"[^>]*\\schecked#', $content);
-        $this->assertStringContainsString('class="contact-address"', substr($content, $general));
-        $this->assertLessThan(
-            strpos($content, 'class="contact-lead"'),
-            strpos($content, 'class="contact-address"'),
-            "The address comes straight after the choice, before anything about it.",
-        );
-    }
-
-    /**
-     * We take no removal requests: a result is removed where it comes from,
-     * and the guide says where for every source, our own searches included.
-     * suma-crm's removal form is switched off, so the row leads to the guide
-     * and nothing on the page leads to the form.
-     *
-     * It used to say requests were only taken online, never by email, phone
-     * or post. With no form that is not true of anything, and a report of
-     * illegal content does come by email (removal.kind.illegal.text).
-     */
-    public function testARemovalRequestIsSentToTheGuideAndNeverToAForm(): void
+    public function testRemovalIsAFrequentQuestionNotAReasonToContactUs(): void
     {
         config(["metager.metager.crm.url" => "https://my.suma-ev.de"]);
 
         $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
-        $row = $this->removalRow($content);
 
-        $this->assertStringContainsString("wird dort entfernt, wo es herkommt", $row);
-        $this->assertMatchesRegularExpression('#<a class="contact-button" href="[^"]*/de-DE/entfernen">Wo Sie die Entfernung beantragen</a>#', $row);
-        $this->assertStringNotContainsString("können wir solche Anträge nicht annehmen", $row);
-        $this->assertStringNotContainsString("Formular", $row);
+        $this->assertStringNotContainsString('class="contact-reason"', $content);
+        $this->assertStringNotContainsString("contact-removal", $content);
+        $this->assertStringNotContainsString("Worum geht es?", $content);
         $this->assertStringNotContainsString("/entfernung", $content);
         $this->assertStringNotContainsString("my.suma-ev.de", $content);
-    }
 
-    /**
-     * Not everyone who opens this row wants to file a request, and people
-     * search for these words: it says why a search engine removes anything,
-     * under a heading of its own.
-     */
-    public function testTheRemovalRowExplainsWhySearchEnginesRemoveResults(): void
-    {
-        $row = $this->removalRow($this->get("/de-DE/kontakt")->assertOk()->getContent());
-
-        $this->assertStringContainsString("<h2", $row);
-        $this->assertStringContainsString("Suchergebnis entfernen lassen", $row);
-        $this->assertMatchesRegularExpression("#<h3>Warum Suchmaschinen Ergebnisse entfernen</h3>#", $row);
-        $this->assertStringContainsString("Recht auf Vergessenwerden, Art. 17 DSGVO", $row);
-        $this->assertStringContainsString("Interesse der Öffentlichkeit", $row);
-    }
-
-    private function removalRow(string $content): string
-    {
-        $removal = strpos($content, '<section class="contact-section contact-removal"');
-        $this->assertNotFalse($removal, "The contact page has no removal row.");
-
-        return substr($content, $removal, strpos($content, "</section>", $removal) - $removal);
+        $topics = substr($content, strpos($content, 'class="contact-section contact-topics"'));
+        $this->assertMatchesRegularExpression('#<a href="[^"]*/de-DE/entfernen"><span>Suchergebnis entfernen lassen<span>#', $topics);
     }
 
     /**
@@ -320,6 +270,7 @@ class ContactPageTest extends TestCase
     public static function topicPaths(): array
     {
         return [
+            "removal" => ["/de-DE/entfernen"],
             "key" => ["/de-DE/hilfe/schluessel"],
             "orders" => ["/de-DE/konto/bestellungen"],
             "donation" => ["/de-DE/spende"],

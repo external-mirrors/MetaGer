@@ -32,20 +32,6 @@ Allemagne",
             'fingerprint' => 'Empreinte PGP : 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'reason' => [
-        'legend' => 'De quoi s’agit-il ?',
-        'general' => 'Une question ou une demande',
-        'removal' => 'Retirer un résultat de recherche',
-    ],
-    'removal' => [
-        'heading' => 'Faire retirer un résultat de recherche',
-        'how' => 'Un résultat de recherche se supprime là d’où il vient : sur le site web et auprès du moteur de recherche qui l’a trouvé. Notre guide vous indique, pour chaque source que MetaGer affiche, à qui vous adresser.',
-        'button' => 'Où demander un retrait',
-        'why' => [
-            'heading' => 'Pourquoi les moteurs de recherche retirent des résultats',
-            'text' => 'Les moteurs de recherche retirent un résultat lorsqu’un motif juridique le justifie. Si un résultat pour le nom d’une personne mène à des informations fausses, obsolètes ou qui ne sont plus pertinentes, cette personne peut exiger qu’il ne soit plus affiché (droit à l’oubli, art. 17 du RGPD). L’intérêt du public pour l’information compte aussi. Les atteintes au droit d’auteur et les contenus illicites peuvent également être un motif. C’est pourquoi un résultat que vous trouvez ailleurs peut manquer sur MetaGer.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Téléphone',
         'hours' => 'Du lundi au vendredi, de :from à :to (heure allemande)',
@@ -53,6 +39,10 @@ Allemagne",
     ],
     'topics' => [
         'heading' => 'Questions fréquentes',
+        'removal' => [
+            'title' => 'Faire retirer un résultat de recherche',
+            'text' => 'À qui s’adresser, pour chaque source affichée par MetaGer',
+        ],
         'key' => [
             'title' => 'Clé MetaGer et jetons',
             'text' => 'Fonctionnement de la clé, recharge et solde',

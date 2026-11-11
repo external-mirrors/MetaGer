@@ -93,11 +93,7 @@ class AccessibilityTest extends DuskTestCase
         });
     }
 
-    /**
-     * Both of the page's states: which reason is chosen decides what is shown.
-     * The legend above the choice inherited a form style's dark text on the
-     * dark palette, and nothing looked at this page in that palette.
-     */
+    /** In both palettes: nothing looked at this page in the dark one once. */
     #[DataProvider("themes")]
     public function testTheContactPage(string $theme): void
     {
@@ -105,10 +101,6 @@ class AccessibilityTest extends DuskTestCase
             $browser->visit("/de-DE/kontakt?dark_mode={$theme}")
                 ->assertVisible(".contact-address");
             $this->assertNoViolations($browser, "contact-{$theme}");
-
-            $browser->click('label[for="contact-reason-removal"]')
-                ->assertVisible(".contact-removal");
-            $this->assertNoViolations($browser, "contact-removal-{$theme}");
         });
     }
 

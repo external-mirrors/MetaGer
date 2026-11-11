@@ -32,20 +32,6 @@ Germany",
             'fingerprint' => 'Huella PGP: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
         ],
     ],
-    'reason' => [
-        'legend' => '¿De qué se trata?',
-        'general' => 'Una pregunta o petición',
-        'removal' => 'Retirar un resultado de búsqueda',
-    ],
-    'removal' => [
-        'heading' => 'Retirar un resultado de búsqueda',
-        'how' => 'Un resultado de búsqueda se elimina allí de donde procede: en el sitio web y en el buscador que lo encontró. Nuestra guía le muestra dónde pedirlo para cada fuente que muestra MetaGer.',
-        'button' => 'Dónde solicitar la retirada',
-        'why' => [
-            'heading' => 'Por qué los buscadores retiran resultados',
-            'text' => 'Los buscadores retiran un resultado cuando hay un motivo legal para ello. Si un resultado para el nombre de una persona lleva a información incorrecta, desactualizada o que ya no es pertinente, esa persona puede exigir que deje de mostrarse (derecho al olvido, art. 17 del RGPD). También cuenta el interés del público en la información. Las infracciones de derechos de autor y los contenidos delictivos también pueden ser un motivo. Por eso puede faltar en MetaGer un resultado que encuentre en otros sitios.',
-        ],
-    ],
     'phone' => [
         'heading' => 'Teléfono',
         'hours' => 'De lunes a viernes, de :from a :to (hora de Alemania)',
@@ -53,6 +39,10 @@ Germany",
     ],
     'topics' => [
         'heading' => 'Consultas frecuentes',
+        'removal' => [
+            'title' => 'Eliminar un resultado de búsqueda',
+            'text' => 'Dónde pedirlo, para cada fuente que muestra MetaGer',
+        ],
         'key' => [
             'title' => 'Clave de MetaGer y tokens',
             'text' => 'Cómo funciona la clave, recargas y saldo',

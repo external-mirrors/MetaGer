@@ -39,9 +39,8 @@ Tyskland",
     ],
     'removal' => [
         'heading' => 'Få et søgeresultat fjernet',
-        'how' => 'Anmodninger om fjernelse foregår online: Vi fører dig trin for trin gennem din anmodning og viser dig, hvor den virker bedst.',
-        'only' => 'Vi kan ikke modtage sådanne anmodninger pr. e-mail, telefon eller post.',
-        'button' => 'Anmod om fjernelse',
+        'how' => 'Et søgeresultat fjernes der, hvor det kommer fra: på hjemmesiden og hos den søgemaskine, der har fundet det. Vores vejledning viser dig for hver kilde, MetaGer viser, hvor du skal spørge.',
+        'button' => 'Hvor du anmoder om fjernelse',
         'why' => [
             'heading' => 'Hvorfor søgemaskiner fjerner resultater',
             'text' => 'Søgemaskiner fjerner et resultat, når der er en juridisk grund til det. Fører et resultat for en persons navn til oplysninger, der er forkerte, forældede eller ikke længere relevante, kan personen kræve, at det ikke længere vises (retten til at blive glemt, GDPR art. 17). Offentlighedens interesse i oplysningerne tæller også med. Krænkelse af ophavsret og strafbart indhold kan også være en grund. Derfor kan der mangle et resultat på MetaGer, som du finder andre steder.',

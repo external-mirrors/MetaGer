@@ -39,9 +39,8 @@ Tyskland",
     ],
     'removal' => [
         'heading' => 'Få ett sökresultat borttaget',
-        'how' => 'Begäranden om borttagning görs online: vi guidar dig steg för steg genom din begäran och visar var den gör mest nytta.',
-        'only' => 'Vi kan inte ta emot sådana begäranden via e-post, telefon eller brev.',
-        'button' => 'Begär borttagning',
+        'how' => 'Ett sökresultat tas bort där det kommer ifrån: på webbplatsen och hos sökmotorn som hittade det. Vår guide visar för varje källa som MetaGer visar var du ska fråga.',
+        'button' => 'Var du begär borttagning',
         'why' => [
             'heading' => 'Varför sökmotorer tar bort resultat',
             'text' => 'Sökmotorer tar bort ett resultat när det finns ett rättsligt skäl. Leder ett resultat för en persons namn till uppgifter som är felaktiga, föråldrade eller inte längre relevanta kan personen kräva att det inte längre visas (rätten att bli bortglömd, art. 17 GDPR). Allmänhetens intresse av informationen räknas också. Upphovsrättsintrång och brottsligt innehåll kan också vara skäl. Därför kan ett resultat som du hittar på annat håll saknas på MetaGer.',

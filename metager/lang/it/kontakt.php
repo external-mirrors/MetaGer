@@ -39,9 +39,8 @@ Germania",
     ],
     'removal' => [
         'heading' => 'Far rimuovere un risultato di ricerca',
-        'how' => 'Le richieste di rimozione si fanno online: La guidiamo passo dopo passo nella Sua richiesta e Le mostriamo dove ha più effetto.',
-        'only' => 'Non possiamo accettare queste richieste via e-mail, telefono o posta.',
-        'button' => 'Richiedi una rimozione',
+        'how' => 'Un risultato di ricerca si rimuove là da dove proviene: sul sito web e presso il motore di ricerca che lo ha trovato. La nostra guida Le mostra, per ogni fonte che MetaGer mostra, a chi rivolgersi.',
+        'button' => 'Dove chiedere la rimozione',
         'why' => [
             'heading' => 'Perché i motori di ricerca rimuovono risultati',
             'text' => 'I motori di ricerca rimuovono un risultato quando esiste un motivo giuridico. Se un risultato per il nome di una persona porta a informazioni errate, superate o non più pertinenti, quella persona può esigere che non venga più mostrato (diritto all’oblio, art. 17 del GDPR). Conta anche l’interesse del pubblico all’informazione. Anche le violazioni del diritto d’autore e i contenuti illeciti possono essere un motivo. Per questo su MetaGer può mancare un risultato che trova altrove.',

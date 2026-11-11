@@ -39,9 +39,8 @@ Duitsland",
     ],
     'removal' => [
         'heading' => 'Een zoekresultaat laten verwijderen',
-        'how' => 'Verzoeken om verwijdering doet u online: we leiden u stap voor stap door uw verzoek en laten zien waar het het meeste effect heeft.',
-        'only' => 'Per e-mail, telefoon of post kunnen we zulke verzoeken niet aannemen.',
-        'button' => 'Verwijdering aanvragen',
+        'how' => 'Een zoekresultaat wordt verwijderd waar het vandaan komt: op de website en bij de zoekmachine die het heeft gevonden. Onze handleiding laat u voor elke bron die MetaGer toont zien waar u het vraagt.',
+        'button' => 'Waar u verwijdering aanvraagt',
         'why' => [
             'heading' => 'Waarom zoekmachines resultaten verwijderen',
             'text' => 'Zoekmachines halen een resultaat weg als daar een juridische reden voor is. Leidt een resultaat voor iemands naam naar informatie die onjuist, verouderd of niet meer relevant is, dan kan die persoon eisen dat het niet meer wordt getoond (recht op vergetelheid, art. 17 AVG). Ook het belang van het publiek bij de informatie telt mee. Ook auteursrechtschending en strafbare inhoud kunnen een reden zijn. Daarom kan op MetaGer een resultaat ontbreken dat u elders wel vindt.',

@@ -39,9 +39,8 @@ Germany",
     ],
     'removal' => [
         'heading' => 'Suchergebnis entfernen lassen',
-        'how' => 'Anträge auf Entfernung stellen Sie bei uns online: Wir führen Sie Schritt für Schritt durch Ihren Antrag und zeigen Ihnen, wo er am meisten bewirkt.',
-        'only' => 'Per E-Mail, Telefon oder Post können wir solche Anträge nicht annehmen.',
-        'button' => 'Entfernung beantragen',
+        'how' => 'Ein Suchergebnis wird dort entfernt, wo es herkommt: auf der Webseite und bei der Suchmaschine, die es gefunden hat. Unsere Anleitung zeigt Ihnen für jede Quelle, die MetaGer zeigt, wo Sie fragen.',
+        'button' => 'Wo Sie die Entfernung beantragen',
         'why' => [
             'heading' => 'Warum Suchmaschinen Ergebnisse entfernen',
             'text' => 'Suchmaschinen entfernen Ergebnisse, wenn es dafür einen rechtlichen Grund gibt. Führt ein Ergebnis zum Namen einer Person zu Angaben, die falsch, veraltet oder nicht mehr relevant sind, kann diese Person verlangen, dass es nicht mehr angezeigt wird (Recht auf Vergessenwerden, Art. 17 DSGVO). Dabei zählt auch das Interesse der Öffentlichkeit an der Information. Auch Urheberrechtsverletzungen und strafbare Inhalte können ein Grund sein. Deshalb kann bei MetaGer ein Ergebnis fehlen, das Sie anderswo finden.',

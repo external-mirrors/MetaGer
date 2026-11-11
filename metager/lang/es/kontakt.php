@@ -39,9 +39,8 @@ Germany",
     ],
     'removal' => [
         'heading' => 'Retirar un resultado de búsqueda',
-        'how' => 'Las solicitudes de retirada se hacen en línea: le guiamos paso a paso por su solicitud y le mostramos dónde tiene más efecto.',
-        'only' => 'No podemos aceptar estas solicitudes por correo electrónico, teléfono ni correo postal.',
-        'button' => 'Solicitar una retirada',
+        'how' => 'Un resultado de búsqueda se elimina allí de donde procede: en el sitio web y en el buscador que lo encontró. Nuestra guía le muestra dónde pedirlo para cada fuente que muestra MetaGer.',
+        'button' => 'Dónde solicitar la retirada',
         'why' => [
             'heading' => 'Por qué los buscadores retiran resultados',
             'text' => 'Los buscadores retiran un resultado cuando hay un motivo legal para ello. Si un resultado para el nombre de una persona lleva a información incorrecta, desactualizada o que ya no es pertinente, esa persona puede exigir que deje de mostrarse (derecho al olvido, art. 17 del RGPD). También cuenta el interés del público en la información. Las infracciones de derechos de autor y los contenidos delictivos también pueden ser un motivo. Por eso puede faltar en MetaGer un resultado que encuentre en otros sitios.',

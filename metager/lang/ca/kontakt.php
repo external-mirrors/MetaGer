@@ -36,9 +36,8 @@ return [
     ],
     'removal' => [
         'heading' => 'Eliminar un resultat de cerca',
-        'how' => 'Les sol·licituds de retirada es fan en línia: us guiem pas a pas per la vostra sol·licitud i us mostrem on té més efecte.',
-        'only' => 'No podem acceptar aquestes sol·licituds per correu electrònic, telèfon ni correu postal.',
-        'button' => 'Sol·licita una retirada',
+        'how' => 'Un resultat de cerca s’elimina allà d’on prové: al lloc web i al cercador que l’ha trobat. La nostra guia us mostra on demanar-ho per a cada font que mostra MetaGer.',
+        'button' => 'On sol·licitar la retirada',
         'why' => [
             'heading' => 'Per què els cercadors retiren resultats',
             'text' => 'Els cercadors retiren un resultat quan hi ha un motiu legal per fer-ho. Si un resultat per al nom d’una persona porta a informació incorrecta, desfasada o que ja no és rellevant, aquesta persona pot exigir que deixi de mostrar-se (dret a l’oblit, art. 17 del RGPD). També compta l’interès del públic en la informació. Les infraccions de drets d’autor i els continguts delictius també poden ser un motiu. Per això pot ser que a MetaGer falti un resultat que trobeu en altres llocs.',

@@ -132,23 +132,28 @@ class ContactPageTest extends TestCase
     }
 
     /**
-     * Removal requests are only taken online, and that starts with reading the
-     * guide: it says where a removal works and ends in the form. To the visitor
-     * this is one process, so the row names neither part, links only to its
-     * start and never to the form itself.
+     * We take no removal requests: a result is removed where it comes from,
+     * and the guide says where for every source, our own searches included.
+     * suma-crm's removal form is switched off, so the row leads to the guide
+     * and nothing on the page leads to the form.
+     *
+     * It used to say requests were only taken online, never by email, phone
+     * or post. With no form that is not true of anything, and a report of
+     * illegal content does come by email (removal.kind.illegal.text).
      */
-    public function testARemovalRequestIsSentToTheStartOfTheProcessNeverDirectlyToTheForm(): void
+    public function testARemovalRequestIsSentToTheGuideAndNeverToAForm(): void
     {
         config(["metager.metager.crm.url" => "https://my.suma-ev.de"]);
 
         $content = $this->get("/de-DE/kontakt")->assertOk()->getContent();
         $row = $this->removalRow($content);
 
-        $this->assertStringContainsString("Per E-Mail, Telefon oder Post können wir solche Anträge nicht annehmen.", $row);
-        $this->assertMatchesRegularExpression('#<a class="contact-button" href="[^"]*/de-DE/entfernen">Entfernung beantragen</a>#', $row);
+        $this->assertStringContainsString("wird dort entfernt, wo es herkommt", $row);
+        $this->assertMatchesRegularExpression('#<a class="contact-button" href="[^"]*/de-DE/entfernen">Wo Sie die Entfernung beantragen</a>#', $row);
+        $this->assertStringNotContainsString("können wir solche Anträge nicht annehmen", $row);
         $this->assertStringNotContainsString("Formular", $row);
-        $this->assertStringNotContainsString("Anleitung", $row);
-        $this->assertStringNotContainsString("/entfernung", $content, "The form is only reached through the guide.");
+        $this->assertStringNotContainsString("/entfernung", $content);
+        $this->assertStringNotContainsString("my.suma-ev.de", $content);
     }
 
     /**

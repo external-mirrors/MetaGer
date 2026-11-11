@@ -5,11 +5,10 @@
 @section('content')
 {{--
 	/kontakt — nearly everyone comes for the address, so email, phone and post
-	show without a click. Above them, a choice of reason: removal requests are
-	only taken online, so that choice swaps those rows for one saying so. It
-	leads to the guide and not to the form: the guide is where the process
-	starts, and the visitor sees one process, so the row names neither. Radios
-	and :has(), no script; without :has() both show, which is still right.
+	show without a click. Above them, a choice of reason: a search result is
+	removed where it comes from, not by writing to us, so that choice swaps
+	those rows for one that leads to the guide saying where. Radios and :has(),
+	no script; without :has() both show, which is still right.
 	One row per way to reach us, so a fold opening in one never stretches
 	another.
 	No script on this page.
@@ -78,7 +77,7 @@
 	<section class="contact-section contact-removal" id="removal" aria-labelledby="contact-removal-heading">
 		<h2 id="contact-removal-heading">@lang('kontakt.removal.heading')</h2>
 		<div class="contact-section-body">
-			<p>@lang('kontakt.removal.how') <strong>@lang('kontakt.removal.only')</strong></p>
+			<p>@lang('kontakt.removal.how')</p>
 			<a class="contact-button" href="{{ route('removal') }}">@lang('kontakt.removal.button')</a>
 			<div class="contact-removal-why">
 				<h3>@lang('kontakt.removal.why.heading')</h3>

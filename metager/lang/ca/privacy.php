@@ -25,13 +25,6 @@ return [
             'description' => 'Si ens escriviu a una de les adreces de la nostra <a href=":link_contact">pàgina de contacte</a>, gestionem el vostre correu al nostre sistema de tiquets. Això implica les dades següents:',
             'contact' => 'Les conservem amb els vostres correus i els seus fitxers adjunts fins a 3 mesos després de tancar la vostra sol·licitud.',
         ],
-        'removal' => [
-            'title' => 'Sol·licituds d’eliminació de resultats de cerca',
-            'description' => 'Si feu servir el nostre formulari per demanar-nos que retirem un resultat d’un dels nostres propis índexs de cerca, com Nolm o TootNews (vegeu <a href=":link_removal">Eliminar un resultat de cerca</a>), obrim un expedient en què examinem la sol·licitud i decidim. El formulari funciona a my.suma-ev.de, que també gestionem nosaltres. La base jurídica és l’art. 6.1.c) en relació amb l’art. 17 del RGPD. Els correus que ens envieu es regeixen per l’apartat «Contacte per correu electrònic». L’expedient conté les dades següents:',
-            'contact' => 'Esborrem de l’expedient el vostre nom i la vostra adreça electrònica, que confirmeu amb un enllaç, 6 mesos després de tancar-lo. Un formulari que no envieu l’esborrem al cap de 7 dies.',
-            'message' => 'Les adreces (URL) i els termes de cerca afectats, els vostres motius i, segons la sol·licitud, una còpia del vostre document d’identitat, un poder o la vostra declaració que teniu els drets sobre un contingut. Desem xifrats la còpia del document i el poder. Els esborrem amb els vostres motius com a molt tard 6 mesos després de tancar l’expedient, i també els termes de cerca, excepte en un resultat amagat (vegeu més avall).',
-            'block' => 'Si amaguem un resultat, conservem la seva adreça, els termes de cerca per als quals està amagat (normalment el vostre nom) i els motius de la nostra decisió mentre el resultat continuï amagat. Per això, l’adreça i els termes de cerca es desen al nostre servei de llista de bloqueig, que gestionem nosaltres mateixos i d’on els obté la cerca afectada. Els necessitem perquè l’ocultació funcioni i per poder-la justificar si s’impugna (art. 17.3.e) i art. 6.1.f) del RGPD).',
-        ],
         'donate' => [
             'title' => 'Ús del formulari de donatius',
             'description' => 'Les dades següents transmeses al formulari de donatius es desaran durant 2 mesos per tramitar-lo:',

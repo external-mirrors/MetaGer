@@ -20,13 +20,6 @@ return [
             'description' => 'Si nos escribe a una de las direcciones de nuestra <a href=":link_contact">página de contacto</a>, tramitamos su correo en nuestro sistema de tickets. Se generan los siguientes datos:',
             'contact' => 'Los conservamos junto con sus correos y sus archivos adjuntos hasta 3 meses después de cerrar su solicitud.',
         ],
-        'removal' => [
-            'title' => 'Solicitudes de eliminación de resultados de búsqueda',
-            'description' => 'Si utiliza nuestro formulario para pedirnos que retiremos un resultado de uno de nuestros propios índices de búsqueda, como Nolm o TootNews (véase <a href=":link_removal">Eliminar un resultado de búsqueda</a>), abrimos un expediente en el que examinamos su solicitud y decidimos. El formulario funciona en my.suma-ev.de, que también gestionamos nosotros. La base jurídica es el art. 6, apdo. 1, letra c), en relación con el art. 17 del RGPD. Los correos que nos envíe se rigen por el apartado «Contacto por correo electrónico». El expediente contiene los siguientes datos:',
-            'contact' => 'Borramos del expediente su nombre y su dirección de correo, que confirma mediante un enlace, 6 meses después de cerrarlo. Un formulario que no envíe lo borramos a los 7 días.',
-            'message' => 'Las direcciones (URL) y los términos de búsqueda afectados, sus motivos y, según la solicitud, una copia de su documento de identidad, un poder o su declaración de que tiene los derechos sobre un contenido. Guardamos cifrados la copia del documento y el poder. Los borramos junto con sus motivos a más tardar 6 meses después de cerrar el expediente, y también los términos de búsqueda, salvo en un resultado oculto (véase más abajo).',
-            'block' => 'Si ocultamos un resultado, conservamos su dirección, los términos de búsqueda para los que está oculto (normalmente su nombre) y los motivos de nuestra decisión mientras el resultado siga oculto. Para ello, la dirección y los términos de búsqueda se guardan en nuestro servicio de lista de bloqueo, que gestionamos nosotros mismos y del que los obtiene la búsqueda afectada. Los necesitamos para que la ocultación funcione y para poder justificarla si se impugna (art. 17, apdo. 3, letra e), y art. 6, apdo. 1, letra f), del RGPD).',
-        ],
         'donate' => [
             'title' => 'Utilización del formulario de donación',
             'description' => 'Los siguientes datos transmitidos en el formulario de donación se almacenarán durante 2 meses para su procesamiento:',

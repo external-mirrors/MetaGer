@@ -23,13 +23,6 @@ return [
             'description' => 'Skriver du til en af adresserne på vores <a href=":link_contact">kontaktside</a>, behandler vi din e-mail i vores ticketsystem. Herved opstår følgende data:',
             'contact' => 'Opbevares sammen med dine e-mails og deres vedhæftede filer indtil 3 måneder efter, at din henvendelse er afsluttet.',
         ],
-        'removal' => [
-            'title' => 'Anmodninger om fjernelse af søgeresultater',
-            'description' => 'Hvis du via vores formular beder os om at fjerne et søgeresultat fra et af vores egne søgeindekser, som Nolm eller TootNews (se <a href=":link_removal">Få et søgeresultat fjernet</a>), opretter vi en sag, hvor vi vurderer din anmodning og træffer afgørelse. Formularen kører på my.suma-ev.de, som vi også selv driver. Retsgrundlaget er art. 6, stk. 1, litra c, sammenholdt med art. 17 i GDPR. For e-mails til os gælder afsnittet »Kontakt via e-mail«. Sagen omfatter følgende data:',
-            'contact' => 'Vi sletter dit navn og din e-mailadresse, som du bekræfter via et link, fra sagen 6 måneder efter, at den er afsluttet. En formular, du ikke sender, sletter vi efter 7 dage.',
-            'message' => 'De berørte adresser (URL’er) og søgeord, din begrundelse og, afhængigt af anmodningen, en kopi af dit ID, en fuldmagt eller din erklæring om, at du har rettighederne til et indhold. Vi opbevarer ID-kopien og fuldmagten krypteret. Vi sletter dem og din begrundelse senest 6 måneder efter, at sagen er afsluttet, og ligeledes søgeordene, undtagen ved et skjult resultat (se nedenfor).',
-            'block' => 'Hvis vi skjuler et resultat, gemmer vi dets adresse, de søgeord, det er skjult for (som regel dit navn), og begrundelsen for vores afgørelse, så længe resultatet forbliver skjult. Adresse og søgeord ligger til det formål i vores blokeringslistetjeneste, som vi selv driver, og hvorfra den berørte søgning henter dem. Vi har brug for dem, for at skjulningen virker, og for at kunne begrunde den, hvis den anfægtes (art. 17, stk. 3, litra e, og art. 6, stk. 1, litra f, i GDPR).',
-        ],
         'donate' => [
             'title' => 'Brug af donationsformularen',
             'description' => 'Følgende data, der overføres i donationsformularen, vil blive gemt i 2 måneder til behandling:',

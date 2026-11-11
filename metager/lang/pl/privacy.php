@@ -55,13 +55,6 @@ return [
             'description' => 'Jeśli napiszesz na jeden z adresów z naszej <a href=":link_contact">strony kontaktowej</a>, obsługujemy Twoją wiadomość w naszym systemie zgłoszeń. Powstają przy tym następujące dane:',
             'contact' => 'Przechowujemy je wraz z Twoimi wiadomościami i ich załącznikami do 3 miesięcy po zakończeniu Twojej sprawy.',
         ],
-        'removal' => [
-            'title' => 'Wnioski o usunięcie wyników wyszukiwania',
-            'description' => 'Jeśli za pomocą naszego formularza poprosisz nas o usunięcie wyniku z jednego z naszych własnych indeksów wyszukiwania, takich jak Nolm lub TootNews (zob. <a href=":link_removal">Usunięcie wyniku wyszukiwania</a>), zakładamy sprawę, w której badamy wniosek i podejmujemy decyzję. Formularz działa na my.suma-ev.de, które również sami prowadzimy. Podstawą prawną jest art. 6 ust. 1 lit. c w związku z art. 17 RODO. Do wiadomości e-mail wysyłanych do nas stosuje się sekcję „Kontakt e-mailowy”. Sprawa obejmuje następujące dane:',
-            'contact' => 'Twoje imię i nazwisko oraz adres e-mail, który potwierdzasz linkiem, usuwamy ze sprawy 6 miesięcy po jej zamknięciu. Formularz, którego nie wyślesz, usuwamy po 7 dniach.',
-            'message' => 'Adresy (URL) i wyszukiwane hasła, których dotyczy wniosek, Twoje uzasadnienie oraz, zależnie od wniosku, kopia dokumentu tożsamości, pełnomocnictwo lub Twoje oświadczenie o posiadaniu praw do treści. Kopię dokumentu i pełnomocnictwo przechowujemy w postaci zaszyfrowanej. Usuwamy je wraz z Twoim uzasadnieniem najpóźniej 6 miesięcy po zamknięciu sprawy, podobnie jak wyszukiwane hasła, z wyjątkiem ukrytego wyniku (zob. niżej).',
-            'block' => 'Jeśli ukryjemy wynik, przechowujemy jego adres, wyszukiwane hasła, dla których jest ukryty (zwykle Twoje nazwisko), oraz uzasadnienie naszej decyzji tak długo, jak wynik pozostaje ukryty. Adres i wyszukiwane hasła znajdują się w tym celu w naszej usłudze listy blokad, którą sami prowadzimy i z której pobiera je dana wyszukiwarka. Potrzebujemy ich, aby ukrycie działało i abyśmy mogli je uzasadnić w razie zakwestionowania (art. 17 ust. 3 lit. e i art. 6 ust. 1 lit. f RODO).',
-        ],
         'mapsapp' => [
             'title' => 'Korzystanie z aplikacji MetaGer',
             'description' => 'Korzystanie z aplikacji MetaGer jest takie samo jak korzystanie z MetaGer za pośrednictwem przeglądarki internetowej.',

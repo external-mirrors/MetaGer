@@ -33,13 +33,6 @@ return [
             'description' => 'Schrijft u naar een van de adressen op onze <a href=":link_contact">contactpagina</a>, dan behandelen wij uw e-mail in ons ticketsysteem. Daarbij ontstaan de volgende gegevens:',
             'contact' => 'Bewaren wij samen met uw e-mails en hun bijlagen tot 3 maanden na afronding van uw verzoek.',
         ],
-        'removal' => [
-            'title' => 'Verzoeken om zoekresultaten te verwijderen',
-            'description' => 'Vraagt u ons via ons formulier een zoekresultaat uit een van onze eigen zoekindexen, zoals Nolm of TootNews, te verwijderen (zie <a href=":link_removal">Een zoekresultaat laten verwijderen</a>), dan openen we een dossier waarin we uw aanvraag beoordelen en beslissen. Het formulier draait op my.suma-ev.de, dat we ook zelf beheren. De rechtsgrondslag is art. 6, lid 1, onder c, in samenhang met art. 17 AVG. Voor e-mails aan ons geldt het onderdeel ‘Contact per e-mail’. Het dossier bevat de volgende gegevens:',
-            'contact' => 'Uw naam en uw e-mailadres, dat u via een link bevestigt, verwijderen we 6 maanden na afsluiting uit het dossier. Een formulier dat u niet verzendt, verwijderen we na 7 dagen.',
-            'message' => 'De adressen (URL’s) en zoektermen waar het om gaat, uw motivering en, afhankelijk van de aanvraag, een kopie van uw identiteitsbewijs, een volmacht of uw verklaring dat u de rechten op een inhoud hebt. De kopie en de volmacht bewaren we versleuteld. We verwijderen ze samen met uw motivering uiterlijk 6 maanden na afsluiting van het dossier, en ook de zoektermen, behalve bij een verborgen resultaat (zie hieronder).',
-            'block' => 'Verbergen we een resultaat, dan bewaren we het adres, de zoektermen waarvoor het verborgen is (meestal uw naam) en de motivering van ons besluit zolang het resultaat verborgen blijft. Adres en zoektermen staan daarvoor in onze blokkeerlijstdienst, die we zelf beheren en waaruit de betreffende zoekmachine ze ophaalt. We hebben ze nodig om het verbergen te laten werken en om het te kunnen onderbouwen als het wordt betwist (art. 17, lid 3, onder e, en art. 6, lid 1, onder f, AVG).',
-        ],
         'key' => [
             'title' => 'MetaGer-sleutel afrekenen',
             'contact' => 'We gebruiken deze gegevens uitsluitend voor eventuele vragen of voor facturering en geven ze in geen geval door aan derden.',

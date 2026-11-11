@@ -24,13 +24,6 @@ return [
             'description' => 'Schreiben Sie uns an eine der Adressen auf unserer <a href=":link_contact">Kontaktseite</a>, bearbeiten wir Ihre E-Mail in unserem Ticketsystem. Dabei fallen folgende Daten an:',
             'contact' => 'Speichern wir mit Ihren E-Mails und deren Anhängen bis 3 Monate nach Abschluss Ihres Anliegens.',
         ],
-        'removal' => [
-            'title' => 'Anträge auf Entfernen von Suchergebnissen',
-            'description' => 'Bitten Sie uns über unser Formular, ein Suchergebnis aus einem unserer eigenen Suchindizes wie Nolm oder TootNews zu entfernen (siehe <a href=":link_removal">Suchergebnis entfernen lassen</a>), legen wir einen Vorgang an, in dem wir Ihren Antrag prüfen und entscheiden. Das Formular läuft auf my.suma-ev.de, das wir ebenfalls selbst betreiben. Rechtsgrundlage ist Art. 6 Abs. 1 lit. c in Verbindung mit Art. 17 DSGVO. Für E-Mails an uns gilt der Abschnitt „Kontakt per E-Mail“. Im Vorgang fallen folgende Daten an:',
-            'contact' => 'Ihren Namen und Ihre E-Mail-Adresse, die Sie über einen Link bestätigen, löschen wir aus dem Vorgang 6 Monate nach Abschluss des Vorgangs. Ein Formular, das Sie nicht absenden, löschen wir nach 7 Tagen.',
-            'message' => 'Die Adressen (URLs) und Suchbegriffe, um die es geht, Ihre Begründung und, je nach Antrag, eine Ausweiskopie, eine Vollmacht oder Ihre Erklärung, die Rechte an einem Inhalt zu haben. Ausweiskopie und Vollmacht speichern wir verschlüsselt. Beide und Ihre Begründung löschen wir spätestens 6 Monate nach Abschluss des Vorgangs, die Suchbegriffe ebenso, außer bei einem ausgeblendeten Ergebnis (siehe unten).',
-            'block' => 'Blenden wir ein Ergebnis aus, speichern wir dessen Adresse, die Suchbegriffe, für die es ausgeblendet ist (meist Ihren Namen), und die Begründung unserer Entscheidung, solange das Ergebnis ausgeblendet bleibt. Adresse und Suchbegriffe liegen dazu in unserem Sperrlisten-Dienst, den wir selbst betreiben und von dem die betroffene Suche sie abruft. Wir brauchen sie, damit das Ausblenden wirkt und wir es begründen können, wenn es angefochten wird (Art. 17 Abs. 3 lit. e und Art. 6 Abs. 1 lit. f DSGVO).',
-        ],
         'donate' => [
             'title' => 'Nutzung des Spendenformulars',
             'description' => 'Die folgenden, im Spendenformular übermittelten, Daten werden 2 Monate zur Bearbeitung gespeichert:',

@@ -12,13 +12,6 @@ return [
             'description' => 'Kun kirjoitat johonkin <a href=":link_contact">yhteystietosivumme</a> osoitteista, käsittelemme sähköpostisi tikettijärjestelmässämme. Tällöin syntyy seuraavia tietoja:',
             'contact' => 'Säilytetään sähköpostiesi ja niiden liitteiden kanssa 3 kuukautta asiasi päättymisen jälkeen.',
         ],
-        'removal' => [
-            'title' => 'Pyynnöt hakutulosten poistamisesta',
-            'description' => 'Jos pyydät lomakkeellamme meitä poistamaan hakutuloksen jostakin omasta hakuindeksistämme, kuten Nolmista tai TootNewsista (katso <a href=":link_removal">Hakutuloksen poistaminen</a>), avaamme asian, jossa tutkimme pyyntösi ja teemme päätöksen. Lomake toimii osoitteessa my.suma-ev.de, jota ylläpidämme myös itse. Oikeusperusta on GDPR:n 6 artiklan 1 kohdan c alakohta yhdessä 17 artiklan kanssa. Meille lähetettyihin sähköposteihin sovelletaan kohtaa ”Yhteydenotto sähköpostitse”. Asiaan kuuluvat seuraavat tiedot:',
-            'contact' => 'Poistamme asiasta nimesi ja sähköpostiosoitteesi, jonka vahvistat linkillä, 6 kuukautta asian päättymisen jälkeen. Lomakkeen, jota et lähetä, poistamme 7 päivän kuluttua.',
-            'message' => 'Asiaan liittyvät osoitteet (URL) ja hakusanat, perustelusi ja pyynnöstä riippuen kopio henkilöllisyystodistuksestasi, valtakirja tai ilmoituksesi siitä, että sinulla on oikeudet sisältöön. Säilytämme kopion ja valtakirjan salattuna. Poistamme ne ja perustelusi viimeistään 6 kuukautta asian päättymisen jälkeen, samoin hakusanat, paitsi piilotetun tuloksen kohdalla (katso alla).',
-            'block' => 'Jos piilotamme tuloksen, säilytämme sen osoitteen, hakusanat, joilta se on piilotettu (yleensä nimesi), ja päätöksemme perustelut niin kauan kuin tulos pysyy piilotettuna. Osoite ja hakusanat ovat tätä varten estolistapalvelussamme, jota ylläpidämme itse ja josta kyseinen haku noutaa ne. Tarvitsemme niitä, jotta piilotus toimii ja jotta voimme perustella sen, jos se riitautetaan (GDPR:n 17 artiklan 3 kohdan e alakohta ja 6 artiklan 1 kohdan f alakohta).',
-        ],
         'title' => 'Saapuvat tiedot asiayhteyden mukaan',
         'metager' => [
             'title' => 'MetaGer-verkkohakukoneen käyttö',

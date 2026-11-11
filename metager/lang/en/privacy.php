@@ -25,13 +25,6 @@ return [
             'description' => 'If you write to one of the addresses on our <a href=":link_contact">contact page</a>, we handle your email in our ticket system. This involves the following data:',
             'contact' => 'Kept together with your emails and their attachments until 3 months after your request is closed.',
         ],
-        'removal' => [
-            'title' => 'Requests to remove search results',
-            'description' => 'If you use our form to ask us to remove a search result from one of our own search indexes, such as Nolm or TootNews (see <a href=":link_removal">Removing a search result</a>), we open a case in which we check and decide on your request. The form runs on my.suma-ev.de, which we also operate ourselves. The legal basis is Art. 6(1)(c) in conjunction with Art. 17 GDPR. Emails to us are covered by “Contact by email”. The case involves the following data:',
-            'contact' => 'We delete your name and your email address, which you confirm through a link, from the case 6 months after it is closed. A form you do not send, we delete after 7 days.',
-            'message' => 'The addresses (URLs) and search terms concerned, your reasons and, depending on the request, a copy of your ID, a power of attorney or your declaration that you hold the rights to a piece of content. We store ID copies and powers of attorney encrypted. We delete them and your reasons no later than 6 months after the case is closed, and the search terms too, except for a hidden result (see below).',
-            'block' => 'If we hide a result, we keep its address, the search terms it is hidden for (usually your name) and the reasons for our decision for as long as the result stays hidden. For this, the address and search terms are held in our blocklist service, which we operate ourselves and from which the search concerned fetches them. We need them for the hiding to work and to justify it if it is challenged (Art. 17(3)(e) and Art. 6(1)(f) GDPR).',
-        ],
         'donate' => [
             'title' => 'Use of the donation form',
             'description' => 'The following data transmitted in the donation form will be stored for 2 months for processing:',

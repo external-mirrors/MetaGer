@@ -21,13 +21,6 @@ return [
             'description' => 'Skriver du till någon av adresserna på vår <a href=":link_contact">kontaktsida</a> hanterar vi ditt e-postmeddelande i vårt ärendesystem. Då uppstår följande uppgifter:',
             'contact' => 'Sparas tillsammans med dina e-postmeddelanden och deras bilagor till 3 månader efter att ditt ärende avslutats.',
         ],
-        'removal' => [
-            'title' => 'Begäranden om att ta bort sökresultat',
-            'description' => 'Om du via vårt formulär ber oss ta bort ett sökresultat från ett av våra egna sökindex, som Nolm eller TootNews (se <a href=":link_removal">Få ett sökresultat borttaget</a>), öppnar vi ett ärende där vi prövar din begäran och beslutar. Formuläret körs på my.suma-ev.de, som vi också själva driver. Den rättsliga grunden är art. 6.1 c jämförd med art. 17 GDPR. För e-post till oss gäller avsnittet ”Kontakt via e-post”. Ärendet omfattar följande uppgifter:',
-            'contact' => 'Vi raderar ditt namn och din e-postadress, som du bekräftar via en länk, från ärendet 6 månader efter att det avslutats. Ett formulär som du inte skickar raderar vi efter 7 dagar.',
-            'message' => 'De berörda adresserna (URL:er) och söktermerna, din motivering och, beroende på begäran, en kopia av din id-handling, en fullmakt eller ditt intygande om att du har rättigheterna till ett innehåll. Vi lagrar kopian och fullmakten krypterade. Vi raderar dem och din motivering senast 6 månader efter att ärendet avslutats, liksom söktermerna, utom för ett dolt resultat (se nedan).',
-            'block' => 'Om vi döljer ett resultat sparar vi dess adress, söktermerna det är dolt för (oftast ditt namn) och motiveringen till vårt beslut så länge resultatet förblir dolt. Adress och söktermer finns för detta i vår blockeringslisttjänst, som vi själva driver och som den berörda sökningen hämtar dem från. Vi behöver dem för att döljandet ska fungera och för att kunna motivera det om det ifrågasätts (art. 17.3 e och art. 6.1 f GDPR).',
-        ],
         'donate' => [
             'title' => 'Användning av donationsformuläret',
             'description' => 'Följande uppgifter som överförs i donationsformuläret kommer att lagras i 2 månader för bearbetning:',

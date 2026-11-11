@@ -49,18 +49,6 @@
                                 @lang('privacy.contexts.contact.contact')</li>
                         </ol>
                     </article>
-                    {{-- Pinned to suma-crm's retention by PrivacyPolicyContactRetentionTest. --}}
-                    <article class="kontext">
-                        <h1 id="removal-requests">@lang('privacy.contexts.removal.title')</h1>
-                        <div>@lang('privacy.contexts.removal.description', ['link_removal' => route('removal')])</div>
-                        <ol class="datum-list">
-                            <li><a href="#contact-data">@lang('privacy.data.contact'):</a>
-                                @lang('privacy.contexts.removal.contact')</li>
-                            <li><a href="#message">@lang('privacy.data.message'):</a>
-                                @lang('privacy.contexts.removal.message')</li>
-                        </ol>
-                        <div>@lang('privacy.contexts.removal.block')</div>
-                    </article>
                     <article class="kontext">
                         <h1 id="donation">@lang('privacy.contexts.donate.title')</h1>
                         <div>@lang('privacy.contexts.donate.description')</div>
@@ -336,6 +324,6 @@
         <div class="section">
             <h1>@lang('privacy.changes.title')</h1>
             <div>@lang('privacy.changes.description')</div>
-            <div>@lang('privacy.changes.date', ['date' => '2026-11-06'])</div>
+            <div>@lang('privacy.changes.date', ['date' => '2026-11-11'])</div>
         </div>
 @endsection

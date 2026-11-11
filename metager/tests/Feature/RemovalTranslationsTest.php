@@ -31,9 +31,10 @@ class RemovalTranslationsTest extends TestCase
         'providers.staan' => ['European Search Perspective'],
         'providers.suma' => ['TootNews', 'SUMA-EV', 'Mastodon'],
         'providers.website' => ['BASE'],
-        'us.text' => ['SUMA-EV', 'Nolm', 'TootNews / TrötNews'],
-        'us.steps.2' => ['17'],
-        'us.identity' => ['6'],
+        'kind.illegal.text' => ['(URL'],
+        'own.text' => ['SUMA-EV', 'Nolm', 'TootNews / TrötNews'],
+        'own.nolm' => ['Nolm', 'Open Web Index'],
+        'own.tootnews' => ['Mastodon'],
     ];
 
     public function test_every_locale_has_the_whole_guide(): void

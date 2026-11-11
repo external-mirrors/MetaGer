@@ -67,9 +67,9 @@ class RemovalGuideLayoutTest extends DuskTestCase
             $browser->resize(1280, 800)->visit("/de-DE/entfernen")->assertPresent("#removal");
             $browser->waitFor('.removal-toc a[aria-current="location"]');
 
-            $browser->script("document.querySelector('#write-to-us').scrollIntoView({ behavior: 'instant' });");
+            $browser->script("document.querySelector('#own-searches').scrollIntoView({ behavior: 'instant' });");
 
-            $browser->waitFor('.removal-toc a[href="#write-to-us"][aria-current="location"]');
+            $browser->waitFor('.removal-toc a[href="#own-searches"][aria-current="location"]');
             $this->assertCount(1, $browser->elements(".removal-toc a[aria-current]"));
         });
     }

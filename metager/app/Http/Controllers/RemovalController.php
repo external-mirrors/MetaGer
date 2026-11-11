@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
 use App\Models\Configuration\SearchEngineRegistry;
+use App\Models\parserSkripte\Tootnews;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\View\View;
 
@@ -12,9 +14,12 @@ use Illuminate\View\View;
  * MetaGer shows other engines' results, so the only removals that work are at
  * the website and at those engines. This page says where; the providers and
  * their forms are in config/removal_providers.php, keyed by the engine names
- * in config/foki.json. suma-crm links its form and replies to the anchors on
- * this page, and the page ends at that form: the one way to ask SUMA-EV itself,
- * for its own indexes.
+ * in config/foki.json. suma-crm links to the anchors on this page.
+ *
+ * SUMA-EV's own searches keep no index of their own either: TootNews searches
+ * Mastodon servers, Nolm the Open Web Index. So the page ends by saying where
+ * their results are removed, not at a form of ours. suma-crm still has its
+ * removal form, switched off; nothing here links it.
  *
  * Only providers MetaGer still gets results from get a card: an engine its
  * parser switches off (CONFIG_OVERLOAD `disabled`) sends nobody
@@ -46,8 +51,23 @@ class RemovalController extends Controller
             ),
             "foki" => $foki,
             "hotlines" => config("removal_providers.hotlines"),
-            "form" => config("metager.metager.crm.url") . "/entfernung?lang=" . urlencode(app()->getLocale()),
+            "own" => config("removal_providers.own"),
+            "tootnews" => self::tootNewsUrl(),
         ]);
+    }
+
+    /**
+     * TootNews' start page, which lists the Mastodon servers it searches, on
+     * the host the parser searches for this visitor: TroetNews for German,
+     * TootNews for everyone else (Tootnews::__construct).
+     */
+    public static function tootNewsUrl(): string
+    {
+        $host = Localization::getLanguage() === "de"
+            ? Tootnews::GERMAN_HOST
+            : Tootnews::CONFIG_OVERLOAD["tootnews"]["host"];
+
+        return "https://$host/";
     }
 
     /**

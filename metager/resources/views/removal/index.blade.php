@@ -7,8 +7,9 @@
 	/entfernen — where a search result can actually be removed.
 
 	Providers, anchors and form URLs come from config/removal_providers.php.
-	The anchors are public: suma-crm's form and replies link to
-	/entfernen#<anchor>, so an id here is not just markup.
+	The anchors are public: suma-crm links to /entfernen#<anchor>, so an id
+	here is not just markup. The page links no form of ours: SUMA-EV's own
+	searches are removed from at their sources too (the last step).
 
 	The page is complete without a script: the request kinds are <details>, the
 	table of contents is plain anchors. resources/js/removal.js only adds hints,
@@ -25,7 +26,7 @@
 			<li><a href="#{{ $website['anchor'] }}">@lang('removal.website.heading')</a></li>
 			<li><a href="#kind">@lang('removal.kind.heading')</a></li>
 			<li><a href="#providers">@lang('removal.providers.heading')</a></li>
-			<li><a href="#write-to-us">@lang('removal.us.heading')</a></li>
+			<li><a href="#own-searches">@lang('removal.own.heading')</a></li>
 		</ol>
 	</nav>
 
@@ -77,7 +78,7 @@
 						@endif
 						<p>{{ __($provider['note']) }}</p>
 						@if($provider['type'] === 'metager')
-							<p class="removal-provider-links"><a href="{{ $form }}">@lang('removal.providers.us')</a></p>
+							<p class="removal-provider-links"><a href="{{ $tootnews }}" rel="noopener noreferrer">@lang('removal.providers.servers')</a></p>
 						@elseif(empty(array_filter($provider['links'])))
 							{{-- No form for anything: one contact line, not three identical ones. --}}
 							<p class="removal-provider-links"><a href="{{ $provider['contact'] }}" rel="noopener noreferrer">@lang('removal.providers.no_form', ['name' => $provider['name']])</a></p>
@@ -104,19 +105,24 @@
 			</div>
 		</li>
 
-		<li class="removal-step" id="write-to-us">
-			<h2>@lang('removal.us.heading')</h2>
-			<p>@lang('removal.us.text')</p>
-			<ol class="removal-us-steps">
-				@foreach(trans('removal.us.steps') as $step)
-					<li>{{ $step }}</li>
+		<li class="removal-step" id="own-searches">
+			<h2>@lang('removal.own.heading')</h2>
+			<p>@lang('removal.own.text')</p>
+			<div class="removal-providers">
+				@foreach($own as $search)
+					<section class="removal-provider" id="{{ $search['anchor'] }}" aria-labelledby="{{ $search['anchor'] }}-name">
+						<h3 id="{{ $search['anchor'] }}-name">{{ $search['name'] }}</h3>
+						<p class="removal-provider-foki"><a href="{{ $search['url'] }}" rel="noopener noreferrer">{{ parse_url($search['url'], PHP_URL_HOST) }}</a></p>
+						<p>{{ __($search['note']) }}</p>
+						<p class="removal-provider-links"><a href="{{ $search['removal'] }}" rel="noopener noreferrer">{{ parse_url($search['removal'], PHP_URL_HOST) }}</a></p>
+					</section>
 				@endforeach
-			</ol>
-			<div class="removal-us-note">
-				<p>@lang('removal.us.include')</p>
-				<p>@lang('removal.us.identity')</p>
+				<section class="removal-provider" id="own-tootnews" aria-labelledby="own-tootnews-name">
+					<h3 id="own-tootnews-name">TootNews / TrötNews</h3>
+					<p>@lang('removal.own.tootnews')</p>
+					<p class="removal-provider-links"><a href="{{ $tootnews }}" rel="noopener noreferrer">@lang('removal.providers.servers')</a></p>
+				</section>
 			</div>
-			<p><a class="removal-contact" href="{{ $form }}">@lang('removal.us.contact')</a></p>
 		</li>
 	</ol>
 	</div>

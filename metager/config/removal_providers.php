@@ -12,10 +12,9 @@
 |
 | Read by the guide page (/entfernen, App\Http\Controllers\RemovalController)
 | and, through the engine keys, by suma-crm: POST /api/blocklist/check
-| answers with `engines[].name`, which is a key of `engines` below, and the
-| reply to a removal request links to /entfernen#<anchor> of its provider
-| (docs/blocklist-api.md). So an anchor is a public URL: renaming one breaks
-| links already sent out in replies.
+| answers with `engines[].name`, which is a key of `engines` below, and
+| suma-crm links to /entfernen#<anchor> of a provider (docs/blocklist-api.md).
+| So an anchor is a public URL: renaming one breaks links already sent out.
 |
 | Tests\Feature\RemovalPageTest fails when an engine in config/foki.json has
 | no entry here, and when an anchor is missing from the page.
@@ -32,7 +31,9 @@
 |   - `website`: the result comes straight from the website or repository
 |     that holds the content; there is nobody in between to ask. Its anchor
 |     is the page's first step, "contact the website".
-|   - `metager`: a source SUMA-EV runs itself; the right address is us.
+|   - `metager`: a source SUMA-EV runs itself (TootNews). It keeps no copy of
+|     the posts, so its card sends people to the Mastodon servers it
+|     searches, whose list is on TootNews' start page.
 |
 | `links`: one URL per kind of request, or null where the provider has no
 | process for it. A null falls back to `contact` on the page.
@@ -185,6 +186,19 @@ return [
             ],
             'contact' => null,
             'note' => 'removal.providers.website',
+        ],
+    ],
+
+    // SUMA-EV's own searches that MetaGer does not show. Nolm searches the
+    // Open Web Index, and a removal through the index's takedown form also
+    // removes the result from Nolm. Shown in the guide's last step.
+    'own' => [
+        'nolm' => [
+            'name' => 'Nolm',
+            'anchor' => 'nolm',
+            'url' => 'https://nolm.eu',
+            'removal' => 'https://openwebindex.eu/takedown',
+            'note' => 'removal.own.nolm',
         ],
     ],
 

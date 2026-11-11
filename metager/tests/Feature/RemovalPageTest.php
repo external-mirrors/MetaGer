@@ -11,11 +11,15 @@ use Tests\TestCase;
 /**
  * /entfernen — the guide to where a search result can actually be removed.
  *
- * The page is the target of suma-crm's replies: POST /api/blocklist/check
- * names the engines a result came from (docs/blocklist-api.md), and the reply
- * links each one to /entfernen#<anchor> through config/removal_providers.php.
- * So the two things that must not drift are that every engine has a provider,
- * and every provider's anchor exists on the page.
+ * suma-crm links here: POST /api/blocklist/check names the engines a result
+ * came from (docs/blocklist-api.md), each linked to /entfernen#<anchor>
+ * through config/removal_providers.php. So the two things that must not drift
+ * are that every engine has a provider, and every provider's anchor exists on
+ * the page.
+ *
+ * We take no removal requests ourselves (decided 2026-11-11): the page lists
+ * where each source is delisted, SUMA-EV's own searches included, and links
+ * no form of ours. suma-crm's form is kept but switched off.
  */
 class RemovalPageTest extends TestCase
 {
@@ -274,28 +278,38 @@ class RemovalPageTest extends TestCase
     }
 
     /**
-     * Version C: requests come in through suma-crm's form only, in the
-     * visitor's language, so the guide no longer ends at the contact page.
+     * The page used to end at suma-crm's removal form. That form is switched
+     * off; nothing on the page may lead to it, under any CRM address.
      */
-    public function testThePageEndsAtTheFormNotTheContactPage(): void
+    public function testThePageLinksNoFormOfOurs(): void
     {
         config(["metager.metager.crm.url" => "https://my.suma-ev.de"]);
 
         $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
-        $section = substr($content, strpos($content, 'id="write-to-us"'));
 
-        $this->assertStringContainsString('href="https://my.suma-ev.de/entfernung?lang=de-DE"', $section);
-        $this->assertStringNotContainsString('href="' . route("contact") . '"', substr($section, 0, strpos($section, "</li>\n\t</ol>")));
+        $this->assertStringNotContainsString("my.suma-ev.de", $content);
+        $this->assertStringNotContainsString("/entfernung", $content);
+        $this->assertStringNotContainsString('id="write-to-us"', $content);
+        $this->assertStringNotContainsString("Zum Formular", $content);
     }
 
-    /** It says what a reader can do here, not what we refuse. */
-    public function testThePageSaysWhichSearchesTheFormTakes(): void
+    /**
+     * The last step names SUMA-EV's own searches and where each is delisted:
+     * Nolm through the Open Web Index's takedown form, which also removes the
+     * result from Nolm, and TootNews at the Mastodon servers it searches.
+     */
+    public function testTheLastStepSaysWhereOurOwnSearchesAreDelisted(): void
     {
-        $this->get("/de-DE/entfernen")
-            ->assertOk()
-            ->assertSeeText("Nolm und TootNews / TrötNews")
-            ->assertDontSeeText("nicht per E-Mail")
-            ->assertDontSeeText("gehört nicht dazu");
+        $this->assertSame("https://openwebindex.eu/takedown", config("removal_providers.own.nolm.removal"));
+
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+        $step = substr($content, strpos($content, '<li class="removal-step" id="own-searches"'));
+
+        $this->assertStringContainsString("Nolm und TootNews / TrötNews", $step);
+        $this->assertStringContainsString('id="nolm"', $step);
+        $this->assertStringContainsString('href="https://openwebindex.eu/takedown"', $step);
+        $this->assertStringContainsString('href="https://troet.suma-lab.de/"', $step);
+        $this->assertStringContainsString("Open Web Index", $step);
     }
 
     /** People search for this page; the generic MetaGer description says nothing about it. */
@@ -314,14 +328,27 @@ class RemovalPageTest extends TestCase
             ->assertSee('<meta name="description" content="' . e(trans("staticPages.meta.Description", [], "de")) . '"', false);
     }
 
-    public function testTheTootNewsCardLeadsToTheForm(): void
+    /**
+     * TootNews keeps no posts of its own: its card sends people to its start
+     * page, which lists the Mastodon servers it searches, on the host the
+     * parser searches for that language (TroetNews for German).
+     */
+    public function testTheTootNewsCardLeadsToTheServersItSearches(): void
     {
-        config(["metager.metager.crm.url" => "https://my.suma-ev.de"]);
-
         $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
         $card = substr($content, strpos($content, 'id="suma-ev"'), 900);
 
-        $this->assertStringContainsString('href="https://my.suma-ev.de/entfernung?lang=de-DE"', $card);
+        $this->assertStringContainsString('href="https://troet.suma-lab.de/"', $card);
+        $this->assertStringContainsString("Mastodon-Server", $card);
+    }
+
+    /** One request per test: a second one is routed against the first one's locale-stripped state and 404s. */
+    public function testTheTootNewsCardLeadsToTheEnglishHostInEnglish(): void
+    {
+        $content = $this->get("/entfernen")->assertOk()->getContent();
+        $card = substr($content, strpos($content, 'id="suma-ev"'), 900);
+
+        $this->assertStringContainsString('href="https://toot.suma-lab.de/"', $card);
     }
 
     /** The page used to say we only hide a result where removal at the source fails. */
@@ -333,28 +360,18 @@ class RemovalPageTest extends TestCase
     }
 
     /**
-     * Art. 12(3) GDPR: an answer within a month. suma-crm's removal cases run
-     * on the same deadline (RemovalRequest::deadline_at). Where to complain
-     * (Art. 12(4)) belongs in the reply that refuses a request, not on this
-     * page (team feedback, 2026-11-04).
+     * The page used to promise an answer within a month, proof of identity
+     * where it mattered, and when we delete it. Those described suma-crm's
+     * removal cases, which are switched off; a promise for a process we do
+     * not run is not one we can keep.
      */
-    public function testWritingToUsNamesTheDeadline(): void
+    public function testThePageMakesNoPromisesForAProcessWeDoNotRun(): void
     {
         $this->get("/de-DE/entfernen")
             ->assertOk()
-            ->assertSeeText("innerhalb eines Monats")
-            ->assertDontSeeText("Aufsichtsbehörde")
-            ->assertDontSeeText("vor Gericht");
-    }
-
-    /** One request per test: a second one is routed against the first one's locale-stripped state and 404s. */
-    public function testWritingToUsNamesTheDeadlineInEnglish(): void
-    {
-        $this->followingRedirects()->get("/en-US/entfernen", ["Sec-Fetch-Mode" => "navigate"])
-            ->assertOk()
-            ->assertSeeText("within one month")
-            ->assertDontSeeText("supervisory authority")
-            ->assertDontSeeText("go to court");
+            ->assertDontSeeText("innerhalb eines Monats")
+            ->assertDontSeeText("Kopie Ihres Ausweises")
+            ->assertDontSeeText("Vollmacht");
     }
 
     /**
@@ -500,37 +517,15 @@ class RemovalPageTest extends TestCase
     /**
      * Not wanting the content is right; discouraging the address was not. A
      * search engine that is told about a clearly illegal result has to act
-     * on it, and the page must not look as if we would rather not know.
+     * on it, and the page must not look as if we would rather not know. With
+     * no form, the address comes by email; the blocklist is how we act on it.
      */
     public function testIllegalContentAsksForTheAddressButNeverTheContent(): void
     {
         $this->get("/de-DE/entfernen")
             ->assertOk()
             ->assertDontSeeText("weder die Inhalte noch Links darauf")
-            ->assertSeeText("nennen Sie uns nur seine Adresse (URL) als Text")
+            ->assertSeeText("nennen Sie uns nur seine Adresse (URL) als Text per E-Mail")
             ->assertSeeText("nie die Inhalte selbst");
-    }
-
-    /**
-     * suma-crm asks for proof of identity and keeps it with the case;
-     * otherwise anyone could have any address removed. The page says so up
-     * front, with what we need it for and that it can be blacked out
-     * (Art. 12(6) GDPR, data minimisation), right after what to include.
-     */
-    public function testWritingToUsSaysWhenWeAskForProofOfIdentity(): void
-    {
-        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
-
-        $this->assertStringContainsString("eine Kopie Ihres Ausweises", $content);
-        $this->assertStringContainsString("Beim Urheberrecht", $content);
-        $this->assertStringContainsString("eine Vollmacht", $content);
-        $this->assertStringContainsString("nur, wo es darauf ankommt", $content);
-        $this->assertStringContainsString("schwärzen", $content);
-        $this->assertStringContainsString("mit Ihren übrigen Angaben", $content);
-        $this->assertLessThan(
-            strpos($content, "Kopie Ihres Ausweises"),
-            strpos($content, "die genauen Adressen (URLs)"),
-            "The identity note belongs after what the form asks for.",
-        );
     }
 }

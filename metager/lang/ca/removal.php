@@ -61,6 +61,10 @@ return [
         'nolm' => 'Nolm és el cercador propi de SUMA-EV, independent de MetaGer. Nolm cerca a l’Open Web Index. Sol·liciteu l’eliminació amb el formulari de retirada de l’Open Web Index: el que s’elimina allà també desapareix de Nolm.',
         'website' => 'BASE mostra el que contenen els repositoris on cerca. Quan el repositori elimina un registre, també desapareix de BASE.',
     ],
+    'questions' => [
+        'text' => 'Encara teniu preguntes sobre com eliminar un resultat de cerca?',
+        'link' => 'Escriviu-nos un correu electrònic',
+    ],
     'trademarks' => [
         'text' => 'Els noms dels cercadors d’altres proveïdors són marques dels seus respectius titulars. Només els fem servir per indicar on podeu sol·licitar una retirada.',
         'ref' => 'Nota sobre marques',

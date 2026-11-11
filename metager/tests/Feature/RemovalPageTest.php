@@ -460,6 +460,19 @@ class RemovalPageTest extends TestCase
         $this->assertGreaterThan(strpos($content, 'id="providers"'), strpos($content, 'id="trademarks"'), "The note is at the bottom.");
     }
 
+    /** Whoever still has questions is pointed to us at the end: by email, through the contact page. */
+    public function testThePageEndsByOfferingToAnswerQuestions(): void
+    {
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression(
+            '#<p class="removal-questions">Noch Fragen zum Entfernen von Suchergebnissen\? <a href="[^"]*/de-DE/kontakt\#email">Schreiben Sie uns eine E-Mail</a></p>#',
+            $content,
+        );
+        $this->assertGreaterThan(strpos($content, 'id="providers"'), strpos($content, 'class="removal-questions"'));
+        $this->assertLessThan(strpos($content, 'id="trademarks"'), strpos($content, 'class="removal-questions"'));
+    }
+
     /** Removed sources leave no card, no mapping and no text; TootNews stays. */
     public function testRemovedSourcesAreNotOnThePage(): void
     {

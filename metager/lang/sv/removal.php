@@ -61,6 +61,10 @@ return [
         'nolm' => 'Nolm är SUMA-EV:s egen sökmotor, skild från MetaGer. Nolm söker i Open Web Index. Begär borttagning med Open Web Index formulär för borttagning: det som tas bort där försvinner också från Nolm.',
         'website' => 'BASE visar vad arkiven som den söker i innehåller. När arkivet tar bort en post försvinner den också från BASE.',
     ],
+    'questions' => [
+        'text' => 'Har du fler frågor om att ta bort ett sökresultat?',
+        'link' => 'Skicka oss ett mejl',
+    ],
     'trademarks' => [
         'text' => 'Namnen på andra leverantörers sökmotorer är varumärken som tillhör respektive ägare. Vi använder dem bara för att visa var du kan begära borttagning.',
         'ref' => 'Varumärkesanmärkning',

@@ -61,6 +61,10 @@ return [
         'nolm' => 'Nolm è il motore di ricerca di SUMA-EV, separato da MetaGer. Nolm cerca nell’Open Web Index. Chieda la rimozione con il modulo di rimozione dell’Open Web Index: ciò che viene rimosso lì scompare anche da Nolm.',
         'website' => 'BASE mostra ciò che contengono gli archivi in cui cerca. Se l’archivio rimuove un record, questo sparisce anche da BASE.',
     ],
+    'questions' => [
+        'text' => 'Ha altre domande sulla rimozione di un risultato di ricerca?',
+        'link' => 'Ci scriva un’e-mail',
+    ],
     'trademarks' => [
         'text' => 'I nomi dei motori di ricerca di altri fornitori sono marchi dei rispettivi titolari. Li usiamo solo per indicare dove può chiedere una rimozione.',
         'ref' => 'Nota sui marchi',

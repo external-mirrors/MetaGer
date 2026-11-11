@@ -116,6 +116,8 @@
 	</ol>
 	</div>
 
+	<p class="removal-questions">@lang('removal.questions.text') <a href="{{ route('contact') }}#email">@lang('removal.questions.link')</a></p>
+
 	{{-- Marked with an asterisk on the cards whose provider has `trademark`
 	     in config/removal_providers.php. No claim of non-affiliation: we are a
 	     customer of some of these services, and TootNews and Nolm are ours. --}}

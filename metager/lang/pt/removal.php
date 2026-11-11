@@ -58,12 +58,7 @@ return [
         'polias' => 'O Polias tem um índice próprio e não tem formulário. Escreva para hallo@polias.eu indicando o endereço da página e o motivo.',
         'pixabay' => 'A Pixabay disponibiliza ela própria as imagens. Use o formulário de denúncia ou o botão de denúncia na página da imagem na Pixabay.',
         'suma' => 'O TootNews é gerido pela SUMA-EV, a associação por trás do MetaGer, e pesquisa publicações em alguns servidores Mastodon. Cada resultado indica o servidor de onde vem; peça a quem gere esse servidor que apague ou oculte a publicação.',
+        'nolm' => 'O Nolm é o motor de busca próprio da SUMA-EV, separado do MetaGer. O Nolm pesquisa no Open Web Index. Peça a remoção através do formulário de remoção do Open Web Index: o que for removido lá desaparece também do Nolm.',
         'website' => 'O BASE mostra o que contêm os repositórios em que pesquisa. Quando o repositório remove um registo, este desaparece também do BASE.',
-    ],
-    'own' => [
-        'heading' => 'Os nossos próprios motores de busca',
-        'text' => 'A SUMA-EV, a associação por trás do MetaGer, também gere motores de busca próprios: Nolm e TootNews / TrötNews. Também não têm um índice próprio, por isso os seus resultados também são removidos na origem.',
-        'nolm' => 'O Nolm pesquisa no Open Web Index. Peça a remoção através do formulário de remoção do Open Web Index: o que for removido lá desaparece também do Nolm.',
-        'tootnews' => 'O TootNews pesquisa publicações em alguns servidores Mastodon, indicados na sua página inicial; cada resultado indica o servidor de onde vem. Peça a quem gere esse servidor que apague ou oculte a publicação. Depois de desaparecer de lá, o TootNews deixa de a encontrar.',
     ],
 ];

@@ -273,7 +273,7 @@ class RemovalPageTest extends TestCase
         preg_match_all('/href="#([^"]+)"/', $toc[0], $targets);
         preg_match_all('/<li class="removal-step" id="([^"]+)"/', $content, $steps);
 
-        $this->assertCount(4, $steps[1]);
+        $this->assertCount(3, $steps[1]);
         $this->assertSame($steps[1], $targets[1]);
     }
 
@@ -294,22 +294,25 @@ class RemovalPageTest extends TestCase
     }
 
     /**
-     * The last step names SUMA-EV's own searches and where each is delisted:
-     * Nolm through the Open Web Index's takedown form, which also removes the
-     * result from Nolm, and TootNews at the Mastodon servers it searches.
+     * SUMA-EV's own searches get cards among the providers, not a step of
+     * their own: TootNews' card (which MetaGer shows) and one for Nolm (which
+     * it does not), whose removal goes through the Open Web Index's takedown
+     * form and also takes the result off Nolm.
      */
-    public function testTheLastStepSaysWhereOurOwnSearchesAreDelisted(): void
+    public function testNolmHasACardAmongTheProviders(): void
     {
         $this->assertSame("https://openwebindex.eu/takedown", config("removal_providers.own.nolm.removal"));
 
         $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
-        $step = substr($content, strpos($content, '<li class="removal-step" id="own-searches"'));
+        $providers = substr($content, strpos($content, '<li class="removal-step" id="providers"'));
+        $nolm = substr($providers, strpos($providers, 'id="nolm"'), 1200);
 
-        $this->assertStringContainsString("Nolm und TootNews / TrötNews", $step);
-        $this->assertStringContainsString('id="nolm"', $step);
-        $this->assertStringContainsString('href="https://openwebindex.eu/takedown"', $step);
-        $this->assertStringContainsString('href="https://troet.suma-lab.de/"', $step);
-        $this->assertStringContainsString("Open Web Index", $step);
+        $this->assertStringContainsString('id="nolm"', $providers);
+        $this->assertStringContainsString('id="suma-ev"', $providers);
+        $this->assertStringContainsString('href="https://openwebindex.eu/takedown"', $nolm);
+        $this->assertStringContainsString("Open Web Index", $nolm);
+        $this->assertStringContainsString("getrennt von MetaGer", $nolm);
+        $this->assertStringNotContainsString('id="own-searches"', $content);
     }
 
     /** People search for this page; the generic MetaGer description says nothing about it. */
@@ -434,9 +437,6 @@ class RemovalPageTest extends TestCase
             ->assertDontSeeText("können wir nicht zusagen");
     }
 
-    /** Removed sources leave no card, no mapping and no text; TootNews stays. */
-    public function testRemovedSourcesAreNotOnThePage(): void
-    {
     /**
      * We have no contract with Google, so no card may read like one. Our
      * supplier is Serper; Google is named only as where Serper's results come
@@ -453,6 +453,9 @@ class RemovalPageTest extends TestCase
             ->assertDontSeeText("Googles Ergebnisse");
     }
 
+    /** Removed sources leave no card, no mapping and no text; TootNews stays. */
+    public function testRemovedSourcesAreNotOnThePage(): void
+    {
         foreach (self::GONE as $engine) {
             $this->assertArrayNotHasKey($engine, config("removal_providers.engines"), "[$engine] is still mapped.");
         }

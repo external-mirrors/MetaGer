@@ -58,12 +58,7 @@ return [
         'polias' => 'Polias té un índex propi i no té cap formulari. Escriviu a hallo@polias.eu amb l’adreça de la pàgina i el motiu.',
         'pixabay' => 'Pixabay allotja les imatges ell mateix. Feu servir el formulari de denúncia o el botó de denúncia a la pàgina de la imatge a Pixabay.',
         'suma' => 'TootNews el gestiona SUMA-EV, l’associació que hi ha darrere de MetaGer, i cerca publicacions en uns quants servidors de Mastodon. Cada resultat indica de quin servidor prové; demaneu als responsables d’aquest servidor que esborrin o amaguin la publicació.',
+        'nolm' => 'Nolm és el cercador propi de SUMA-EV, independent de MetaGer. Nolm cerca a l’Open Web Index. Sol·liciteu l’eliminació amb el formulari de retirada de l’Open Web Index: el que s’elimina allà també desapareix de Nolm.',
         'website' => 'BASE mostra el que contenen els repositoris on cerca. Quan el repositori elimina un registre, també desapareix de BASE.',
-    ],
-    'own' => [
-        'heading' => 'Els nostres propis cercadors',
-        'text' => 'SUMA-EV, l’associació que hi ha darrere de MetaGer, també gestiona cercadors propis: Nolm i TootNews / TrötNews. Tampoc no tenen un índex propi, de manera que els seus resultats també s’eliminen allà d’on provenen.',
-        'nolm' => 'Nolm cerca a l’Open Web Index. Sol·liciteu l’eliminació amb el formulari de retirada de l’Open Web Index: el que s’elimina allà també desapareix de Nolm.',
-        'tootnews' => 'TootNews cerca publicacions en uns quants servidors de Mastodon, que figuren a la seva pàgina d’inici; cada resultat indica de quin servidor prové. Demaneu als responsables d’aquest servidor que esborrin o amaguin la publicació. Un cop hi hagi desaparegut, TootNews ja no la troba.',
     ],
 ];

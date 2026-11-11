@@ -58,12 +58,7 @@ return [
         'polias' => 'Polias ma własny indeks i nie ma formularza. Napisz na adres hallo@polias.eu, podając adres strony i powód.',
         'pixabay' => 'Pixabay sam udostępnia obrazy. Skorzystaj z formularza zgłoszeniowego lub przycisku zgłoszenia na stronie obrazu w Pixabay.',
         'suma' => 'TootNews prowadzi SUMA-EV, stowarzyszenie stojące za MetaGer; wyszukuje on wpisy na kilku serwerach Mastodona. Przy każdym wyniku widać, z którego serwera pochodzi; poproś administratorów tego serwera o usunięcie lub ukrycie wpisu.',
+        'nolm' => 'Nolm to własna wyszukiwarka SUMA-EV, niezależna od MetaGer. Nolm przeszukuje Open Web Index. Złóż wniosek o usunięcie przez formularz usuwania Open Web Index: to, co zostanie tam usunięte, znika też z Nolm.',
         'website' => 'BASE pokazuje zawartość przeszukiwanych repozytoriów. Gdy repozytorium usunie rekord, znika on także z BASE.',
-    ],
-    'own' => [
-        'heading' => 'Nasze własne wyszukiwarki',
-        'text' => 'SUMA-EV, stowarzyszenie stojące za MetaGer, prowadzi też własne wyszukiwarki: Nolm i TootNews / TrötNews. One również nie mają własnego indeksu, więc także ich wyniki usuwa się tam, skąd pochodzą.',
-        'nolm' => 'Nolm przeszukuje Open Web Index. Złóż wniosek o usunięcie przez formularz usuwania Open Web Index: to, co zostanie tam usunięte, znika też z Nolm.',
-        'tootnews' => 'TootNews wyszukuje wpisy na kilku serwerach Mastodona, wymienionych na jego stronie głównej; przy każdym wyniku widać, z którego serwera pochodzi. Poproś administratorów tego serwera o usunięcie lub ukrycie wpisu. Gdy zniknie stamtąd, TootNews przestanie go znajdować.',
     ],
 ];

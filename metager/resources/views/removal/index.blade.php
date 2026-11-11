@@ -9,7 +9,7 @@
 	Providers, anchors and form URLs come from config/removal_providers.php.
 	The anchors are public: suma-crm links to /entfernen#<anchor>, so an id
 	here is not just markup. The page links no form of ours: SUMA-EV's own
-	searches are removed from at their sources too (the last step).
+	searches are removed from at their sources too (the TootNews and Nolm cards).
 
 	The page is complete without a script: the request kinds are <details>, the
 	table of contents is plain anchors. resources/js/removal.js only adds hints,
@@ -26,7 +26,6 @@
 			<li><a href="#{{ $website['anchor'] }}">@lang('removal.website.heading')</a></li>
 			<li><a href="#kind">@lang('removal.kind.heading')</a></li>
 			<li><a href="#providers">@lang('removal.providers.heading')</a></li>
-			<li><a href="#own-searches">@lang('removal.own.heading')</a></li>
 		</ol>
 	</nav>
 
@@ -102,13 +101,8 @@
 						@endif
 					</section>
 				@endforeach
-			</div>
-		</li>
-
-		<li class="removal-step" id="own-searches">
-			<h2>@lang('removal.own.heading')</h2>
-			<p>@lang('removal.own.text')</p>
-			<div class="removal-providers">
+				{{-- SUMA-EV's own searches MetaGer does not show (Nolm): a card
+				     here too, so the page has one place that says where. --}}
 				@foreach($own as $search)
 					<section class="removal-provider" id="{{ $search['anchor'] }}" aria-labelledby="{{ $search['anchor'] }}-name">
 						<h3 id="{{ $search['anchor'] }}-name">{{ $search['name'] }}</h3>
@@ -117,13 +111,9 @@
 						<p class="removal-provider-links"><a href="{{ $search['removal'] }}" rel="noopener noreferrer">{{ parse_url($search['removal'], PHP_URL_HOST) }}</a></p>
 					</section>
 				@endforeach
-				<section class="removal-provider" id="own-tootnews" aria-labelledby="own-tootnews-name">
-					<h3 id="own-tootnews-name">TootNews / TrötNews</h3>
-					<p>@lang('removal.own.tootnews')</p>
-					<p class="removal-provider-links"><a href="{{ $tootnews }}" rel="noopener noreferrer">@lang('removal.providers.servers')</a></p>
-				</section>
 			</div>
 		</li>
+
 	</ol>
 	</div>
 </div>

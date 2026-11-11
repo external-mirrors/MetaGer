@@ -58,12 +58,7 @@ return [
         'polias' => 'Polias driver ett eget index och har inget formulär. Skriv till hallo@polias.eu med sidans adress och skälet.',
         'pixabay' => 'Pixabay tillhandahåller bilderna själv. Använd anmälningsformuläret eller anmälningsknappen på bildens sida hos Pixabay.',
         'suma' => 'TootNews drivs av SUMA-EV, föreningen bakom MetaGer, och söker bland inlägg på några få Mastodon-servrar. Vid varje resultat står vilken server det kommer från; be dem som driver servern att radera eller dölja inlägget.',
+        'nolm' => 'Nolm är SUMA-EV:s egen sökmotor, skild från MetaGer. Nolm söker i Open Web Index. Begär borttagning med Open Web Index formulär för borttagning: det som tas bort där försvinner också från Nolm.',
         'website' => 'BASE visar vad arkiven som den söker i innehåller. När arkivet tar bort en post försvinner den också från BASE.',
-    ],
-    'own' => [
-        'heading' => 'Våra egna sökmotorer',
-        'text' => 'SUMA-EV, föreningen bakom MetaGer, driver också egna sökmotorer: Nolm och TootNews / TrötNews. Inte heller de har något eget index, så även deras resultat tas bort där de kommer ifrån.',
-        'nolm' => 'Nolm söker i Open Web Index. Begär borttagning med Open Web Index formulär för borttagning: det som tas bort där försvinner också från Nolm.',
-        'tootnews' => 'TootNews söker bland inlägg på några få Mastodon-servrar, som står på dess startsida; vid varje resultat står vilken server det kommer från. Be dem som driver servern att radera eller dölja inlägget. När det är borta där hittar TootNews det inte längre.',
     ],
 ];

@@ -191,14 +191,14 @@ return [
 
     // SUMA-EV's own searches that MetaGer does not show. Nolm searches the
     // Open Web Index, and a removal through the index's takedown form also
-    // removes the result from Nolm. Shown in the guide's last step.
+    // removes the result from Nolm. A card after the providers' cards.
     'own' => [
         'nolm' => [
             'name' => 'Nolm',
             'anchor' => 'nolm',
             'url' => 'https://nolm.eu',
             'removal' => 'https://openwebindex.eu/takedown',
-            'note' => 'removal.own.nolm',
+            'note' => 'removal.providers.nolm',
         ],
     ],
 

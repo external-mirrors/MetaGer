@@ -58,12 +58,7 @@ return [
         'polias' => 'Polias heeft een eigen index en geen formulier. Schrijf naar hallo@polias.eu met het adres van de pagina en de reden.',
         'pixabay' => 'Pixabay host de afbeeldingen zelf. Gebruik het meldformulier of de meldknop op de pagina van de afbeelding bij Pixabay.',
         'suma' => 'TootNews wordt beheerd door SUMA-EV, de vereniging achter MetaGer, en zoekt berichten op een paar Mastodon-servers. Bij elk resultaat staat van welke server het komt; vraag de beheerders van die server het bericht te verwijderen of te verbergen.',
+        'nolm' => 'Nolm is de eigen zoekmachine van SUMA-EV, los van MetaGer. Nolm zoekt in de Open Web Index. Vraag de verwijdering aan via het verwijderingsformulier van de Open Web Index: wat daar wordt verwijderd, verdwijnt ook uit Nolm.',
         'website' => 'BASE toont wat de repositories bevatten die het doorzoekt. Verwijdert de repository een record, dan verdwijnt het ook uit BASE.',
-    ],
-    'own' => [
-        'heading' => 'Onze eigen zoekmachines',
-        'text' => 'SUMA-EV, de vereniging achter MetaGer, beheert ook eigen zoekmachines: Nolm en TootNews / TrötNews. Ook die hebben geen eigen index, dus ook hun resultaten worden verwijderd waar ze vandaan komen.',
-        'nolm' => 'Nolm zoekt in de Open Web Index. Vraag de verwijdering aan via het verwijderingsformulier van de Open Web Index: wat daar wordt verwijderd, verdwijnt ook uit Nolm.',
-        'tootnews' => 'TootNews zoekt berichten op een paar Mastodon-servers, die op zijn startpagina staan; bij elk resultaat staat van welke server het komt. Vraag de beheerders van die server het bericht te verwijderen of te verbergen. Is het daar weg, dan vindt TootNews het niet meer.',
     ],
 ];

@@ -17,8 +17,8 @@ use Illuminate\View\View;
  * in config/foki.json. suma-crm links to the anchors on this page.
  *
  * SUMA-EV's own searches keep no index of their own either: TootNews searches
- * Mastodon servers, Nolm the Open Web Index. So the page ends by saying where
- * their results are removed, not at a form of ours. suma-crm still has its
+ * Mastodon servers, Nolm the Open Web Index. Their cards say where their
+ * results are removed; there is no form of ours. suma-crm still has its
  * removal form, switched off; nothing here links it.
  *
  * Only providers MetaGer still gets results from get a card: an engine its

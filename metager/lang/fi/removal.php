@@ -58,12 +58,7 @@ return [
         'polias' => 'Poliasilla on oma hakemisto, eikä sillä ole lomaketta. Kirjoita osoitteeseen hallo@polias.eu ja ilmoita sivun osoite ja syy.',
         'pixabay' => 'Pixabay tarjoaa kuvat itse. Käytä ilmoituslomaketta tai ilmoituspainiketta kuvan sivulla Pixabayssa.',
         'suma' => 'TootNewsia ylläpitää SUMA-EV, MetaGerin taustalla oleva yhdistys, ja se hakee julkaisuja muutamalta Mastodon-palvelimelta. Jokaisen tuloksen kohdalla näkyy, miltä palvelimelta se on; pyydä palvelimen ylläpitäjiä poistamaan tai piilottamaan julkaisu.',
+        'nolm' => 'Nolm on SUMA-EV:n oma hakukone, erillään MetaGerista. Nolm hakee Open Web Indexistä. Pyydä poistoa Open Web Indexin poistolomakkeella: mikä siellä poistetaan, katoaa myös Nolmista.',
         'website' => 'BASE näyttää, mitä sen hakemat arkistot sisältävät. Kun arkisto poistaa tietueen, se katoaa myös BASEsta.',
-    ],
-    'own' => [
-        'heading' => 'Omat hakukoneemme',
-        'text' => 'SUMA-EV, MetaGerin taustalla oleva yhdistys, ylläpitää myös omia hakukoneita: Nolm ja TootNews / TrötNews. Niilläkään ei ole omaa hakemistoa, joten niidenkin tulokset poistetaan siellä, mistä ne ovat peräisin.',
-        'nolm' => 'Nolm hakee Open Web Indexistä. Pyydä poistoa Open Web Indexin poistolomakkeella: mikä siellä poistetaan, katoaa myös Nolmista.',
-        'tootnews' => 'TootNews hakee julkaisuja muutamalta Mastodon-palvelimelta, jotka on lueteltu sen etusivulla; jokaisen tuloksen kohdalla näkyy, miltä palvelimelta se on. Pyydä palvelimen ylläpitäjiä poistamaan tai piilottamaan julkaisu. Kun se on poistettu sieltä, TootNews ei enää löydä sitä.',
     ],
 ];

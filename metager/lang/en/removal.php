@@ -58,12 +58,7 @@ return [
         'polias' => 'Polias runs its own index and has no form. Write to hallo@polias.eu with the page’s address and the reason.',
         'pixabay' => 'Pixabay hosts the pictures itself. Use the report form or the report button on the picture’s page on Pixabay.',
         'suma' => 'TootNews is run by SUMA-EV, the association behind MetaGer, and searches posts on a few Mastodon servers. Each result shows the server it comes from; ask the people who run that server to delete or hide the post.',
+        'nolm' => 'Nolm is SUMA-EV’s own search engine, separate from MetaGer. Nolm searches the Open Web Index. Request the removal with the Open Web Index’s takedown form: what is removed there is also gone from Nolm.',
         'website' => 'BASE shows what the repositories it searches hold. Once the repository removes a record, it disappears from BASE.',
-    ],
-    'own' => [
-        'heading' => 'Our own search engines',
-        'text' => 'SUMA-EV, the association behind MetaGer, also runs search engines of its own: Nolm and TootNews / TrötNews. They have no index of their own either, so their results are removed where they come from, too.',
-        'nolm' => 'Nolm searches the Open Web Index. Request the removal with the Open Web Index’s takedown form: what is removed there is also gone from Nolm.',
-        'tootnews' => 'TootNews searches posts on a few Mastodon servers, which its start page lists; each result shows the server it comes from. Ask the people who run that server to delete or hide the post. Once it is gone there, TootNews no longer finds it.',
     ],
 ];

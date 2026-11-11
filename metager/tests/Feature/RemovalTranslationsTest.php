@@ -32,9 +32,7 @@ class RemovalTranslationsTest extends TestCase
         'providers.suma' => ['TootNews', 'SUMA-EV', 'Mastodon'],
         'providers.website' => ['BASE'],
         'kind.illegal.text' => ['(URL'],
-        'own.text' => ['SUMA-EV', 'Nolm', 'TootNews / TrötNews'],
-        'own.nolm' => ['Nolm', 'Open Web Index'],
-        'own.tootnews' => ['Mastodon'],
+        'providers.nolm' => ['Nolm', 'SUMA-EV', 'Open Web Index'],
     ];
 
     public function test_every_locale_has_the_whole_guide(): void

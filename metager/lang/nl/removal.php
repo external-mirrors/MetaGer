@@ -51,7 +51,7 @@ return [
         'no_form' => 'Geen formulier, contact opnemen met :name',
         'contact' => 'Contact opnemen met :name',
         'servers' => 'De Mastodon-servers waarin TootNews zoekt',
-        'google' => 'MetaGer krijgt deze resultaten van de dienst Serper, die ze uit Google Zoeken haalt. Wat Google uit zijn index verwijdert, ontbreekt daarna ook bij MetaGer.',
+        'google' => 'MetaGer krijgt de resultaten van Google via de dienst Serper. Wat Google uit zijn index verwijdert, ontbreekt daarna ook bij MetaGer.',
         'brave' => 'Brave Search heeft een eigen index. Verzoeken over persoonsgegevens gaan per e-mail naar privacy@brave.com met het onderwerp ‘RTBF request’; de gelinkte pagina vertelt wat de e-mail moet bevatten.',
         'mojeek' => 'Mojeek heeft een eigen index en bewerkt zijn resultaten niet met de hand. Om juridische redenen verwijdert Mojeek pagina’s op verzoek; schrijf via de contactpagina en noem de exacte adressen.',
         'staan' => 'Staan is de zoekinterface van European Search Perspective. Staan neemt verzoeken over persoonsgegevens aan via een eigen formulier; vul elk veld in en voeg de bewijsstukken toe. De verwijdering geldt alleen voor de index van Staan.',

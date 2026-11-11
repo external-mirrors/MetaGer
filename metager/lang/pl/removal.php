@@ -51,7 +51,7 @@ return [
         'no_form' => 'Brak formularza, kontakt: :name',
         'contact' => 'Kontakt: :name',
         'servers' => 'Serwery Mastodona, które przeszukuje TootNews',
-        'google' => 'MetaGer otrzymuje te wyniki od usługi Serper, która pobiera je z wyszukiwarki Google. To, co Google usunie ze swojego indeksu, znika potem także z MetaGer.',
+        'google' => 'MetaGer otrzymuje wyniki Google przez usługę Serper. To, co Google usunie ze swojego indeksu, znika potem także z MetaGer.',
         'brave' => 'Brave Search ma własny indeks. Wnioski dotyczące danych osobowych wysyła się e-mailem na adres privacy@brave.com z tematem „RTBF request”; podlinkowana strona wyjaśnia, co musi zawierać wiadomość.',
         'mojeek' => 'Mojeek ma własny indeks i nie edytuje wyników ręcznie. Z przyczyn prawnych usuwa strony na wniosek; napisz przez jego stronę kontaktową i podaj dokładne adresy.',
         'staan' => 'Staan to interfejs wyszukiwania European Search Perspective. Wnioski dotyczące danych osobowych przyjmuje przez własny formularz; wypełnij każde pole i dołącz dokumenty potwierdzające. Usunięcie dotyczy tylko indeksu Staan.',

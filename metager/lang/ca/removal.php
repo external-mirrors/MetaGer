@@ -51,7 +51,7 @@ return [
         'no_form' => 'Sense formulari, contacteu amb :name',
         'contact' => 'Contacteu amb :name',
         'servers' => 'Els servidors de Mastodon on cerca TootNews',
-        'google' => 'MetaGer rep aquests resultats del servei Serper, que els obté de la Cerca de Google. El que Google elimina del seu índex també desapareix de MetaGer.',
+        'google' => 'MetaGer rep els resultats de Google a través del servei Serper. El que Google elimina del seu índex també desapareix de MetaGer.',
         'brave' => 'Brave Search té un índex propi. Les sol·licituds sobre dades personals s’envien per correu electrònic a privacy@brave.com amb l’assumpte «RTBF request»; la pàgina enllaçada explica què ha de contenir el correu.',
         'mojeek' => 'Mojeek té un índex propi i no edita els resultats a mà. Retira pàgines per motius legals a petició; escriviu-li des de la pàgina de contacte i indiqueu els URL exactes.',
         'staan' => 'Staan és la interfície de cerca d’European Search Perspective. Les sol·licituds sobre dades personals les rep amb un formulari propi; ompliu tots els camps i adjunteu-hi els documents justificatius. L’eliminació només afecta l’índex de Staan.',

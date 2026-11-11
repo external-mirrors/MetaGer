@@ -51,7 +51,7 @@ return [
         'no_form' => 'No form, contact :name',
         'contact' => 'Contact :name',
         'servers' => 'The Mastodon servers TootNews searches',
-        'google' => 'MetaGer gets these results from the service Serper, which takes them from Google Search. What Google removes from its index is then gone from MetaGer too.',
+        'google' => 'MetaGer receives Google’s results through the service Serper. What Google removes from its index is then gone from MetaGer too.',
         'brave' => 'Brave Search runs its own index. Requests about personal data go by email to privacy@brave.com with the subject “RTBF request”; the linked page says what the email needs to contain.',
         'mojeek' => 'Mojeek runs its own index and does not edit its results by hand. It removes pages for legal reasons on request; write to it through its contact page and name the exact URLs.',
         'staan' => 'Staan is the search interface of European Search Perspective. It takes requests about personal data through its own form; fill in every field and attach the supporting documents. The removal only affects the Staan index.',

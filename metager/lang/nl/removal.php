@@ -61,4 +61,8 @@ return [
         'nolm' => 'Nolm is de eigen zoekmachine van SUMA-EV, los van MetaGer. Nolm zoekt in de Open Web Index. Vraag de verwijdering aan via het verwijderingsformulier van de Open Web Index: wat daar wordt verwijderd, verdwijnt ook uit Nolm.',
         'website' => 'BASE toont wat de repositories bevatten die het doorzoekt. Verwijdert de repository een record, dan verdwijnt het ook uit BASE.',
     ],
+    'trademarks' => [
+        'text' => 'Namen van zoekmachines van andere aanbieders zijn merken van hun respectieve eigenaren. We gebruiken ze alleen om aan te geven waar u verwijdering kunt aanvragen.',
+        'ref' => 'Merkenvermelding',
+    ],
 ];

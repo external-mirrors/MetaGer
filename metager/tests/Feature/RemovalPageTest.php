@@ -437,6 +437,29 @@ class RemovalPageTest extends TestCase
             ->assertDontSeeText("können wir nicht zusagen");
     }
 
+    /**
+     * Google is named without a contract with Google, so its name carries an
+     * asterisk to a general trademark note at the bottom of the page (team
+     * decision, 2026-11-11). The note claims no non-affiliation: we are a
+     * customer of some of these services, and TootNews and Nolm are ours.
+     */
+    public function testGoogleCarriesAnAsteriskToTheTrademarkNote(): void
+    {
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+
+        $this->assertStringContainsString(
+            '<h3 id="google-name">Google<a class="removal-trademark-ref" href="#trademarks" aria-label="Markenhinweis">*</a></h3>',
+            $content,
+        );
+        $this->assertSame(1, substr_count($content, 'class="removal-trademark-ref"'), "Only Google is marked.");
+        $this->assertMatchesRegularExpression(
+            '#<p class="removal-trademarks" id="trademarks"><span aria-hidden="true">\*</span> Die Namen der Suchmaschinen anderer Anbieter sind Marken ihrer jeweiligen Inhaber\.#',
+            $content,
+        );
+        $this->assertStringNotContainsString("nicht verbunden", $content);
+        $this->assertGreaterThan(strpos($content, 'id="providers"'), strpos($content, 'id="trademarks"'), "The note is at the bottom.");
+    }
+
     /** Removed sources leave no card, no mapping and no text; TootNews stays. */
     public function testRemovedSourcesAreNotOnThePage(): void
     {

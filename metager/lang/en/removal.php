@@ -61,4 +61,8 @@ return [
         'nolm' => 'Nolm is SUMA-EV’s own search engine, separate from MetaGer. Nolm searches the Open Web Index. Request the removal with the Open Web Index’s takedown form: what is removed there is also gone from Nolm.',
         'website' => 'BASE shows what the repositories it searches hold. Once the repository removes a record, it disappears from BASE.',
     ],
+    'trademarks' => [
+        'text' => 'Names of other providers’ search engines are trademarks of their respective owners. We use them only to say where you can request a removal.',
+        'ref' => 'Trademark note',
+    ],
 ];

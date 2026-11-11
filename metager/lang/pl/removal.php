@@ -61,4 +61,8 @@ return [
         'nolm' => 'Nolm to własna wyszukiwarka SUMA-EV, niezależna od MetaGer. Nolm przeszukuje Open Web Index. Złóż wniosek o usunięcie przez formularz usuwania Open Web Index: to, co zostanie tam usunięte, znika też z Nolm.',
         'website' => 'BASE pokazuje zawartość przeszukiwanych repozytoriów. Gdy repozytorium usunie rekord, znika on także z BASE.',
     ],
+    'trademarks' => [
+        'text' => 'Nazwy wyszukiwarek innych dostawców są znakami towarowymi ich właścicieli. Używamy ich tylko po to, by wskazać, gdzie można złożyć wniosek o usunięcie.',
+        'ref' => 'Informacja o znakach towarowych',
+    ],
 ];

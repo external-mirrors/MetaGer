@@ -352,4 +352,20 @@
             margin: 0;
             overflow-wrap: anywhere;
         }
-    }}
+    }
+
+    // The asterisk after a provider's name, pointing to the note below.
+    // Underlined, which the base styles take off every link: in a heading,
+    // colour alone does not set a link apart (AccessibilityTest, axe's
+    // link-in-text-block).
+    .removal-trademark-ref {
+        margin-left: 0.1em;
+        text-decoration: underline;
+    }
+
+    .removal-trademarks {
+        margin-top: 2rem;
+        font-size: 0.85rem;
+        color: @muted-text-color;
+    }
+}

@@ -61,4 +61,8 @@ return [
         'nolm' => 'Nolm on SUMA-EV:n oma hakukone, erillään MetaGerista. Nolm hakee Open Web Indexistä. Pyydä poistoa Open Web Indexin poistolomakkeella: mikä siellä poistetaan, katoaa myös Nolmista.',
         'website' => 'BASE näyttää, mitä sen hakemat arkistot sisältävät. Kun arkisto poistaa tietueen, se katoaa myös BASEsta.',
     ],
+    'trademarks' => [
+        'text' => 'Muiden palveluntarjoajien hakukoneiden nimet ovat omistajiensa tavaramerkkejä. Käytämme niitä vain kertoaksemme, mistä voit pyytää poistoa.',
+        'ref' => 'Tavaramerkkihuomautus',
+    ],
 ];

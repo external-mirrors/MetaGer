@@ -41,6 +41,9 @@
 |   - `outdated`:      the page changed or is gone, the result still shows it
 |   - `legal`:         copyright and other legal reasons
 |
+| `trademark` (optional): the card's name gets an asterisk pointing to the
+| trademark note at the bottom of the page.
+|
 | `note` is a translation key, so the page can say it in the visitor's
 | language. URLs were checked by hand in November 2026; providers move these
 | pages around, so a dead one is worth a look before assuming the form is gone.
@@ -87,6 +90,8 @@ return [
             ],
             'contact' => null,
             'note' => 'removal.providers.google',
+            // An asterisk on the card, pointing to the page's trademark note.
+            'trademark' => true,
         ],
         'brave' => [
             'type' => 'provider',

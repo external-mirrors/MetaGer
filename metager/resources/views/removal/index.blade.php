@@ -71,7 +71,7 @@
 			<div class="removal-providers">
 				@foreach($providers as $id => $provider)
 					<section class="removal-provider" id="{{ $provider['anchor'] }}" aria-labelledby="{{ $provider['anchor'] }}-name">
-						<h3 id="{{ $provider['anchor'] }}-name">{{ $provider['name'] }}</h3>
+						<h3 id="{{ $provider['anchor'] }}-name">{{ $provider['name'] }}@if(!empty($provider['trademark']))<a class="removal-trademark-ref" href="#trademarks" aria-label="@lang('removal.trademarks.ref')">*</a>@endif</h3>
 						@if(!empty($foki[$id]))
 							<p class="removal-provider-foki">@lang('removal.providers.shows') {{ implode(', ', $foki[$id]) }}</p>
 						@endif
@@ -113,8 +113,12 @@
 				@endforeach
 			</div>
 		</li>
-
 	</ol>
 	</div>
+
+	{{-- Marked with an asterisk on the cards whose provider has `trademark`
+	     in config/removal_providers.php. No claim of non-affiliation: we are a
+	     customer of some of these services, and TootNews and Nolm are ours. --}}
+	<p class="removal-trademarks" id="trademarks"><span aria-hidden="true">*</span> @lang('removal.trademarks.text')</p>
 </div>
 @endsection

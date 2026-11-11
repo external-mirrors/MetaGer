@@ -429,7 +429,7 @@ class RemovalPageTest extends TestCase
     {
         $this->get("/de-DE/entfernen")
             ->assertOk()
-            ->assertSeeText("MetaGer bezieht Googles Ergebnisse über den Dienst Serper")
+            ->assertSeeText("MetaGer erhält diese Ergebnisse vom Dienst Serper")
             ->assertDontSeeText("nur für Suchende in Europa")
             ->assertDontSeeText("können wir nicht zusagen");
     }
@@ -437,6 +437,22 @@ class RemovalPageTest extends TestCase
     /** Removed sources leave no card, no mapping and no text; TootNews stays. */
     public function testRemovedSourcesAreNotOnThePage(): void
     {
+    /**
+     * We have no contract with Google, so no card may read like one. Our
+     * supplier is Serper; Google is named only as where Serper's results come
+     * from, and as the one whose removal reaches us. "MetaGer bezieht Googles
+     * Ergebnisse" made Google sound like our supplier (team feedback,
+     * 2026-11-11).
+     */
+    public function testTheGoogleCardDoesNotSoundLikeAPartnershipWithGoogle(): void
+    {
+        $this->get("/de-DE/entfernen")
+            ->assertOk()
+            ->assertSeeText("der sie der Google-Suche entnimmt")
+            ->assertDontSeeText("bezieht Googles Ergebnisse")
+            ->assertDontSeeText("Googles Ergebnisse");
+    }
+
         foreach (self::GONE as $engine) {
             $this->assertArrayNotHasKey($engine, config("removal_providers.engines"), "[$engine] is still mapped.");
         }

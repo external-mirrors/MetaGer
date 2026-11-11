@@ -51,7 +51,7 @@ return [
         'no_form' => 'Ei lomaketta, ota yhteyttä: :name',
         'contact' => 'Ota yhteyttä: :name',
         'servers' => 'Mastodon-palvelimet, joilta TootNews hakee',
-        'google' => 'MetaGer saa Googlen tulokset Serper-palvelun kautta. Mitä Google poistaa hakemistostaan, puuttuu sen jälkeen myös MetaGerista.',
+        'google' => 'MetaGer saa nämä tulokset Serper-palvelulta, joka hakee ne Google-hausta. Mitä Google poistaa hakemistostaan, puuttuu sen jälkeen myös MetaGerista.',
         'brave' => 'Brave Searchilla on oma hakemisto. Henkilötietoja koskevat pyynnöt lähetetään sähköpostilla osoitteeseen privacy@brave.com otsikolla ”RTBF request”; linkitetyllä sivulla kerrotaan, mitä viestissä pitää olla.',
         'mojeek' => 'Mojeekilla on oma hakemisto, eikä se muokkaa tuloksiaan käsin. Oikeudellisista syistä Mojeek poistaa sivuja pyynnöstä; kirjoita sen yhteydenottosivun kautta ja ilmoita tarkat osoitteet.',
         'staan' => 'Staan on European Search Perspectiven hakurajapinta. Staan ottaa henkilötietoja koskevat pyynnöt vastaan omalla lomakkeellaan; täytä kaikki kentät ja liitä todisteet. Poisto koskee vain Staanin hakemistoa.',

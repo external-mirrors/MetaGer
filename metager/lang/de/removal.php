@@ -51,7 +51,7 @@ return [
         'no_form' => 'Kein Formular, :name kontaktieren',
         'contact' => ':name kontaktieren',
         'servers' => 'Die Mastodon-Server, die TrötNews durchsucht',
-        'google' => 'MetaGer bezieht Googles Ergebnisse über den Dienst Serper. Was Google aus seinem Index entfernt, fehlt danach auch bei MetaGer.',
+        'google' => 'MetaGer erhält diese Ergebnisse vom Dienst Serper, der sie der Google-Suche entnimmt. Was Google aus seinem Index entfernt, fehlt danach auch bei MetaGer.',
         'brave' => 'Brave Search betreibt einen eigenen Index. Anträge zu persönlichen Daten gehen per E-Mail an privacy@brave.com mit dem Betreff „RTBF request“; die verlinkte Seite sagt, was die E-Mail enthalten muss.',
         'mojeek' => 'Mojeek betreibt einen eigenen Index und bearbeitet seine Ergebnisse nicht von Hand. Aus rechtlichen Gründen entfernt Mojeek Seiten auf Antrag; schreiben Sie über die Kontaktseite und nennen Sie die genauen Adressen.',
         'staan' => 'Staan ist die Suchschnittstelle von European Search Perspective. Anträge zu persönlichen Daten nimmt Staan über ein eigenes Formular entgegen; füllen Sie jedes Feld aus und hängen Sie die Nachweise an. Das Entfernen betrifft nur den Index von Staan.',

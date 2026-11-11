@@ -236,7 +236,7 @@ class Blacklists
      */
     private static function directory(): string
     {
-        return storage_path("framework/cache/blocklist");
+        return config("metager.metager.blocklist.compiled_directory") ?? storage_path("framework/cache/blocklist");
     }
 
     private static function path(string $version): string

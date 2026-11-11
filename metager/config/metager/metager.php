@@ -121,6 +121,11 @@ return [
         // Where the legacy blacklist*.txt files are read from before the
         // first sync (App\Search\LegacyBlocklistFiles). Null: config/.
         "legacy_directory" => null,
+        // Where compiled snapshots are kept (App\Search\Blacklists).
+        // Null: storage/framework/cache/blocklist. Tests give every parallel
+        // worker its own (Tests\Support\BootCache), since each has its own
+        // `blocklist:version` counter.
+        "compiled_directory" => null,
     ],
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),

@@ -33,7 +33,7 @@ final class BootCache
         }
 
         $app = $createApplication();
-        self::$config = self::withOwnRedisDatabase($app['config']->all());
+        self::$config = self::withOwnBlocklistDirectory(self::withOwnRedisDatabase($app['config']->all()), $app->storagePath('framework/cache'));
         self::useCacheFile('APP_CONFIG_CACHE', 'config');
 
         if (! $app->routesAreCached()) {
@@ -65,6 +65,25 @@ final class BootCache
             if (is_array($connection) && array_key_exists('database', $connection)) {
                 $config['database']['redis'][$name]['database'] = ($token - 1) % 15 + 1;
             }
+        }
+
+        return $config;
+    }
+
+    /**
+     * App\Search\Blacklists writes one compiled file per `blocklist:version`,
+     * and that counter lives in the worker's own Redis database above, so two
+     * workers at the same version hold different lists. Sharing a directory,
+     * one read the other's file and flushed it from under it.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array<string, mixed>
+     */
+    private static function withOwnBlocklistDirectory(array $config, string $cache): array
+    {
+        $token = (int) ($_SERVER['TEST_TOKEN'] ?? 0);
+        if ($token !== 0) {
+            $config['metager']['metager']['blocklist']['compiled_directory'] = $cache.DIRECTORY_SEPARATOR."blocklist-{$token}";
         }
 
         return $config;

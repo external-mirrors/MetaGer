@@ -278,19 +278,35 @@ class Searchengines
             return;
         }
 
+        // The cached engines are the next page of the search that wrote them,
+        // in the fokus that search ran in. The uid travels in the URL, so it
+        // can arrive with another `focus=` — a web search's uid on an image
+        // search turned Staan or Serper on there, whose results have no image
+        // data, and the image deduplication died on them. A next page from
+        // another fokus is not this search's next page: it runs as page one.
+        $settings = app(SearchSettings::class);
+        $engines_in_fokus = $settings->sumasJson->foki->{$settings->fokus}->sumas;
+        $engines = array_filter(
+            $next["engines"] ?? [],
+            fn($engine) => $engine instanceof Searchengine
+                && isset($this->sumas[$engine->name])
+                && in_array($engine->name, $engines_in_fokus)
+        );
+        if ($engines === []) {
+            return;
+        }
+
         // Pagination call detected. Disable all Searchengines and replace the searchengines with the cached ones
         foreach ($this->sumas as $suma) {
             $suma->configuration->disabled = true;
             $suma->configuration->disabledReasons[] = DisabledReason::SUMAS_CONFIGURATION;
         }
-        foreach ($next["engines"] as $engine) {
-            foreach ($this->sumas as $name => $suma) {
-                if ($engine instanceof $suma) {
-                    $this->sumas[$name] = $engine;
-                }
-            }
+        // By name, not by class: two engines may share a parser class or one
+        // may extend another, and either way an instanceof test puts a cached
+        // engine into a slot that is not its own.
+        foreach ($engines as $engine) {
+            $this->sumas[$engine->name] = $engine;
         }
-        $settings = app(SearchSettings::class);
         $settings->page = $next["page"];
     }
 

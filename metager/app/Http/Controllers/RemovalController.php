@@ -34,6 +34,7 @@ class RemovalController extends Controller
     public function show(SearchEngineRegistry $registry): View
     {
         $providers = config("removal_providers.providers");
+        $providers["suma"]["name"] = self::tootNewsName();
         $foki = $this->fokiPerProvider($registry);
 
         return view("removal.index", [
@@ -54,6 +55,18 @@ class RemovalController extends Controller
             "own" => config("removal_providers.own"),
             "tootnews" => self::tootNewsUrl(),
         ]);
+    }
+
+    /**
+     * The name a visitor finds under a TootNews result: TroetNews for German,
+     * TootNews for everyone else (Tootnews::__construct). They are one search
+     * over the same Mastodon servers, so the guide names only this one.
+     */
+    public static function tootNewsName(): string
+    {
+        return Localization::getLanguage() === "de"
+            ? Tootnews::GERMAN_DISPLAY_NAME
+            : Tootnews::CONFIG_OVERLOAD["tootnews"]["infos"]["display_name"];
     }
 
     /**

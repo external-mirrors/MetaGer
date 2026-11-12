@@ -354,6 +354,39 @@ class RemovalPageTest extends TestCase
         $this->assertStringContainsString('href="https://toot.suma-lab.de/"', $card);
     }
 
+    /**
+     * TootNews and TroetNews are one search over the same Mastodon servers;
+     * a German search asks troet.suma-lab.de and labels its results
+     * TroetNews (Tootnews::__construct). The card names the one the visitor
+     * finds under a result, and only that one.
+     */
+    public function testTheTootNewsCardNamesTroetNewsInGerman(): void
+    {
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+        $card = $this->card($content, "suma-ev");
+
+        $this->assertStringContainsString("TroetNews", $card);
+        $this->assertStringNotContainsString("TootNews", $card);
+    }
+
+    public function testTheTootNewsCardNamesTootNewsInEnglish(): void
+    {
+        $content = $this->get("/entfernen")->assertOk()->getContent();
+        $card = $this->card($content, "suma-ev");
+
+        $this->assertStringContainsString("TootNews", $card);
+        $this->assertStringNotContainsString("TroetNews", $card);
+    }
+
+    /** One provider card, from its opening tag to its end. */
+    private function card(string $content, string $anchor): string
+    {
+        $start = strpos($content, "id=\"$anchor\"");
+        $this->assertNotFalse($start, "No card #$anchor.");
+
+        return substr($content, $start, strpos($content, "</section>", $start) - $start);
+    }
+
     /** The page used to say we only hide a result where removal at the source fails. */
     public function testThePageDoesNotTurnRequestsAwayOverTheSource(): void
     {
@@ -473,7 +506,7 @@ class RemovalPageTest extends TestCase
         $this->assertLessThan(strpos($content, 'id="trademarks"'), strpos($content, 'class="removal-questions"'));
     }
 
-    /** Removed sources leave no card, no mapping and no text; TootNews stays. */
+    /** Removed sources leave no card, no mapping and no text; TootNews (TroetNews in German) stays. */
     public function testRemovedSourcesAreNotOnThePage(): void
     {
         foreach (self::GONE as $engine) {
@@ -491,7 +524,7 @@ class RemovalPageTest extends TestCase
         foreach (["eBay", "TUBdok", "Minisucher", "VeRO", "Yandex", "One News Page"] as $gone) {
             $this->assertStringNotContainsStringIgnoringCase($gone, $page, "$gone is still named on the page.");
         }
-        $this->assertStringContainsString("TootNews", $page);
+        $this->assertStringContainsString("TroetNews", $page);
         $this->assertStringContainsString("BASE", $page);
     }
 

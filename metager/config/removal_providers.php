@@ -165,10 +165,12 @@ return [
             'note' => 'removal.providers.pixabay',
         ],
         // TootNews/TroetNews is run by SUMA-EV. The content still lives on
-        // a Mastodon instance, so the website comes first here too.
+        // a Mastodon instance, so the website comes first here too. `name`
+        // is replaced per language by RemovalController::tootNewsName():
+        // German searches label these results TroetNews.
         'suma' => [
             'type' => 'metager',
-            'name' => 'SUMA-EV (TootNews)',
+            'name' => 'TootNews',
             'anchor' => 'suma-ev',
             'links' => [
                 'personal_data' => null,

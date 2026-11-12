@@ -75,9 +75,9 @@
 						@if(!empty($foki[$id]))
 							<p class="removal-provider-foki">@lang('removal.providers.shows') {{ implode(', ', $foki[$id]) }}</p>
 						@endif
-						<p>{{ __($provider['note']) }}</p>
+						<p>{{ __($provider['note'], ['name' => $provider['name']]) }}</p>
 						@if($provider['type'] === 'metager')
-							<p class="removal-provider-links"><a href="{{ $tootnews }}" rel="noopener noreferrer">@lang('removal.providers.servers')</a></p>
+							<p class="removal-provider-links"><a href="{{ $tootnews }}" rel="noopener noreferrer">@lang('removal.providers.servers', ['name' => $provider['name']])</a></p>
 						@elseif(empty(array_filter($provider['links'])))
 							{{-- No form for anything: one contact line, not three identical ones. --}}
 							<p class="removal-provider-links"><a href="{{ $provider['contact'] }}" rel="noopener noreferrer">@lang('removal.providers.no_form', ['name' => $provider['name']])</a></p>

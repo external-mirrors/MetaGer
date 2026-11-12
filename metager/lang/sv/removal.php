@@ -57,8 +57,8 @@ return [
         'staan' => 'Staan är sökgränssnittet från European Search Perspective. Staan tar emot begäranden om personuppgifter via ett eget formulär; fyll i alla fält och bifoga underlagen. Borttagningen gäller bara Staans index.',
         'polias' => 'Polias driver ett eget index och har inget formulär. Skriv till hallo@polias.eu med sidans adress och skälet.',
         'pixabay' => 'Pixabay tillhandahåller bilderna själv. Använd anmälningsformuläret eller anmälningsknappen på bildens sida hos Pixabay.',
-        'suma' => ':name drivs av SUMA-EV, föreningen bakom MetaGer, och söker bland inlägg på några få Mastodon-servrar. Vid varje resultat står vilken server det kommer från; be dem som driver servern att radera eller dölja inlägget.',
-        'nolm' => 'Nolm är SUMA-EV:s egen sökmotor, skild från MetaGer. Nolm söker i Open Web Index. Begär borttagning med Open Web Index formulär för borttagning: det som tas bort där försvinner också från Nolm.',
+        'suma' => ':name drivs av SUMA-EV, föreningen bakom MetaGer. Den har inget eget index, utan söker bland inläggen på några få Mastodon-servrar. När en server raderar eller döljer ett inlägg hittar :name det inte längre. Vid varje resultat står vilken server det kommer från; be dem som driver servern att radera eller dölja inlägget.',
+        'nolm' => 'Nolm är SUMA-EV:s egen sökmotor, skild från MetaGer. Den har inget eget index, utan visar vad Open Web Index innehåller. Det som tas bort där försvinner därför också från Nolm. Begär borttagning med Open Web Index formulär för borttagning.',
         'website' => 'BASE visar vad arkiven som den söker i innehåller. När arkivet tar bort en post försvinner den också från BASE.',
     ],
     'questions' => [

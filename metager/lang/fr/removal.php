@@ -57,8 +57,8 @@ return [
         'staan' => 'Staan est l’interface de recherche d’European Search Perspective. Staan reçoit les demandes concernant des données personnelles via son propre formulaire ; remplissez chaque champ et joignez les justificatifs. Le retrait ne concerne que l’index de Staan.',
         'polias' => 'Polias exploite son propre index et n’a pas de formulaire. Écrivez à hallo@polias.eu en indiquant l’adresse de la page et le motif.',
         'pixabay' => 'Pixabay héberge lui-même les images. Utilisez le formulaire de signalement ou le bouton de signalement sur la page de l’image sur Pixabay.',
-        'suma' => ':name est exploité par SUMA-EV, l’association derrière MetaGer, et cherche des publications sur quelques serveurs Mastodon. Chaque résultat indique le serveur dont il provient ; demandez aux personnes qui gèrent ce serveur de supprimer ou de masquer la publication.',
-        'nolm' => 'Nolm est le moteur de recherche propre à SUMA-EV, distinct de MetaGer. Nolm cherche dans l’Open Web Index. Demandez la suppression avec le formulaire de retrait de l’Open Web Index : ce qui y est supprimé disparaît aussi de Nolm.',
+        'suma' => ':name est exploité par SUMA-EV, l’association derrière MetaGer. Il n’a pas d’index propre et cherche dans les publications de quelques serveurs Mastodon. Dès qu’un serveur supprime ou masque une publication, :name ne la trouve plus. Chaque résultat indique le serveur dont il provient ; demandez aux personnes qui gèrent ce serveur de supprimer ou de masquer la publication.',
+        'nolm' => 'Nolm est le moteur de recherche propre à SUMA-EV, distinct de MetaGer. Il n’a pas d’index propre et affiche ce que contient l’Open Web Index. Ce qui y est supprimé disparaît donc aussi de Nolm. Demandez la suppression avec le formulaire de retrait de l’Open Web Index.',
         'website' => 'BASE affiche ce que contiennent les dépôts qu’il interroge. Si le dépôt retire une notice, elle disparaît aussi de BASE.',
     ],
     'questions' => [

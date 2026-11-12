@@ -378,6 +378,20 @@ class RemovalPageTest extends TestCase
         $this->assertStringNotContainsString("TroetNews", $card);
     }
 
+    /**
+     * "Ours" invites the question why we do not just remove it ourselves.
+     * Both cards answer it: neither search keeps an index of its own, so a
+     * result is gone from it once it is gone at the source.
+     */
+    public function testOurOwnSearchesSayTheyHaveNoIndexOfTheirOwn(): void
+    {
+        $content = $this->get("/de-DE/entfernen")->assertOk()->getContent();
+
+        foreach (["suma-ev", "nolm"] as $anchor) {
+            $this->assertStringContainsString("keinen eigenen Index", $this->card($content, $anchor), "#$anchor");
+        }
+    }
+
     /** One provider card, from its opening tag to its end. */
     private function card(string $content, string $anchor): string
     {

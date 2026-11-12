@@ -57,8 +57,8 @@ return [
         'staan' => 'Staan is the search interface of European Search Perspective. It takes requests about personal data through its own form; fill in every field and attach the supporting documents. The removal only affects the Staan index.',
         'polias' => 'Polias runs its own index and has no form. Write to hallo@polias.eu with the page’s address and the reason.',
         'pixabay' => 'Pixabay hosts the pictures itself. Use the report form or the report button on the picture’s page on Pixabay.',
-        'suma' => ':name is run by SUMA-EV, the association behind MetaGer, and searches posts on a few Mastodon servers. Each result shows the server it comes from; ask the people who run that server to delete or hide the post.',
-        'nolm' => 'Nolm is SUMA-EV’s own search engine, separate from MetaGer. Nolm searches the Open Web Index. Request the removal with the Open Web Index’s takedown form: what is removed there is also gone from Nolm.',
+        'suma' => ':name is run by SUMA-EV, the association behind MetaGer. It has no index of its own, but searches the posts on a few Mastodon servers. Once a server deletes or hides a post, :name no longer finds it. Each result shows the server it comes from; ask the people who run that server to delete or hide the post.',
+        'nolm' => 'Nolm is SUMA-EV’s own search engine, separate from MetaGer. It has no index of its own, but shows what the Open Web Index holds. So what is removed there is also gone from Nolm. Request the removal with the Open Web Index’s takedown form.',
         'website' => 'BASE shows what the repositories it searches hold. Once the repository removes a record, it disappears from BASE.',
     ],
     'questions' => [

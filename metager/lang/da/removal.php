@@ -57,8 +57,8 @@ return [
         'staan' => 'Staan er søgegrænsefladen fra European Search Perspective. Staan modtager anmodninger om personoplysninger via sin egen formular; udfyld alle felter, og vedhæft dokumentationen. Fjernelsen gælder kun Staans indeks.',
         'polias' => 'Polias driver sit eget indeks og har ingen formular. Skriv til hallo@polias.eu med sidens adresse og begrundelsen.',
         'pixabay' => 'Pixabay leverer selv billederne. Brug anmeldelsesformularen eller anmeldelsesknappen på billedets side på Pixabay.',
-        'suma' => ':name drives af SUMA-EV, foreningen bag MetaGer, og søger i opslag på nogle få Mastodon-servere. Ved hvert resultat står, hvilken server det kommer fra; bed dem, der driver serveren, om at slette eller skjule opslaget.',
-        'nolm' => 'Nolm er SUMA-EV’s egen søgemaskine, adskilt fra MetaGer. Nolm søger i Open Web Index. Anmod om fjernelse via Open Web Index’ formular til fjernelse: Det, der fjernes dér, forsvinder også fra Nolm.',
+        'suma' => ':name drives af SUMA-EV, foreningen bag MetaGer. Den har intet eget indeks, men søger i opslagene på nogle få Mastodon-servere. Når en server sletter eller skjuler et opslag, finder :name det ikke længere. Ved hvert resultat står, hvilken server det kommer fra; bed dem, der driver serveren, om at slette eller skjule opslaget.',
+        'nolm' => 'Nolm er SUMA-EV’s egen søgemaskine, adskilt fra MetaGer. Den har intet eget indeks, men viser, hvad Open Web Index indeholder. Det, der fjernes dér, forsvinder derfor også fra Nolm. Anmod om fjernelse via Open Web Index’ formular til fjernelse.',
         'website' => 'BASE viser, hvad de arkiver, det gennemsøger, indeholder. Når arkivet fjerner en post, forsvinder den også fra BASE.',
     ],
     'questions' => [

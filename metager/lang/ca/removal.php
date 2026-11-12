@@ -57,8 +57,8 @@ return [
         'staan' => 'Staan és la interfície de cerca d’European Search Perspective. Les sol·licituds sobre dades personals les rep amb un formulari propi; ompliu tots els camps i adjunteu-hi els documents justificatius. L’eliminació només afecta l’índex de Staan.',
         'polias' => 'Polias té un índex propi i no té cap formulari. Escriviu a hallo@polias.eu amb l’adreça de la pàgina i el motiu.',
         'pixabay' => 'Pixabay allotja les imatges ell mateix. Feu servir el formulari de denúncia o el botó de denúncia a la pàgina de la imatge a Pixabay.',
-        'suma' => ':name el gestiona SUMA-EV, l’associació que hi ha darrere de MetaGer, i cerca publicacions en uns quants servidors de Mastodon. Cada resultat indica de quin servidor prové; demaneu als responsables d’aquest servidor que esborrin o amaguin la publicació.',
-        'nolm' => 'Nolm és el cercador propi de SUMA-EV, independent de MetaGer. Nolm cerca a l’Open Web Index. Sol·liciteu l’eliminació amb el formulari de retirada de l’Open Web Index: el que s’elimina allà també desapareix de Nolm.',
+        'suma' => ':name el gestiona SUMA-EV, l’associació que hi ha darrere de MetaGer. No té cap índex propi, sinó que cerca les publicacions d’uns quants servidors de Mastodon. Quan un servidor esborra o amaga una publicació, :name ja no la troba. Cada resultat indica de quin servidor prové; demaneu als responsables d’aquest servidor que esborrin o amaguin la publicació.',
+        'nolm' => 'Nolm és el cercador propi de SUMA-EV, independent de MetaGer. No té cap índex propi, sinó que mostra el que conté l’Open Web Index. Per això, el que s’elimina allà també desapareix de Nolm. Sol·liciteu l’eliminació amb el formulari de retirada de l’Open Web Index.',
         'website' => 'BASE mostra el que contenen els repositoris on cerca. Quan el repositori elimina un registre, també desapareix de BASE.',
     ],
     'questions' => [

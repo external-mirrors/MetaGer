@@ -57,8 +57,8 @@ return [
         'staan' => 'Staan on European Search Perspectiven hakurajapinta. Staan ottaa henkilötietoja koskevat pyynnöt vastaan omalla lomakkeellaan; täytä kaikki kentät ja liitä todisteet. Poisto koskee vain Staanin hakemistoa.',
         'polias' => 'Poliasilla on oma hakemisto, eikä sillä ole lomaketta. Kirjoita osoitteeseen hallo@polias.eu ja ilmoita sivun osoite ja syy.',
         'pixabay' => 'Pixabay tarjoaa kuvat itse. Käytä ilmoituslomaketta tai ilmoituspainiketta kuvan sivulla Pixabayssa.',
-        'suma' => 'Hakupalvelua :name ylläpitää SUMA-EV, MetaGerin taustalla oleva yhdistys, ja se hakee julkaisuja muutamalta Mastodon-palvelimelta. Jokaisen tuloksen kohdalla näkyy, miltä palvelimelta se on; pyydä palvelimen ylläpitäjiä poistamaan tai piilottamaan julkaisu.',
-        'nolm' => 'Nolm on SUMA-EV:n oma hakukone, erillään MetaGerista. Nolm hakee Open Web Indexistä. Pyydä poistoa Open Web Indexin poistolomakkeella: mikä siellä poistetaan, katoaa myös Nolmista.',
+        'suma' => 'Hakupalvelua :name ylläpitää SUMA-EV, MetaGerin taustalla oleva yhdistys. Sillä ei ole omaa indeksiä, vaan se hakee julkaisuja muutamalta Mastodon-palvelimelta. Kun palvelin poistaa tai piilottaa julkaisun, :name ei enää löydä sitä. Jokaisen tuloksen kohdalla näkyy, miltä palvelimelta se on; pyydä palvelimen ylläpitäjiä poistamaan tai piilottamaan julkaisu.',
+        'nolm' => 'Nolm on SUMA-EV:n oma hakukone, erillään MetaGerista. Sillä ei ole omaa indeksiä, vaan se näyttää, mitä Open Web Index sisältää. Siksi mikä siellä poistetaan, katoaa myös Nolmista. Pyydä poistoa Open Web Indexin poistolomakkeella.',
         'website' => 'BASE näyttää, mitä sen hakemat arkistot sisältävät. Kun arkisto poistaa tietueen, se katoaa myös BASEsta.',
     ],
     'questions' => [

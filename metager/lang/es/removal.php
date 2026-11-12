@@ -57,8 +57,8 @@ return [
         'staan' => 'Staan es la interfaz de búsqueda de European Search Perspective. Recibe las solicitudes sobre datos personales a través de su propio formulario; rellene todos los campos y adjunte los justificantes. La retirada solo afecta al índice de Staan.',
         'polias' => 'Polias tiene índice propio y no dispone de formulario. Escriba a hallo@polias.eu indicando la dirección de la página y el motivo.',
         'pixabay' => 'Pixabay aloja las imágenes por sí mismo. Utilice el formulario de denuncia o el botón de denuncia en la página de la imagen en Pixabay.',
-        'suma' => ':name lo gestiona SUMA-EV, la asociación que está detrás de MetaGer, y busca publicaciones en unos pocos servidores de Mastodon. Cada resultado indica de qué servidor procede; pida a quienes gestionan ese servidor que borren u oculten la publicación.',
-        'nolm' => 'Nolm es el buscador propio de SUMA-EV, independiente de MetaGer. Nolm busca en el Open Web Index. Solicite la eliminación con el formulario de retirada del Open Web Index: lo que se elimina allí desaparece también de Nolm.',
+        'suma' => ':name lo gestiona SUMA-EV, la asociación que está detrás de MetaGer. No tiene un índice propio, sino que busca en las publicaciones de unos pocos servidores de Mastodon. Cuando un servidor borra u oculta una publicación, :name deja de encontrarla. Cada resultado indica de qué servidor procede; pida a quienes gestionan ese servidor que borren u oculten la publicación.',
+        'nolm' => 'Nolm es el buscador propio de SUMA-EV, independiente de MetaGer. No tiene un índice propio, sino que muestra lo que contiene el Open Web Index. Por eso, lo que se elimina allí desaparece también de Nolm. Solicite la eliminación con el formulario de retirada del Open Web Index.',
         'website' => 'BASE muestra lo que contienen los repositorios en los que busca. Si el repositorio retira un registro, este desaparece también de BASE.',
     ],
     'questions' => [

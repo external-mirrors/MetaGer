@@ -2,5 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>dominik/renovate-runner"
+  ],
+  "packageRules": [
+    {
+      "description": "pestphp/pest pins the phpunit/phpunit versions it supports (5.3.5 conflicts with >13.4.5). Updated on its own, phpunit gets ahead of Pest and the composer.lock update for the whole group fails, which drops every composer update from the MR (!2596). Weekly lock file maintenance still moves phpunit as far as Pest allows.",
+      "matchPackageNames": [
+        "phpunit/phpunit"
+      ],
+      "enabled": false
+    }
   ]
 }

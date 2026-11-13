@@ -79,7 +79,16 @@ class RequestFetcherSignalTest extends TestCase
             [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
             $pipes,
             base_path(),
-            [...getenv(), 'REDIS_DB' => (string) self::REDIS_DATABASE]
+            [
+                ...getenv(),
+                'REDIS_DB' => (string) self::REDIS_DATABASE,
+                // CI runs `php artisan optimize` before the suite, and a cached
+                // config never calls env() again: the child would read the
+                // REDIS_DB baked in at cache time (0) and stamp a database this
+                // test is not watching. A cache path that does not exist makes
+                // the child build its config from the environment it is given.
+                'APP_CONFIG_CACHE' => storage_path('framework/no-config-cache-' . getmypid() . '.php'),
+            ]
         );
         $this->assertIsResource($process, 'Could not spawn the fetcher process.');
         stream_set_blocking($pipes[1], false);

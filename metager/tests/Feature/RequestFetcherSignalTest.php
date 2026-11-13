@@ -41,6 +41,13 @@ use Tests\TestCase;
 #[Group('serial')]
 class RequestFetcherSignalTest extends TestCase
 {
+    /**
+     * Not 0, which the dev stack uses. Parallel workers take 1–15
+     * (Tests\Support\BootCache), but this test is in the serial group, which
+     * never runs alongside them.
+     */
+    private const REDIS_DATABASE = 15;
+
     #[DataProvider('signals')]
     public function testTheFetcherExitsGracefullyOnSignal(int $signal): void
     {
@@ -49,16 +56,30 @@ class RequestFetcherSignalTest extends TestCase
         // unfixed run of this very test) can leave it set forever, which would
         // make this test pass whether or not the real fix is in place.
         Redis::del('fpm_stopped');
+
+        // The child process reads its own config, so it neither knows a
+        // parallel worker's database (Tests\Support\BootCache) nor gets one in
+        // the serial run, and would share database 0 with any `requests:fetcher`
+        // already running there — the dev stack's `worker` is one. Its stamp
+        // then passed for this child being ready, the signal arrived before
+        // the handlers were installed, and the test failed with "killed by
+        // signal" about one run in three, and every run in some sequences.
+        // A database of its own makes the healthcheck below this child's alone.
+        // SELECT rather than config(): RedisManager keeps the config it was
+        // built with, so changing it afterwards and purging still connects to
+        // database 0.
+        $fetcherRedis = Redis::connection(RequestFetcher::REDIS_CONNECTION);
+        $fetcherRedis->select(self::REDIS_DATABASE);
         // Cleared so a stamp left by an earlier fetcher cannot pass for this
         // one being ready — see the wait below.
-        $fetcherRedis = Redis::connection(RequestFetcher::REDIS_CONNECTION);
         $fetcherRedis->del(RequestFetcher::HEALTHCHECK_KEY);
 
         $process = proc_open(
             [PHP_BINARY, base_path('artisan'), 'requests:fetcher'],
             [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
             $pipes,
-            base_path()
+            base_path(),
+            [...getenv(), 'REDIS_DB' => (string) self::REDIS_DATABASE]
         );
         $this->assertIsResource($process, 'Could not spawn the fetcher process.');
         stream_set_blocking($pipes[1], false);

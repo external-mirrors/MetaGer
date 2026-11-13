@@ -231,7 +231,7 @@ return [
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
-            'database' => 0,
+            'database' => (int) env('REDIS_DB', 0),
             'cluster' => false,
         ],
 
@@ -272,7 +272,7 @@ return [
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
-            'database' => 0,
+            'database' => (int) env('REDIS_DB', 0),
             'cluster' => false,
         ],
 
@@ -302,7 +302,7 @@ return [
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
-            'database' => 0,
+            'database' => (int) env('REDIS_DB', 0),
             'cluster' => false,
         ],
 
@@ -358,7 +358,7 @@ return [
                 'password' => env('REDIS_SENTINEL_REDIS_PASSWORD', null),
                 'parameters' => [
                     'password' => env('REDIS_SENTINEL_REDIS_PASSWORD', null),
-                    'database' => 0
+                    'database' => (int) env('REDIS_DB', 0)
                 ]
             ]
         ],

@@ -16,8 +16,9 @@
      otherwise still holds its 'query' default and would match by accident.
 
      Without data-proxy-link, resultpage/proxy.js leaves the click alone and the
-     href (old proxy) is followed — which is the whole opt-out for clients that
-     cannot authenticate against SafeBrowse (see ClientCapabilities). Rendering the
-     attribute for them instead would boot the SafeBrowse app just to dead-end on
-     "Kein Authentifizierungsschlüssel angegeben". --}}
+     href (parts/proxy-href) is followed — for clients that cannot authenticate
+     against SafeBrowse (see ClientCapabilities) that is the old proxy, which is
+     their whole opt-out. Rendering the attribute for them instead would boot the
+     SafeBrowse app just to dead-end on "Kein Authentifizierungsschlüssel
+     angegeben". --}}
 @if (\App\Http\ClientCapabilities::supportsSafebrowse(request())) data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}#url={{ rawurlencode($target->link) }}&fallback={{ rawurlencode($target->proxyLink) }}@if (auth()->guard("key")->user() !== null && auth()->guard("key")->login_method === 'query')&key={{ rawurlencode(auth()->guard("key")->user()->key) }}@endif" @endif

@@ -2,6 +2,8 @@
 
 namespace App\Search;
 
+use App\Http\ClientCapabilities;
+use App\Http\SafebrowseNojs;
 use App\Models\Configuration\SearchEngineRegistry;
 use Illuminate\Http\Request;
 
@@ -156,6 +158,14 @@ class LinkBuilder
      */
     private function to(array $parameters): string
     {
+        // The SafeBrowse sid of this results page rides along, so that the results of the next
+        // page, another fokus or a corrected query open in the same SafeBrowse session for a
+        // browser without JavaScript and cookies. Always this page's sid, never the one the
+        // request arrived with, which SafebrowseNojs only takes over from one of our own pages.
+        unset($parameters["sid"]);
+        if (ClientCapabilities::supportsSafebrowse($this->request)) {
+            $parameters["sid"] = SafebrowseNojs::sid($this->request);
+        }
         return action("MetaGerSearch@search", $parameters);
     }
 }

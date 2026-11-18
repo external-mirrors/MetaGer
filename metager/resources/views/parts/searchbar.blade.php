@@ -80,6 +80,14 @@
 				@foreach (app(\App\Http\SettingsCarry::class)->all() as $carryName => $carryValue)
 				<input type="hidden" name="{{ $carryName }}" value="{{ $carryValue }}" form="searchForm">
 				@endforeach
+				{{--
+					A new search from a result page keeps that page's SafeBrowse sid, so the
+					results it finds open in the same SafeBrowse session for a browser without
+					JavaScript and cookies (App\Http\SafebrowseNojs).
+				--}}
+				@if (!empty($metager) && \App\Http\ClientCapabilities::supportsSafebrowse(request()))
+				<input type="hidden" name="sid" value="{{ \App\Http\SafebrowseNojs::sid(request()) }}" form="searchForm">
+				@endif
 				@if (isset($option_values))
 				@foreach($option_values as $option => $value)
 				<input type="hidden" name={{ $option }} value={{ $value }}>

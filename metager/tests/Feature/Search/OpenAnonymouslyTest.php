@@ -24,6 +24,9 @@ class OpenAnonymouslyTest extends TestCase
 
     private const PROXY = "https://proxy.metager.de/";
 
+    /** SafeBrowse's page view without JavaScript (App\Http\SafebrowseNojs). */
+    private const NOJS = "~^(https?://[^/]+)?/de-DE/proxy/nojs\\?url=~";
+
     protected function tearDown(): void
     {
         $this->forgetSearchUserClaims();
@@ -68,13 +71,13 @@ class OpenAnonymouslyTest extends TestCase
     }
 
     /**
-     * A link that opens $direct through the proxy: the old proxy as its href,
-     * which is what works without JavaScript, and SafeBrowse for proxy.js.
+     * A link that opens $direct through the proxy: SafeBrowse's page view
+     * without JavaScript as its href, and SafeBrowse for proxy.js.
      */
     private function assertOpensAnonymously(DOMElement $link, string $direct): void
     {
         $href = $link->getAttribute("href");
-        $this->assertStringStartsWith(self::PROXY, $href, "$direct is opened directly.");
+        $this->assertMatchesRegularExpression(self::NOJS, $href, "$direct is opened directly.");
         $this->assertStringContainsString("url=" . rawurlencode($direct), $href);
         $this->assertStringContainsString("#url=" . rawurlencode($direct), $link->getAttribute("data-proxy-link"));
     }
@@ -240,6 +243,7 @@ class OpenAnonymouslyTest extends TestCase
         foreach ($this->results($page) as $result) {
             $title = $page->query(".//h2[" . self::hasClass("result-title") . "]/a", $result)->item(0);
             $this->assertStringStartsNotWith(self::PROXY, $title->getAttribute("href"));
+            $this->assertDoesNotMatchRegularExpression(self::NOJS, $title->getAttribute("href"));
             $this->assertSame(0, $page->query(".//a[" . self::hasClass("result-open-direct") . "]", $result)->length);
         }
     }
@@ -251,6 +255,7 @@ class OpenAnonymouslyTest extends TestCase
         foreach ($this->results($page) as $result) {
             $title = $page->query(".//h2[" . self::hasClass("result-title") . "]/a", $result)->item(0);
             $this->assertStringStartsNotWith(self::PROXY, $title->getAttribute("href"));
+            $this->assertDoesNotMatchRegularExpression(self::NOJS, $title->getAttribute("href"));
             $this->assertFalse($title->hasAttribute("data-proxy-link"));
         }
         $this->assertSame(0, $page->query("//a[" . self::hasClass("result-open-direct") . "]")->length);

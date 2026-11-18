@@ -29,7 +29,7 @@
         </a>
     @endif
 @elseif (request()->header("is-proxy") !== "true" && !empty($result->proxyLink))
-    <a class="result-open-proxy result-open-proxy--{{ $proxyVariant }}" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" @include('parts.proxy-safebrowse-attribute', ['target' => $result])
+    <a class="result-open-proxy result-open-proxy--{{ $proxyVariant }}" title="@lang('result.proxytext')" @include('parts.proxy-href', ['target' => $result]) @include('parts.proxy-safebrowse-attribute', ['target' => $result])
         target="{{ $metager->getNewtab() }}" @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
         @if ($proxyVariant === 'icon') aria-label="@lang('result.options.anonym')" @endif>
         <svg class="result-open-proxy-shield" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3 4 6v6c0 4.5 3.4 8.2 8 9 4.6-.8 8-4.5 8-9V6z"/></svg>

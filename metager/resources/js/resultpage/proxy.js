@@ -4,7 +4,7 @@ let wsTestInProgress = false;
 // Mirrors the sessionStorage cache in memory, for browsers that deny storage access outright
 // (Firefox "block all cookies" makes even reading sessionStorage throw a SecurityError). Without
 // it the test result would be forgotten the instant it is produced and no click would ever be
-// intercepted, silently sending exactly those users to the old proxy.
+// intercepted, silently sending exactly those users to the plain href.
 let wsTestResult = null;
 
 const TAB_SESSION_PREFIX = "safebrowse-sid:";
@@ -53,7 +53,8 @@ function randomUuid() {
 
 export default function updateProxyLinks() {
     if (!browserSupportsSafebrowse()) {
-        // Links keep their native href (old proxy) when SafeBrowse won't work in this browser
+        // Links keep their native href (SafeBrowse without JavaScript, parts/proxy-href) when
+        // SafeBrowse won't boot in this browser
         return;
     }
 
@@ -68,7 +69,7 @@ export default function updateProxyLinks() {
     links.forEach(function (link) {
         if (link.dataset.proxyHandlerAttached) return; // updateProxyLinks runs again after "load more"
         link.dataset.proxyHandlerAttached = "1";
-        const oldProxyHref = link.href;
+        const nativeHref = link.href;
         const href = link.dataset.proxyLink ? link.dataset.proxyLink + "&sid=" + pageSessionId : "";
         // The SafeBrowse URL is the link's own href, so that middle click, Ctrl+click and "open in
         // new tab" open SafeBrowse as well. Should WebSockets turn out not to work there,
@@ -80,14 +81,14 @@ export default function updateProxyLinks() {
             // must be called synchronously within the click handler — popup blockers silently drop
             // calls made after an async WebSocket test — so a click landing before the test
             // settles cannot wait for it. Guessing "reachable" is the better guess: SafeBrowse
-            // bounces a genuinely unreachable backend to the &fallback= URL in the hash (this same
-            // old-proxy link), whereas guessing the other way sends everyone who clicks early to
-            // the old proxy with no way back. That window is every page load for users whose
-            // browser denies storage, since the cached result cannot survive for them.
+            // bounces a genuinely unreachable backend to the &fallback= URL in the hash (the old
+            // proxy), whereas guessing the other way sends everyone who clicks early to the page
+            // view without JavaScript with no way back. That window is every page load for users
+            // whose browser denies storage, since the cached result cannot survive for them.
             if (!href) return;
             if (getCachedWebsocketResult() === "failed") {
-                // Followed natively, now to the old proxy.
-                link.href = oldProxyHref;
+                // Followed natively: SafeBrowse without JavaScript, which needs no WebSocket.
+                link.href = nativeHref;
                 return;
             }
             e.preventDefault();
@@ -104,7 +105,7 @@ export default function updateProxyLinks() {
  * either of these would hang on the SafeBrowse loading screen, so they keep the native href
  * instead. Web Storage is deliberately not required: SafeBrowse treats it as optional, and
  * merely touching window.localStorage throws in a browser configured to block all cookies —
- * which used to make this whole check fail and send those users to the old proxy.
+ * which used to make this whole check fail and send those users to the plain href.
  */
 function browserSupportsSafebrowse() {
     try {

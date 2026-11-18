@@ -73,7 +73,7 @@ export default function updateProxyLinks() {
         const href = link.dataset.proxyLink ? link.dataset.proxyLink + "&sid=" + pageSessionId : "";
         // The SafeBrowse URL is the link's own href, so that middle click, Ctrl+click and "open in
         // new tab" open SafeBrowse as well. Should WebSockets turn out not to work there,
-        // SafeBrowse itself sends the tab on to the &fallback= URL (the old proxy).
+        // SafeBrowse itself sends the tab on to its page view without JavaScript.
         if (href) link.href = href;
 
         link.addEventListener("click", function (e) {
@@ -81,10 +81,10 @@ export default function updateProxyLinks() {
             // must be called synchronously within the click handler — popup blockers silently drop
             // calls made after an async WebSocket test — so a click landing before the test
             // settles cannot wait for it. Guessing "reachable" is the better guess: SafeBrowse
-            // bounces a genuinely unreachable backend to the &fallback= URL in the hash (the old
-            // proxy), whereas guessing the other way sends everyone who clicks early to the page
-            // view without JavaScript with no way back. That window is every page load for users
-            // whose browser denies storage, since the cached result cannot survive for them.
+            // sends a tab whose socket never connects on to its page view without JavaScript,
+            // whereas guessing the other way sends everyone who clicks early there with no way
+            // back. That window is every page load for users whose browser denies storage, since
+            // the cached result cannot survive for them.
             if (!href) return;
             if (getCachedWebsocketResult() === "failed") {
                 // Followed natively: SafeBrowse without JavaScript, which needs no WebSocket.

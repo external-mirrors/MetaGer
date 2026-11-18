@@ -29,7 +29,7 @@ class Result
     public $image; # Ein Vorschaubild für das Suchergebnis (als URL)
     public $logo;
     public $imageDimensions; # Ein Array in welchem wenn verfügbar Breite/Höhe des Bildes gespeichert sind ["width" => ..., "height" => ...]
-    public $proxyLink; # Der Link für die Seite über unseren Proxy-Service
+    public $proxyLink; # Der Link, der die Seite in SafeBrowse öffnet (generateProxyLink)
     public $engineBoost = 1; # Der Boost für den Provider des Suchergebnisses
     public $valid = true; # Ob das Ergebnis noch gültig ist (bool)
     public $host; # Der aus dem Link gelesene Host des Suchergebnisses
@@ -359,38 +359,27 @@ class Result
         return $match['domain'];
     }
 
-    # Erstellt aus einem Link einen Proxy-Link für unseren Proxy-Service
+    /**
+     * Der Link, der $link anonym öffnet: SafeBrowse mit dem Ziel im Hash
+     * (`/proxy/#url=…`), wie ihn auch parts/proxy-safebrowse-attribute baut.
+     * Der Hash erreicht keinen Server und kein Zugriffsprotokoll.
+     *
+     * Wurzelrelativ, weil dieselbe App unter metager.de, metager3.de und einer
+     * .onion-Adresse antwortet. Die Ergebnisseite selbst nutzt das Feld nur als
+     * "gibt es einen anonymen Weg"; sie baut ihre Links aus $link (parts/
+     * proxy-href, parts/proxy-safebrowse-attribute). Gelesen wird es von out=json
+     * (toApiArray) und von Sitelinks.
+     *
+     * Früher führte dieser Link zum alten, HTML-umschreibenden Proxy
+     * (proxy.metager.de), der abgeschaltet wird.
+     */
     public function generateProxyLink($link)
     {
         if (!$link || empty($link)) {
             return "";
         }
 
-        $parts = parse_url($link);
-
-        $proxyUrl = "https://proxy.metager.de/";
-
-        if (!empty($parts["host"])) {
-            $proxyUrl .= $parts["host"];
-            if (!empty($parts["path"])) {
-                $proxyUrl .= "/" . rawurlencode(trim($parts["path"], "/"));
-            }
-        }
-
-        // We need to generate the correct password for the Proxy URLs
-        // It's an hmac sha256 hash of the url having the proxy password as secret
-        $password = hash_hmac("sha256", rtrim($link, "/"), config("metager.metager.proxy.password"));
-
-        $urlParameters = [
-            "url" => $link,
-            "password" => $password,
-        ];
-
-        $params = http_build_query($urlParameters, "", "&", PHP_QUERY_RFC3986);
-
-        $proxyUrl .= "?" . $params;
-
-        return $proxyUrl;
+        return "/proxy/#url=" . rawurlencode($link);
     }
 
     /* Liest aus einer URL alle Informationen aus
@@ -550,7 +539,7 @@ class Result
             # Auf DESCRIPTION_LENGTH gekürzt; longDescription ist ungekürzt.
             "description" => $this->descr,
             "longDescription" => $this->longDescr,
-            # Einstiegspunkt für "anonym öffnen" (SafeBrowse/Proxy). Ohne dieses
+            # Einstiegspunkt für "anonym öffnen" (SafeBrowse). Ohne dieses
             # Feld kann ein Client die Funktion pro Ergebnis nicht anbieten.
             "proxyLink" => $this->proxyLink !== "" ? $this->proxyLink : null,
             "engines" => $this->enginesToApiArray(),

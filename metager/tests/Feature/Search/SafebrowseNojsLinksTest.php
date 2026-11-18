@@ -115,16 +115,19 @@ class SafebrowseNojsLinksTest extends TestCase
         $this->assertNotSame(self::SID, $this->pageSid($this->page("&sid=" . self::SID)));
     }
 
-    /** Apps that cannot authenticate against SafeBrowse keep the old proxy and get no sid. */
-    public function testAnOldAppKeepsTheOldProxy(): void
+    /**
+     * The old proxy is shut down, so nothing links to it any more — also not for the 5.x app,
+     * which used to keep it, nor as SafeBrowse's #fallback=.
+     */
+    public function testNothingLinksToTheOldProxy(): void
     {
-        $page = $this->page("", ["mg-app" => "5.4.1"]);
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses(["brave" => $this->engineFixture("brave-web.json")]);
 
-        $shields = iterator_to_array($page->query("//a[contains(@class, 'result-open-proxy')]"));
-        $this->assertNotEmpty($shields);
-        foreach ($shields as $shield) {
-            $this->assertStringStartsWith("https://proxy.metager.de/", $shield->getAttribute("href"));
-        }
-        $this->assertSame(0, $page->query("//input[@name='sid']")->length);
+        $html = $this->withHeaders(["mg-app" => "5.4.1"])->get("/de-DE/meta/meta.ger3?eingabe=kaffee&focus=web")->assertOk()->getContent();
+
+        $this->assertStringNotContainsString("proxy.metager.de", $html);
+        $this->assertStringNotContainsString("fallback=", $html);
+        $this->assertStringContainsString("/proxy/nojs?url=", $html);
     }
 }

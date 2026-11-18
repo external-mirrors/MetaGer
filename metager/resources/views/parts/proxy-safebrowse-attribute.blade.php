@@ -13,12 +13,5 @@
      socket URL, so emitting it anyway would write those keys into access logs.
      A query login has no other transport and its key is in the URL regardless.
      user() is evaluated first on purpose: it is what resolves login_method, which
-     otherwise still holds its 'query' default and would match by accident.
-
-     Without data-proxy-link, resultpage/proxy.js leaves the click alone and the
-     href (parts/proxy-href) is followed — for clients that cannot authenticate
-     against SafeBrowse (see ClientCapabilities) that is the old proxy, which is
-     their whole opt-out. Rendering the attribute for them instead would boot the
-     SafeBrowse app just to dead-end on "Kein Authentifizierungsschlüssel
-     angegeben". --}}
-@if (\App\Http\ClientCapabilities::supportsSafebrowse(request())) data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}#url={{ rawurlencode($target->link) }}&fallback={{ rawurlencode($target->proxyLink) }}@if (auth()->guard("key")->user() !== null && auth()->guard("key")->login_method === 'query')&key={{ rawurlencode(auth()->guard("key")->user()->key) }}@endif" @endif
+     otherwise still holds its 'query' default and would match by accident. --}}
+data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}#url={{ rawurlencode($target->link) }}@if (auth()->guard("key")->user() !== null && auth()->guard("key")->login_method === 'query')&key={{ rawurlencode(auth()->guard("key")->user()->key) }}@endif"

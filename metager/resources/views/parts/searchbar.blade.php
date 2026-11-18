@@ -85,7 +85,7 @@
 					results it finds open in the same SafeBrowse session for a browser without
 					JavaScript and cookies (App\Http\SafebrowseNojs).
 				--}}
-				@if (!empty($metager) && \App\Http\ClientCapabilities::supportsSafebrowse(request()))
+				@if (!empty($metager))
 				<input type="hidden" name="sid" value="{{ \App\Http\SafebrowseNojs::sid(request()) }}" form="searchForm">
 				@endif
 				@if (isset($option_values))

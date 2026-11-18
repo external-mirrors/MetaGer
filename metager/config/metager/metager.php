@@ -6,9 +6,6 @@ return [
         "whitelist" => explode(",", env("BOT_PROTECTION_WHITELIST", "")),
     ],
     "event_authorization" => env("EVENT_AUTHORIZATION", "EVENT_AUTHORIZATION"),
-    "proxy" => [
-        "password" => env("PROXY_PASSWORD", "secure_password"),
-    ],
     "keymanager" => [
         "server" => env("KEY_SERVER", config("app.url") . "/keys"),
         "access_token" => env("KEY_ACCESS_TOKEN", "no-auth"),

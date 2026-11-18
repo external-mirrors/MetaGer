@@ -24,9 +24,9 @@ class HttpCache
      *  - **The caller's key.** The page embeds per-user markup — most visibly the SafeBrowse link,
      *    whose hash carries the key itself on a query login and omits it on a header or cookie
      *    login. Serving one user's rendered page to another would hand over their key.
-     *  - **The client version.** `mg-app` decides whether that link is rendered at all
-     *    (ClientCapabilities::supportsSafebrowse), so a page stored before an app upgrade would
-     *    keep pointing the upgraded app at the old proxy.
+     *  - **The client version.** `mg-app` used to decide whether that link was rendered at all,
+     *    and still decides how the app pays (AuthenticationValidation), so a page stored before
+     *    an app upgrade is not served to the upgraded app.
      *  - **The deployed frontend.** Asset URLs are versioned (webpack mix `.version()`), so the
      *    bundle a page loads is baked into its HTML. A page held in cache pins the client to the
      *    bundle that was current when it was stored — which is how a client can keep running

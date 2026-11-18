@@ -4,11 +4,11 @@ namespace App\Search;
 
 /**
  * One sitelink as the page shows it: its title, where it leads, and the same
- * place through the proxy — the two fields parts/result-proxy-link reads.
+ * place in SafeBrowse — the fields parts/result-proxy-link reads.
  *
  * Not Models\DeepResults\Button with a field added: Buttons are cached with
- * their result (the loader entry), and the page's signed URL has no business
- * there. See Sitelinks.
+ * their result (the loader entry), and the SafeBrowse link has no business
+ * there either. See Sitelinks.
  */
 final class Sitelink
 {

@@ -22,8 +22,6 @@ class OpenAnonymouslyTest extends TestCase
 {
     use FakesSearchEngines;
 
-    private const PROXY = "https://proxy.metager.de/";
-
     /** SafeBrowse's page view without JavaScript (App\Http\SafebrowseNojs). */
     private const NOJS = "~^(https?://[^/]+)?/de-DE/proxy/nojs\\?url=~";
 
@@ -242,7 +240,6 @@ class OpenAnonymouslyTest extends TestCase
 
         foreach ($this->results($page) as $result) {
             $title = $page->query(".//h2[" . self::hasClass("result-title") . "]/a", $result)->item(0);
-            $this->assertStringStartsNotWith(self::PROXY, $title->getAttribute("href"));
             $this->assertDoesNotMatchRegularExpression(self::NOJS, $title->getAttribute("href"));
             $this->assertSame(0, $page->query(".//a[" . self::hasClass("result-open-direct") . "]", $result)->length);
         }
@@ -254,7 +251,6 @@ class OpenAnonymouslyTest extends TestCase
 
         foreach ($this->results($page) as $result) {
             $title = $page->query(".//h2[" . self::hasClass("result-title") . "]/a", $result)->item(0);
-            $this->assertStringStartsNotWith(self::PROXY, $title->getAttribute("href"));
             $this->assertDoesNotMatchRegularExpression(self::NOJS, $title->getAttribute("href"));
             $this->assertFalse($title->hasAttribute("data-proxy-link"));
         }

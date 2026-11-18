@@ -16,8 +16,8 @@ use Tests\TestCase;
  * tests/Feature/Search/SitelinksTest. These are the rules that decide what goes
  * into it, at the size where a broken rule fails in one line.
  *
- * Extends Tests\TestCase rather than PHPUnit's: proxy links are signed with a
- * config value.
+ * Extends Tests\TestCase rather than PHPUnit's: building a Result needs the
+ * application.
  */
 class SitelinksTest extends TestCase
 {
@@ -176,7 +176,7 @@ class SitelinksTest extends TestCase
     /**
      * Someone who opens every result anonymously would otherwise leave the
      * proxy the moment they click a sitelink. The fragment goes into the
-     * signed URL with everything else, so the proxy receives the section too.
+     * SafeBrowse link with everything else, so the section opens too.
      */
     public function testEverySitelinkCarriesAProxyLinkOfItsOwn(): void
     {

@@ -8,8 +8,41 @@ return [
         '1' => 'Da molti anni MetaGer nasconde e non memorizza gli indirizzi IP. Tuttavia, questi indirizzi sono temporaneamente visibili sul server MetaGer durante l\'esecuzione di una ricerca: se MetaGer venisse compromesso, un malintenzionato potrebbe leggere e memorizzare i vostri indirizzi. Per soddisfare i massimi requisiti di sicurezza, gestiamo un\'istanza di MetaGer sulla rete Tor: il MetaGer TOR Hidden Service, accessibile tramite: <a href="/tor/" target="_blank" rel="noopener">https://metager.de/tor/</a>. Per utilizzarlo, è necessario un browser speciale, che si può scaricare da <a href="https://www.torproject.org/" target="_blank" rel="noopener">https://www.torproject.org/</a>.',
     ],
     'proxy' => [
-        'title' => 'Browser anonimo <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        '1' => 'Per utilizzarlo, è sufficiente fare clic su "APRIRE IN MODO ANONIMO" in fondo a un risultato nella pagina dei risultati di MetaGer. Si apre quindi una finestra separata con un browser vero e isolato, eseguito sui nostri server – non sul vostro dispositivo. La sessione inizia direttamente sulla pagina che volevate aprire. Questo browser ha una propria barra degli indirizzi e schede proprie, che potete usare normalmente: potete continuare a navigare, inserire nuovi indirizzi e aprire nuove schede senza perdere la protezione. Il sito di destinazione non viene mai a conoscenza del vostro indirizzo IP né di altri dati che vi riguardano. Al termine della sessione, tutto viene eliminato automaticamente. Se il vostro browser non supporta questa funzione, passiamo automaticamente al nostro proxy anonimizzante più semplice: rimanete protetti finché seguite i link sulla pagina, ma non potete inserire un nuovo indirizzo nel campo dell\'indirizzo. Potete verificare se siete ancora protetti perché il campo dell\'indirizzo mostrerà: https://proxy.suma-ev.de/?url=qui c\'è l\'indirizzo effettivo.',
+        'title' => 'Apri in modo anonimo (SafeBrowse) <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'intro' => 'Con «Apri in modo anonimo» visiti un sito web senza che questo veda mai il tuo dispositivo. La pagina viene aperta in un browser che funziona sui nostri server: SafeBrowse. Il sito ha a che fare solo con questo browser e non viene a sapere né il tuo indirizzo IP né nulla sul tuo dispositivo, sul tuo browser o sui tuoi cookie.',
+        'use' => [
+            'title' => 'Come aprire una pagina in modo anonimo',
+            'text' => [
+                'Fai clic su «Apri in modo anonimo» (l’icona dello scudo) in un risultato. La pagina si apre in una nuova scheda.',
+                'Se vuoi aprire ogni risultato in modo anonimo, attiva «Aprire i risultati in modo anonimo» nelle impostazioni. Ogni link di un risultato passa allora per SafeBrowse, e con «Apri direttamente» visiti una pagina senza SafeBrowse.',
+            ],
+        ],
+        'session' => [
+            'title' => 'La sessione',
+            'text' => [
+                'Il primo risultato aperto in modo anonimo avvia una sessione. Ognuno dei successivi si apre nella stessa sessione, in una scheda propria. Lì continui a navigare come al solito: segui link, compili moduli, scrivi un nuovo indirizzo o un termine di ricerca nella barra degli indirizzi. Nel frattempo resti protetto.',
+                'Una sessione costa token della tua chiave MetaGer; quanti e per quanto tempo è indicato prima dell’avvio. Finché usi la sessione, viene prolungata automaticamente. Quando smetti di usarla, termina da sola poco dopo, oppure la chiudi con «Chiudi sessione».',
+                'Quando la sessione termina, il browser sui nostri server viene cancellato con tutto ciò che conteneva: pagine visitate, cookie, accessi e file scaricati. La sessione successiva inizia con un browser nuovo e vuoto. Salva quindi prima i file scaricati sul tuo dispositivo da «Download».',
+            ],
+        ],
+        'views' => [
+            'title' => 'Due visualizzazioni',
+            'text' => [
+                '«Pagina» mostra una copia del sito web senza i suoi script. La leggi, scorri, cerchi e copi come qualsiasi pagina; i tuoi clic e ciò che scrivi vanno al browser sui nostri server. «Browser completo» mostra questo browser come immagine, con tutte le sue schede. Lì funziona tutto, anche i video e le pagine che «Pagina» non riesce a mostrare. Passi dall’una all’altra nella barra in alto.',
+            ],
+        ],
+        'nojs' => [
+            'title' => 'Senza JavaScript',
+            'text' => [
+                'Anche se JavaScript è disattivato nel tuo browser, «Apri in modo anonimo» apre la pagina in SafeBrowse. Vedi allora una copia della pagina in cui link, pulsanti e moduli funzionano. Viene ricaricata dopo ogni clic, ma non cambia da sola. I video, le finestre di dialogo della pagina e il caricamento di file non funzionano in questo modo. Se il tuo browser blocca i cookie, i risultati che apri da una pagina dei risultati finiscono comunque nella stessa sessione, anche se continui a cercare da lì.',
+            ],
+        ],
+        'limits' => [
+            'title' => 'Cosa «Apri in modo anonimo» non fa',
+            'text' => [
+                'Il sito web non ti riconosce dal tuo dispositivo, ma sì da ciò che gli dici tu stesso: se accedi o inserisci dati personali, sa chi sei. Se non vuoi mostrarti nemmeno a MetaGer, usa MetaGer tramite Tor (vedi sopra).',
+            ],
+        ],
     ],
     'content' => [
         'title' => 'Contenuti discutibili / Protezione dei giovani <a title="For easy help, click here" href="/help/easy-language/privacy-protection#eh-content" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

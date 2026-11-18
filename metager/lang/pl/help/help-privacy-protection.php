@@ -8,8 +8,41 @@ return [
         '2' => 'Dostęp do MetaGer w przeglądarce Tor można uzyskać pod adresem: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion .',
     ],
     'proxy' => [
-        'title' => 'Anonimowa przeglądarka <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        '1' => 'Aby z niej skorzystać, wystarczy kliknąć "OTWARTE ANONIMOWO" na dole wyniku na stronie wyników MetaGer. Otworzy się wtedy osobne okno z prawdziwą, izolowaną przeglądarką działającą na naszych serwerach – a nie na Twoim urządzeniu. Sesja zaczyna się od razu na stronie, którą chciałeś otworzyć. Ta przeglądarka ma własny pasek adresu i własne karty, których możesz używać zupełnie normalnie: możesz klikać dalej, wpisywać nowe adresy i otwierać nowe karty, nie tracąc ochrony. Witryna docelowa nigdy nie pozna Twojego adresu IP ani żadnych innych danych na Twój temat. Po zakończeniu sesji wszystko jest automatycznie usuwane. Jeśli Twoja przeglądarka tego nie obsługuje, automatycznie przełączamy się na nasz prostszy, anonimizujący serwer proxy: pozostajesz chroniony, dopóki klikasz linki na stronie, ale nie możesz wpisać nowego adresu w pasku adresu. To, czy nadal jesteś chroniony, poznasz po tym, że pasek adresu pokazuje https://proxy.suma-ev.de/?url=tutaj jest rzeczywisty adres.',
+        'title' => 'Otwórz anonimowo (SafeBrowse) <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'intro' => 'Dzięki „Otwórz anonimowo” odwiedzasz stronę internetową tak, że nigdy nie widzi ona Twojego urządzenia. Strona otwiera się w przeglądarce działającej na naszych serwerach: SafeBrowse. Witryna ma do czynienia tylko z tą przeglądarką i nie poznaje ani Twojego adresu IP, ani niczego o Twoim urządzeniu, przeglądarce czy plikach cookie.',
+        'use' => [
+            'title' => 'Jak otworzyć stronę anonimowo',
+            'text' => [
+                'Kliknij „Otwórz anonimowo” (ikona tarczy) przy wyniku. Strona otworzy się w nowej karcie.',
+                'Jeśli chcesz otwierać każdy wynik anonimowo, włącz w ustawieniach „Otwieranie wyników anonimowo”. Wtedy każdy link wyniku prowadzi przez SafeBrowse, a „Otwórz bezpośrednio” otwiera stronę bez SafeBrowse.',
+            ],
+        ],
+        'session' => [
+            'title' => 'Sesja',
+            'text' => [
+                'Pierwszy wynik otwarty anonimowo rozpoczyna sesję. Każdy kolejny otwiera się w tej samej sesji, we własnej karcie. Tam przeglądasz dalej jak zwykle: klikasz linki, wypełniasz formularze, wpisujesz nowy adres lub hasło wyszukiwania w pasku adresu. Przez cały czas pozostajesz chroniony.',
+                'Sesja kosztuje tokeny z Twojego klucza MetaGer; ile i na jak długo, widać przed startem. Dopóki korzystasz z sesji, jest ona automatycznie przedłużana. Gdy przestaniesz z niej korzystać, wkrótce kończy się sama, albo kończysz ją przyciskiem „Zamknij sesję”.',
+                'Gdy sesja się kończy, przeglądarka na naszych serwerach jest usuwana razem ze wszystkim, co w niej było: odwiedzonymi stronami, plikami cookie, logowaniami i pobranymi plikami. Następna sesja zaczyna się z nową, pustą przeglądarką. Dlatego wcześniej zapisz pobrane pliki na swoim urządzeniu w „Pliki do pobrania”.',
+            ],
+        ],
+        'views' => [
+            'title' => 'Dwa widoki',
+            'text' => [
+                '„Strona” pokazuje kopię witryny bez jej skryptów. Czytasz, przewijasz, wyszukujesz i kopiujesz w niej jak na każdej stronie; Twoje kliknięcia i wpisy trafiają do przeglądarki na naszych serwerach. „Pełna przeglądarka” pokazuje tę przeglądarkę jako obraz, ze wszystkimi jej kartami. Tam działa wszystko, także filmy i strony, których „Strona” nie potrafi pokazać. Między widokami przełączasz się na pasku u góry.',
+            ],
+        ],
+        'nojs' => [
+            'title' => 'Bez JavaScriptu',
+            'text' => [
+                'Nawet gdy JavaScript jest wyłączony w Twojej przeglądarce, „Otwórz anonimowo” otwiera stronę w SafeBrowse. Widzisz wtedy kopię strony, w której działają linki, przyciski i formularze. Jest ona przeładowywana po każdym kliknięciu, ale sama się nie zmienia. Filmy, okna dialogowe strony i przesyłanie plików w ten sposób nie działają. Jeśli Twoja przeglądarka blokuje pliki cookie, wyniki otwierane z jednej strony wyników i tak trafiają do tej samej sesji, także gdy stamtąd szukasz dalej.',
+            ],
+        ],
+        'limits' => [
+            'title' => 'Czego „Otwórz anonimowo” nie robi',
+            'text' => [
+                'Witryna nie rozpoznaje Cię po urządzeniu, ale owszem po tym, co sam jej powiesz: jeśli się zalogujesz lub podasz dane osobowe, wie, kim jesteś. Jeśli nie chcesz pokazywać się także MetaGerowi, korzystaj z MetaGera przez Tor (zob. wyżej).',
+            ],
+        ],
     ],
     'content' => [
         'title' => 'Wątpliwa zawartość / ochrona młodzieży <a title="For easy help, click here" href="/help/easy-language/privacy-protection#eh-content" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

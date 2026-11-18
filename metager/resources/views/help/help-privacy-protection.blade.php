@@ -22,7 +22,13 @@
 	</section>
 	<section id="h-proxy" class="card">
 		<h3>{!! trans('help/help-privacy-protection.proxy.title') !!}</h3>
-		<p>{!! trans('help/help-privacy-protection.proxy.1') !!}</p>
+		<p>{!! trans('help/help-privacy-protection.proxy.intro') !!}</p>
+		@foreach (['use', 'session', 'views', 'nojs', 'limits'] as $part)
+		<h4>{!! trans("help/help-privacy-protection.proxy.$part.title") !!}</h4>
+		@foreach (trans("help/help-privacy-protection.proxy.$part.text") as $paragraph)
+		<p>{!! $paragraph !!}</p>
+		@endforeach
+		@endforeach
 	</section>
 	<section id="h-content" class="card">
 		<h3>{!! trans('help/help-privacy-protection.content.title') !!}</h3>

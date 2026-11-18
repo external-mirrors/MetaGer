@@ -8,8 +8,41 @@ return [
         '2' => 'Du kan få adgang til MetaGer i Tor-browseren på: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion .',
     ],
     'proxy' => [
-        'title' => 'Anonym browser <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        '1' => 'For at bruge den skal du blot klikke på \'ÅBN ANONYMT\' nederst i et resultat på MetaGers resultatside. Der åbnes derefter et separat vindue med en rigtig, isoleret browser, der kører på vores servere – ikke på din enhed. Sessionen starter direkte på den side, du ville åbne. Denne browser har sit eget adressefelt og sine egne faneblade, som du kan bruge helt normalt: du kan klikke videre, indtaste nye adresser og åbne nye faneblade uden at miste din beskyttelse. Målwebstedet får aldrig kendskab til din IP-adresse eller andre data om dig. Alt slettes automatisk, når sessionen slutter. Hvis din browser ikke understøtter dette, skifter vi automatisk til vores enklere anonymiserende proxy: du forbliver beskyttet, så længe du følger links på siden, men du kan ikke indtaste en ny adresse i adressefeltet. Du kan se, om du stadig er beskyttet, fordi adressefeltet viser: https://proxy.suma-ev.de/?url=her er den aktuelle adresse.',
+        'title' => 'Åbn anonymt (SafeBrowse) <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'intro' => 'Med „Åbn anonymt“ besøger du et websted, uden at det nogensinde ser din enhed. Siden åbnes i en browser, der kører på vores servere: SafeBrowse. Webstedet har kun med denne browser at gøre og får hverken din IP-adresse eller noget at vide om din enhed, din browser eller dine cookies.',
+        'use' => [
+            'title' => 'Sådan åbner du en side anonymt',
+            'text' => [
+                'Klik på „Åbn anonymt“ (skjoldikonet) ved et resultat. Siden åbnes i en ny fane.',
+                'Hvis du vil åbne alle resultater anonymt, så slå „Åbn resultater anonymt“ til i indstillingerne. Så går hvert link i et resultat gennem SafeBrowse, og med „Åbn direkte“ besøger du en side uden SafeBrowse.',
+            ],
+        ],
+        'session' => [
+            'title' => 'Sessionen',
+            'text' => [
+                'Det første resultat, du åbner anonymt, starter en session. Hvert følgende åbnes i samme session i sin egen fane. Der surfer du videre som normalt: følger links, udfylder formularer, skriver en ny adresse eller et søgeord i adressefeltet. Du forbliver beskyttet imens.',
+                'En session koster tokens fra din MetaGer-nøgle; hvor mange for hvor lang tid, vises før start. Så længe du bruger sessionen, forlænges den automatisk. Når du holder op med at bruge den, slutter den af sig selv kort efter, eller du afslutter den med „Luk sessionen“.',
+                'Når sessionen slutter, slettes browseren på vores servere med alt, hvad der var i den: besøgte sider, cookies, logins og downloadede filer. Den næste session starter med en ny, tom browser. Gem derfor downloadede filer på din enhed under „Downloads“ inden da.',
+            ],
+        ],
+        'views' => [
+            'title' => 'To visninger',
+            'text' => [
+                '„Side“ viser en kopi af webstedet uden dets scripts. Du læser, scroller, søger og kopierer i den som på enhver side; dine klik og indtastninger går til browseren på vores servere. „Hele browseren“ viser denne browser som et billede med alle dens faner. Der virker alt, også videoer og sider, som „Side“ ikke kan vise. Du skifter mellem de to i bjælken øverst.',
+            ],
+        ],
+        'nojs' => [
+            'title' => 'Uden JavaScript',
+            'text' => [
+                'Også når JavaScript er slået fra i din browser, åbner „Åbn anonymt“ siden i SafeBrowse. Du ser så en kopi af siden, hvor links, knapper og formularer virker. Den genindlæses efter hvert klik, men ændrer sig ikke af sig selv. Videoer, sidens dialoger og upload af filer virker ikke på denne måde. Hvis din browser blokerer cookies, havner de resultater, du åbner fra én resultatside, stadig i samme session, også når du søger videre derfra.',
+            ],
+        ],
+        'limits' => [
+            'title' => 'Hvad „Åbn anonymt“ ikke gør',
+            'text' => [
+                'Webstedet genkender dig ikke på din enhed, men nok på det, du selv fortæller det: hvis du logger ind eller indtaster personlige oplysninger, ved det, hvem du er. Hvis du heller ikke vil vise dig over for MetaGer, så brug MetaGer via Tor (se ovenfor).',
+            ],
+        ],
     ],
     'content' => [
         'title' => 'Tvivlsomt indhold / beskyttelse af unge <a title="For easy help, click here" href="/help/easy-language/privacy-protection#eh-content" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

@@ -8,8 +8,41 @@ return [
         '2' => 'Je kunt toegang krijgen tot MetaGer in de Tor browser op: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion .',
     ],
     'proxy' => [
-        'title' => 'Anonieme browser <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        '1' => 'Om het te gebruiken klik je gewoon op \'ANONIEM OPENEN\' onderaan een resultaat op de resultatenpagina van MetaGer. Er opent dan een apart venster met een echte, geïsoleerde browser die op onze servers draait – niet op jouw apparaat. De sessie begint meteen op de pagina die je wilde openen. Deze browser heeft een eigen adresbalk en eigen tabbladen, die je gewoon normaal kunt gebruiken: je kunt doorklikken, nieuwe adressen invoeren en nieuwe tabbladen openen zonder je bescherming te verliezen. De doelwebsite komt nooit je IP-adres of andere gegevens over jou te weten. Zodra de sessie eindigt, wordt alles automatisch verwijderd. Als je browser dit niet ondersteunt, schakelen we automatisch over op onze eenvoudigere anonimiserende proxy: je blijft beschermd zolang je links op de pagina volgt, maar je kunt geen nieuw adres invoeren in het adresveld. Je herkent of je nog beschermd bent doordat het adresveld toont: https://proxy.suma-ev.de/?url=hier staat het werkelijke adres.',
+        'title' => 'Anoniem openen (SafeBrowse) <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'intro' => 'Met „Anoniem openen” bezoekt u een website zonder dat die ooit uw apparaat te zien krijgt. De pagina wordt geopend in een browser die op onze servers draait: SafeBrowse. De website heeft alleen met die browser te maken en komt uw IP-adres niet te weten, en ook niets over uw apparaat, uw browser of uw cookies.',
+        'use' => [
+            'title' => 'Zo opent u een pagina anoniem',
+            'text' => [
+                'Klik bij een resultaat op „Anoniem openen” (het schildpictogram). De pagina opent in een nieuw tabblad.',
+                'Wilt u elk resultaat anoniem openen, zet dan in de instellingen „Resultaten anoniem openen” aan. Dan loopt elke link van een resultaat via SafeBrowse, en met „Direct openen” bezoekt u een pagina zonder SafeBrowse.',
+            ],
+        ],
+        'session' => [
+            'title' => 'De sessie',
+            'text' => [
+                'Het eerste resultaat dat u anoniem opent, start een sessie. Elk volgend resultaat opent in dezelfde sessie, in een eigen tabblad. Daarin surft u gewoon verder: links volgen, formulieren invullen, een nieuw adres of een zoekterm in de adresbalk typen. U blijft daarbij beschermd.',
+                'Een sessie kost tokens van uw MetaGer-sleutel; hoeveel voor welke tijd, ziet u vóór de start. Zolang u de sessie gebruikt, wordt die automatisch verlengd. Gebruikt u haar niet meer, dan eindigt ze kort daarna vanzelf, of u beëindigt haar met „Sessie afsluiten”.',
+                'Als de sessie eindigt, wordt de browser op onze servers gewist met alles wat erin zat: bezochte pagina’s, cookies, aanmeldingen en gedownloade bestanden. De volgende sessie begint met een nieuwe, lege browser. Sla gedownloade bestanden daarom eerst via „Downloads” op uw apparaat op.',
+            ],
+        ],
+        'views' => [
+            'title' => 'Twee weergaven',
+            'text' => [
+                '„Pagina” toont een kopie van de website zonder haar scripts. U leest, scrolt, zoekt en kopieert erin zoals op elke pagina; uw klikken en invoer gaan naar de browser op onze servers. „Volledige browser” toont die browser als afbeelding, met al zijn tabbladen. Daar werkt alles, ook video’s en pagina’s die „Pagina” niet kan tonen. U wisselt tussen beide in de balk bovenaan.',
+            ],
+        ],
+        'nojs' => [
+            'title' => 'Zonder JavaScript',
+            'text' => [
+                'Ook als JavaScript in uw browser is uitgeschakeld, opent „Anoniem openen” de pagina in SafeBrowse. U ziet dan een kopie van de pagina waarin links, knoppen en formulieren werken. Ze wordt na elke klik opnieuw geladen, maar verandert niet vanzelf. Video’s, dialoogvensters van de pagina en het uploaden van bestanden werken zo niet. Blokkeert uw browser cookies, dan komen de resultaten die u vanaf één resultatenpagina opent toch in dezelfde sessie terecht, ook als u van daaruit verder zoekt.',
+            ],
+        ],
+        'limits' => [
+            'title' => 'Wat „Anoniem openen” niet doet',
+            'text' => [
+                'De website herkent u niet aan uw apparaat, maar wel aan wat u haar zelf vertelt: als u zich aanmeldt of persoonlijke gegevens invoert, weet ze wie u bent. Wilt u zich ook tegenover MetaGer niet laten zien, gebruik MetaGer dan via Tor (zie hierboven).',
+            ],
+        ],
     ],
     'content' => [
         'title' => 'Bedenkelijke inhoud / Jeugdbescherming <a title="For easy help, click here" href="/help/easy-language/privacy-protection#eh-content" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

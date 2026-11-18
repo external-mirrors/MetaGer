@@ -18,9 +18,42 @@ return [
         "2" => "You can access MetaGer in the Tor browser at: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion .",
     ],
 
-    "proxy" => [
-        "title" => 'Anonymous Browser <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        "1" => "To use it, simply click 'OPEN ANONYMOUSLY' at the bottom of a result on the MetaGer results page. A separate window then opens with a real, isolated browser running on our servers – not on your device. The session starts right at the page you wanted to open. This browser has its own address bar and its own tabs, which you can use just like normal: you can click through, type in new addresses, and open new tabs without losing your protection. The target website never learns your IP address or any other data about you. Everything is automatically deleted once the session ends. If your browser doesn't support this, we automatically fall back to our simpler anonymizing proxy: you stay protected as long as you follow links on the page, but you cannot enter a new address in the address field. You can tell whether you're still protected because the address field will display: https://proxy.suma-ev.de/?url=here is the actual address.",
+    'proxy' => [
+        'title' => 'Open anonymously (SafeBrowse) <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'intro' => 'With “Open anonymously” you visit a website without it ever seeing your device. The page is opened in a browser that runs on our servers: SafeBrowse. The website only deals with that browser and learns neither your IP address nor anything about your device, your browser or your cookies.',
+        'use' => [
+            'title' => 'How to open a page anonymously',
+            'text' => [
+                'Click “Open anonymously” (the shield icon) on a result. The page opens in a new tab.',
+                'If you want to open every result anonymously, turn on “Open results anonymously” in the settings. Every link of a result then goes through SafeBrowse, and “Open directly” visits a page without SafeBrowse.',
+            ],
+        ],
+        'session' => [
+            'title' => 'The session',
+            'text' => [
+                'The first result you open anonymously starts a session. Every further one opens in the same session, in a tab of its own. There you browse on as usual: follow links, fill in forms, type a new address or a search term into the address bar. You stay protected while doing so.',
+                'A session costs tokens from your MetaGer key; how many for how long is shown before it starts. As long as you use the session, it is extended automatically. When you stop using it, it ends by itself shortly afterwards, or you end it with “Close Session”.',
+                'When the session ends, the browser on our servers is deleted with everything that was in it: visited pages, cookies, logins and downloaded files. The next session starts with a new, empty browser. So save downloaded files to your device under “Downloads” before that.',
+            ],
+        ],
+        'views' => [
+            'title' => 'Two views',
+            'text' => [
+                '“Page” shows a copy of the website without its scripts. You read, scroll, search and copy in it as on any page; your clicks and input go to the browser on our servers. “Full browser” shows that browser as a picture, with all its tabs. Everything works there, including videos and pages that “Page” cannot show. You switch between the two in the bar at the top.',
+            ],
+        ],
+        'nojs' => [
+            'title' => 'Without JavaScript',
+            'text' => [
+                'Even with JavaScript turned off in your browser, “Open anonymously” opens the page in SafeBrowse. You then see a copy of the page in which links, buttons and forms work. It is reloaded after every click but does not change by itself. Videos, the page’s dialogs and uploading files do not work this way. If your browser blocks cookies, the results you open from one results page still land in the same session, also when you search on from there.',
+            ],
+        ],
+        'limits' => [
+            'title' => 'What “Open anonymously” does not do',
+            'text' => [
+                'The website does not recognise you by your device, but it does by what you tell it yourself: if you log in or enter personal data, it knows who you are. If you do not want to show yourself to MetaGer either, use MetaGer through Tor (see above).',
+            ],
+        ],
     ],
 
     "maps" => [

@@ -18,9 +18,42 @@ return [
         "2" => "Podeu accedir a MetaGer des del navegador Tor a: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion .",
     ],
 
-    "proxy" => [
-        "title" => 'Navegador anònim <a title="Per a l\'ajuda fàcil, feu clic aquí" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        "1" => "Per fer-lo servir, només cal que feu clic a «OBRE ANÒNIMAMENT» a la part inferior d'un resultat de la pàgina de resultats de MetaGer. Aleshores s'obre una finestra a part amb un navegador real i aïllat que s'executa als nostres servidors, no al vostre dispositiu. La sessió comença directament a la pàgina que volíeu obrir. Aquest navegador té la seva pròpia barra d'adreces i les seves pestanyes, que podeu fer servir com sempre: podeu anar clicant, escriure adreces noves i obrir pestanyes noves sense perdre la protecció. El lloc web de destinació no arriba a conèixer mai la vostra adreça IP ni cap altra dada vostra. Tot s'esborra automàticament quan acaba la sessió. Si el vostre navegador no ho admet, passem automàticament al nostre servidor intermediari anònim més senzill: quedeu protegits mentre seguiu enllaços de la pàgina, però no podeu escriure una adreça nova al camp d'adreces. Podeu saber si encara esteu protegits perquè el camp d'adreces mostrarà: https://proxy.suma-ev.de/?url=aquí hi ha l'adreça real.",
+    'proxy' => [
+        'title' => 'Obre anònimament (SafeBrowse) <a title="Per a l\\\\\\\'ajuda fàcil, feu clic aquí" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'intro' => 'Amb «Obre anònimament» visiteu un lloc web sense que aquest vegi mai el vostre dispositiu. La pàgina s’obre en un navegador que funciona als nostres servidors: SafeBrowse. El lloc web només tracta amb aquest navegador i no coneix ni la vostra adreça IP ni res del vostre dispositiu, del vostre navegador o de les vostres galetes.',
+        'use' => [
+            'title' => 'Com obrir una pàgina anònimament',
+            'text' => [
+                'Feu clic a «Obre anònimament» (la icona de l’escut) en un resultat. La pàgina s’obre en una pestanya nova.',
+                'Si voleu obrir tots els resultats anònimament, activeu «Obre els resultats de manera anònima» a la configuració. Aleshores cada enllaç d’un resultat passa per SafeBrowse, i amb «Obre directament» visiteu una pàgina sense SafeBrowse.',
+            ],
+        ],
+        'session' => [
+            'title' => 'La sessió',
+            'text' => [
+                'El primer resultat que obriu anònimament inicia una sessió. Cadascun dels següents s’obre en la mateixa sessió, en una pestanya pròpia. Allà hi navegueu com sempre: seguiu enllaços, empleneu formularis, escriviu una adreça nova o un terme de cerca a la barra d’adreces. Continueu protegits mentre ho feu.',
+                'Una sessió costa fitxes de la vostra clau de MetaGer; quantes i per quant de temps es mostra abans de començar. Mentre feu servir la sessió, s’allarga automàticament. Quan deixeu de fer-la servir, s’acaba sola poc després, o la tanqueu amb «Tanca la sessió».',
+                'Quan la sessió s’acaba, el navegador dels nostres servidors s’esborra amb tot el que hi havia: pàgines visitades, galetes, inicis de sessió i fitxers baixats. La sessió següent comença amb un navegador nou i buit. Per això, deseu abans els fitxers baixats al vostre dispositiu des de «Baixades».',
+            ],
+        ],
+        'views' => [
+            'title' => 'Dues vistes',
+            'text' => [
+                '«Pàgina» mostra una còpia del lloc web sense els seus scripts. Hi llegiu, desplaceu, cerqueu i copieu com a qualsevol pàgina; els vostres clics i el que escriviu van al navegador dels nostres servidors. «Navegador complet» mostra aquest navegador com a imatge, amb totes les seves pestanyes. Allà funciona tot, també els vídeos i les pàgines que «Pàgina» no pot mostrar. Canvieu entre totes dues a la barra de dalt.',
+            ],
+        ],
+        'nojs' => [
+            'title' => 'Sense JavaScript',
+            'text' => [
+                'Encara que tingueu el JavaScript desactivat al navegador, «Obre anònimament» obre la pàgina a SafeBrowse. Aleshores veieu una còpia de la pàgina en què funcionen els enllaços, els botons i els formularis. Es torna a carregar després de cada clic, però no canvia sola. Els vídeos, els diàlegs de la pàgina i la pujada de fitxers no funcionen d’aquesta manera. Si el vostre navegador bloqueja les galetes, els resultats que obriu des d’una pàgina de resultats continuen anant a la mateixa sessió, també si seguiu cercant des d’allà.',
+            ],
+        ],
+        'limits' => [
+            'title' => 'El que «Obre anònimament» no fa',
+            'text' => [
+                'El lloc web no us reconeix pel vostre dispositiu, però sí pel que li dieu vosaltres: si inicieu la sessió o hi introduïu dades personals, sap qui sou. Si tampoc no voleu mostrar-vos a MetaGer, feu servir MetaGer a través de Tor (vegeu més amunt).',
+            ],
+        ],
     ],
 
     "maps" => [

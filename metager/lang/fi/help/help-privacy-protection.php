@@ -8,8 +8,41 @@ return [
         '2' => 'Voit käyttää MetaGeriä Tor-selaimessa osoitteessa: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion .',
     ],
     'proxy' => [
-        'title' => 'Anonyymi selain <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        '1' => 'Käyttääksesi sitä, klikkaa vain "AVATA NIMETTÖMÄNÄ" MetaGer-tulossivun tuloksen alareunassa. Tällöin avautuu erillinen ikkuna, jossa on aito, eristetty selain palvelimillamme – ei laitteellasi. Istunto alkaa suoraan siltä sivulta, jonka halusit avata. Tällä selaimella on oma osoitepalkki ja omat välilehdet, joita voit käyttää aivan normaalisti: voit jatkaa selaamista, kirjoittaa uusia osoitteita ja avata uusia välilehtiä menettämättä suojaasi. Kohdesivusto ei koskaan saa tietää IP-osoitettasi tai muita tietoja sinusta. Kaikki poistetaan automaattisesti istunnon päätyttyä. Jos selaimesi ei tue tätä, siirrymme automaattisesti yksinkertaisempaan anonymisoivaan välityspalvelimeemme: pysyt suojattuna niin kauan kuin seuraat sivun linkkejä, mutta et voi syöttää uutta osoitetta osoitekenttään. Näet, oletko yhä suojattu, siitä, että osoitekentässä näkyy: https://proxy.suma-ev.de/?url=tässä on todellinen osoite.',
+        'title' => 'Avaa nimettömästi (SafeBrowse) <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'intro' => '”Avaa nimettömästi” -toiminnolla vierailet verkkosivustolla ilman, että se näkee laitettasi. Sivu avataan selaimessa, joka toimii palvelimillamme: SafeBrowsessa. Sivusto on tekemisissä vain tämän selaimen kanssa eikä saa tietää IP-osoitettasi eikä mitään laitteestasi, selaimestasi tai evästeistäsi.',
+        'use' => [
+            'title' => 'Näin avaat sivun nimettömästi',
+            'text' => [
+                'Napsauta tuloksen kohdalla ”Avaa nimettömästi” (kilpikuvake). Sivu avautuu uuteen välilehteen.',
+                'Jos haluat avata kaikki tulokset nimettömästi, ota asetuksista käyttöön ”Avaa tulokset anonyymisti”. Silloin jokainen tuloksen linkki kulkee SafeBrowsen kautta, ja ”Avaa suoraan” avaa sivun ilman SafeBrowsea.',
+            ],
+        ],
+        'session' => [
+            'title' => 'Istunto',
+            'text' => [
+                'Ensimmäinen nimettömästi avattu tulos aloittaa istunnon. Jokainen seuraava avautuu samaan istuntoon omaan välilehteensä. Siellä selaat tavalliseen tapaan: seuraat linkkejä, täytät lomakkeita, kirjoitat uuden osoitteen tai hakusanan osoiteriville. Pysyt samalla suojattuna.',
+                'Istunto maksaa tokeneita MetaGer-avaimestasi; kuinka monta ja kuinka pitkäksi ajaksi, näytetään ennen aloitusta. Niin kauan kuin käytät istuntoa, sitä jatketaan automaattisesti. Kun lopetat sen käytön, se päättyy itsestään pian sen jälkeen, tai voit lopettaa sen valinnalla ”Sulje istunto”.',
+                'Kun istunto päättyy, palvelimillamme oleva selain poistetaan kaikkine sisältöineen: vieraillut sivut, evästeet, kirjautumiset ja ladatut tiedostot. Seuraava istunto alkaa uudella, tyhjällä selaimella. Tallenna siksi ladatut tiedostot laitteellesi kohdasta ”Lataukset” ennen sitä.',
+            ],
+        ],
+        'views' => [
+            'title' => 'Kaksi näkymää',
+            'text' => [
+                '”Sivu” näyttää kopion sivustosta ilman sen skriptejä. Luet, vierität, haet ja kopioit siinä kuten millä tahansa sivulla; napsautuksesi ja syötteesi menevät palvelimillamme olevaan selaimeen. ”Koko selain” näyttää tämän selaimen kuvana kaikkine välilehtineen. Siellä kaikki toimii, myös videot ja sivut, joita ”Sivu” ei pysty näyttämään. Vaihdat näkymien välillä yläpalkista.',
+            ],
+        ],
+        'nojs' => [
+            'title' => 'Ilman JavaScriptiä',
+            'text' => [
+                'Vaikka JavaScript olisi poistettu käytöstä selaimessasi, ”Avaa nimettömästi” avaa sivun SafeBrowsessa. Näet silloin kopion sivusta, jossa linkit, painikkeet ja lomakkeet toimivat. Se ladataan uudelleen jokaisen napsautuksen jälkeen, mutta se ei muutu itsestään. Videot, sivun valintaikkunat ja tiedostojen lähettäminen eivät toimi tällä tavalla. Jos selaimesi estää evästeet, yhdeltä tulossivulta avaamasi tulokset päätyvät silti samaan istuntoon, myös jos jatkat hakemista sieltä.',
+            ],
+        ],
+        'limits' => [
+            'title' => 'Mitä ”Avaa nimettömästi” ei tee',
+            'text' => [
+                'Sivusto ei tunnista sinua laitteestasi, mutta kyllä siitä, mitä itse kerrot sille: jos kirjaudut sisään tai annat henkilötietoja, se tietää, kuka olet. Jos et halua näyttäytyä myöskään MetaGerille, käytä MetaGeria Torin kautta (katso yllä).',
+            ],
+        ],
     ],
     'content' => [
         'title' => 'Kyseenalainen sisältö / Nuorten suojelu <a title="For easy help, click here" href="/help/easy-language/privacy-protection#eh-content" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

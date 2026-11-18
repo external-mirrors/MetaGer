@@ -15,8 +15,41 @@ return [
         '2' => "Du kannst MetaGer im Tor-Browser aufrufen unter: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion.",
     ],
     'proxy' => [
-        'title' => 'Anonymer Browser <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        '1' => "Um ihn zu verwenden, klicken Sie auf der MetaGer-Ergebnisseite einfach auf \"ANONYM ÖFFNEN\" am unteren Rand eines Ergebnisses. Es öffnet sich dann ein eigenes Fenster mit einem echten, isolierten Browser, der sicher auf unseren Servern läuft – nicht auf Ihrem Gerät. Die Sitzung startet direkt bei der Seite, die Sie öffnen wollten. Dieser Browser hat ein eigenes Adressfeld und eigene Tabs, die Sie ganz normal bedienen können: Sie können weiterklicken, neue Adressen eingeben und neue Tabs öffnen, ohne den Schutz zu verlieren. Die Zielwebseite erfährt dabei weder Ihre IP-Adresse noch sonstige Daten über Sie. Nach Ende der Sitzung wird automatisch alles gelöscht. Unterstützt Ihr Browser diese Funktion nicht, greifen wir automatisch auf unseren einfacheren anonymisierenden Proxy zurück: Dabei bleiben Sie beim Weiterklicken auf der Seite geschützt, können aber im Adressfeld keine neue Adresse ansteuern. Ob Sie noch geschützt sind, erkennen Sie daran, dass die Adresse mit https://proxy.suma-ev.de/?url= beginnt.",
+        'title' => 'Anonym öffnen (SafeBrowse) <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'intro' => 'Mit „Anonym öffnen“ besuchen Sie eine Webseite, ohne dass sie Ihr Gerät zu sehen bekommt. Die Seite wird in einem Browser geöffnet, der auf unseren Servern läuft: SafeBrowse. Die Webseite hat es nur mit diesem Browser zu tun und erfährt weder Ihre IP-Adresse noch etwas über Ihr Gerät, Ihren Browser oder Ihre Cookies.',
+        'use' => [
+            'title' => 'So öffnen Sie eine Seite anonym',
+            'text' => [
+                'Klicken Sie bei einem Ergebnis auf „Anonym öffnen“ (das Schild-Symbol). Die Seite öffnet sich in einem neuen Tab.',
+                'Wenn Sie jedes Ergebnis anonym öffnen möchten, schalten Sie in den Einstellungen „Ergebnisse anonym öffnen“ ein. Dann führt jeder Link eines Ergebnisses über SafeBrowse, und mit „Direkt öffnen“ besuchen Sie eine Seite ohne SafeBrowse.',
+            ],
+        ],
+        'session' => [
+            'title' => 'Die Sitzung',
+            'text' => [
+                'Das erste anonym geöffnete Ergebnis startet eine Sitzung. Jedes weitere öffnet sich in derselben Sitzung in einem eigenen Tab. Darin surfen Sie ganz normal weiter: Links folgen, Formulare ausfüllen, eine neue Adresse oder einen Suchbegriff ins Adressfeld eingeben. Sie bleiben dabei geschützt.',
+                'Eine Sitzung kostet Token von Ihrem MetaGer-Schlüssel; wie viele für welche Zeit, steht vor dem Start. Solange Sie die Sitzung benutzen, wird sie automatisch verlängert. Benutzen Sie sie nicht mehr, endet sie kurz darauf von selbst, oder Sie beenden sie mit „Sitzung beenden“.',
+                'Wenn die Sitzung endet, wird der Browser auf unseren Servern mit allem gelöscht, was darin war: besuchte Seiten, Cookies, Anmeldungen und heruntergeladene Dateien. Die nächste Sitzung beginnt mit einem neuen, leeren Browser. Heruntergeladene Dateien speichern Sie deshalb vorher über „Downloads“ auf Ihrem Gerät.',
+            ],
+        ],
+        'views' => [
+            'title' => 'Zwei Ansichten',
+            'text' => [
+                '„Seite“ zeigt eine Kopie der Webseite ohne deren Skripte. Sie lesen, scrollen, suchen und kopieren darin wie auf jeder Seite; Ihre Klicks und Eingaben gehen an den Browser auf unseren Servern. „Ganzer Browser“ zeigt diesen Browser als Bild, mit allen seinen Tabs. Dort funktioniert alles, auch Videos und Seiten, die „Seite“ nicht darstellen kann. Zwischen beiden wechseln Sie in der Leiste oben.',
+            ],
+        ],
+        'nojs' => [
+            'title' => 'Ohne JavaScript',
+            'text' => [
+                'Auch wenn JavaScript in Ihrem Browser ausgeschaltet ist, öffnet „Anonym öffnen“ die Seite in SafeBrowse. Sie sehen dann eine Kopie der Seite, in der Links, Knöpfe und Formulare funktionieren. Sie wird nach jedem Klick neu geladen, verändert sich aber nicht von selbst. Videos, Dialoge der Seite und das Hochladen von Dateien gehen so nicht. Blockiert Ihr Browser Cookies, landen die Ergebnisse, die Sie von einer Ergebnisseite aus öffnen, trotzdem in derselben Sitzung, auch wenn Sie von dort aus weitersuchen.',
+            ],
+        ],
+        'limits' => [
+            'title' => 'Was „Anonym öffnen“ nicht leistet',
+            'text' => [
+                'Die Webseite erkennt Sie nicht an Ihrem Gerät, wohl aber an dem, was Sie ihr selbst mitteilen: Wenn Sie sich anmelden oder persönliche Daten eingeben, weiß sie, wer Sie sind. Wer sich auch gegenüber MetaGer nicht zeigen möchte, nutzt MetaGer über Tor (siehe oben).',
+            ],
+        ],
     ],
     'maps' => [
         'title' => "MetaGer Maps",

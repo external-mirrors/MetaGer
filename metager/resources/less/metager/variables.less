@@ -169,7 +169,9 @@
   --accent-text-color: #ff9933;
   --accent-fill-color: #ff9933;
   --on-accent-color: #1a1a1a;
-  --accent-tint-color: mix(@orange, @color-strong-grey, 12%);
+  // Darker than the card, not lighter: tinted towards the orange, a lighter
+  // ground took the orange links in the panel below 4.5:1.
+  --accent-tint-color: mix(@orange, @color-almost-black, 8%);
   --focus-ring-color: #ff9933;
   --background-color: @color-almost-black;
   --background-color-mobile: @color-almost-black;

@@ -276,6 +276,13 @@
     line-height: 1.55;
   }
 
+  // Links inside running text need more than colour to stand out: in the dark
+  // theme the orange link and the light text differ by 1.7:1 only.
+  .account-membership__text a,
+  .account-membership__points a {
+    text-decoration: underline;
+  }
+
   .account-membership__points {
     display: grid;
     gap: 0.5rem;
@@ -333,7 +340,8 @@
   align-items: center;
   gap: 0.75rem;
   margin: 0;
-  color: @muted-text-color;
+  // Not @muted-text-color: #aaa on the dark card is 4.46:1.
+  color: @text-color-alpha-70;
   font-size: 0.9rem;
 
   &::before,

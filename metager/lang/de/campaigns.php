@@ -72,7 +72,7 @@ return [
         'teaser' => [
             'heading' => 'Dein MetaGer-Geschenk',
             'tokens' => 'Token',
-            'description' => 'Mit diesem Code erhältst du einen eigenen MetaGer-Schlüssel mit :tokens Token - suche werbefrei und ohne Tracking im Web.',
+            'description' => 'Mit diesem Code erhältst du einen eigenen MetaGer-Schlüssel mit :tokens Token - suche ohne Tracking im Web.',
             'validity' => 'Der Schlüssel ist nach dem Einlösen :days Tage gültig.',
             'submit' => 'Schlüssel abholen',
         ],

@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "Como funciona a chave MetaGer?",
-            "description" => "Com uma chave MetaGer pesquisa sem publicidade. Recebe tokens dos quais é descontado um por cada pesquisa. Quando utiliza uma chave MetaGer, todos os mecanismos que protegem o MetaGer de chamadas automatizadas ficam desativados. Isto significa que não verá pedidos de captcha e que o seu endereço IP não será guardado por tempo limitado. Em resumo: o MetaGer fica mais rápido, mais fiável e mais seguro.",
+            "description" => 'Recebe tokens dos quais é descontado um por cada pesquisa. Quando utiliza uma chave MetaGer, todos os mecanismos que protegem o MetaGer de chamadas automatizadas ficam desativados. Isto significa que não verá pedidos de captcha e que o seu endereço IP não será guardado por tempo limitado. Em resumo: o MetaGer fica mais rápido, mais fiável e mais seguro.',
         ],
         [
             "summary" => "Como funcionam os tokens anónimos?",

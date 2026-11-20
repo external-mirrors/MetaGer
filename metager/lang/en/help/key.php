@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "How does the MetaGer key work?",
-            "description" => "With a MetaGer key you search ad-free. You receive tokens from which one search is deducted per search. When you use a MetaGer key, all features that protect MetaGer from automated calls are disabled. This means that you won't see captcha requests and your IP address won't be kept for a limited time. Simply put, this will make MetaGer faster, more reliable and more secure.",
+            "description" => 'You receive tokens from which one search is deducted per search. When you use a MetaGer key, all features that protect MetaGer from automated calls are disabled. This means that you won\'t see captcha requests and your IP address won\'t be kept for a limited time. Simply put, this will make MetaGer faster, more reliable and more secure.',
         ],
         [
             "summary" => "How does the anonymous token work?",

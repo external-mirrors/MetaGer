@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "Com funciona la clau de MetaGer?",
-            "description" => "Amb una clau de MetaGer cerqueu sense publicitat. Rebeu fitxes, de les quals se'n descompta una per cerca. Quan feu servir una clau de MetaGer, es desactiven totes les funcions que protegeixen MetaGer de les consultes automatitzades. Això vol dir que no veureu captcha i que la vostra adreça IP no es conservarà durant un temps limitat. Dit d'una manera senzilla: això fa MetaGer més ràpid, més fiable i més segur.",
+            "description" => 'Rebeu fitxes, de les quals se\'n descompta una per cerca. Quan feu servir una clau de MetaGer, es desactiven totes les funcions que protegeixen MetaGer de les consultes automatitzades. Això vol dir que no veureu captcha i que la vostra adreça IP no es conservarà durant un temps limitat. Dit d\'una manera senzilla: això fa MetaGer més ràpid, més fiable i més segur.',
         ],
         [
             "summary" => "Com funciona el testimoni anònim?",

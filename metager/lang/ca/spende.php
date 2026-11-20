@@ -20,7 +20,7 @@ return [
         ],
         'membershiphint' => [
             'title' => 'O potser voleu fer-vos-en membre?',
-            'description' => 'Com a membre de <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> podeu fer servir MetaGer sense publicitat i accedir a tots els cercadors de pagament.',
+            'description' => 'Els nostres socis sostenen MetaGer. L\'associació sense ànim de lucre <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> investiga la tecnologia dels cercadors, tal com estableixen els seus estatuts, i els nostres socis hi ajuden cercant amb MetaGer. Per això la seva clau es recarrega cada mes, sense cap cost addicional.',
         ],
         'qr' => [
             'alt' => 'Transferència fotogràfica',

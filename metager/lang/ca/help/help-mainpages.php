@@ -25,7 +25,7 @@ return [
     ],
     "searchfield" => [
         "info" => 'El camp de cerca consta de diverses parts:',
-        "memberkey" => 'el símbol de la clau: aquí podeu introduir la vostra clau per fer servir la cerca sense publicitat. També hi podeu consultar el saldo de fitxes i gestionar la clau.',
+        "memberkey" => 'el símbol de la clau: aquí podeu introduir la vostra clau per cercar amb MetaGer. També hi podeu consultar el saldo de fitxes i gestionar la clau.',
         "morefunctions" => 'Trobareu funcions addicionals a l\'apartat «<a href = "/hilfe/funktionen">Funcions de cerca</a>»',
         "search" => 'la lupa: comenceu la cerca fent-hi clic o prement Retorn.',
         "slot" => 'el camp de cerca: escriviu-hi el vostre terme de cerca. No es distingeix entre majúscules i minúscules.',
@@ -39,7 +39,7 @@ return [
         ],
     ],
     "settings" => [
-        "1" => 'Cerca sense publicitat <br> Aquí podeu consultar el saldo de la vostra clau i la clau mateixa. També teniu l\'opció de recarregar-la o eliminar-la.',
+        "1" => 'Clau de MetaGer <br> Aquí podeu consultar el saldo de la vostra clau i la clau mateixa. També teniu l\'opció de recarregar-la o eliminar-la.',
         "2" => 'Cercadors utilitzats <br> Aquí podeu consultar i ajustar els cercadors que feu servir. Fent clic al nom corresponent, els podeu activar o desactivar.',
         "3" => 'Filtres de cerca <br> Els filtres de cerca us permeten filtrar la cerca de manera permanent.',
         "4" => 'Llista negra <br> Aquí podeu crear una llista negra personal. La podeu fer servir per filtrar dominis concrets i crear la vostra pròpia configuració de cerca. Fent clic a «Afegeix», aquesta configuració s\'afegirà a l\'enllaç de l\'apartat «Nota».',
@@ -51,7 +51,7 @@ return [
         "title" => 'Configuració <a title="Per a l\'ajuda fàcil, feu clic aquí" href="/hilfe/easy-language/mainpages#help-settings" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "startpage" => [
-        "info" => 'La pàgina d\'inici inclou el camp de cerca, un botó a la cantonada superior dreta per accedir al menú i dos enllaços sota el camp de cerca per afegir MetaGer al navegador i cercar sense publicitat. A la part inferior hi trobareu informació sobre MetaGer i l\'associació SUMA-EV. A més, a baix de tot es mostren els nostres eixos: <i>Privadesa garantida, Associació sense ànim de lucre, Divers i lliure</i> i <i>100 % energia verda</i>. Fent clic als apartats corresponents o desplaçant-vos hi trobareu més informació. ',
+        "info" => 'La pàgina d\'inici inclou el camp de cerca, un botó a la cantonada superior dreta per accedir al menú i dos enllaços sota el camp de cerca per afegir MetaGer al navegador i configurar una clau de MetaGer. A la part inferior hi trobareu informació sobre MetaGer i l\'associació SUMA-EV. A més, a baix de tot es mostren els nostres eixos: <i>Privadesa garantida, Associació sense ànim de lucre, Divers i lliure</i> i <i>100 % energia verda</i>. Fent clic als apartats corresponents o desplaçant-vos hi trobareu més informació. ',
         "title" => 'La pàgina d\'inici <a title="Per a l\'ajuda fàcil, feu clic aquí" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "title" => [

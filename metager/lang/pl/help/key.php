@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "Jak działa klucz MetaGer?",
-            "description" => "Klucz MetaGer umożliwia wyszukiwanie bez reklam. Otrzymujesz tokeny, od których odejmowane jest jedno wyszukiwanie. Podczas korzystania z klucza MetaGer wszystkie funkcje chroniące MetaGer przed automatycznymi połączeniami są wyłączone. Oznacza to, że nie zobaczysz żądań captcha, a Twój adres IP nie będzie przechowywany przez ograniczony czas. Mówiąc prościej, sprawi to, że MetaGer będzie szybszy, bardziej niezawodny i bezpieczniejszy.",
+            "description" => 'Otrzymujesz tokeny, od których odejmowane jest jedno wyszukiwanie. Podczas korzystania z klucza MetaGer wszystkie funkcje chroniące MetaGer przed automatycznymi połączeniami są wyłączone. Oznacza to, że nie zobaczysz żądań captcha, a Twój adres IP nie będzie przechowywany przez ograniczony czas. Mówiąc prościej, sprawi to, że MetaGer będzie szybszy, bardziej niezawodny i bezpieczniejszy.',
         ],
         [
             "summary" => "Jak działa anonimowy token?",

@@ -29,7 +29,7 @@ return [
         'charge' => 'Crédito: :token Token',
         'manage' => 'Tecla de carregamento',
         'logout' => 'Remover a chave',
-        'no-key' => 'Não definiu uma chave para pesquisas sem anúncios.',
+        'no-key' => 'Não configurou nenhuma chave.',
     ],
     'hint' => [
         'header' => 'Restaurar todas as definições actuais',
@@ -86,7 +86,7 @@ return [
     'meaning' => 'Significado',
     'engineDisabled' => 'O motor de busca :engine não será consultado no focus :focus.',
     'inFocus' => 'em foco',
-    'key' => 'A sua chave para uma pesquisa sem anúncios',
+    'key' => 'A sua chave MetaGer',
     'blentry' => 'Entrada na lista negra',
     'removeCookie' => 'Remover este cookie',
     'aria' => [

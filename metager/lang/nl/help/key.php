@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "Hoe werkt de MetaGer-sleutel?",
-            "description" => "Met een MetaGer-sleutel zoek je reclamevrij. Je ontvangt tokens waarvan één zoekopdracht per zoekopdracht wordt afgetrokken. Wanneer je een MetaGer-sleutel gebruikt, worden alle functies die MetaGer beschermen tegen geautomatiseerde oproepen uitgeschakeld. Dit betekent dat je geen captcha-verzoeken te zien krijgt en dat je IP-adres voor een beperkte tijd niet wordt bijgehouden. Simpel gezegd maakt dit MetaGer sneller, betrouwbaarder en veiliger.",
+            "description" => 'Je ontvangt tokens waarvan één zoekopdracht per zoekopdracht wordt afgetrokken. Wanneer je een MetaGer-sleutel gebruikt, worden alle functies die MetaGer beschermen tegen geautomatiseerde oproepen uitgeschakeld. Dit betekent dat je geen captcha-verzoeken te zien krijgt en dat je IP-adres voor een beperkte tijd niet wordt bijgehouden. Simpel gezegd maakt dit MetaGer sneller, betrouwbaarder en veiliger.',
         ],
         [
             "summary" => "Hoe werkt het anonieme token?",

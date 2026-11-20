@@ -15,7 +15,7 @@ return [
         "Tärkein yhteenveto",
     ],
     "texts" => [
-        "Jokaisesta mainoksettomasta MetaGer-verkkohausta oletusasetuksilla veloitetaan <b>1 merkki</b>. Voit milloin tahansa täydentää avaintasi jollakin näistä token-paketeista.",
+        'Jokaisesta MetaGer-verkkohausta oletusasetuksilla veloitetaan <b>1 merkki</b>. Voit milloin tahansa täydentää avaintasi jollakin näistä token-paketeista.',
     ],
     "short-info" => [
         [

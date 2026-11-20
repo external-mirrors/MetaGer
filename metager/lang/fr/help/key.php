@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "Comment fonctionne la clé MetaGer ?",
-            "description" => "Avec une clé MetaGer, vous effectuez des recherches sans publicité. Vous recevez des jetons dont une recherche est déduite par recherche. Lorsque vous utilisez une clé MetaGer, toutes les fonctions qui protègent MetaGer des appels automatisés sont désactivées. Cela signifie que vous ne verrez pas de demandes captcha et que votre adresse IP ne sera pas conservée pendant une durée limitée. En d'autres termes, MetaGer sera plus rapide, plus fiable et plus sûr.",
+            "description" => 'Vous recevez des jetons dont une recherche est déduite par recherche. Lorsque vous utilisez une clé MetaGer, toutes les fonctions qui protègent MetaGer des appels automatisés sont désactivées. Cela signifie que vous ne verrez pas de demandes captcha et que votre adresse IP ne sera pas conservée pendant une durée limitée. En d\'autres termes, MetaGer sera plus rapide, plus fiable et plus sûr.',
         ],
         [
             "summary" => "Comment fonctionne le jeton anonyme ?",

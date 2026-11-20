@@ -8,7 +8,7 @@ return [
     "startpage.info"	=>	"La página de inicio contiene el campo de búsqueda, un botón en la parte superior derecha para abrir el menú y un enlace debajo del campo de búsqueda con el que puede agregar MetaGer a su navegador. En la parte inferior encontrará información sobre MetaGer y la asociación patrocinadora SUMA-EV.",
     "searchfield.title"	=>	"El campo de búsqueda",
     "searchfield.info"	=>	"El campo de búsqueda consiste de varias partes:",
-    "searchfield.memberkey"	=>	"El símbolo de la llave (solo para asociados): Los socios del SUMA-EV pueden ingresar aquí su clave para poder utilizar la búsqueda sin publicidad. Si quiere resultados de búqueda sin anuncios publicitarios, conviértase en socio: <a href = \"/beitritt/\">Solicitud de admisión</a>",
+    "searchfield.memberkey"	=>	'El símbolo de la llave: aquí puede introducir su clave de MetaGer para buscar con MetaGer.',
     "searchfield.slot"	=>	"El campo de búsqueda: Ingrese su término de búsqueda aquí.",
     "searchfield.search"	=>	"La lupa: Inicie la búsqueda aquí con un clic o pulse \"Enter\".",
     "resultpage.title"	=>	"La página de resultados",

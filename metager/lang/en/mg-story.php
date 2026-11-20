@@ -6,14 +6,14 @@ return [
             'alt' => 'lock',
         ],
         'title' => 'Guaranteed Privacy',
-        'p' => 'By using our ad-free search you retain full control over your data. Our anonymizing proxy keeps you protected even when you continue surfing. We don\'t track.',
+        'p' => 'With MetaGer you retain full control over your data. Our anonymizing proxy keeps you protected even when you continue surfing. We don\'t track.',
     ],
     'ngo' => [
         'title' => 'Run by a Nonprofit Organization',
         'image' => [
             'alt' => 'Heart',
         ],
-        'p' => 'MetaGer is developed and run by our nonprofit organization, SUMA-EV–Association for Free Access to Knowledge. Strengthen us by becoming a member or by donating to SUMA-EV. Members search ad free!',
+        'p' => 'MetaGer is developed and run by our nonprofit organization, SUMA-EV–Association for Free Access to Knowledge. Strengthen us by becoming a member or by donating to SUMA-EV.',
     ],
     'diversity' => [
         'title' => 'Diverse & Free',

@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "¿Cómo funciona la llave MetaGer?",
-            "description" => "Con una clave MetaGer buscas sin publicidad. Recibes tokens de los que se descuenta una búsqueda por búsqueda. Cuando utilizas una clave MetaGer, se desactivan todas las funciones que protegen a MetaGer de las llamadas automáticas. Esto significa que no verás solicitudes captcha y que tu dirección IP no se guardará durante un tiempo limitado. En pocas palabras, esto hará que MetaGer sea más rápido, más fiable y más seguro.",
+            "description" => 'Recibes tokens de los que se descuenta una búsqueda por búsqueda. Cuando utilizas una clave MetaGer, se desactivan todas las funciones que protegen a MetaGer de las llamadas automáticas. Esto significa que no verás solicitudes captcha y que tu dirección IP no se guardará durante un tiempo limitado. En pocas palabras, esto hará que MetaGer sea más rápido, más fiable y más seguro.',
         ],
         [
             "summary" => "¿Cómo funciona la ficha anónima?",

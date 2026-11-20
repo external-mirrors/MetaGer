@@ -20,7 +20,7 @@ return [
         ],
         'membershiphint' => [
             'title' => 'Or maybe become a member?',
-            'description' => 'As a member of <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> you can use MetaGer ad-free and get access to all paid search engines.',
+            'description' => 'Our members carry MetaGer. The non-profit <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> researches search engine technology, as set out in its statutes, and our members help by searching with MetaGer. That is why their key is topped up every month at no further cost.',
         ],
         'qr' => [
             'alt' => 'Photo transfer',

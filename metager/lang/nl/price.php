@@ -15,7 +15,7 @@ return [
         "De belangrijkste samengevat",
     ],
     "texts" => [
-        "Voor elke advertentievrije zoekopdracht op MetaGer met standaardinstellingen wordt <b>1 token in rekening gebracht</b>. Je kunt je sleutel op elk moment opwaarderen met een van deze tokenpakketten.",
+        'Voor elke zoekopdracht op MetaGer met standaardinstellingen wordt <b>1 token in rekening gebracht</b>. Je kunt je sleutel op elk moment opwaarderen met een van deze tokenpakketten.',
     ],
     "short-info" => [
         [

@@ -17,7 +17,7 @@ return [
     'actions' => 'Åtgärder',
     'engineDisabled' => 'Sökmotorn :engine kommer inte att efterfrågas i focus :focus.',
     'inFocus' => 'i fokus',
-    'key' => 'Din nyckel till en annonsfri sökning',
+    'key' => 'Din MetaGer-nyckel',
     'blentry' => 'Upptagande på svart lista',
     'removeCookie' => 'Ta bort denna cookie',
     'aria' => [
@@ -31,7 +31,7 @@ return [
         'charge' => 'Kredit: :token Token',
         'manage' => 'Laddningsknapp',
         'logout' => 'Ta bort nyckeln',
-        'no-key' => 'Du har inte ställt in en nyckel för annonsfria sökningar.',
+        'no-key' => 'Du har inte konfigurerat någon nyckel.',
         'actions' => [
             'info' => 'Vad är det för något?',
             'login' => 'Konfigurera befintlig nyckel',

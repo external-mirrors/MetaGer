@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "Wie funktioniert der MetaGer Schlüssel?",
-            "description" => "Mit einem MetaGer-Schlüssel suchen Sie werbefrei. Sie erhalten Token, von dem pro Suche eine Suche abgezogen wird. Wenn Sie einen MetaGer-Schlüssel verwenden, werden alle Funktionen, die MetaGer vor automatisierten Aufrufen schützen, deaktiviert. Das heißt, dass Sie keine Captcha-Anfragen sehen werden und Ihre IP-Adresse auch nicht für begrenzte Zeit vorgehalten wird. Vereinfacht gesagt wird MetaGer dadurch schneller, zuverlässiger und sicherer.",
+            "description" => 'Sie erhalten Token, von dem pro Suche eine Suche abgezogen wird. Wenn Sie einen MetaGer-Schlüssel verwenden, werden alle Funktionen, die MetaGer vor automatisierten Aufrufen schützen, deaktiviert. Das heißt, dass Sie keine Captcha-Anfragen sehen werden und Ihre IP-Adresse auch nicht für begrenzte Zeit vorgehalten wird. Vereinfacht gesagt wird MetaGer dadurch schneller, zuverlässiger und sicherer.',
         ],
         [
             "summary" => "Wie funktioniert das anonyme Token?",

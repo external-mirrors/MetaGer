@@ -15,7 +15,7 @@ return [
         "Le résumé le plus important",
     ],
     "texts" => [
-        "Pour chaque recherche web sans publicité sur MetaGer avec les paramètres par défaut, il vous sera facturé <b>1 jeton</b>. Vous pouvez à tout moment recharger votre clé avec l'un de ces paquets de jetons.",
+        'Pour chaque recherche web sur MetaGer avec les paramètres par défaut, il vous sera facturé <b>1 jeton</b>. Vous pouvez à tout moment recharger votre clé avec l\'un de ces paquets de jetons.',
     ],
     "short-info" => [
         [

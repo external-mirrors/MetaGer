@@ -59,7 +59,7 @@ return [
         'teaser' => [
             'heading' => 'O seu presente MetaGer',
             'tokens' => 'Tokens',
-            'description' => 'Este código dá-lhe a sua própria chave MetaGer carregada com :tokens tokens - pesquise na web sem publicidade e sem ser rastreado.',
+            'description' => 'Este código dá-lhe a sua própria chave MetaGer carregada com :tokens tokens - pesquise na web sem ser rastreado.',
             'validity' => 'A chave é válida durante :days dias após o resgate.',
             'submit' => 'Obter a minha chave',
         ],

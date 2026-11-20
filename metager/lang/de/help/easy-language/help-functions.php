@@ -62,7 +62,7 @@ return [
 
         ],
 
-        "1" => 'Sie können bei uns suchen, ohne Werbung zu sehen. <br> Dafür braucht man einen MetaGer Schlüssel. <br> Den kann man bei uns kaufen. <br> Sie können den Schlüssel auf mehreren Geräten gleich-zeitig benutzen. <br> Dafür muss man den Schlüssel einrichten. <br> Als Erstes öffnet man die Verwaltungs-Seite vom MetaGer Schlüssel. <br> Hier kommt man zur Verwaltungs-Seite: <br> <a href = "/keys/key/enter">Verwaltungs-Seite</a> <br> Dort gibt es diese Möglichkeiten:',
+        "1" => 'Zum Suchen bei uns braucht man einen MetaGer Schlüssel. <br> Den kann man bei uns kaufen. <br> Sie können den Schlüssel auf mehreren Geräten gleich-zeitig benutzen. <br> Dafür muss man den Schlüssel einrichten. <br> Als Erstes öffnet man die Verwaltungs-Seite vom MetaGer Schlüssel. <br> Hier kommt man zur Verwaltungs-Seite: <br> <a href = "/keys/key/enter">Verwaltungs-Seite</a> <br> Dort gibt es diese Möglichkeiten:',
         "2" => [
             '1' => 'Log-in Code <br> Ein weiteres Gerät mit dem Log-in Code zu registrieren geht so: <br> Sie klicken auf den Knopf <strong>Login Code erzeugen</strong>. <br> So sieht der Knopf aus:',   
             '2' => 'Dann werden 6 Zahlen angezeigt. <br> So sehen die Zahlen zum Beispiel aus:',
@@ -80,13 +80,13 @@ return [
         "5" => [
             '1' =>'QR-Code scannen <br> Ein weiteres Gerät mit dem QR-Code zu registieren geht so: <br> Sie öffnen die Seite zum Einrichten vom Schlüssel auf dem neuen Gerät. <br> So sieht die Seite aus:',
             '2' => 'Dann klicken Sie auf den Knopf <strong>QR Code scannen</strong>. <br> So sieht dieser Knopf aus:',
-            '3' => 'Nun scannen Sie den QR-Code ein. <br> Danach können Sie werbefrei auf Ihrem Gerät suchen.',   
+            '3' => 'Nun scannen Sie den QR-Code ein. <br> Danach können Sie auf Ihrem Gerät suchen.',   
         ],
         "6" => 'Manuell eingeben <br> Es geht natürlich auch, den Schlüssel manuell einzugeben. <br> Dafür tippen Sie die lange Folge von Zahlen und Buchstaben ab. ',   
-        "7" => 'Manchmal sehen Sie bei uns einen bunten Schlüssel. <br> Das hat einen Grund. <br> Die Farben sagen, wie oft man noch ohne Werbung suchen kann. <br> Es gibt folgende Farben: ',   
+        "7" => 'Manchmal sehen Sie bei uns einen bunten Schlüssel. <br> Das hat einen Grund. <br> Die Farben sagen, wie oft man noch suchen kann. <br> Es gibt folgende Farben: ',   
         "8" => 'Grauer Schlüssel: <br> Sie sehen einen grauen Schlüssel. <br> Dann haben Sie keinen Schlüssel eingerichtet.',   
-        "9" => 'Roter Schlüssel: <br> Sie sehen einen rot/orangenen Schlüssel. <br> Dann ist Ihr Guthaben leer. <br> Sie können also nicht mehr ohne Werbung suchen. <br> Wir empfehlen Ihnen den Schlüssel wieder aufzuladen. <br> Dann können Sie wieder ohne Werbung suchen.', 
-        "10" => 'Grüner Schlüssel: <br> Sie sehen einen grünen Schlüssel. <br> Dann suchen Sie aktuell ohne Werbung. <br> Sie können also weiter ohne Werbung suchen.',   
+        "9" => 'Roter Schlüssel: <br> Sie sehen einen rot/orangenen Schlüssel. <br> Dann ist Ihr Guthaben leer. <br> Sie können also nicht mehr suchen. <br> Wir empfehlen Ihnen den Schlüssel wieder aufzuladen. <br> Dann können Sie wieder suchen.', 
+        "10" => 'Grüner Schlüssel: <br> Sie sehen einen grünen Schlüssel. <br> Dann ist Ihr Schlüssel aufgeladen. <br> Sie können also weiter suchen.',   
         "11" => 'Gelber Schlüssel: <br> Sie sehen einen gelben Schlüssel. <br> Dann haben Sie bald Ihr Guthaben aufgebraucht. <br> Sie haben aktuell weniger als 30 Token, zum Benutzen. <br> Wir empfehlen Ihnen den Schlüssel bald aufzuladen. ',   
   
 

@@ -24,7 +24,7 @@ return [
     ],
     'searchfield' => [
         'info' => 'Das Suchfeld besteht aus mehreren Teilen:',
-        'memberkey' => 'dem Schlüsselsymbol: Hier können Sie Ihren Schlüssel eingeben, um die werbefreie Suche nutzen zu können. Zusätzlich können Sie Ihren Tokenstand einsehen und Ihren Schlüssel verwalten.',
+        'memberkey' => 'dem Schlüsselsymbol: Hier können Sie Ihren Schlüssel eingeben, um mit MetaGer zu suchen. Zusätzlich können Sie Ihren Tokenstand einsehen und Ihren Schlüssel verwalten.',
         'morefunctions' => 'Weitere Funktionen finden sie unter dem Menüpunkt "<a href = "/hilfe/funktionen">Suchfunktionen</a>".',
         'search' => 'das Vergrößerungsglas: Starten Sie Ihre Suche, indem Sie hier klicken oder "Enter" drücken.',
         'slot' => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein. Zwischen Groß- und Kleinschreibung wird nicht unterschieden.',
@@ -38,7 +38,7 @@ return [
         ],
     ],
     'settings' => [
-        '1' => 'Werbefreie Suche <br> Hier können Sie das Guthaben Ihres Schlüssels, sowie Ihren Schlüssel einsehen. Sie haben ebenfalls die Optionen, Ihren Schlüssel aufzuladen oder zu entfernen.',
+        '1' => 'MetaGer-Schlüssel <br> Hier können Sie das Guthaben Ihres Schlüssels, sowie Ihren Schlüssel einsehen. Sie haben ebenfalls die Optionen, Ihren Schlüssel aufzuladen oder zu entfernen.',
         '2' => 'Verwendete Suchmaschinen <br> Hier können Sie die Suchmaschinen, die Sie verwenden, anzeigen und anpassen. Mit einem Klick auf den entsprechenden Namen können Sie diese entsprechend aktivieren oder deaktivieren.',
         '3' => 'Suchfilter <br> Mit Suchfiltern können Sie Ihre Suche permanent filtern.',
         '4' => 'Schwarze Liste <br> Hier können Sie eine persönliche schwarze Liste erstellen. Damit können Sie bestimmte Domains herausfiltern und Ihre eigenen Sucheinstellungen vornehmen. Wenn Sie auf "Hinzufügen" klicken, werden diese Einstellungen an den Link im Abschnitt "Hinweis" angehängt.',
@@ -50,7 +50,7 @@ return [
         'title' => 'Einstellungen <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/mainpages#help-settings" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     'startpage' => [
-        'info' => 'Die Startseite beinhaltet das Suchfeld, oben rechts einen Button zum Aufrufen des Menus und unter dem Suchfeld zwei Links, mit dem Sie MetaGer zu Ihrem Browser hinzufügen und MetaGer werbefrei nutzen können. Im unteren Bereich finden Sie Informationen zu MetaGer und dem Trägerverein SUMA-EV. Zusätzlich werden unten unsere Schwerpunkte <i>Garantierte Privatsphäre, Gemeinnütziger Verein, Vielfältig & Frei</i> und <i>100% Ökostrom</i> angezeigt. Durch einen Klick auf die entsprechenden Bereiche oder durch Scrollen können mehr Informationen gefunden werden. ',
+        'info' => 'Die Startseite beinhaltet das Suchfeld, oben rechts einen Button zum Aufrufen des Menus und unter dem Suchfeld zwei Links, mit dem Sie MetaGer zu Ihrem Browser hinzufügen und einen MetaGer-Schlüssel einrichten können. Im unteren Bereich finden Sie Informationen zu MetaGer und dem Trägerverein SUMA-EV. Zusätzlich werden unten unsere Schwerpunkte <i>Garantierte Privatsphäre, Gemeinnütziger Verein, Vielfältig & Frei</i> und <i>100% Ökostrom</i> angezeigt. Durch einen Klick auf die entsprechenden Bereiche oder durch Scrollen können mehr Informationen gefunden werden. ',
         'title' => 'Die Startseite <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     'title' => [

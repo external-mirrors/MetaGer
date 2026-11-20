@@ -6,14 +6,14 @@ return [
             'alt' => 'cerradura de seguridad',
         ],
         'title' => 'Privacidad garantizada',
-        'p' => 'Al utilizar nuestra búsqueda sin anuncios, conservas el control total sobre tus datos. Nuestro proxy anonimizador te mantiene protegido incluso cuando sigues navegando. No rastreamos.',
+        'p' => 'Con MetaGer conservas el control total sobre tus datos. Nuestro proxy anonimizador te mantiene protegido incluso cuando sigues navegando. No rastreamos.',
     ],
     'ngo' => [
         'title' => 'Organización sin ánimo de lucro',
         'image' => [
             'alt' => 'corazón',
         ],
-        'p' => 'Metager cuenta con el apoyo de la asociación sin fines de lucro SUMA-EV, asociación de libre acceso al conocimiento. Apóyenos donando o convirtiéndose en miembro. Los miembros buscan sin publicidad en Metager.',
+        'p' => 'Metager cuenta con el apoyo de la asociación sin fines de lucro SUMA-EV, asociación de libre acceso al conocimiento. Apóyenos donando o convirtiéndose en miembro.',
     ],
     'diversity' => [
         'title' => 'Diversos y libres',

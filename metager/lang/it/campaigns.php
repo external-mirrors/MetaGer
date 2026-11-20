@@ -59,7 +59,7 @@ return [
         'teaser' => [
             'heading' => 'Il tuo regalo MetaGer',
             'tokens' => 'Token',
-            'description' => 'Questo codice ti dà una tua chiave MetaGer caricata con :tokens token - cerca sul web senza pubblicità e senza essere tracciato.',
+            'description' => 'Questo codice ti dà una tua chiave MetaGer caricata con :tokens token - cerca sul web senza essere tracciato.',
             'validity' => 'La chiave è valida per :days giorni dopo il riscatto.',
             'submit' => 'Ottieni la mia chiave',
         ],

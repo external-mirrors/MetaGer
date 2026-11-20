@@ -53,7 +53,7 @@ return [
     'actions' => 'Handlinger',
     'engineDisabled' => 'Søgemaskinen :engine vil ikke blive spurgt i focus :focus.',
     'inFocus' => 'i fokus',
-    'key' => 'Din nøgle til reklamefri søgning',
+    'key' => 'Din MetaGer-nøgle',
     'blentry' => 'Optagelse på sort liste',
     'removeCookie' => 'Fjern denne cookie',
     'aria' => [
@@ -67,7 +67,7 @@ return [
         'charge' => 'Kredit: :token Token',
         'manage' => 'Opladningsnøgle',
         'logout' => 'Fjern nøglen',
-        'no-key' => 'Du har ikke oprettet en nøgle til reklamefri søgninger.',
+        'no-key' => 'Du har ikke oprettet en nøgle.',
         'actions' => [
             'info' => 'Hvad er det for noget?',
             'login' => 'Opsæt eksisterende nøgle',

@@ -22,7 +22,7 @@ return [
         '2' => 'MetaGer różni się od innych wyszukiwarek. Znajduje to odzwierciedlenie nie tylko w naszej orientacji na dobro publiczne i skupieniu się na prywatności, ale także w niektórych unikalnych funkcjach:',
         '3' => 'Możliwość utworzenia osobistej czarnej listy',
         '4' => 'Funkcja wyszukiwania w wyszukiwaniu',
-        '5' => 'Możliwość wyszukiwania bez reklam',
+        '5' => 'Bez reklam',
         '6' => 'Integracja projektów wyszukiwarek, takich jak YaCy',
         '7' => 'Jedyna niemiecka wyszukiwarka, która łączy wyniki z kilku dużych indeksów internetowych',
         '8' => 'I wiele więcej...',

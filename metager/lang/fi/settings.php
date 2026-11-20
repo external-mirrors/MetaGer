@@ -18,7 +18,7 @@ return [
         'logout' => 'Poista avain',
         'header' => 'MetaGer avain',
         'charge' => 'Luotto: :token Token',
-        'no-key' => 'Et ole määrittänyt avainta mainoksettomia hakuja varten.',
+        'no-key' => 'Et ole määrittänyt avainta.',
         'actions' => [
             'info' => 'Mikä se on?',
             'login' => 'Aseta olemassa oleva avain',
@@ -65,7 +65,7 @@ return [
     'actions' => 'Toimet',
     'engineDisabled' => 'Hakukonetta :engine ei kysytä focus :focus -tilassa.',
     'inFocus' => 'tarkennettuna',
-    'key' => 'Avaimesi mainoksettomaan hakuun',
+    'key' => 'MetaGer-avaimesi',
     'blentry' => 'Mustan listan merkintä',
     'removeCookie' => 'Poista tämä eväste',
     'aria' => [

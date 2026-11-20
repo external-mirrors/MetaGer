@@ -7,12 +7,12 @@ return [
     ],
     'startpage' => [
         'title' => 'De startpagina <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        'info' => 'De startpagina bevat het zoekveld, een knop in de rechterbovenhoek om het menu te openen en twee links onder het zoekveld om MetaGer aan je browser toe te voegen en advertentievrij te zoeken. In het onderste gedeelte vind je informatie over MetaGer en de SUMA-EV vereniging. Bovendien worden onze focusgebieden <i>Gegarandeerde privacy, Non-profit vereniging, Divers & gratis</i> en <i>100% groene energie</i> onderaan weergegeven. Door op de betreffende onderdelen te klikken of door te scrollen kun je meer informatie vinden. ',
+        'info' => 'De startpagina bevat het zoekveld, een knop in de rechterbovenhoek om het menu te openen en twee links onder het zoekveld om MetaGer aan je browser toe te voegen en een MetaGer-sleutel in te stellen. In het onderste gedeelte vind je informatie over MetaGer en de SUMA-EV vereniging. Bovendien worden onze focusgebieden <i>Gegarandeerde privacy, Non-profit vereniging, Divers & gratis</i> en <i>100% groene energie</i> onderaan weergegeven. Door op de betreffende onderdelen te klikken of door te scrollen kun je meer informatie vinden. ',
     ],
     'searchfield' => [
         'title' => 'Het zoekveld <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         'info' => 'Het zoekveld bestaat uit verschillende delen:',
-        'memberkey' => 'het sleutelsymbool: Hier kun je je sleutel invoeren om reclamevrij zoeken te gebruiken. U kunt ook uw tokensaldo bekijken en uw sleutel beheren.',
+        'memberkey' => 'het sleutelsymbool: Hier kun je je sleutel invoeren om met MetaGer te zoeken. U kunt ook uw tokensaldo bekijken en uw sleutel beheren.',
         'slot' => 'het zoekveld: Voer hier je zoekterm in. Hoofdletters en kleine letters worden niet onderscheiden.',
         'search' => 'het vergrootglas: Start uw zoekopdracht door hier te klikken of op "Enter" te drukken.',
         'morefunctions' => 'Extra functies zijn te vinden onder het menu-item "<a href = "/hilfe/funktionen">Zoekfuncties</a>".',
@@ -52,7 +52,7 @@ return [
         '5' => 'Schakel naar donkere modus <br> Schakel hier eenvoudig naar donkere modus.',
         '6' => 'Resultaten openen in nieuw tabblad <br> Hier kunt u de functie om resultaten in een nieuw tabblad te openen permanent inschakelen.',
         '7' => 'Citaten <br> Hier kunt u de weergave van citaten in- en uitschakelen.',
-        '1' => 'Advertentievrij zoeken <br> Hier kun je het saldo van je sleutel en je sleutel bekijken. Je hebt ook de opties om je sleutel op te waarderen of te verwijderen.',
+        '1' => 'MetaGer-sleutel <br> Hier kun je het saldo van je sleutel en je sleutel bekijken. Je hebt ook de opties om je sleutel op te waarderen of te verwijderen.',
         '8' => 'Alle huidige instellingen herstellen <br> Er wordt een link weergegeven die u kunt instellen als startpagina of bladwijzer om uw huidige instellingen te behouden.',
         '9' => 'Subtiele reclame voor onze eigen diensten <br> We tonen u subtiele reclame voor onze eigen diensten. U kunt onze zelfpromotie hier uitschakelen.',
     ],

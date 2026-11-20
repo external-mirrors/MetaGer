@@ -15,7 +15,7 @@ return [
         "The most important summarized",
     ],
     "texts" => [
-        "For each ad-free web search on MetaGer with default settings you will be charged <b>1 token</b>. You can top up your key with one of these token packages at any time.",
+        'For each web search on MetaGer with default settings you will be charged <b>1 token</b>. You can top up your key with one of these token packages at any time.',
     ],
     "short-info" => [
         [

@@ -18,7 +18,7 @@ return [
         'charge' => 'Guthaben: :token Token',
         'manage' => 'Schlüssel aufladen',
         'logout' => 'Schlüssel entfernen',
-        'no-key' => 'Sie haben keinen Schlüssel für werbefreie Suchen eingerichtet.',
+        'no-key' => 'Sie haben keinen Schlüssel eingerichtet.',
         'actions' => [
             'info' => 'Was ist das?',
             'login' => 'Vorhandenen Schlüssel einrichten',
@@ -87,7 +87,7 @@ return [
     'free' => 'kostenlos',
     'limited' => 'limitiert',
     'inFocus' => 'im Fokus',
-    'key' => 'Ihr Schlüssel für die werbefreie Suche',
+    'key' => 'Ihr MetaGer-Schlüssel',
     'light' => 'Hell',
     'meaning' => 'Bedeutung',
     'more' => 'Weitere Einstellungen',

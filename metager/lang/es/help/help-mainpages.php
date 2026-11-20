@@ -6,12 +6,12 @@ return [
     ],
     'startpage' => [
         'title' => 'Página de inicio <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        'info' => 'La página de inicio incluye el campo de búsqueda, un botón en la esquina superior derecha para acceder al menú y dos enlaces debajo del campo de búsqueda para añadir MetaGer a su navegador y buscar sin anuncios. En la parte inferior, encontrará información sobre MetaGer y la asociación SUMA-EV. Además, en la parte inferior aparecen nuestras áreas de interés <i>Privacidad garantizada, Asociación sin ánimo de lucro, Diverso y gratuito</i> y <i>100% energía verde</i>. Haciendo clic en las respectivas secciones o desplazándose por ellas, podrá encontrar más información. ',
+        'info' => 'La página de inicio incluye el campo de búsqueda, un botón en la esquina superior derecha para acceder al menú y dos enlaces debajo del campo de búsqueda para añadir MetaGer a su navegador y configurar una clave de MetaGer. En la parte inferior, encontrará información sobre MetaGer y la asociación SUMA-EV. Además, en la parte inferior aparecen nuestras áreas de interés <i>Privacidad garantizada, Asociación sin ánimo de lucro, Diverso y gratuito</i> y <i>100% energía verde</i>. Haciendo clic en las respectivas secciones o desplazándose por ellas, podrá encontrar más información. ',
     ],
     'searchfield' => [
         'title' => 'El campo de búsqueda <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         'info' => 'El campo de búsqueda consta de varias partes:',
-        'memberkey' => 'el símbolo de la llave: Aquí puede introducir su clave para utilizar la búsqueda sin anuncios. También puedes ver tu saldo de fichas y gestionar tu clave.',
+        'memberkey' => 'el símbolo de la llave: Aquí puede introducir su clave para buscar con MetaGer. También puedes ver tu saldo de fichas y gestionar tu clave.',
         'slot' => 'el campo de búsqueda: Introduzca aquí el término de búsqueda. No se distingue entre mayúsculas y minúsculas.',
         'search' => 'la lupa: Inicie su búsqueda haciendo clic aquí o pulsando "Intro".',
         'morefunctions' => 'Encontrará funciones adicionales en la opción de menú "<a href = "/hilfe/funktionen">Funciones de búsqueda</a>"',
@@ -52,7 +52,7 @@ return [
         '5' => 'Alternar el modo oscuro <br> Cambia al modo oscuro fácilmente aquí.',
         '6' => 'Abrir resultados en una pestaña nueva <br> Aquí puede activar permanentemente la función para abrir los resultados en una pestaña nueva.',
         '7' => 'Citas <br> Aquí puedes activar o desactivar la visualización de citas.',
-        '1' => 'Búsqueda sin publicidad <br> Aquí puede ver el saldo de su llave y su llave. También tiene la opción de recargar o eliminar su llave.',
+        '1' => 'Clave de MetaGer <br> Aquí puede ver el saldo de su llave y su llave. También tiene la opción de recargar o eliminar su llave.',
         '8' => 'Restaurar toda la configuración actual <br> Aparecerá un enlace que puede establecer como página de inicio o marcador para conservar la configuración actual.',
         '9' => 'Publicidad Sutil para Nuestro Propio Servicio <br> Le mostramos publicidad sutil para nuestros propios servicios. Puede desactivar nuestra autopromoción aquí.',
     ],

@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "Hur fungerar MetaGer-nyckeln?",
-            "description" => "Med en MetaGer-nyckel söker du annonsfritt. Du får tokens från vilka en sökning dras av per sökning. När du använder en MetaGer-nyckel inaktiveras alla funktioner som skyddar MetaGer från automatiserade samtal. Detta innebär att du inte kommer att se captcha-förfrågningar och att din IP-adress inte kommer att sparas under en begränsad tid. Enkelt uttryckt kommer detta att göra MetaGer snabbare, mer tillförlitlig och säkrare.",
+            "description" => 'Du får tokens från vilka en sökning dras av per sökning. När du använder en MetaGer-nyckel inaktiveras alla funktioner som skyddar MetaGer från automatiserade samtal. Detta innebär att du inte kommer att se captcha-förfrågningar och att din IP-adress inte kommer att sparas under en begränsad tid. Enkelt uttryckt kommer detta att göra MetaGer snabbare, mer tillförlitlig och säkrare.',
         ],
         [
             "summary" => "Hur fungerar den anonyma token?",

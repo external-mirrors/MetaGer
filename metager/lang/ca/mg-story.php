@@ -6,14 +6,14 @@ return [
             'alt' => 'cadenat',
         ],
         'title' => 'Privadesa garantida',
-        'p' => 'En fer servir la nostra cerca sense publicitat, conserveu el control total de les vostres dades. El nostre servidor intermediari anònim us protegeix fins i tot quan continueu navegant. No us rastregem.',
+        'p' => 'Amb MetaGer conserveu el control total de les vostres dades. El nostre servidor intermediari anònim us protegeix fins i tot quan continueu navegant. No us rastregem.',
     ],
     'ngo' => [
         'title' => 'Gestionat per una organització sense ànim de lucre',
         'image' => [
             'alt' => 'Cor',
         ],
-        'p' => 'MetaGer és desenvolupat i gestionat per la nostra organització sense ànim de lucre, SUMA-EV – Associació per al Lliure Accés al Coneixement. Reforceu-nos fent-vos-en membre o fent un donatiu a SUMA-EV. Els membres cerquen sense publicitat!',
+        'p' => 'MetaGer és desenvolupat i gestionat per la nostra organització sense ànim de lucre, SUMA-EV – Associació per al Lliure Accés al Coneixement. Reforceu-nos fent-vos-en membre o fent un donatiu a SUMA-EV.',
     ],
     'diversity' => [
         'title' => 'Divers i lliure',

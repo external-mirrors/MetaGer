@@ -118,7 +118,7 @@ return [
         '2' => 'MetaGer eroaa muista hakukoneista. Tämä näkyy paitsi yleishyödyllisessä suuntautumisessa ja yksityisyyden suojaan keskittymisessä myös joissakin ainutlaatuisissa ominaisuuksissamme:',
         '3' => 'Mahdollisuus luoda henkilökohtainen musta lista',
         '4' => 'Hakutoiminto haussa',
-        '5' => 'Mainokseton haku mahdollista',
+        '5' => 'Ei mainoksia',
         '6' => 'Hakukonehankkeiden, kuten YaCy:n, integrointi',
         '7' => 'Ainoa saksalainen hakukone, joka yhdistää useiden suurten verkkoindeksien tulokset.',
         '8' => 'Ja paljon muuta..',

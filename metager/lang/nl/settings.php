@@ -53,7 +53,7 @@ return [
     'actions' => 'Acties',
     'engineDisabled' => 'De zoekmachine :engine wordt niet opgevraagd in focus :focus.',
     'inFocus' => 'in beeld',
-    'key' => 'Jouw sleutel tot reclamevrij zoeken',
+    'key' => 'Jouw MetaGer-sleutel',
     'blentry' => 'Vermelding op zwarte lijst',
     'removeCookie' => 'Verwijder deze cookie',
     'aria' => [
@@ -67,7 +67,7 @@ return [
         'charge' => 'Krediet: :token Token',
         'manage' => 'Laadtoets',
         'logout' => 'Sleutel verwijderen',
-        'no-key' => 'Je hebt geen sleutel ingesteld voor advertentievrije zoekopdrachten.',
+        'no-key' => 'Je hebt geen sleutel ingesteld.',
         'actions' => [
             'info' => 'Wat is het?',
             'login' => 'Bestaande sleutel instellen',

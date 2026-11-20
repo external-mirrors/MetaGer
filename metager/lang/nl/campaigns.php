@@ -59,7 +59,7 @@ return [
         'teaser' => [
             'heading' => 'Jouw MetaGer-cadeau',
             'tokens' => 'Tokens',
-            'description' => 'Deze code geeft je een eigen MetaGer-sleutel met :tokens tokens - zoek reclamevrij en zonder getrackt te worden op het web.',
+            'description' => 'Deze code geeft je een eigen MetaGer-sleutel met :tokens tokens - zoek zonder getrackt te worden op het web.',
             'validity' => 'De sleutel is :days dagen geldig na inwisseling.',
             'submit' => 'Sleutel ophalen',
         ],

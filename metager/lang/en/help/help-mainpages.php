@@ -25,7 +25,7 @@ return [
     ],
     "searchfield" => [
         "info" => 'The search field consists of several parts:',
-        "memberkey" => 'the key symbol: Here, you can enter your key to use ad-free search. You can also view your token balance and manage your key.',
+        "memberkey" => 'the key symbol: Here, you can enter your key to search with MetaGer. You can also view your token balance and manage your key.',
         "morefunctions" => 'Additional functions can be found under the menu item "<a href = "/hilfe/funktionen">Search Functions</a>"',
         "search" => 'the magnifying glass: Start your search by clicking here or pressing "Enter".',
         "slot" => 'the search field: Enter your search term here. Uppercase and lowercase letters are not distinguished.',
@@ -39,7 +39,7 @@ return [
         ],
     ],
     "settings" => [
-        "1" => 'Ad-Free Search <br> Here, you can view the balance of your key and your key. You also have the options to top up or remove your key.',
+        "1" => 'MetaGer key <br> Here, you can view the balance of your key and your key. You also have the options to top up or remove your key.',
         "2" => 'Used Search Engines <br> Here, you can view and adjust the search engines you are using. By clicking on the corresponding name, you can enable or disable it accordingly.',
         "3" => 'Search Filters <br> Search filters allow you to filter your search permanently.',
         "4" => 'Blacklist <br> Here, you can create a personal blacklist. You can use it to filter out specific domains and create your own search settings. By clicking on "Add", these settings will be appended to the link in the "Note" section.',
@@ -51,7 +51,7 @@ return [
         "title" => 'Settings <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-settings" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "startpage" => [
-        "info" => 'The start page includes the search field, a button in the upper right corner to access the menu, and two links below the search field to add MetaGer to your browser and search ad free. In the lower section, you will find information about MetaGer and the SUMA-EV association. Additionally, our focus areas <i>Guaranteed Privacy, Nonprofit Association, Diverse & Free</i>, and <i>100% Green Energy</i> are displayed at the bottom. By clicking on the respective sections or by scrolling, you can find more information. ',
+        "info" => 'The start page includes the search field, a button in the upper right corner to access the menu, and two links below the search field to add MetaGer to your browser and set up a MetaGer key. In the lower section, you will find information about MetaGer and the SUMA-EV association. Additionally, our focus areas <i>Guaranteed Privacy, Nonprofit Association, Diverse & Free</i>, and <i>100% Green Energy</i> are displayed at the bottom. By clicking on the respective sections or by scrolling, you can find more information. ',
         "title" => 'The Start Page <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "title" => [

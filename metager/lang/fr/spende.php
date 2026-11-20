@@ -20,7 +20,7 @@ return [
         ],
         'membershiphint' => [
             'title' => 'Ou peut-être devenir membre ?',
-            'description' => 'En tant que membre de <a href="https://suma-ev.de" target="_blank">SUMA-EV</a>, vous pouvez utiliser MetaGer sans publicité et avoir accès à tous les moteurs de recherche payants.',
+            'description' => 'Nos membres portent MetaGer. L\'association à but non lucratif <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> mène des recherches sur la technologie des moteurs de recherche, comme le prévoient ses statuts, et nos membres y contribuent en cherchant avec MetaGer. C\'est pourquoi leur clé est rechargée chaque mois, sans frais supplémentaires.',
         ],
         'qr' => [
             'alt' => 'Transfert de photos',

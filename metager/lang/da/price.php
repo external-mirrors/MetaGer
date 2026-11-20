@@ -15,7 +15,7 @@ return [
         "Den vigtigste opsummering",
     ],
     "texts" => [
-        "For hver reklamefri websøgning på MetaGer med standardindstillinger vil du blive opkrævet <b>1 token</b>. Du kan til enhver tid fylde din nøgle op med en af disse token-pakker.",
+        'For hver websøgning på MetaGer med standardindstillinger vil du blive opkrævet <b>1 token</b>. Du kan til enhver tid fylde din nøgle op med en af disse token-pakker.',
     ],
     "short-info" => [
         [

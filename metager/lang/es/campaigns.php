@@ -59,7 +59,7 @@ return [
         'teaser' => [
             'heading' => 'Tu regalo de MetaGer',
             'tokens' => 'Fichas',
-            'description' => 'Este código te da una clave de MetaGer propia cargada con :tokens fichas: busca en la web sin publicidad y sin que te rastreen.',
+            'description' => 'Este código te da una clave de MetaGer propia cargada con :tokens fichas: busca en la web sin que te rastreen.',
             'validity' => 'La clave es válida durante :days días tras el canje.',
             'submit' => 'Quiero mi clave',
         ],

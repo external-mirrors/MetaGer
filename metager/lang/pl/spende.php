@@ -20,7 +20,7 @@ return [
         ],
         'membershiphint' => [
             'title' => 'A może zostać członkiem?',
-            'description' => 'Jako członek <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> możesz korzystać z MetaGer bez reklam i uzyskać dostęp do wszystkich płatnych wyszukiwarek.',
+            'description' => 'Nasi członkowie utrzymują MetaGer. Stowarzyszenie non-profit <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> prowadzi badania nad technologią wyszukiwarek, tak jak przewiduje to statut, a nasi członkowie pomagają, wyszukując z MetaGer. Dlatego ich klucz jest doładowywany co miesiąc, bez dalszych kosztów.',
         ],
         'qr' => [
             'alt' => 'Transfer zdjęć',

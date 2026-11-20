@@ -12,10 +12,10 @@ return [
     'key' => [
         'placeholder' => 'Introduïu la vostra clau de MetaGer per començar a cercar.',
         'tooltip' => [
-            'nokey' => 'Configura la cerca sense publicitat',
+            'nokey' => 'Configura una clau',
             'empty' => 'Fitxes exhaurides. Recarregueu-ne ara.',
             'low' => 'Fitxes gairebé exhaurides. Recarregueu-ne ara.',
-            'full' => 'Cerca sense publicitat activada.',
+            'full' => 'Clau activa.',
         ],
     ],
     'placeholder' => 'MetaGer: cerca i troba amb la privadesa protegida',
@@ -30,7 +30,7 @@ return [
         'produkte' => 'Productes',
         'maps' => 'Mapes'
     ],
-    'adfree' => 'MetaGer sense publicitat',
+    'adfree' => 'Clau de MetaGer',
     'searchbar-replacement' => [
         'tagline' => 'Codi obert. Sense publicitat. Anònim.',
         'message' => 'La clau és el vostre accés: sense compte, sense adreça electrònica. Només el saldo hi va lligat.',
@@ -105,7 +105,7 @@ return [
                 ],
                 [
                     'heading' => 'Activeu el vostre accés',
-                    'description' => 'Un <a href=":linkCost">pagament</a> únic afegeix saldo a la vostra clau, que anomenem fitxes. Això activa la cerca sense publicitat ni rastreig i la navegació anònima, a més de totes les funcions actuals i futures de MetaGer. Unes 500 fitxes (5 €) solen durar uns 2 mesos.',
+                    'description' => 'Un <a href=":linkCost">pagament</a> únic afegeix saldo a la vostra clau, que anomenem fitxes. Això activa la cerca sense rastreig i la navegació anònima, a més de totes les funcions actuals i futures de MetaGer. Unes 500 fitxes (5 €) solen durar uns 2 mesos.',
                     'membership' => 'Nota: els membres de la nostra associació sense ànim de lucre <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> poden fer servir MetaGer sense cap cost addicional. <a href=":linkMembership" target="_blank">Feu-vos-en membre ara</a>',
                 ],
                 [

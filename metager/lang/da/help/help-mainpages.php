@@ -4,7 +4,7 @@ return [
         'search' => 'forstørrelsesglasset: Start din søgning ved at klikke her eller trykke på "Enter".',
         'title' => 'Søgefeltet <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         'info' => 'Søgefeltet består af flere dele:',
-        'memberkey' => 'nøglesymbolet: Her kan du indtaste din nøgle for at bruge annoncefri søgning. Du kan også se din token-saldo og administrere din nøgle.',
+        'memberkey' => 'nøglesymbolet: Her kan du indtaste din nøgle for at søge med MetaGer. Du kan også se din token-saldo og administrere din nøgle.',
         'slot' => 'søgefeltet: Indtast dit søgeord her. Der skelnes ikke mellem store og små bogstaver.',
         'morefunctions' => 'Yderligere funktioner kan findes under menupunktet "<a href = "/hilfe/funktionen">Søgefunktioner</a>"',
         'suggest' => [
@@ -22,7 +22,7 @@ return [
     ],
     'startpage' => [
         'title' => 'Startsiden <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        'info' => 'Startsiden indeholder søgefeltet, en knap i øverste højre hjørne for at få adgang til menuen og to links under søgefeltet for at tilføje MetaGer til din browser og søge reklamefrit. I den nederste sektion finder du information om MetaGer og SUMA-EV-foreningen. Derudover vises vores fokusområder <i>Garanteret privatliv, Nonprofit-forening, Mangfoldig & gratis</i> og <i>100% grøn energi</i> nederst. Ved at klikke på de respektive sektioner eller ved at scrolle, kan du finde mere information. ',
+        'info' => 'Startsiden indeholder søgefeltet, en knap i øverste højre hjørne for at få adgang til menuen og to links under søgefeltet for at tilføje MetaGer til din browser og oprette en MetaGer-nøgle. I den nederste sektion finder du information om MetaGer og SUMA-EV-foreningen. Derudover vises vores fokusområder <i>Garanteret privatliv, Nonprofit-forening, Mangfoldig & gratis</i> og <i>100% grøn energi</i> nederst. Ved at klikke på de respektive sektioner eller ved at scrolle, kan du finde mere information. ',
     ],
     'resultpage' => [
         'title' => 'Siden med resultater <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
@@ -52,7 +52,7 @@ return [
         '5' => 'Skift til mørk tilstand <br> Skift nemt til mørk tilstand her.',
         '6' => 'Åbn resultater i ny fane <br> Her kan du permanent aktivere funktionen til at åbne resultater i en ny fane.',
         '7' => 'Citater <br> Her kan du slå visning af citater til og fra.',
-        '1' => 'Annoncefri søgning <br> Her kan du se saldoen på din nøgle og din nøgle. Du har også mulighed for at fylde op eller fjerne din nøgle.',
+        '1' => 'MetaGer-nøgle <br> Her kan du se saldoen på din nøgle og din nøgle. Du har også mulighed for at fylde op eller fjerne din nøgle.',
         '8' => 'Gendan alle nuværende indstillinger <br> Der vises et link, som du kan indstille som din startside eller dit bogmærke for at beholde dine nuværende indstillinger.',
         '9' => 'Subtil reklame for vores egen tjeneste <br> Vi viser dig subtil reklame for vores egne tjenester. Du kan slå vores selvpromovering fra her.',
     ],

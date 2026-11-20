@@ -7,12 +7,12 @@ return [
     ],
     'startpage' => [
         'title' => 'Strona startowa <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        'info' => 'Strona startowa zawiera pole wyszukiwania, przycisk w prawym górnym rogu, aby uzyskać dostęp do menu, oraz dwa linki poniżej pola wyszukiwania, aby dodać MetaGer do przeglądarki i wyszukiwać bez reklam. W dolnej części znajdują się informacje o MetaGer i stowarzyszeniu SUMA-EV. Ponadto na dole wyświetlane są nasze obszary tematyczne <i>Gwarantowana prywatność</i>, Stowarzyszenie non-profit</i>, Różnorodność i bezpłatność</i> oraz <i>100% zielonej energii</i>. Klikając odpowiednie sekcje lub przewijając, można znaleźć więcej informacji. ',
+        'info' => 'Strona startowa zawiera pole wyszukiwania, przycisk w prawym górnym rogu, aby uzyskać dostęp do menu, oraz dwa linki poniżej pola wyszukiwania, aby dodać MetaGer do przeglądarki i skonfigurować klucz MetaGer. W dolnej części znajdują się informacje o MetaGer i stowarzyszeniu SUMA-EV. Ponadto na dole wyświetlane są nasze obszary tematyczne <i>Gwarantowana prywatność</i>, Stowarzyszenie non-profit</i>, Różnorodność i bezpłatność</i> oraz <i>100% zielonej energii</i>. Klikając odpowiednie sekcje lub przewijając, można znaleźć więcej informacji. ',
     ],
     'searchfield' => [
         'title' => 'Pole wyszukiwania <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         'info' => 'Pole wyszukiwania składa się z kilku części:',
-        'memberkey' => 'symbol klucza: Tutaj możesz wprowadzić swój klucz, aby korzystać z wyszukiwania bez reklam. Możesz także wyświetlić saldo tokenów i zarządzać kluczem.',
+        'memberkey' => 'symbol klucza: Tutaj możesz wprowadzić swój klucz, aby wyszukiwać z MetaGer. Możesz także wyświetlić saldo tokenów i zarządzać kluczem.',
         'slot' => 'pole wyszukiwania: Wpisz tutaj wyszukiwane hasło. Wielkie i małe litery nie są rozróżniane.',
         'search' => 'szkło powiększające: Rozpocznij wyszukiwanie, klikając tutaj lub naciskając "Enter".',
         'morefunctions' => 'Dodatkowe funkcje można znaleźć w punkcie menu "<a href = "/hilfe/funktionen">Funkcje wyszukiwania</a>".',
@@ -52,7 +52,7 @@ return [
         '5' => 'Przełączanie trybu ciemnego <br> Tutaj można łatwo przełączyć się na tryb ciemny.',
         '6' => 'Otwórz wyniki w nowej karcie <br> Tutaj można na stałe włączyć funkcję otwierania wyników w nowej karcie.',
         '7' => 'Cytaty <br> Tutaj można włączać i wyłączać wyświetlanie cytatów.',
-        '1' => 'Wyszukiwanie bez reklam <br> Tutaj możesz sprawdzić saldo swojego klucza. Dostępne są również opcje doładowania lub usunięcia klucza.',
+        '1' => 'Klucz MetaGer <br> Tutaj możesz sprawdzić saldo swojego klucza. Dostępne są również opcje doładowania lub usunięcia klucza.',
         '8' => 'Przywróć wszystkie bieżące ustawienia <br> Zostanie wyświetlony link, który można ustawić jako stronę główną lub zakładkę, aby zachować bieżące ustawienia.',
         '9' => 'Subtelna reklama naszych własnych usług <br> Pokazujemy subtelną reklamę naszych własnych usług. Możesz wyłączyć naszą autopromocję tutaj.',
     ],

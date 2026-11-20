@@ -22,7 +22,7 @@ return [
         '2' => 'MetaGer is anders dan andere zoekmachines. Dit wordt niet alleen weerspiegeld in onze oriëntatie op het algemeen belang en onze focus op privacy, maar ook door enkele unieke functies:',
         '3' => 'Mogelijkheid om een persoonlijke zwarte lijst te maken',
         '4' => 'Functie van de zoekopdracht in de zoekopdracht',
-        '5' => 'Reclamevrij zoeken mogelijk',
+        '5' => 'Geen advertenties',
         '6' => 'Integratie van zoekmachineprojecten zoals YaCy',
         '7' => 'De enige Duitse zoekmachine die resultaten van verschillende grote webindexen combineert',
         '8' => 'En nog veel meer...',

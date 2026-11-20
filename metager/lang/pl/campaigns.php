@@ -59,7 +59,7 @@ return [
         'teaser' => [
             'heading' => 'Twój prezent od MetaGer',
             'tokens' => 'Tokeny',
-            'description' => 'Ten kod daje Ci własny klucz MetaGer z :tokens tokenami - przeszukuj internet bez reklam i bez śledzenia.',
+            'description' => 'Ten kod daje Ci własny klucz MetaGer z :tokens tokenami - przeszukuj internet bez śledzenia.',
             'validity' => 'Klucz jest ważny przez :days dni po realizacji.',
             'submit' => 'Odbierz mój klucz',
         ],

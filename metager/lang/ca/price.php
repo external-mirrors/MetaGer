@@ -15,7 +15,7 @@ return [
         "El més important, resumit",
     ],
     "texts" => [
-        "Per cada cerca web sense publicitat a MetaGer amb la configuració predeterminada se us cobrarà <b>1 fitxa</b>. Podeu recarregar la clau amb un d'aquests paquets de fitxes en qualsevol moment.",
+        'Per cada cerca web a MetaGer amb la configuració predeterminada se us cobrarà <b>1 fitxa</b>. Podeu recarregar la clau amb un d\'aquests paquets de fitxes en qualsevol moment.',
     ],
     "short-info" => [
         [

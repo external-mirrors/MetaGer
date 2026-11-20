@@ -7,14 +7,14 @@ return [
             'alt' => 'blokada',
         ],
         'title' => 'Gwarantowana prywatność',
-        'p' => 'Korzystając z naszego wyszukiwania bez reklam, zachowujesz pełną kontrolę nad swoimi danymi. Nasz anonimizujący serwer proxy zapewnia ochronę nawet podczas dalszego surfowania. Nie śledzimy.',
+        'p' => 'Z MetaGer zachowujesz pełną kontrolę nad swoimi danymi. Nasz anonimizujący serwer proxy zapewnia ochronę nawet podczas dalszego surfowania. Nie śledzimy.',
     ],
     'ngo' => [
         'title' => 'Prowadzony przez organizację non-profit',
         'image' => [
             'alt' => 'Serce',
         ],
-        'p' => 'MetaGer jest rozwijany i prowadzony przez naszą organizację non-profit, SUMA-EV - Stowarzyszenie na rzecz Wolnego Dostępu do Wiedzy. Wzmocnij nas, zostając członkiem lub przekazując darowiznę na rzecz SUMA-EV. Członkowie wyszukują bez reklam!',
+        'p' => 'MetaGer jest rozwijany i prowadzony przez naszą organizację non-profit, SUMA-EV - Stowarzyszenie na rzecz Wolnego Dostępu do Wiedzy. Wzmocnij nas, zostając członkiem lub przekazując darowiznę na rzecz SUMA-EV.',
     ],
     'diversity' => [
         'title' => 'Różnorodność i wolność',

@@ -118,7 +118,7 @@ return [
         '2' => 'MetaGer skiljer sig från andra sökmotorer. Detta återspeglas inte bara i vår inriktning på det allmänna bästa och vårt fokus på integritet, utan också genom några unika funktioner:',
         '3' => 'Möjlighet att skapa en personlig svart lista',
         '4' => 'Funktion för sökningen i sökningen',
-        '5' => 'Reklamfri sökning möjlig',
+        '5' => 'Inga annonser',
         '6' => 'Integration av sökmotorprojekt som YaCy',
         '7' => 'Den enda tyska sökmotorn som kombinerar resultat från flera stora webbindex',
         '8' => 'Och mycket mer...',

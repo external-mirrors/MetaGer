@@ -6,14 +6,14 @@ return [
             'alt' => 'lukko',
         ],
         'title' => 'Taattu yksityisyys',
-        'p' => 'Käyttämällä mainoksetonta hakuamme säilytät täyden määräysvallan tietoihin. Anonymisoiva välityspalvelimemme pitää sinut suojattuna, vaikka jatkaisitkin surffailua. Emme seuraa.',
+        'p' => 'MetaGerin avulla säilytät täyden määräysvallan tietoihin. Anonymisoiva välityspalvelimemme pitää sinut suojattuna, vaikka jatkaisitkin surffailua. Emme seuraa.',
     ],
     'ngo' => [
         'title' => 'Voittoa tavoittelematon organisaatio',
         'image' => [
             'alt' => 'Sydän',
         ],
-        'p' => 'MetaGeriä kehittää ja ylläpitää voittoa tavoittelematon järjestömme, SUMA-EV-Association for Free Access to Knowledge. Vahvista meitä liittymällä jäseneksi tai lahjoittamalla SUMA-EV:lle. Jäsenet hakevat mainosvapaasti!',
+        'p' => 'MetaGeriä kehittää ja ylläpitää voittoa tavoittelematon järjestömme, SUMA-EV-Association for Free Access to Knowledge. Vahvista meitä liittymällä jäseneksi tai lahjoittamalla SUMA-EV:lle.',
     ],
     'diversity' => [
         'title' => 'Monipuolinen & vapaa',

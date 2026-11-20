@@ -118,7 +118,7 @@ return [
         '3' => 'Möglichkeit der Erstellung einer persönlichen Blacklist',
         '4' => 'Funktion der Suche in der Suche',
         '2' => 'MetaGer ist anders als andere Suchmaschinen. Dies spiegelt sich nicht nur in unserer Gemeinwohlorientierung und unserem Fokus auf den Datenschutz wider, sondern auch in einigen einzigartigen Funktionen:',
-        '5' => 'Werbefreie Suche möglich',
+        '5' => 'Ohne Werbeanzeigen',
         '6' => 'Integration von Suchmaschinenprojekten wie YaCy',
         '7' => 'Die einzige deutsche Suchmaschine, die Ergebnisse aus mehreren großen Web-Indizes kombiniert',
         '8' => 'Und vieles mehr...',

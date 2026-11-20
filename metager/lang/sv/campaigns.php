@@ -59,7 +59,7 @@ return [
         'teaser' => [
             'heading' => 'Din MetaGer-present',
             'tokens' => 'Tokens',
-            'description' => 'Den här koden ger dig en egen MetaGer-nyckel laddad med :tokens tokens - sök på webben utan reklam och utan spårning.',
+            'description' => 'Den här koden ger dig en egen MetaGer-nyckel laddad med :tokens tokens - sök på webben utan spårning.',
             'validity' => 'Nyckeln är giltig i :days dagar efter inlösen.',
             'submit' => 'Hämta min nyckel',
         ],

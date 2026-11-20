@@ -72,7 +72,7 @@ return [
         'teaser' => [
             'heading' => 'Your MetaGer gift',
             'tokens' => 'Tokens',
-            'description' => 'This code gives you your own MetaGer key charged with :tokens tokens - search the web ad-free and without being tracked.',
+            'description' => 'This code gives you your own MetaGer key charged with :tokens tokens - search the web without being tracked.',
             'validity' => 'The key is valid for :days days after redemption.',
             'submit' => 'Get my key',
         ],

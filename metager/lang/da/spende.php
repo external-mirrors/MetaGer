@@ -58,7 +58,7 @@ return [
         ],
         'membershiphint' => [
             'title' => 'Eller måske blive medlem?',
-            'description' => 'Som medlem af <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> kan du bruge MetaGer reklamefrit og få adgang til alle betalte søgemaskiner.',
+            'description' => 'Vores medlemmer bærer MetaGer. Den almennyttige forening <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> forsker i søgemaskineteknologi, som det står i vedtægterne, og vores medlemmer hjælper ved at søge med MetaGer. Derfor fyldes deres nøgle op hver måned uden yderligere omkostninger.',
         ],
         'qr' => [
             'alt' => 'Fotooverførsel',

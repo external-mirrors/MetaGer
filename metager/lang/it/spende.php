@@ -198,7 +198,7 @@ return [
         'taxes' => 'Le donazioni a <a href="https://suma-ev.de">SUMA-EV</a> sono deducibili dalle tasse, in quanto l\'associazione è riconosciuta come organizzazione senza scopo di lucro dall\'Ufficio Imposte di Hannover Nord, iscritta nel registro delle associazioni presso il Tribunale locale di Hannover con il numero VR200033.',
         'membershiphint' => [
             'title' => 'O magari diventare un membro?',
-            'description' => 'Come membro di <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> potete utilizzare MetaGer senza pubblicità e avere accesso a tutti i motori di ricerca a pagamento.',
+            'description' => 'I nostri soci sostengono MetaGer. L\'associazione senza scopo di lucro <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> fa ricerca sulla tecnologia dei motori di ricerca, come previsto dal suo statuto, e i nostri soci contribuiscono cercando con MetaGer. Per questo la loro chiave viene ricaricata ogni mese, senza ulteriori costi.',
         ],
         'qr' => [
             'alt' => 'Trasferimento di foto',

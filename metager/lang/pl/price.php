@@ -15,7 +15,7 @@ return [
         "Najważniejsze podsumowanie",
     ],
     "texts" => [
-        "Za każde wyszukiwanie bez reklam w MetaGer z domyślnymi ustawieniami zostanie naliczona opłata <b>1 token</b>. W każdej chwili możesz doładować swój klucz jednym z tych pakietów tokenów.",
+        'Za każde wyszukiwanie w MetaGer z domyślnymi ustawieniami zostanie naliczona opłata <b>1 token</b>. W każdej chwili możesz doładować swój klucz jednym z tych pakietów tokenów.',
     ],
     "short-info" => [
         [

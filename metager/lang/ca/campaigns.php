@@ -62,7 +62,7 @@ return [
         'teaser' => [
             'heading' => 'El vostre regal de MetaGer',
             'tokens' => 'Fitxes',
-            'description' => 'Aquest codi us dona una clau de MetaGer pròpia carregada amb :tokens fitxes: cerqueu al web sense publicitat i sense que us rastregin.',
+            'description' => 'Aquest codi us dona una clau de MetaGer pròpia carregada amb :tokens fitxes: cerqueu al web sense que us rastregin.',
             'validity' => 'La clau és vàlida durant :days dies des del bescanvi.',
             'submit' => 'Vull la meva clau',
         ],

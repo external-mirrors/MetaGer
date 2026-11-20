@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "Miten MetaGer-avain toimii?",
-            "description" => "MetaGer-avaimella haet ilman mainoksia. Saat merkkejä, joista vähennetään yksi haku per haku. Kun käytät MetaGer-avainta, kaikki ominaisuudet, jotka suojaavat MetaGeria automaattisilta puheluilta, poistetaan käytöstä. Tämä tarkoittaa, että et näe captcha-pyyntöjä eikä IP-osoitettasi säilytetä rajoitetun ajan. Yksinkertaisesti sanottuna tämä tekee MetaGeristä nopeamman, luotettavamman ja turvallisemman.",
+            "description" => 'Saat merkkejä, joista vähennetään yksi haku per haku. Kun käytät MetaGer-avainta, kaikki ominaisuudet, jotka suojaavat MetaGeria automaattisilta puheluilta, poistetaan käytöstä. Tämä tarkoittaa, että et näe captcha-pyyntöjä eikä IP-osoitettasi säilytetä rajoitetun ajan. Yksinkertaisesti sanottuna tämä tekee MetaGeristä nopeamman, luotettavamman ja turvallisemman.',
         ],
         [
             "summary" => "Miten anonyymi merkki toimii?",

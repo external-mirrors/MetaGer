@@ -18,7 +18,7 @@ return [
     ],
     'privacy' => [
         'title' => 'Privacidade garantida',
-        'p' => 'Ao utilizar a nossa pesquisa sem anúncios, mantém o controlo total sobre os seus dados. O nosso proxy anónimo mantém-no protegido mesmo quando continua a navegar. Nós não rastreamos.',
+        'p' => 'Com o MetaGer, mantém o controlo total sobre os seus dados. O nosso proxy anónimo mantém-no protegido mesmo quando continua a navegar. Nós não rastreamos.',
         'image' => [
             'alt' => 'fechadura',
         ],
@@ -35,7 +35,7 @@ return [
         'image' => [
             'alt' => 'Coração',
         ],
-        'p' => 'O MetaGer é desenvolvido e gerido pela nossa organização sem fins lucrativos, a SUMA-EV - Associação para o Acesso Livre ao Conhecimento. Fortaleça-nos tornando-se membro ou fazendo um donativo à SUMA-EV. Os membros pesquisam sem anúncios!',
+        'p' => 'O MetaGer é desenvolvido e gerido pela nossa organização sem fins lucrativos, a SUMA-EV - Associação para o Acesso Livre ao Conhecimento. Fortaleça-nos tornando-se membro ou fazendo um donativo à SUMA-EV.',
         'title' => 'Gerido por uma organização sem fins lucrativos',
     ],
     'btn-mg-code' => 'Código fonte do Metager',

@@ -2,9 +2,9 @@
 return [
     'key' => [
         'tooltip' => [
-            'nokey' => 'Recherche sans publicité',
+            'nokey' => 'Configurer une clé',
             'low' => 'Jeton bientôt épuisé. Rechargez maintenant.',
-            'full' => 'Recherche sans publicité activée.',
+            'full' => 'Clé active.',
             'empty' => 'Jeton épuisé. Rechargez maintenant.',
         ],
         'placeholder' => 'Saisissez votre clé MetaGer pour commencer la recherche.',
@@ -22,7 +22,7 @@ return [
     ],
     'plugin' => 'Installer MetaGer',
     'plugin-title' => 'Ajouter MetaGer à votre navigateur',
-    'adfree' => 'Utiliser MetaGer sans publicité',
+    'adfree' => 'Clé MetaGer',
     'skip' => [
         'content' => 'Aller au contenu',
         'search' => 'Passer à la saisie de la requête de recherche',
@@ -105,7 +105,7 @@ return [
                 ],
                 [
                     'heading' => 'Activez votre accès',
-                    'description' => 'Un <a href=":linkCost">paiement</a> unique ajoute du crédit à votre clé, que nous appelons token. Cela active la recherche sans publicité ni pistage ainsi que la navigation anonyme, y compris toutes les fonctionnalités actuelles et futures de MetaGer. Environ 500 tokens (5 €) suffisent généralement pour près de 2 mois.',
+                    'description' => 'Un <a href=":linkCost">paiement</a> unique ajoute du crédit à votre clé, que nous appelons token. Cela active la recherche sans pistage ainsi que la navigation anonyme, y compris toutes les fonctionnalités actuelles et futures de MetaGer. Environ 500 tokens (5 €) suffisent généralement pour près de 2 mois.',
                     'membership' => 'Remarque : les membres de notre association à but non lucratif <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> peuvent utiliser MetaGer sans frais supplémentaires. <a href=":linkMembership" target="_blank">Devenir membre</a>',
                 ],
                 [

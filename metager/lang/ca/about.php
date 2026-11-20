@@ -28,7 +28,7 @@ return [
         '2' => 'MetaGer és diferent d\'altres cercadors. Això no només es reflecteix en la nostra orientació al bé comú i en l\'atenció a la privadesa, sinó també en algunes funcions úniques:',
         '3' => 'Possibilitat de crear una llista negra personal',
         '4' => 'Funció de cerca dins la cerca',
-        '5' => 'Cerca sense publicitat possible',
+        '5' => 'Sense anuncis',
         '6' => 'Integració de projectes de cerca com YaCy',
         '7' => 'L\'únic cercador alemany que combina resultats de diversos grans índexs web',
         '8' => 'I molt més...',

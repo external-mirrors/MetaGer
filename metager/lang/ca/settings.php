@@ -82,7 +82,7 @@ return [
     'actions' => 'Accions',
     'engineDisabled' => 'El cercador :engine no es consultarà en el focus :focus.',
     'inFocus' => 'en el focus',
-    'key' => 'La vostra clau per a la cerca sense publicitat',
+    'key' => 'La vostra clau de MetaGer',
     'blentry' => 'Entrada de la llista negra',
     'removeCookie' => 'Elimina aquesta galeta',
     'aria' => [
@@ -96,7 +96,7 @@ return [
         'charge' => 'Saldo: :token fitxes',
         'manage' => 'Recarrega la clau',
         'logout' => 'Elimina la clau',
-        'no-key' => 'No heu configurat cap clau per a les cerques sense publicitat.',
+        'no-key' => 'No heu configurat cap clau.',
         'actions' => [
             'info' => 'Què és?',
             'login' => 'Configura una clau existent',

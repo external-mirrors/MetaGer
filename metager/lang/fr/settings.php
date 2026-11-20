@@ -55,7 +55,7 @@ return [
     'actions' => 'Actions',
     'engineDisabled' => 'Le moteur de recherche :engine ne sera pas interrogé dans le centre d\'intéret :focus.',
     'inFocus' => 'dans le centre d\'intérêt',
-    'key' => 'Votre clé pour une recherche sans publicité',
+    'key' => 'Votre clé MetaGer',
     'blentry' => 'Inscription sur liste noire',
     'removeCookie' => 'Supprimer ce cookie',
     'aria' => [
@@ -69,7 +69,7 @@ return [
         'charge' => 'Crédit : :token Token',
         'manage' => 'Charger la clé',
         'logout' => 'Retirer la clé',
-        'no-key' => 'Vous n\'avez pas configuré de clé pour les recherches sans publicité.',
+        'no-key' => 'Vous n\'avez pas configuré de clé.',
         'actions' => [
             'info' => 'Qu\'est-ce que c\'est ?',
             'login' => 'Configurer une clé existante',

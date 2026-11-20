@@ -15,7 +15,7 @@ return [
         "Il più importante riassunto",
     ],
     "texts" => [
-        "Per ogni ricerca web senza pubblicità su MetaGer con le impostazioni predefinite vi verrà addebitato <b>1 token</b>. Potete ricaricare la vostra chiave con uno di questi pacchetti di token in qualsiasi momento.",
+        'Per ogni ricerca web su MetaGer con le impostazioni predefinite vi verrà addebitato <b>1 token</b>. Potete ricaricare la vostra chiave con uno di questi pacchetti di token in qualsiasi momento.',
     ],
     "short-info" => [
         [

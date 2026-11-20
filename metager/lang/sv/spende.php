@@ -20,7 +20,7 @@ return [
         'taxes' => 'Donationer till <a href="https://suma-ev.de">SUMA-EV</a> är avdragsgilla, eftersom föreningen är erkänd som en ideell organisation av Hannovers norra skattekontor, registrerad i föreningsregistret vid Hannovers lokala domstol under VR200033.',
         'membershiphint' => [
             'title' => 'Eller kanske bli medlem?',
-            'description' => 'Som medlem på <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> kan du använda MetaGer annonsfritt och få tillgång till alla betalda sökmotorer.',
+            'description' => 'Våra medlemmar bär MetaGer. Den ideella föreningen <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> forskar om sökmotorteknik, så som det står i stadgarna, och våra medlemmar bidrar genom att söka med MetaGer. Därför fylls deras nyckel på varje månad utan ytterligare kostnad.',
         ],
         'qr' => [
             'alt' => 'Fotoöverföring',

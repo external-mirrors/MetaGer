@@ -82,7 +82,7 @@ return [
     'actions' => 'Actions',
     'engineDisabled' => 'The search engine :engine will not be queried in focus :focus.',
     'inFocus' => 'in focus',
-    'key' => 'Your key to the ad-free search',
+    'key' => 'Your MetaGer key',
     'blentry' => 'Black list entry',
     'removeCookie' => 'Remove this cookie',
     'aria' => [
@@ -96,7 +96,7 @@ return [
         'charge' => 'Credit: :token Token',
         'manage' => 'Charge key',
         'logout' => 'Remove key',
-        'no-key' => 'You have not set up a key for ad-free searches.',
+        'no-key' => 'You have not set up a key.',
         'actions' => [
             'info' => 'What is it?',
             'login' => 'Set up existing key',

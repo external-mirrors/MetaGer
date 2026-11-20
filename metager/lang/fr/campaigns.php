@@ -59,7 +59,7 @@ return [
         'teaser' => [
             'heading' => 'Votre cadeau MetaGer',
             'tokens' => 'Jetons',
-            'description' => 'Ce code vous donne votre propre clé MetaGer chargée de :tokens jetons - recherchez sur le web sans publicité et sans être suivi.',
+            'description' => 'Ce code vous donne votre propre clé MetaGer chargée de :tokens jetons - recherchez sur le web sans être suivi.',
             'validity' => 'La clé est valable :days jours après utilisation.',
             'submit' => 'Obtenir ma clé',
         ],

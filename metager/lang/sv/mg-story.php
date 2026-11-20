@@ -6,14 +6,14 @@ return [
             'alt' => 'lås',
         ],
         'title' => 'Garanterad integritet',
-        'p' => 'Genom att använda vår annonsfria sökning behåller du full kontroll över dina data. Vår anonymiserande proxy håller dig skyddad även när du fortsätter att surfa. Vi spårar inte.',
+        'p' => 'Med MetaGer behåller du full kontroll över dina data. Vår anonymiserande proxy håller dig skyddad även när du fortsätter att surfa. Vi spårar inte.',
     ],
     'ngo' => [
         'title' => 'Drivs av en ideell organisation',
         'image' => [
             'alt' => 'Hjärta',
         ],
-        'p' => 'MetaGer utvecklas och drivs av vår ideella organisation, SUMA-EV - Föreningen för fri tillgång till kunskap. Stärk oss genom att bli medlem eller genom att donera till SUMA-EV. Medlemmar söker annonsfritt!',
+        'p' => 'MetaGer utvecklas och drivs av vår ideella organisation, SUMA-EV - Föreningen för fri tillgång till kunskap. Stärk oss genom att bli medlem eller genom att donera till SUMA-EV.',
     ],
     'eco' => [
         'image' => [

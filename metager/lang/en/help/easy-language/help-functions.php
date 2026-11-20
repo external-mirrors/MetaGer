@@ -59,7 +59,7 @@ return [
             "none" => 'Image of a grey key',
         ],
 
-        "1" => 'You can search with us without seeing ads. <br> For this, you need a MetaGer Key. <br> You can buy it from us.<br> We call this password a key. <br> You can use the key on multiple devices simultaneously. <br> To do this, you need to set up the key. <br> First, open the management page of the MetaGer Key. <br> Here you can find it: <br> <a href = "/keys/key/enter">Management page</a> <br> There you have these options:',
+        "1" => 'To search with us, you need a MetaGer Key. <br> You can buy it from us.<br> We call this password a key. <br> You can use the key on multiple devices simultaneously. <br> To do this, you need to set up the key. <br> First, open the management page of the MetaGer Key. <br> Here you can find it: <br> <a href = "/keys/key/enter">Management page</a> <br> There you have these options:',
         "2" => [
             '1' => 'Login Code <br> To register another device with the login code, follow these steps: <br> Click the button <strong>Generate Login Code</strong>. <br> The button looks like this:',
             '2' => 'Then, 6 numbers will be displayed. <br> They look like this, for example:',
@@ -77,13 +77,13 @@ return [
         "5" => [
             '1' =>'Scan QR Code <br> To register another device with the QR code, follow these steps: <br> Open the page for setting up the key on the new device. <br> It looks like this:',
             '2' => 'Then click the button <strong>Scan QR Code</strong>. <br> The button looks like this:',
-            '3' => 'Now scan the QR code. <br> After that, you can search without ads on your device.',   
+            '3' => 'Now scan the QR code. <br> After that, you can search on your device.',   
         ],
         "6" => 'Enter Manually <br> Of course, you can also enter the key manually. <br> To do this, type the long sequence of numbers and letters. ',   
-        "7" => 'Sometimes you will see a colored key. <br> There is a reason for this. <br> The colors indicate how many searches without ads you have left. <br> There are the following colors: ',   
+        "7" => 'Sometimes you will see a colored key. <br> There is a reason for this. <br> The colors indicate how many searches you have left. <br> There are the following colors: ',   
         "8" => 'Grey Key: <br> You see a grey key. <br> Then you have not set up a key yet.',   
-        "9" => 'Red Key: <br> You see a red/orange key. <br> Then your balance is empty. <br> You can no longer search without ads. <br> We recommend recharging the key. <br> Then you can search without ads again.', 
-        "10" => 'Green Key: <br> You see a green key. <br> Then you are currently searching without ads. <br> So, you can continue to search without ads.',   
+        "9" => 'Red Key: <br> You see a red/orange key. <br> Then your balance is empty. <br> You can no longer search. <br> We recommend recharging the key. <br> Then you can search again.', 
+        "10" => 'Green Key: <br> You see a green key. <br> Then your key is charged. <br> So, you can continue to search.',   
         "11" => 'Yellow Key: <br> You see a yellow key. <br> Then you have almost used up your balance. <br> You currently have less than 30 tokens for use. <br> We recommend recharging the key soon. ',   
     ],
     "selist" => [

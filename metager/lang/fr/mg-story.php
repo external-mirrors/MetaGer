@@ -13,14 +13,14 @@ return [
             'alt' => 'serrure',
         ],
         'title' => 'Confidentialité garantie',
-        'p' => 'En utilisant notre recherche sans publicité, vous gardez le contrôle total de vos données. Notre proxy anonyme vous protège même lorsque vous continuez à surfer. Nous ne suivons pas.',
+        'p' => 'Avec MetaGer, vous gardez le contrôle total de vos données. Notre proxy anonyme vous protège même lorsque vous continuez à surfer. Nous ne suivons pas.',
     ],
     'ngo' => [
         'title' => 'Géré par une organisation à but non lucratif',
         'image' => [
             'alt' => 'Le cœur',
         ],
-        'p' => 'MetaGer est développé et géré par notre organisation à but non lucratif, SUMA-EV-Association pour le libre accès à la connaissance. Renforcez-nous en devenant membre ou en faisant un don à SUMA-EV. La recherche des membres est gratuite !',
+        'p' => 'MetaGer est développé et géré par notre organisation à but non lucratif, SUMA-EV-Association pour le libre accès à la connaissance. Renforcez-nous en devenant membre ou en faisant un don à SUMA-EV.',
     ],
     'eco' => [
         'title' => '100% d\'énergie renouvelable',

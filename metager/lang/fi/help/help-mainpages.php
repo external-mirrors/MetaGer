@@ -7,12 +7,12 @@ return [
     ],
     'startpage' => [
         'title' => 'Aloitussivu <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        'info' => 'Aloitussivu sisältää hakukentän, oikeassa yläkulmassa olevan painikkeen, jolla pääset valikkoon, ja kaksi linkkiä hakukentän alapuolella, joiden avulla voit lisätä MetaGerin selaimeesi ja tehdä hakuja ilman mainoksia. Alemmassa osiossa on tietoa MetaGeristä ja SUMA-EV-yhdistyksestä. Lisäksi alareunassa näkyvät painopistealueemme <i>Takuunalainen yksityisyys, Voittoa tavoittelematon yhdistys, Monipuolinen ja vapaa</i> sekä <i>100 % vihreää energiaa</i>. Klikkaamalla kyseisiä osioita tai selaamalla löydät lisätietoja. ',
+        'info' => 'Aloitussivu sisältää hakukentän, oikeassa yläkulmassa olevan painikkeen, jolla pääset valikkoon, ja kaksi linkkiä hakukentän alapuolella, joiden avulla voit lisätä MetaGerin selaimeesi ja ottaa MetaGer-avaimen käyttöön. Alemmassa osiossa on tietoa MetaGeristä ja SUMA-EV-yhdistyksestä. Lisäksi alareunassa näkyvät painopistealueemme <i>Takuunalainen yksityisyys, Voittoa tavoittelematon yhdistys, Monipuolinen ja vapaa</i> sekä <i>100 % vihreää energiaa</i>. Klikkaamalla kyseisiä osioita tai selaamalla löydät lisätietoja. ',
     ],
     'searchfield' => [
         'title' => 'Hakukenttä <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         'info' => 'Hakukenttä koostuu useista osista:',
-        'memberkey' => 'avainsymboli: Tässä voit syöttää avaimesi mainoksetonta hakua varten. Voit myös tarkastella tunnussaldoasi ja hallita avaintasi.',
+        'memberkey' => 'avainsymboli: Tässä voit syöttää avaimesi MetaGer-hakuja varten. Voit myös tarkastella tunnussaldoasi ja hallita avaintasi.',
         'slot' => 'hakukenttä: Kirjoita hakusanasi tähän. Isoja ja pieniä kirjaimia ei eroteta toisistaan.',
         'search' => 'suurennuslasi: Aloita haku klikkaamalla tästä tai painamalla "Enter".',
         'morefunctions' => 'Lisätoiminnot löytyvät valikkokohdasta "<a href = "/hilfe/funktionen">Hakutoiminnot</a>".',
@@ -52,7 +52,7 @@ return [
         '5' => 'Tummennustilan vaihtaminen <br> Siirry tummennustilaan helposti tästä.',
         '6' => 'Avaa tulokset uudessa välilehdessä <br> Tässä voit ottaa pysyvästi käyttöön toiminnon, joka avaa tulokset uuteen välilehteen.',
         '7' => 'Lainaukset <br> Voit kytkeä lainausten näyttämisen päälle ja pois tästä.',
-        '1' => 'Mainokseton haku <br> Täällä voit tarkastella avaimesi ja avaimesi saldoa. Sinulla on myös mahdollisuus ladata tai poistaa avaimesi.',
+        '1' => 'MetaGer-avain <br> Täällä voit tarkastella avaimesi ja avaimesi saldoa. Sinulla on myös mahdollisuus ladata tai poistaa avaimesi.',
         '9' => 'Hienovaraista mainontaa omille palveluillemme <br> Näytämme hienovaraista mainontaa omille palveluillemme. Voit kytkeä itsemainontamme pois päältä tästä.',
         '8' => 'Palauta kaikki nykyiset asetukset <br> Näyttöön tulee linkki, jonka voit asettaa etusivuksi tai kirjanmerkiksi, jotta voit säilyttää nykyiset asetukset.',
     ],

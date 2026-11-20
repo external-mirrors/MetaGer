@@ -13,7 +13,7 @@ return [
         'backup' => 'Backup e ripristino',
     ],
     'resetDescription' => 'Rimuove tutte le impostazioni di questa pagina e ripristina MetaGer ai valori predefiniti.',
-    'key' => 'La chiave per una ricerca senza pubblicità',
+    'key' => 'La sua chiave MetaGer',
     'blentry' => 'Iscrizione nella lista nera',
     'free' => 'libero',
     'payment-engine' => 'Il motore di ricerca richiede la configurazione della chiave MetaGer',
@@ -69,7 +69,7 @@ return [
         'charge' => 'Credito: :token Token',
         'manage' => 'Tasto di carica',
         'logout' => 'Rimuovere la chiave',
-        'no-key' => 'Non è stata impostata una chiave per le ricerche senza pubblicità.',
+        'no-key' => 'Non è stata impostata una chiave.',
         'actions' => [
             'info' => 'Che cos\'è?',
             'login' => 'Impostare la chiave esistente',

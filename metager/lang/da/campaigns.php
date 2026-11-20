@@ -59,7 +59,7 @@ return [
         'teaser' => [
             'heading' => 'Din MetaGer-gave',
             'tokens' => 'Tokens',
-            'description' => 'Denne kode giver dig din egen MetaGer-nøgle med :tokens tokens - søg reklamefrit og uden sporing på nettet.',
+            'description' => 'Denne kode giver dig din egen MetaGer-nøgle med :tokens tokens - søg uden sporing på nettet.',
             'validity' => 'Nøglen er gyldig i :days dage efter indløsning.',
             'submit' => 'Hent min nøgle',
         ],

@@ -112,7 +112,7 @@ return [
         '2' => 'MetaGer er anderledes end andre søgemaskiner. Dette afspejles ikke kun i vores orientering mod almenvellet og fokus på privatlivets fred, men også gennem nogle unikke funktioner:',
         '3' => 'Mulighed for at oprette en personlig sortliste',
         '4' => 'Funktion af søgningen i søgningen',
-        '5' => 'Mulighed for reklamefri søgning',
+        '5' => 'Ingen annoncer',
         '6' => 'Integration af søgemaskineprojekter som YaCy',
         '7' => 'Den eneste tyske søgemaskine, der kombinerer resultater fra flere store webindekser',
         '8' => 'Og meget mere...',

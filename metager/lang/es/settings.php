@@ -53,7 +53,7 @@ return [
     'actions' => 'Acciones',
     'engineDisabled' => 'El buscador :engine no se consulta en el foco :focus.',
     'inFocus' => 'en el punto de mira',
-    'key' => 'La clave para una búsqueda sin publicidad',
+    'key' => 'Su clave de MetaGer',
     'blentry' => 'Entrada en la lista negra',
     'removeCookie' => 'Eliminar esta cookie',
     'aria' => [
@@ -67,7 +67,7 @@ return [
         'charge' => 'Crédito: Ficha :token',
         'manage' => 'Llave de carga',
         'logout' => 'Quitar la llave',
-        'no-key' => 'No ha configurado una clave para búsquedas sin publicidad.',
+        'no-key' => 'No ha configurado ninguna clave.',
         'actions' => [
             'info' => '¿De qué se trata?',
             'login' => 'Configurar la llave existente',

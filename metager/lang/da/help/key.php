@@ -11,7 +11,7 @@ return [
     "faqs" => [
         [
             "summary" => "Hvordan fungerer MetaGer-nøglen?",
-            "description" => "Med en MetaGer-nøgle søger du reklamefrit. Du modtager tokens, hvorfra der trækkes en søgning pr. søgning. Når du bruger en MetaGer-nøgle, er alle funktioner, der beskytter MetaGer mod automatiserede opkald, deaktiveret. Det betyder, at du ikke vil se captcha-anmodninger, og at din IP-adresse ikke vil blive gemt i en begrænset periode. Kort sagt, det vil gøre MetaGer hurtigere, mere pålidelig og mere sikker.",
+            "description" => 'Du modtager tokens, hvorfra der trækkes en søgning pr. søgning. Når du bruger en MetaGer-nøgle, er alle funktioner, der beskytter MetaGer mod automatiserede opkald, deaktiveret. Det betyder, at du ikke vil se captcha-anmodninger, og at din IP-adresse ikke vil blive gemt i en begrænset periode. Kort sagt, det vil gøre MetaGer hurtigere, mere pålidelig og mere sikker.',
         ],
         [
             "summary" => "Hvordan fungerer det anonyme token?",

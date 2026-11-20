@@ -15,7 +15,7 @@ return [
         "Lo más importante resumido",
     ],
     "texts" => [
-        "Por cada búsqueda web sin publicidad en MetaGer con la configuración predeterminada se te cobrará <b>1 token</b>. Puedes recargar tu clave con uno de estos paquetes de tokens en cualquier momento.",
+        'Por cada búsqueda web en MetaGer con la configuración predeterminada se te cobrará <b>1 token</b>. Puedes recargar tu clave con uno de estos paquetes de tokens en cualquier momento.',
     ],
     "short-info" => [
         [

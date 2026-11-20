@@ -20,7 +20,7 @@ return [
         "memberkey"  => [
             "1" => 'El camp de l\'esquerra:',
             "2" => 'El camp de l\'esquerra mostra una clau.<br> Té aquest aspecte:',
-            "3" => 'Amb nosaltres podeu cercar sense veure publicitat. <br> Per fer-ho, feu clic a la clau. <br> Després feu clic al botó <strong>Configura la cerca sense publicitat</strong>.<br> Tot seguit, feu clic al botó <strong>Crea la clau ara</strong>.<br> Aleshores rebreu una contrasenya. <br> A aquesta contrasenya l\'anomenem clau. <br> Ara podeu recarregar la clau amb fitxes pagant.<br> Escriviu aquesta clau al camp de l\'esquerra. <br> Aleshores podreu cercar sense publicitat. <br> Trobareu més informació aquí: <a href = "/hilfe/easy-language/functions#eh-keyexplain">Clau de MetaGer</a>',
+            "3" => 'Per cercar amb nosaltres us cal una clau. <br> Per obtenir-la, feu clic a la clau. <br> Després feu clic al botó <strong>Configura una clau</strong>.<br> Tot seguit, feu clic al botó <strong>Crea la clau ara</strong>.<br> Aleshores rebreu una contrasenya. <br> A aquesta contrasenya l\'anomenem clau. <br> Ara podeu recarregar la clau amb fitxes pagant.<br> Escriviu aquesta clau al camp de l\'esquerra. <br> Aleshores podreu cercar. <br> Trobareu més informació aquí: <a href = "/hilfe/easy-language/functions#eh-keyexplain">Clau de MetaGer</a>',
         ],
         "slot"  => [
             "1"      => 'El camp del mig:',
@@ -87,8 +87,8 @@ return [
     "settings" => [
         "title" => 'Configuració',
         "metagerkey" => [
-            "title" => "Cerca sense publicitat",
-            '1'=> 'Aquí podeu veure el saldo de la cerca sense publicitat. <br> Podeu fer servir la cerca sense publicitat amb una clau de MetaGer. <br> Trobareu la clau de MetaGer sota el saldo. <br> A sota hi ha dos botons. <br> Podeu fer clic al botó de l\'esquerra <strong>Recarrega la clau</strong> per carregar-la. <br> Podeu fer clic al botó de la dreta <strong>Elimina la clau</strong> per esborrar la clau del navegador<a title="El navegador serveix per veure pàgines d\'internet. Feu clic aquí per a més informació" href="/hilfe/easy-language/glossary#glbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> Trobareu més informació sobre la clau de MetaGer aquí: <a href = "/hilfe/easy-language/functions#eh-keyexplain">Clau de MetaGer</a> <br> Si no teniu clau, es veurà així:',
+            "title" => 'Clau de MetaGer',
+            '1'=> 'Aquí podeu veure el saldo de la vostra clau de MetaGer. <br> Trobareu la clau de MetaGer sota el saldo. <br> A sota hi ha dos botons. <br> Podeu fer clic al botó de l\'esquerra <strong>Recarrega la clau</strong> per carregar-la. <br> Podeu fer clic al botó de la dreta <strong>Elimina la clau</strong> per esborrar la clau del navegador<a title="El navegador serveix per veure pàgines d\'internet. Feu clic aquí per a més informació" href="/hilfe/easy-language/glossary#glbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> Trobareu més informació sobre la clau de MetaGer aquí: <a href = "/hilfe/easy-language/functions#eh-keyexplain">Clau de MetaGer</a> <br> Si no teniu clau, es veurà així:',
             '2'=> "Es mostren tres botons. <br> Podeu fer clic al botó de l'esquerra, amb el text <strong>Què és?</strong>. <br> Això us portarà a la pàgina d'informació sobre la clau de MetaGer. <br> Podeu fer clic al botó del mig, amb el text <strong>Configura una clau existent</strong>. <br> Si ja teniu una clau de MetaGer, la hi podeu introduir. <br> Si no en teniu cap, podeu fer clic al botó de la dreta <strong>Crea una clau nova</strong> per comprar-ne una.",
         ],
         "cookies" => [

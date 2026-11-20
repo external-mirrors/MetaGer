@@ -28,7 +28,7 @@ return [
         '2' => 'MetaGer is different from other search engines. This is reflected not only in our public good orientation and focus on privacy, but also through some unique features:',
         '3' => 'Possibility of creating a personal blacklist',
         '4' => 'Function of the search in the search',
-        '5' => 'Advertising-free search possible',
+        '5' => 'No advertising',
         '6' => 'Integration of search engine projects like YaCy',
         '7' => 'The only German search engine that combines results from several large web indexes',
         '8' => 'And much more..',

@@ -59,7 +59,7 @@ return [
             "none" => 'Imatge d\'una clau grisa',
         ],
 
-        "1" => 'Amb nosaltres podeu cercar sense veure publicitat. <br> Per a això us cal una clau de MetaGer. <br> Ens la podeu comprar.<br> A aquesta contrasenya l\'anomenem clau. <br> Podeu fer servir la clau en diversos dispositius alhora. <br> Per fer-ho, heu de configurar la clau. <br> Primer obriu la pàgina de gestió de la clau de MetaGer. <br> Aquí la trobareu: <br> <a href = "/keys/key/enter">pàgina de gestió</a> <br> Allà teniu aquestes opcions:',
+        "1" => 'Per cercar amb nosaltres us cal una clau de MetaGer. <br> Ens la podeu comprar.<br> A aquesta contrasenya l\'anomenem clau. <br> Podeu fer servir la clau en diversos dispositius alhora. <br> Per fer-ho, heu de configurar la clau. <br> Primer obriu la pàgina de gestió de la clau de MetaGer. <br> Aquí la trobareu: <br> <a href = "/keys/key/enter">pàgina de gestió</a> <br> Allà teniu aquestes opcions:',
         "2" => [
             '1' => 'Codi d\'inici de sessió <br> Per registrar un altre dispositiu amb el codi d\'inici de sessió, seguiu aquests passos: <br> feu clic al botó <strong>Genera un codi d\'inici de sessió</strong>. <br> El botó té aquest aspecte:',
             '2' => 'Aleshores es mostraran 6 xifres. <br> Per exemple, així:',
@@ -77,13 +77,13 @@ return [
         "5" => [
             '1' =>'Escaneja el codi QR <br> Per registrar un altre dispositiu amb el codi QR, seguiu aquests passos: <br> obriu al dispositiu nou la pàgina per configurar la clau. <br> Té aquest aspecte:',
             '2' => 'Després feu clic al botó <strong>Escaneja el codi QR</strong>. <br> El botó té aquest aspecte:',
-            '3' => 'Ara escanegeu el codi QR. <br> Després ja podreu cercar sense publicitat al vostre dispositiu.',
+            '3' => 'Ara escanegeu el codi QR. <br> Després ja podreu cercar al vostre dispositiu.',
         ],
         "6" => 'Introdueix-la manualment <br> És clar que també podeu escriure la clau a mà. <br> Per fer-ho, escriviu la llarga seqüència de xifres i lletres. ',
-        "7" => 'De vegades veureu una clau de color. <br> Hi ha un motiu. <br> Els colors indiquen quantes cerques sense publicitat us queden. <br> Hi ha aquests colors: ',
+        "7" => 'De vegades veureu una clau de color. <br> Hi ha un motiu. <br> Els colors indiquen quantes cerques us queden. <br> Hi ha aquests colors: ',
         "8" => 'Clau grisa: <br> veieu una clau grisa. <br> Vol dir que encara no heu configurat cap clau.',
-        "9" => 'Clau vermella: <br> veieu una clau vermella o taronja. <br> Vol dir que el saldo és buit. <br> Ja no podeu cercar sense publicitat. <br> Us recomanem recarregar la clau. <br> Aleshores podreu tornar a cercar sense publicitat.',
-        "10" => 'Clau verda: <br> veieu una clau verda. <br> Vol dir que ara mateix esteu cercant sense publicitat. <br> Així doncs, podeu continuar cercant sense publicitat.',
+        "9" => 'Clau vermella: <br> veieu una clau vermella o taronja. <br> Vol dir que el saldo és buit. <br> Ja no podeu cercar. <br> Us recomanem recarregar la clau. <br> Aleshores podreu tornar a cercar.',
+        "10" => 'Clau verda: <br> veieu una clau verda. <br> Vol dir que la clau té saldo. <br> Així doncs, podeu continuar cercant.',
         "11" => 'Clau groga: <br> veieu una clau groga. <br> Vol dir que gairebé heu exhaurit el saldo. <br> Ara mateix teniu menys de 30 fitxes per fer servir. <br> Us recomanem recarregar la clau aviat. ',
     ],
     "selist" => [

@@ -12,10 +12,10 @@ return [
     'key' => [
         'placeholder' => 'Enter your MetaGer Key to start searching.',
         'tooltip' => [
-            'nokey' => 'Set up ad-free search',
+            'nokey' => 'Set up a key',
             'empty' => 'Token used up. Recharge now.',
             'low' => 'Token soon used up. Recharge now.',
-            'full' => 'Ad-free search enabled.',
+            'full' => 'Key active.',
         ],
     ],
     'placeholder' => 'MetaGer: Privacy Protected Search & Find',
@@ -30,7 +30,7 @@ return [
         'produkte' => 'Products',
         'maps' => 'Maps'
     ],
-    'adfree' => 'MetaGer ad-free',
+    'adfree' => 'MetaGer key',
     'searchbar-replacement' => [
         'tagline' => 'Open Source. Ad-Free. Anonymous.',
         'message' => 'Your key is your access – no account, no email address. Only your balance hangs off it.',
@@ -105,7 +105,7 @@ return [
                 ],
                 [
                     'heading' => 'Activate your access',
-                    'description' => 'A one-time <a href=":linkCost">payment</a> adds credit to your key, which we call token. This activates ad-free, tracking-free search and anonymous browsing, plus all current and future MetaGer features. About 500 token (€5) usually lasts around 2 months.',
+                    'description' => 'A one-time <a href=":linkCost">payment</a> adds credit to your key, which we call token. This activates tracking-free search and anonymous browsing, plus all current and future MetaGer features. About 500 token (€5) usually lasts around 2 months.',
                     'membership' => 'Note: members of our non-profit association <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> can use MetaGer at no extra cost. <a href=":linkMembership" target="_blank">Become a member now</a>',
                 ],
                 [

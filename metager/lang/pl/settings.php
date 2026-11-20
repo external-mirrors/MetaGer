@@ -53,7 +53,7 @@ return [
     'actions' => 'Działania',
     'engineDisabled' => 'Wyszukiwarka :engine nie będzie odpytywana w fokusie :focus.',
     'inFocus' => 'w centrum uwagi',
-    'key' => 'Klucz do wyszukiwania bez reklam',
+    'key' => 'Twój klucz MetaGer',
     'blentry' => 'Wpis na czarną listę',
     'removeCookie' => 'Usuń ten plik cookie',
     'aria' => [
@@ -67,7 +67,7 @@ return [
         'charge' => 'Kredyt: :token Token',
         'manage' => 'Klucz ładowania',
         'logout' => 'Usuń klucz',
-        'no-key' => 'Nie skonfigurowano klucza wyszukiwania bez reklam.',
+        'no-key' => 'Nie skonfigurowano klucza.',
         'actions' => [
             'info' => 'Co to jest?',
             'login' => 'Konfiguracja istniejącego klucza',

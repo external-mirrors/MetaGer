@@ -20,7 +20,7 @@ return [
         ],
         'membershiphint' => [
             'title' => 'Tai ehkä liittyä jäseneksi?',
-            'description' => 'Jäsenenä <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> voit käyttää MetaGeriä mainosvapaasti ja saada pääsyn kaikkiin maksullisiin hakukoneisiin.',
+            'description' => 'Jäsenemme kannattelevat MetaGeria. Voittoa tavoittelematon yhdistys <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> tutkii hakukoneteknologiaa, kuten sääntöihin on kirjattu, ja jäsenemme auttavat hakemalla MetaGerilla. Siksi heidän avaimensa ladataan joka kuukausi ilman lisäkustannuksia.',
         ],
         'qr' => [
             'alt' => 'Valokuvan siirto',

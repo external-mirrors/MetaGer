@@ -5,10 +5,10 @@ return [
     'key' => [
         'placeholder' => 'Kirjoita MetaGer-avaimesi aloittaaksesi haun.',
         'tooltip' => [
-            'nokey' => 'Aseta mainokseton haku',
+            'nokey' => 'Ota avain käyttöön',
             'empty' => 'Merkki käytetty loppuun. Lataa nyt.',
             'low' => 'Merkki pian käytetty. Lataa nyt.',
-            'full' => 'Mainokseton haku käytössä.',
+            'full' => 'Avain käytössä.',
         ],
     ],
     'placeholder' => 'MetaGer: Etsi ja löydä yksityisyyden suojaa',
@@ -22,7 +22,7 @@ return [
         'produkte' => 'Tuotteet',
         'maps' => 'Kartat',
     ],
-    'adfree' => 'Käytä MetaGeria mainosvapaasti',
+    'adfree' => 'MetaGer-avain',
     'skip' => [
         'content' => 'Siirry sisältöön',
         'search' => 'Siirry hakukyselyn syöttöön',
@@ -105,7 +105,7 @@ return [
                 ],
                 [
                     'heading' => 'Aktivoi käyttöoikeutesi',
-                    'description' => 'Kertaluonteinen <a href=":linkCost">maksu</a> lisää avaimeesi saldoa, jota kutsumme tokeniksi. Sillä avaat mainoksettoman ja seurannattoman haun sekä anonyymin selaamisen – mukaan lukien kaikki MetaGerin nykyiset ja tulevat ominaisuudet. Noin 500 tokenia (5 €) riittää yleensä noin 2 kuukaudeksi.',
+                    'description' => 'Kertaluonteinen <a href=":linkCost">maksu</a> lisää avaimeesi saldoa, jota kutsumme tokeniksi. Sillä avaat seurannattoman haun sekä anonyymin selaamisen – mukaan lukien kaikki MetaGerin nykyiset ja tulevat ominaisuudet. Noin 500 tokenia (5 €) riittää yleensä noin 2 kuukaudeksi.',
                     'membership' => 'Huomio: <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> on yleishyödyllinen kannatusyhdistyksemme, ja sen jäsenet voivat käyttää MetaGeriä ilman lisäkustannuksia. <a href=":linkMembership" target="_blank">Liity jäseneksi nyt</a>',
                 ],
                 [

@@ -6,7 +6,7 @@ return [
             'alt' => 'lås',
         ],
         'title' => 'Garanteret privatliv',
-        'p' => 'Ved at bruge vores reklamefri søgning bevarer du fuld kontrol over dine data. Vores anonymiserende proxy holder dig beskyttet, selv når du fortsætter med at surfe. Vi sporer ikke.',
+        'p' => 'Med MetaGer bevarer du fuld kontrol over dine data. Vores anonymiserende proxy holder dig beskyttet, selv når du fortsætter med at surfe. Vi sporer ikke.',
     ],
     'btn-SUMA-EV' => 'SUMA-EV',
     'ngo' => [
@@ -14,7 +14,7 @@ return [
         'image' => [
             'alt' => 'Hjerte',
         ],
-        'p' => 'MetaGer er udviklet og drives af vores nonprofit organisation, SUMA-EV - Foreningen for Fri Adgang til Viden. Styrk os ved at blive medlem eller ved at donere til SUMA-EV. Medlemmer søger annoncefrit!',
+        'p' => 'MetaGer er udviklet og drives af vores nonprofit organisation, SUMA-EV - Foreningen for Fri Adgang til Viden. Styrk os ved at blive medlem eller ved at donere til SUMA-EV.',
     ],
     'diversity' => [
         'title' => 'Mangfoldig og fri',

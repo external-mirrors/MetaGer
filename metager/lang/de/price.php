@@ -15,7 +15,7 @@ return [
         "Das Wichtigste zusammengefasst",
     ],
     "texts" => [
-        "Für jede werbefreie Websuche auf MetaGer mit Standardeinstellungen wird Ihnen <b>1 Token</b> berechnet. Sie können Ihren Schlüssel jederzeit mit einem dieser Token-Pakete aufladen.",
+        'Für jede Websuche auf MetaGer mit Standardeinstellungen wird Ihnen <b>1 Token</b> berechnet. Sie können Ihren Schlüssel jederzeit mit einem dieser Token-Pakete aufladen.',
     ],
     "short-info" => [
         [

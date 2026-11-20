@@ -5,10 +5,10 @@ return [
     'key' => [
         'placeholder' => 'Ange din MetaGer-nyckel för att börja söka.',
         'tooltip' => [
-            'nokey' => 'Skapa annonsfri sökning',
+            'nokey' => 'Konfigurera en nyckel',
             'empty' => 'Token förbrukad. Ladda om nu.',
             'low' => 'Token snart förbrukad. Ladda om nu.',
-            'full' => 'Annonsfri sökning aktiverad.',
+            'full' => 'Nyckel aktiv.',
         ],
     ],
     'placeholder' => 'MetaGer: Integritetsskyddad sökning och sökning',
@@ -22,7 +22,7 @@ return [
         'produkte' => 'Produkter',
         'maps' => 'Kartor',
     ],
-    'adfree' => 'Använd MetaGer annonsfritt',
+    'adfree' => 'MetaGer-nyckel',
     'skip' => [
         'content' => 'Hoppa till innehållet',
         'search' => 'Hoppa till inmatning av sökfråga',
@@ -105,7 +105,7 @@ return [
                 ],
                 [
                     'heading' => 'Aktivera din åtkomst',
-                    'description' => 'En <a href=":linkCost">betalning</a> vid ett enda tillfälle fyller på din nyckel med saldo som vi kallar token. Det aktiverar annonsfri och spårningsfri sökning samt anonym surfning – inklusive alla nuvarande och framtida MetaGer-funktioner. Omkring 500 token (5 €) räcker vanligtvis i ungefär 2 månader.',
+                    'description' => 'En <a href=":linkCost">betalning</a> vid ett enda tillfälle fyller på din nyckel med saldo som vi kallar token. Det aktiverar spårningsfri sökning samt anonym surfning – inklusive alla nuvarande och framtida MetaGer-funktioner. Omkring 500 token (5 €) räcker vanligtvis i ungefär 2 månader.',
                     'membership' => 'Observera: medlemmar i vår ideella förening <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> kan använda MetaGer utan extra kostnad. <a href=":linkMembership" target="_blank">Bli medlem nu</a>',
                 ],
                 [

@@ -6,14 +6,14 @@ return [
             'alt' => 'Sicherheitsschloss',
         ],
         'title' => 'Garantierte Privatsphäre',
-        'p' => 'Mit unserer werbefreien Suche behalten Sie die volle Kontrolle über Ihre Daten. Unser Anonymisierungs-Proxy schützt Sie, auch wenn Sie weiter surfen. Wir tracken nicht.',
+        'p' => 'Mit MetaGer behalten Sie die volle Kontrolle über Ihre Daten. Unser Anonymisierungs-Proxy schützt Sie, auch wenn Sie weiter surfen. Wir tracken nicht.',
     ],
     'ngo' => [
         'title' => 'Gemeinnütziger Verein',
         'image' => [
             'alt' => 'Herz',
         ],
-        'p' => 'MetaGer wird getragen vom gemeinnützigen SUMA-EV, Verein für freien Wissenszugang. Unterstützen Sie uns, indem Sie spenden oder Mitglied werden. Mitglieder suchen auf MetaGer werbefrei.',
+        'p' => 'MetaGer wird getragen vom gemeinnützigen SUMA-EV, Verein für freien Wissenszugang. Unterstützen Sie uns, indem Sie spenden oder Mitglied werden.',
     ],
     'diversity' => [
         'title' => 'Vielfältig & Frei',

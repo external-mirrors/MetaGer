@@ -5,10 +5,10 @@ return [
     'key' => [
         'placeholder' => 'Wprowadź swój klucz MetaGer, aby rozpocząć wyszukiwanie.',
         'tooltip' => [
-            'nokey' => 'Skonfiguruj wyszukiwanie bez reklam',
+            'nokey' => 'Skonfiguruj klucz',
             'empty' => 'Żeton zużyty. Doładuj teraz.',
             'low' => 'Żeton wkrótce się zużyje. Doładuj teraz.',
-            'full' => 'Wyszukiwanie bez reklam włączone.',
+            'full' => 'Klucz aktywny.',
         ],
     ],
     'placeholder' => 'MetaGer: Wyszukiwanie i znajdowanie chronione prywatnością',
@@ -22,7 +22,7 @@ return [
         'produkte' => 'Produkty',
         'maps' => 'Mapy',
     ],
-    'adfree' => 'Korzystaj z MetaGer bez reklam',
+    'adfree' => 'Klucz MetaGer',
     'skip' => [
         'content' => 'Przejdź do treści',
         'search' => 'Przejdź do wprowadzania zapytania wyszukiwania',
@@ -105,7 +105,7 @@ return [
                 ],
                 [
                     'heading' => 'Aktywuj dostęp',
-                    'description' => 'Jednorazowa <a href=":linkCost">płatność</a> dodaje do Twojego klucza środki, które nazywamy tokenami. Aktywuje to wyszukiwanie bez reklam i bez śledzenia oraz anonimowe przeglądanie – wraz ze wszystkimi obecnymi i przyszłymi funkcjami MetaGer. Około 500 tokenów (5 €) wystarcza zwykle na mniej więcej 2 miesiące.',
+                    'description' => 'Jednorazowa <a href=":linkCost">płatność</a> dodaje do Twojego klucza środki, które nazywamy tokenami. Aktywuje to wyszukiwanie bez śledzenia oraz anonimowe przeglądanie – wraz ze wszystkimi obecnymi i przyszłymi funkcjami MetaGer. Około 500 tokenów (5 €) wystarcza zwykle na mniej więcej 2 miesiące.',
                     'membership' => 'Uwaga: członkowie naszego stowarzyszenia pożytku publicznego <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> mogą korzystać z MetaGer bez dodatkowych kosztów. <a href=":linkMembership" target="_blank">Zostań członkiem</a>',
                 ],
                 [

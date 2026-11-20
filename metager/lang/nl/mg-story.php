@@ -1,7 +1,7 @@
 <?php
 return [
     'ngo' => [
-        'p' => 'MetaGer wordt ontwikkeld en beheerd door onze non-profit organisatie, SUMA-EV-Association for Free Access to Knowledge. Versterk ons door lid te worden of door te doneren aan SUMA-EV. Leden zoeken advertentievrij!',
+        'p' => 'MetaGer wordt ontwikkeld en beheerd door onze non-profit organisatie, SUMA-EV-Association for Free Access to Knowledge. Versterk ons door lid te worden of door te doneren aan SUMA-EV.',
         'title' => 'Gerund door een non-profitorganisatie',
         'image' => [
             'alt' => 'Hart',
@@ -44,6 +44,6 @@ return [
             'alt' => 'slot',
         ],
         'title' => 'Gegarandeerde privacy',
-        'p' => 'Door gebruik te maken van onze advertentievrije zoekfunctie behoudt u de volledige controle over uw gegevens. Onze anonimiserende proxy houdt je beschermd, zelfs als je verder surft. We traceren niet.',
+        'p' => 'Met MetaGer behoudt u de volledige controle over uw gegevens. Onze anonimiserende proxy houdt je beschermd, zelfs als je verder surft. We traceren niet.',
     ],
 ];

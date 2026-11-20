@@ -7,7 +7,7 @@ return [
         ],
         'membershiphint' => [
             'title' => 'Of misschien lid worden?',
-            'description' => 'Als lid van <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> kun je MetaGer advertentievrij gebruiken en krijg je toegang tot alle betaalde zoekmachines.',
+            'description' => 'Onze leden dragen MetaGer. De non-profitvereniging <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> doet onderzoek naar zoekmachinetechnologie, zoals vastgelegd in de statuten, en onze leden dragen bij door met MetaGer te zoeken. Daarom wordt hun sleutel elke maand opgeladen, zonder verdere kosten.',
         ],
         'qr' => [
             'alt' => 'Foto overdracht',

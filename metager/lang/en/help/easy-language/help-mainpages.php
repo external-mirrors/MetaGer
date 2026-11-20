@@ -20,7 +20,7 @@ return [
         "memberkey"  => [
             "1" => 'The left field:', 
             "2" => 'The left field shows a key.<br> This is what the left field looks like:',
-            "3" => 'You can search with us without seeing ads. <br> To do this, click on the key. <br> Then click on the button <strong>Set Up Ad-Free Search</strong>.<br> After that, click on the button <strong>Create Key Now</strong>.<br> Then you will receive a password. <br> This password is called the key. <br> Now you can recharge the key with token for money.<br> Enter this key in the left field. <br> Then you can search without ads. <br> You can find more information here: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a>',
+            "3" => 'To search with us, you need a key. <br> To get one, click on the key. <br> Then click on the button <strong>Set up a key</strong>.<br> After that, click on the button <strong>Create Key Now</strong>.<br> Then you will receive a password. <br> This password is called the key. <br> Now you can recharge the key with token for money.<br> Enter this key in the left field. <br> Then you can search. <br> You can find more information here: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a>',
         ],
         "slot"  => [
             "1"      => 'The middle field:',
@@ -87,8 +87,8 @@ return [
     "settings" => [
         "title" => 'Settings',
         "metagerkey" => [
-            "title" => "Ad-Free Search",
-            '1'=> 'Here you can see the credit for the ad-free search. <br> You can use the ad-free search with a MetaGer Key. <br> You can find the MetaGer Key under the credit. <br> Below that, you will find two buttons. <br> You can click the left button <strong>Charge Key</strong> to charge the key. <br> You can click the right button <strong>Remove Key</strong> to delete the key from the browser<a title="The browser can be used to view pages on the Internet. Click here for more infomation" href="/hilfe/easy-language/glossary#glbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> You can find more information about the MetaGer Key here: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a> <br> If you don\'t have a key, it will look like this:',
+            "title" => 'MetaGer Key',
+            '1'=> 'Here you can see the credit of your MetaGer Key. <br> You can find the MetaGer Key under the credit. <br> Below that, you will find two buttons. <br> You can click the left button <strong>Charge Key</strong> to charge the key. <br> You can click the right button <strong>Remove Key</strong> to delete the key from the browser<a title="The browser can be used to view pages on the Internet. Click here for more infomation" href="/hilfe/easy-language/glossary#glbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> You can find more information about the MetaGer Key here: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a> <br> If you don\'t have a key, it will look like this:',
             '2'=> "Three buttons are displayed. <br> You can click the left button with the text <strong>What is it?</strong>. <br> This will take you to the information page about the MetaGer Key. <br> You can click the middle button with the text <strong>Set up existing key</strong>. <br> If you already have a MetaGer Key, you can enter it there. <br> If you don't have a key, you can click the right button <strong>Create new Key</strong> to purchase a new key.",
         ],
         "cookies" => [

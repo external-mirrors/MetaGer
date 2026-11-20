@@ -5,10 +5,10 @@ return [
     'key' => [
         'placeholder' => 'Voer je MetaGer Key in om te beginnen zoeken.',
         'tooltip' => [
-            'nokey' => 'Advertentievrij zoeken instellen',
+            'nokey' => 'Sleutel instellen',
             'empty' => 'Fiche opgebruikt. Nu herladen.',
             'low' => 'Muntje snel opgebruikt. Nu herladen.',
-            'full' => 'Zoeken zonder advertenties ingeschakeld.',
+            'full' => 'Sleutel actief.',
         ],
     ],
     'foki' => [
@@ -22,7 +22,7 @@ return [
     'placeholder' => 'MetaGer: Beschermd zoeken en vinden',
     'searchbutton' => 'MetaGer zoeken starten',
     'searchlabel' => 'Zoekopdracht',
-    'adfree' => 'Gebruik MetaGer reclamevrij',
+    'adfree' => 'MetaGer-sleutel',
     'skip' => [
         'content' => 'Naar de inhoud',
         'search' => 'Doorgaan naar invoer zoekopdracht',
@@ -105,7 +105,7 @@ return [
                 ],
                 [
                     'heading' => 'Activeer je toegang',
-                    'description' => 'Met een eenmalige <a href=":linkCost">betaling</a> zet je tegoed op je sleutel, dat wij token noemen. Daarmee schakel je reclamevrij en trackingvrij zoeken en anoniem surfen vrij – inclusief alle huidige en toekomstige MetaGer-functies. Ongeveer 500 token (€ 5) is meestal genoeg voor zo\'n 2 maanden.',
+                    'description' => 'Met een eenmalige <a href=":linkCost">betaling</a> zet je tegoed op je sleutel, dat wij token noemen. Daarmee schakel je trackingvrij zoeken en anoniem surfen vrij – inclusief alle huidige en toekomstige MetaGer-functies. Ongeveer 500 token (€ 5) is meestal genoeg voor zo\'n 2 maanden.',
                     'membership' => 'Let op: leden van onze non-profitvereniging <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> kunnen MetaGer zonder extra kosten gebruiken. <a href=":linkMembership" target="_blank">Word nu lid</a>',
                 ],
                 [

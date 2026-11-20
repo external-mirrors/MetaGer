@@ -59,7 +59,7 @@ return [
         'teaser' => [
             'heading' => 'MetaGer-lahjasi',
             'tokens' => 'Tokenia',
-            'description' => 'Tämä koodi antaa sinulle oman MetaGer-avaimen, jossa on :tokens tokenia - hae verkosta mainoksitta ja ilman seurantaa.',
+            'description' => 'Tämä koodi antaa sinulle oman MetaGer-avaimen, jossa on :tokens tokenia - hae verkosta ilman seurantaa.',
             'validity' => 'Avain on voimassa :days päivää lunastuksen jälkeen.',
             'submit' => 'Hae avaimeni',
         ],

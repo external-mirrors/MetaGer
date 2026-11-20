@@ -9,7 +9,7 @@ return [
     ],
     'searchfield' => [
         'search' => 'a lupa: Comece a sua pesquisa clicando aqui ou premindo "Enter".',
-        'memberkey' => 'o símbolo da chave: Aqui, pode introduzir a sua chave para utilizar a pesquisa sem anúncios. Também pode ver o seu saldo de fichas e gerir a sua chave.',
+        'memberkey' => 'o símbolo da chave: Aqui, pode introduzir a sua chave para pesquisar com o MetaGer. Também pode ver o seu saldo de fichas e gerir a sua chave.',
         'slot' => 'o campo de pesquisa: Introduza aqui o seu termo de pesquisa. As letras maiúsculas e minúsculas não são distinguidas.',
         'morefunctions' => 'Funções adicionais podem ser encontradas no item de menu "<a href = "/hilfe/funktionen">Funções de pesquisa</a>"',
         'title' => 'O campo de pesquisa <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
@@ -32,10 +32,10 @@ return [
         '2' => 'Motores de pesquisa usados <br> Aqui, pode ver e ajustar os motores de pesquisa que está a utilizar. Ao clicar no nome correspondente, pode activá-lo ou desactivá-lo em conformidade.',
         '9' => 'Publicidade subtil ao nosso próprio serviço <br> Mostramos-lhe publicidade subtil aos nossos próprios serviços. Pode desativar a nossa auto-promoção aqui.',
         'title' => 'Definições <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-settings" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        '1' => 'Pesquisa sem anúncios <br> Aqui, pode ver o saldo da sua chave e a sua chave. Tem também a opção de carregar ou remover a sua chave.',
+        '1' => 'Chave MetaGer <br> Aqui, pode ver o saldo da sua chave e a sua chave. Tem também a opção de carregar ou remover a sua chave.',
     ],
     'startpage' => [
-        'info' => 'A página inicial inclui o campo de pesquisa, um botão no canto superior direito para aceder ao menu e duas ligações abaixo do campo de pesquisa para adicionar o MetaGer ao seu browser e pesquisar sem anúncios. Na secção inferior, encontrará informações sobre o MetaGer e a associação SUMA-EV. Para além disso, as nossas áreas de foco <i>Privacidade Garantida, Associação Sem Fins Lucrativos, Diversidade e Liberdade</i> e <i>Energia 100% Verde</i> são apresentadas na parte inferior. Ao clicar nas respectivas secções ou ao percorrer o ecrã, pode encontrar mais informações. ',
+        'info' => 'A página inicial inclui o campo de pesquisa, um botão no canto superior direito para aceder ao menu e duas ligações abaixo do campo de pesquisa para adicionar o MetaGer ao seu browser e configurar uma chave MetaGer. Na secção inferior, encontrará informações sobre o MetaGer e a associação SUMA-EV. Para além disso, as nossas áreas de foco <i>Privacidade Garantida, Associação Sem Fins Lucrativos, Diversidade e Liberdade</i> e <i>Energia 100% Verde</i> são apresentadas na parte inferior. Ao clicar nas respectivas secções ou ao percorrer o ecrã, pode encontrar mais informações. ',
         'title' => 'A página inicial <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     'title' => [

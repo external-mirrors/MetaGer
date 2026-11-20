@@ -118,7 +118,7 @@ return [
         '2' => 'MetaGer est différent des autres moteurs de recherche. Cela se reflète non seulement dans notre orientation vers le bien public et notre souci de la protection de la vie privée, mais aussi dans certaines caractéristiques uniques :',
         '3' => 'Possibilité de créer une liste noire personnelle',
         '4' => 'Fonction de la recherche dans la recherche',
-        '5' => 'Possibilité de recherche sans publicité',
+        '5' => 'Aucune annonce',
         '6' => 'Intégration de projets de moteurs de recherche comme YaCy',
         '7' => 'Le seul moteur de recherche allemand qui combine les résultats de plusieurs grands index web',
         '8' => 'Et bien plus encore...',

@@ -15,7 +15,7 @@ return [
         "Den viktigaste sammanfattningen",
     ],
     "texts" => [
-        "För varje annonsfri webbsökning på MetaGer med standardinställningar kommer du att debiteras <b>1 token</b>. Du kan när som helst fylla på din nyckel med ett av dessa tokenpaket.",
+        'För varje webbsökning på MetaGer med standardinställningar kommer du att debiteras <b>1 token</b>. Du kan när som helst fylla på din nyckel med ett av dessa tokenpaket.',
     ],
     "short-info" => [
         [

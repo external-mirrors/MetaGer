@@ -92,23 +92,42 @@ return [
 
         'charge' => [
             'heading' => 'Guthaben aufladen',
-            // Der Preis steht auf /preise ausführlich; hier reicht der Satz,
-            // der die Zahlen in den Kacheln erklärt.
-            'lede' => 'Ein Token ist eine Suche und kostet einen Cent. Die Preise verstehen sich inklusive Mehrwertsteuer.',
+            // Der erste Satz stellt die Wahl vor: Mitgliedschaft, empfohlen, oder ein
+            // einzelnes Paket. Der Tokenpreis steht jetzt in once.lede, bei den
+            // Kacheln, die er erklärt.
+            'lede' => 'Zwei Wege zu Ihrem Guthaben. Wir empfehlen den ersten.',
             'tokens' => ':amount Token',
             'price' => ':price €',
             'more' => 'Alle Preise und Zahlungswege',
+            'or' => 'oder',
+            'once' => [
+                'heading' => 'Einmalig aufladen',
+                'lede' => 'Ohne Mitgliedschaft und ohne Bindung. Ein Token ist eine Suche und kostet einen Cent. Die Preise verstehen sich inklusive Mehrwertsteuer.',
+            ],
 
             /**
-             * Die Alternative zum Kauf eines Token-Pakets, die der Keymanager
-             * an derselben Stelle anbot und die beim Umzug hierher verloren
-             * ging. Sie wird nur auf der deutschen Oberfläche gerendert
-             * ({@see \App\Support\MembershipOffer}) — das Beitrittsformular
-             * gibt es in keiner anderen Sprache.
+             * Die Mitgliedschaft, zuerst und in jeder Sprache angeboten
+             * ({@see \App\Support\MembershipOffer}). Ein gemeinnütziger Verein darf
+             * für Mitgliedsbeiträge keine Gegenleistung erbringen, deshalb sagt der
+             * Text nie, der Beitrag bezahle den Schlüssel: Mitglieder nehmen durch
+             * ihre Suchen an der Forschung teil, die die Satzung nennt, und darum
+             * wird ihr Schlüssel aufgefüllt. `language` erscheint überall außer auf
+             * der deutschen Oberfläche.
              */
             'membership' => [
-                'heading' => 'Oder Mitglied werden?',
-                'text' => 'Mitglieder des gemeinnützigen Trägervereins <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> suchen ohne weitere Kosten: Der Schlüssel wird monatlich aus dem Mitgliedsbeitrag aufgeladen, und Sie tragen die Suchmaschine, statt sie zu bezahlen.',
+                'badge' => 'Unser Vorschlag',
+                'heading' => 'Werden Sie Teil von MetaGer',
+                'text' => 'Unsere Mitglieder tragen MetaGer. Der gemeinnützige <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> erforscht laut <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">Satzung</a> Suchmaschinentechnologie. Diese Forschung braucht eine Suchmaschine im echten Alltag, und unsere Mitglieder machen MetaGer dazu, indem sie damit suchen. Deshalb wird ihr Schlüssel jeden Monat aufgefüllt, ohne weitere Kosten.',
+                'points' => [
+                    'refill' => 'Ihr Schlüssel wird monatlich aufgefüllt, ohne weitere Kosten',
+                    'anonymous' => 'Dank <a href=":url">anonymer Token</a> suchen Sie auch als Mitglied anonym',
+                    'amount' => 'Die Höhe Ihres Beitrags bestimmen Sie selbst',
+                    'vote' => 'Mit Ihrer Stimme in der Mitgliederversammlung gestalten Sie den Verein mit',
+                ],
+                'language' => [
+                    'heading' => 'Gut zu wissen: Unsere Versammlungen sind auf Deutsch',
+                    'text' => 'Beitrittsformular und Begrüßungsmail erhalten Sie in Ihrer Sprache. Einladungen zur Mitgliederversammlung und ihre Protokolle sind auf Deutsch, der Vereinssprache, und Mitglieder erhalten sie derzeit per E-Mail. In den kommenden Monaten bieten wir eine Fördermitgliedschaft ohne diese E-Mails an.',
+                ],
                 'action' => 'Mitglied werden',
             ],
 

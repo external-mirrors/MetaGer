@@ -46,6 +46,8 @@
   --accent-text-color: #555;
   --accent-fill-color: @orange;
   --on-accent-color: #1a1a1a;
+  // The membership offer on /konto: a panel washed with the brand orange.
+  --accent-tint-color: mix(@orange, @color-white, 6%);
   // The logo orange, by decision rather than by measurement: it is 2.5:1 on
   // white, below the 3:1 that audits reading WCAG 1.4.11 ask of a focus ring
   // (2.4.7 itself sets no contrast). The brown that passed did not read as the
@@ -167,6 +169,7 @@
   --accent-text-color: #ff9933;
   --accent-fill-color: #ff9933;
   --on-accent-color: #1a1a1a;
+  --accent-tint-color: mix(@orange, @color-strong-grey, 12%);
   --focus-ring-color: #ff9933;
   --background-color: @color-almost-black;
   --background-color-mobile: @color-almost-black;
@@ -273,6 +276,7 @@
 @accent-text-color: var(--accent-text-color);
 @accent-fill-color: var(--accent-fill-color);
 @on-accent-color: var(--on-accent-color);
+@accent-tint-color: var(--accent-tint-color);
 @focus-ring-color: var(--focus-ring-color);
 @sidebar-list-hover-color: var(--sidebar-list-hover-color);
 @card-background-color: var(--card-background-color);

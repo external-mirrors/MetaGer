@@ -23,6 +23,14 @@ use App\Localization;
  * Stellen ihn schlicht vergessen hatten. Genau so driftet eine Regel
  * auseinander, die an sechs Orten dasselbe bedeuten muss.
  *
+ * Die Aufladekarte auf /konto ist die Ausnahme: dort wird in jeder Sprache
+ * geworben. Das Formular und die Begrüßungsmail kommen inzwischen aus suma-crm
+ * und sind übersetzt (`?lang=`, {@see \App\Http\Controllers\MembershipController}).
+ * Deutsch bleiben die Einladungen zur Mitgliederversammlung und ihre Protokolle,
+ * und abbestellen lassen sie sich nicht. Das sagt die Karte, sobald
+ * {@see self::needsLanguageNotice()} es verlangt, bis es eine
+ * Fördermitgliedschaft ohne diese Mails gibt.
+ *
  * Was hier *nicht* entschieden wird, ist die Erreichbarkeit des Formulars
  * selbst: die E-Mails an Mitglieder verlinken es mit einer Bearbeitungs-ID,
  * und eine Route, die je nach Oberflächensprache 404 antwortet, würde diese
@@ -34,5 +42,14 @@ final class MembershipOffer
     public static function isAdvertised(): bool
     {
         return Localization::getLanguage() === "de";
+    }
+
+    /**
+     * Ob ein Angebot der Mitgliedschaft dazusagen muss, dass Einladungen zur
+     * Mitgliederversammlung und ihre Protokolle auf Deutsch kommen.
+     */
+    public static function needsLanguageNotice(): bool
+    {
+        return Localization::getLanguage() !== "de";
     }
 }

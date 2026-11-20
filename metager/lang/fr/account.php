@@ -83,20 +83,40 @@ return [
 
         'charge' => [
             'heading' => 'Recharger le solde',
-            'lede' => 'Un jeton correspond à une recherche et coûte un centime. Tous les prix s\'entendent TVA comprise.',
+            // The card's opening line sets up the choice: membership, recommended, or
+            // a one-off package. The token price moved down to once.lede, next to the
+            // packages it explains.
+            'lede' => 'Deux façons de recharger votre clé. Nous vous recommandons la première.',
             'tokens' => ':amount jetons',
             'price' => ':price €',
             'more' => 'Tous les prix et moyens de paiement',
+            'or' => 'ou',
+            'once' => [
+                'heading' => 'Recharger une seule fois',
+                'lede' => 'Sans adhésion et sans engagement. Un jeton correspond à une recherche et coûte un centime. Tous les prix s\'entendent TVA comprise.',
+            ],
 
             /**
-             * Rendered on the German interface only
-             * ({@see \App\Support\MembershipOffer}) — the SUMA-EV
-             * application form exists in no other language. Translated
-             * all the same, so the catalogues stay in step.
+             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
+             * A non-profit may give nothing in return for a membership fee, so the
+             * text never says the fee pays for the key: members take part in the
+             * research the statutes name by searching, and that is why their key is
+             * topped up. `language` is shown everywhere but on the German interface.
              */
             'membership' => [
-                'heading' => 'Ou devenir membre ?',
-                'text' => 'Les membres de notre association à but non lucratif <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> cherchent sans frais supplémentaires : la clé est rechargée chaque mois par la cotisation, et vous portez le moteur de recherche au lieu de le payer.',
+                'badge' => 'Notre suggestion',
+                'heading' => 'Faites partie de MetaGer',
+                'text' => 'Nos membres portent MetaGer. <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a>, l\'association à but non lucratif qui le gère, mène des recherches sur la technologie des moteurs de recherche, comme le prévoient <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">ses statuts</a>. Ces recherches ont besoin d\'un moteur de recherche utilisé au quotidien, en conditions réelles, et nos membres le rendent possible en cherchant avec MetaGer. C\'est pourquoi leur clé est rechargée chaque mois, sans frais supplémentaires.',
+                'points' => [
+                    'refill' => 'Votre clé est rechargée chaque mois, sans frais supplémentaires',
+                    'anonymous' => 'Grâce aux <a href=":url">jetons anonymes</a>, vous cherchez de manière anonyme, même en tant que membre',
+                    'amount' => 'Vous fixez vous-même le montant de votre cotisation',
+                    'vote' => 'Avec votre voix à l\'assemblée générale, vous participez aux décisions de l\'association',
+                ],
+                'language' => [
+                    'heading' => 'Bon à savoir : nos assemblées se tiennent en allemand',
+                    'text' => 'Le formulaire d\'adhésion et l\'e-mail de bienvenue vous parviennent dans votre langue. Les convocations à l\'assemblée générale et leurs procès-verbaux sont en allemand, la langue de travail de l\'association, et les membres les reçoivent actuellement par e-mail. Dans les mois à venir, nous proposerons une adhésion de soutien sans ces e-mails.',
+                ],
                 'action' => 'Devenir membre',
             ],
 

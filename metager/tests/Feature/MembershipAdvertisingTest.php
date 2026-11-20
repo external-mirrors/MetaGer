@@ -24,6 +24,11 @@ use Tests\TestCase;
  * indem jemand einen neuen Hinweis einbaut und den Sprachvergleich nicht
  * kennt. Jede Stelle steht deshalb hier zweimal: einmal auf Deutsch gesehen,
  * einmal auf Englisch nicht gesehen.
+ *
+ * Die Ausnahme ist die Aufladekarte auf /konto: Formular und Begrüßungsmail
+ * kommen inzwischen übersetzt aus suma-crm, also wird dort in jeder Sprache
+ * geworben, mit einem Hinweis, dass Versammlungen und Protokolle deutsch
+ * bleiben.
  */
 class MembershipAdvertisingTest extends TestCase
 {
@@ -89,6 +94,24 @@ class MembershipAdvertisingTest extends TestCase
         }
     }
 
+    /**
+     * Auf der Aufladeseite wird überall geworben, aber nur die deutsche
+     * Oberfläche kommt ohne den Hinweis aus, dass Einladungen zur
+     * Mitgliederversammlung und ihre Protokolle auf Deutsch kommen.
+     */
+    public function testOnlyTheGermanInterfaceGoesWithoutTheLanguageNotice(): void
+    {
+        foreach (["de-DE", "de-AT", "de-CH"] as $locale) {
+            LocaleContext::resolve(Request::create("http://metager.de/$locale/"))->apply();
+            $this->assertFalse(MembershipOffer::needsLanguageNotice(), "$locale should not need the notice");
+        }
+
+        foreach (["en-US", "en-GB", "es-ES", "pl-PL", "nl-NL"] as $locale) {
+            LocaleContext::resolve(Request::create("http://metager.de/$locale/"))->apply();
+            $this->assertTrue(MembershipOffer::needsLanguageNotice(), "$locale should need the notice");
+        }
+    }
+
     // ── Die Startseite ───────────────────────────────────────────────────────
 
     /**
@@ -151,19 +174,47 @@ class MembershipAdvertisingTest extends TestCase
         $response->assertSeeText(__("account.page.charge.membership.heading", locale: "de"));
         $response->assertSeeText(__("account.page.charge.membership.action", locale: "de"));
         $response->assertSee(route("membership_form"), false);
+
+        // Anonyme Token sind die Antwort auf „dann weiß der Verein, wonach ich
+        // suche“ — die Hilfeseite dazu ist verlinkt.
+        $response->assertSee("/hilfe/anonyme-token", false);
+
+        // Deutsch ist die Vereinssprache, hier gibt es nichts anzumerken.
+        $response->assertDontSee("account-membership__language", false);
     }
 
-    public function testTheChargeSectionKeepsTheAlternativeToGerman(): void
+    /**
+     * Die Mitgliedschaft ist der Vorschlag, das Paket die Alternative: sie
+     * steht zuerst, die Pakete folgen.
+     */
+    public function testTheChargeSectionPutsMembershipBeforeThePackages(): void
     {
         $this->keyserverKnows();
 
-        $response = $this->signedIn()->get("/konto", self::speaking("en-US,en"))->assertOk();
+        $this->signedIn()->get("/konto", self::speaking("de-DE,de"))
+            ->assertOk()
+            ->assertSeeInOrder(['id="charge-membership"', 'class="account-tiers"'], false);
+    }
 
-        $response->assertDontSee('id="charge-membership"', false);
-        $response->assertDontSeeText(__("account.page.charge.membership.heading", locale: "en"));
+    /**
+     * Beitrittsformular und Begrüßungsmail gibt es in mehreren Sprachen
+     * (suma-crm, über `?lang=`), deshalb wird auf der Aufladeseite in jeder
+     * Sprache geworben. Was deutsch bleibt — Einladungen zur
+     * Mitgliederversammlung und Protokolle —, sagt der Hinweis.
+     */
+    public function testTheChargeSectionOffersMembershipInEveryLanguage(): void
+    {
+        $this->keyserverKnows();
 
-        // Die Pakete selbst sind unberührt — hier fällt nur die Alternative weg.
-        $response->assertSee("account-tiers", false);
+        foreach (["en-US,en" => "en", "pl-PL,pl" => "pl"] as $header => $language) {
+            $response = $this->signedIn()->get("/konto", self::speaking($header))->assertOk();
+
+            $response->assertSee('id="charge-membership"', false);
+            $response->assertSeeText(__("account.page.charge.membership.heading", locale: $language));
+            $response->assertSee("account-membership__language", false);
+            $response->assertSeeText(__("account.page.charge.membership.language.heading", locale: $language));
+            $response->assertSee("account-tiers", false);
+        }
     }
 
     /**

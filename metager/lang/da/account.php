@@ -83,20 +83,40 @@ return [
 
         'charge' => [
             'heading' => 'Fyld saldo op',
-            'lede' => 'Et token er én søgning og koster én cent. Alle priser er inklusive moms.',
+            // The card's opening line sets up the choice: membership, recommended, or
+            // a one-off package. The token price moved down to once.lede, next to the
+            // packages it explains.
+            'lede' => 'To måder at fylde din nøgle op. Vi anbefaler den første.',
             'tokens' => ':amount tokens',
             'price' => ':price €',
             'more' => 'Alle priser og betalingsmåder',
+            'or' => 'eller',
+            'once' => [
+                'heading' => 'Fyld op én gang',
+                'lede' => 'Uden medlemskab og uden binding. Et token er én søgning og koster én cent. Alle priser er inklusive moms.',
+            ],
 
             /**
-             * Rendered on the German interface only
-             * ({@see \App\Support\MembershipOffer}) — the SUMA-EV
-             * application form exists in no other language. Translated
-             * all the same, so the catalogues stay in step.
+             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
+             * A non-profit may give nothing in return for a membership fee, so the
+             * text never says the fee pays for the key: members take part in the
+             * research the statutes name by searching, and that is why their key is
+             * topped up. `language` is shown everywhere but on the German interface.
              */
             'membership' => [
-                'heading' => 'Eller blive medlem?',
-                'text' => 'Medlemmer af vores almennyttige forening <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> søger uden yderligere omkostninger: nøglen fyldes op hver måned af medlemskontingentet, og du bærer søgemaskinen i stedet for at betale for den.',
+                'badge' => 'Vores forslag',
+                'heading' => 'Bliv en del af MetaGer',
+                'text' => 'Vores medlemmer bærer MetaGer. <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a>, den almennyttige forening bag, forsker i søgemaskineteknologi, som det står i <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">vedtægterne</a>. Den forskning kræver en søgemaskine i virkelig, daglig brug, og vores medlemmer gør MetaGer til det ved at søge med den. Derfor fyldes deres nøgle op hver måned uden yderligere omkostninger.',
+                'points' => [
+                    'refill' => 'Din nøgle fyldes op hver måned uden yderligere omkostninger',
+                    'anonymous' => 'Med <a href=":url">anonyme tokens</a> søger du anonymt, også som medlem',
+                    'amount' => 'Du bestemmer selv størrelsen på dit kontingent',
+                    'vote' => 'Med din stemme på generalforsamlingen er du med til at forme foreningen',
+                ],
+                'language' => [
+                    'heading' => 'Godt at vide: vores møder foregår på tysk',
+                    'text' => 'Indmeldelsesformularen og velkomstmailen får du på dit sprog. Indkaldelser til generalforsamlingen og referaterne er på tysk, foreningens arbejdssprog, og medlemmer modtager dem i øjeblikket per e-mail. I de kommende måneder tilbyder vi et støttemedlemskab uden disse e-mails.',
+                ],
                 'action' => 'Bliv medlem',
             ],
 

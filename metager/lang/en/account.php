@@ -83,21 +83,40 @@ return [
 
         'charge' => [
             'heading' => 'Top up balance',
-            'lede' => 'One token is one search and costs one cent. All prices include VAT.',
+            // The card's opening line sets up the choice: membership, recommended, or
+            // a one-off package. The token price moved down to once.lede, next to the
+            // packages it explains.
+            'lede' => 'Two ways to top up your key. We recommend the first.',
             'tokens' => ':amount tokens',
             'price' => ':price €',
             'more' => 'All prices and payment methods',
+            'or' => 'or',
+            'once' => [
+                'heading' => 'Top up once',
+                'lede' => 'No membership, no commitment. One token is one search and costs one cent. All prices include VAT.',
+            ],
 
             /**
-             * The alternative to buying a token package, which the keymanager
-             * offered in the same place and which was lost in the move. It is
-             * rendered on the German interface only
-             * ({@see \App\Support\MembershipOffer}) — the application form
-             * exists in no other language.
+             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
+             * A non-profit may give nothing in return for a membership fee, so the
+             * text never says the fee pays for the key: members take part in the
+             * research the statutes name by searching, and that is why their key is
+             * topped up. `language` is shown everywhere but on the German interface.
              */
             'membership' => [
-                'heading' => 'Or become a member?',
-                'text' => 'Members of our non-profit association <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> search at no further cost: the key is topped up from the membership fee every month, and you carry the search engine instead of paying it.',
+                'badge' => 'Our suggestion',
+                'heading' => 'Become part of MetaGer',
+                'text' => 'Our members carry MetaGer. <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a>, the non-profit behind it, researches search engine technology, as set out in <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">its statutes</a>. That research needs a search engine in real, everyday use, and our members make MetaGer one by searching with it. That is why their key is topped up every month at no further cost.',
+                'points' => [
+                    'refill' => 'Your key is topped up every month at no further cost',
+                    'anonymous' => 'With <a href=":url">anonymous tokens</a> you search anonymously, even as a member',
+                    'amount' => 'You decide the amount of your membership fee yourself',
+                    'vote' => 'With your vote in the general meeting, you help shape the association',
+                ],
+                'language' => [
+                    'heading' => 'Good to know: our meetings are held in German',
+                    'text' => 'The membership form and your welcome email come in your language. Invitations to our general meetings and their minutes are in German, the association\'s working language, and members currently receive them by email. In the coming months we will offer a supporting membership without these emails.',
+                ],
                 'action' => 'Become a member',
             ],
 

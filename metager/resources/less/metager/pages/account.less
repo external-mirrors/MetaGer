@@ -244,31 +244,125 @@
   font-size: 0.9rem;
 }
 
-// Die Mitgliedschaft als Alternative zum Token-Paket, unter den Kacheln.
-// Bewusst keine weitere Kachel: sie ist kein zusätzliches Paket in derselben
-// Reihe, sondern der Weg daran vorbei. Dieselbe getönte Fläche wie
-// .account-blocked und aus demselben Grund — ein Hinweis, kein Bedienelement.
-// Gerendert nur auf der deutschen Oberfläche (App\Support\MembershipOffer).
+// Die Mitgliedschaft, vor den Paketen: der Vorschlag des Vereins, deshalb
+// gerahmt und in der Akzentfarbe getönt statt so zurückhaltend wie
+// .account-blocked. In jeder Sprache gerendert (App\Support\MembershipOffer).
 .account-membership {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.9rem;
   justify-items: start;
-  padding: 0.9rem 1.1rem;
-  border-radius: 10px;
-  background-color: @highlight-color-alpha-60;
+  padding: 1.25rem;
+  border: 2px solid @metager-orange;
+  border-radius: 12px;
+  background-color: @accent-tint-color;
+
+  @media (max-width: @screen-mobile-l) {
+    padding: 1rem;
+  }
+
+  .account-membership__badge {
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background-color: @accent-fill-color;
+    color: @on-accent-color;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
 
   .account-membership__heading {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   .account-membership__text {
     margin: 0;
-    font-size: 0.9rem;
+    line-height: 1.55;
   }
 
+  .account-membership__points {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      position: relative;
+      padding-left: 1.6rem;
+      line-height: 1.45;
+
+      // Ein Haken aus zwei Rahmenkanten statt eines Icons: er erbt die
+      // Textfarbe und braucht in keinem Thema eine eigene Datei.
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0.35rem;
+        top: 0.2em;
+        width: 0.4rem;
+        height: 0.75rem;
+        border-right: 2.5px solid currentColor;
+        border-bottom: 2.5px solid currentColor;
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  // Nur außerhalb der deutschen Oberfläche: was auf Deutsch bleibt.
+  .account-membership__language {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid @border-color;
+    border-radius: 10px;
+    background-color: @card-background-color;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  // .account-btn wächst in einer Reihe mit `flex: 1 1 0`; hier steht er allein
+  // im Raster und soll so breit sein wie seine Beschriftung.
   .account-membership__action {
-    font-size: 0.85rem;
+    flex: none;
+    min-height: 44px;
+    padding-inline: 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+}
+
+// „oder“ zwischen den beiden Wegen, als Trennlinie mit Wort.
+.account-charge__or {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  color: @muted-text-color;
+  font-size: 0.9rem;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: @border-color;
+  }
+}
+
+.account-charge__once {
+  display: grid;
+  gap: 0.25rem;
+
+  .account-charge__heading {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .account-charge__lede {
+    margin: 0;
+    font-size: 0.9rem;
+    color: @text-color-alpha-70;
   }
 }
 

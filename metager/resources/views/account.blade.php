@@ -125,6 +125,44 @@
 			<p class="account-blocked">@lang('account.page.balance.unknown')</p>
 		@else
 			<p class="account-section__lede">@lang('account.page.charge.lede')</p>
+
+			{{--
+				Die Mitgliedschaft zuerst, das Paket als Alternative: wer hier
+				aufladen will, soll beides kennen, bevor er bezahlt, und der Verein
+				empfiehlt das eine. Der Text sagt mit Absicht nicht, der Beitrag
+				*bezahle* den Schlüssel — ein gemeinnütziger Verein darf für
+				Mitgliedsbeiträge keine Gegenleistung erbringen. Der Schlüssel
+				folgt daraus, dass Mitglieder durch ihre Nutzung an der Forschung
+				teilnehmen, die die Satzung als Zweck nennt.
+
+				In jeder Sprache, anders als die übrigen Hinweise auf die
+				Mitgliedschaft — siehe App\Support\MembershipOffer.
+			--}}
+			<div class="account-membership" id="charge-membership">
+				<span class="account-membership__badge">@lang('account.page.charge.membership.badge')</span>
+				<h3 class="account-membership__heading">@lang('account.page.charge.membership.heading')</h3>
+				<p class="account-membership__text">{!! __('account.page.charge.membership.text') !!}</p>
+				<ul class="account-membership__points">
+					<li>@lang('account.page.charge.membership.points.refill')</li>
+					<li>{!! __('account.page.charge.membership.points.anonymous', ['url' => route('anonymous-token')]) !!}</li>
+					<li>@lang('account.page.charge.membership.points.amount')</li>
+					<li>@lang('account.page.charge.membership.points.vote')</li>
+				</ul>
+				@if(\App\Support\MembershipOffer::needsLanguageNotice())
+					<div class="account-membership__language">
+						<strong>@lang('account.page.charge.membership.language.heading')</strong>
+						<span>@lang('account.page.charge.membership.language.text')</span>
+					</div>
+				@endif
+				<a class="account-btn account-btn--primary account-membership__action" href="{{ $membershipUrl }}">@lang('account.page.charge.membership.action')</a>
+			</div>
+
+			<p class="account-charge__or"><span>@lang('account.page.charge.or')</span></p>
+
+			<div class="account-charge__once">
+				<h3 class="account-charge__heading">@lang('account.page.charge.once.heading')</h3>
+				<p class="account-charge__lede">@lang('account.page.charge.once.lede')</p>
+			</div>
 			<ul class="account-tiers">
 				@foreach($tiers as $amount => $price)
 					<li>
@@ -136,27 +174,6 @@
 				@endforeach
 			</ul>
 			<a class="account-section__more" href="{{ $priceUrl }}">@lang('account.page.charge.more')</a>
-
-			{{--
-				Die Alternative zum Bezahlen, an der Stelle, an der jemand
-				bezahlen will. Der Keymanager zeigte den Hinweis auf die
-				Mitgliedschaft an genau dieser Stelle; er ist beim Umzug
-				verlorengegangen, und er gehört hierher und nicht auf eine
-				Werbeseite: Mitglieder suchen ohne weitere Kosten, der
-				Schlüssel wird monatlich aus dem Beitrag aufgefüllt. Wer
-				gerade ein Token-Paket kaufen will, ist der Einzige, den das
-				betrifft.
-
-				Nur auf der deutschen Oberfläche, wie jeder Hinweis auf die
-				Mitgliedschaft — siehe App\Support\MembershipOffer.
-			--}}
-			@if(\App\Support\MembershipOffer::isAdvertised())
-				<div class="account-membership" id="charge-membership">
-					<h3 class="account-membership__heading">@lang('account.page.charge.membership.heading')</h3>
-					<p class="account-membership__text">{!! __('account.page.charge.membership.text') !!}</p>
-					<a class="account-membership__action" href="{{ $membershipUrl }}">@lang('account.page.charge.membership.action')</a>
-				</div>
-			@endif
 		@endif
 	</section>
 

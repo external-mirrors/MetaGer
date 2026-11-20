@@ -95,26 +95,13 @@ return [
             ],
 
             /**
-             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
-             * A non-profit may give nothing in return for a membership fee, so the
-             * text never says the fee pays for the key: members take part in the
-             * research the statutes name by searching, and that is why their key is
-             * topped up. `language` is shown everywhere but on the German interface.
+             * Membership, offered first and in every language
+             * ({@see \App\Support\MembershipOffer}). The form says the rest.
              */
             'membership' => [
                 'badge' => 'Nasza propozycja',
                 'heading' => 'Stań się częścią MetaGer',
-                'text' => 'Nasi członkowie utrzymują MetaGer. <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a>, stowarzyszenie non-profit, które za nim stoi, prowadzi badania nad technologią wyszukiwarek, tak jak przewiduje to <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">statut</a>. Te badania potrzebują wyszukiwarki w prawdziwym, codziennym użyciu, a nasi członkowie ją taką czynią, wyszukując z MetaGer. Dlatego ich klucz jest doładowywany co miesiąc, bez dalszych kosztów.',
-                'points' => [
-                    'refill' => 'Twój klucz jest doładowywany co miesiąc, bez dalszych kosztów',
-                    'anonymous' => 'Dzięki <a href=":url">anonimowym tokenom</a> wyszukujesz anonimowo, także jako członek',
-                    'amount' => 'Wysokość składki ustalasz sam, od 5 € miesięcznie',
-                    'vote' => 'Swoim głosem na walnym zgromadzeniu współdecydujesz o stowarzyszeniu',
-                ],
-                'language' => [
-                    'heading' => 'Warto wiedzieć: nasze zebrania odbywają się po niemiecku',
-                    'text' => 'Formularz przystąpienia i wiadomość powitalną otrzymasz w swoim języku. Zaproszenia na walne zgromadzenie i protokoły są po niemiecku, w języku roboczym stowarzyszenia, a członkowie otrzymują je obecnie e-mailem. W najbliższych miesiącach zaoferujemy członkostwo wspierające bez tych wiadomości.',
-                ],
+                'text' => 'Jako członek stowarzyszenia non-profit SUMA-EV pomagasz utrzymywać MetaGer.',
                 'action' => 'Zostań członkiem',
             ],
 

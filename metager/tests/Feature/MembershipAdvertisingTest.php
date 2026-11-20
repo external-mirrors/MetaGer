@@ -94,24 +94,6 @@ class MembershipAdvertisingTest extends TestCase
         }
     }
 
-    /**
-     * Auf der Aufladeseite wird überall geworben, aber nur die deutsche
-     * Oberfläche kommt ohne den Hinweis aus, dass Einladungen zur
-     * Mitgliederversammlung und ihre Protokolle auf Deutsch kommen.
-     */
-    public function testOnlyTheGermanInterfaceGoesWithoutTheLanguageNotice(): void
-    {
-        foreach (["de-DE", "de-AT", "de-CH"] as $locale) {
-            LocaleContext::resolve(Request::create("http://metager.de/$locale/"))->apply();
-            $this->assertFalse(MembershipOffer::needsLanguageNotice(), "$locale should not need the notice");
-        }
-
-        foreach (["en-US", "en-GB", "es-ES", "pl-PL", "nl-NL"] as $locale) {
-            LocaleContext::resolve(Request::create("http://metager.de/$locale/"))->apply();
-            $this->assertTrue(MembershipOffer::needsLanguageNotice(), "$locale should need the notice");
-        }
-    }
-
     // ── Die Startseite ───────────────────────────────────────────────────────
 
     /**
@@ -173,18 +155,7 @@ class MembershipAdvertisingTest extends TestCase
         $response->assertSee('id="charge-membership"', false);
         $response->assertSeeText(__("account.page.charge.membership.heading", locale: "de"));
         $response->assertSeeText(__("account.page.charge.membership.action", locale: "de"));
-        $response->assertSee(route("membership_form"), false);
-
-        // Anonyme Token sind die Antwort auf „dann weiß der Verein, wonach ich
-        // suche“ — die Hilfeseite dazu ist verlinkt.
-        $response->assertSee("/hilfe/anonyme-token", false);
-
-        // Der Mindestbeitrag steht dabei, damit niemand erst ins Formular muss,
-        // um zu erfahren, was eine Mitgliedschaft mindestens kostet.
-        $response->assertSeeText("ab 5 € im Monat");
-
-        // Deutsch ist die Vereinssprache, hier gibt es nichts anzumerken.
-        $response->assertDontSee("account-membership__language", false);
+        $response->assertSee(e(route("membership_form", ["back" => "account"])), false);
     }
 
     /**
@@ -203,8 +174,7 @@ class MembershipAdvertisingTest extends TestCase
     /**
      * Beitrittsformular und Begrüßungsmail gibt es in mehreren Sprachen
      * (suma-crm, über `?lang=`), deshalb wird auf der Aufladeseite in jeder
-     * Sprache geworben. Was deutsch bleibt — Einladungen zur
-     * Mitgliederversammlung und Protokolle —, sagt der Hinweis.
+     * Sprache geworben. Was deutsch bleibt, sagt das Formular.
      */
     public function testTheChargeSectionOffersMembershipInEveryLanguage(): void
     {
@@ -215,8 +185,6 @@ class MembershipAdvertisingTest extends TestCase
 
             $response->assertSee('id="charge-membership"', false);
             $response->assertSeeText(__("account.page.charge.membership.heading", locale: $language));
-            $response->assertSee("account-membership__language", false);
-            $response->assertSeeText(__("account.page.charge.membership.language.heading", locale: $language));
             $response->assertSee("account-tiers", false);
         }
     }

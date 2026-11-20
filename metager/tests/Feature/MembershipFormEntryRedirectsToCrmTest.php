@@ -129,4 +129,34 @@ class MembershipFormEntryRedirectsToCrmTest extends TestCase
         $this->assertNotContains("membership/webhook/paypal", $uris);
         $this->assertNotContains("membership/token", $uris);
     }
+
+    /**
+     * The /konto card sends `back=account`, and suma-crm gets the page's
+     * absolute URL to link back to.
+     */
+    public function testTheAccountPageIsCarriedAlongAsTheWayBack(): void
+    {
+        $location = $this->get("/de-DE/membership?back=account")->assertRedirect()->headers->get("Location");
+
+        parse_str(parse_url($location, PHP_URL_QUERY), $query);
+        $this->assertStringEndsWith("/de-DE/konto", $query["back"]);
+    }
+
+    public static function unknownWaysBack(): array
+    {
+        return [
+            "a foreign URL" => ["https://evil.example/"],
+            "a path" => ["/konto"],
+            "an unlisted route" => ["startpage"],
+            "nothing" => [""],
+        ];
+    }
+
+    /** Anything but a listed page is dropped, never passed on as a URL. */
+    #[\PHPUnit\Framework\Attributes\DataProvider("unknownWaysBack")]
+    public function testAnUnknownWayBackIsDropped(string $back): void
+    {
+        $this->get("/de-DE/membership?back=" . rawurlencode($back))
+            ->assertRedirect("https://crm.example.com/mitglied-werden?lang=de-DE");
+    }
 }

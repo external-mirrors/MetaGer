@@ -95,26 +95,13 @@ return [
             ],
 
             /**
-             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
-             * A non-profit may give nothing in return for a membership fee, so the
-             * text never says the fee pays for the key: members take part in the
-             * research the statutes name by searching, and that is why their key is
-             * topped up. `language` is shown everywhere but on the German interface.
+             * Membership, offered first and in every language
+             * ({@see \App\Support\MembershipOffer}). The form says the rest.
              */
             'membership' => [
                 'badge' => 'Il nostro consiglio',
                 'heading' => 'Diventi parte di MetaGer',
-                'text' => 'I nostri soci sostengono MetaGer. <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a>, l\'associazione senza scopo di lucro che lo gestisce, fa ricerca sulla tecnologia dei motori di ricerca, come previsto dal <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">suo statuto</a>. Questa ricerca ha bisogno di un motore di ricerca usato davvero, ogni giorno, e i nostri soci lo rendono tale cercando con MetaGer. Per questo la loro chiave viene ricaricata ogni mese, senza ulteriori costi.',
-                'points' => [
-                    'refill' => 'La sua chiave viene ricaricata ogni mese, senza ulteriori costi',
-                    'anonymous' => 'Grazie ai <a href=":url">token anonimi</a> cerca in modo anonimo, anche da socio',
-                    'amount' => 'L\'importo della quota lo decide lei, a partire da 5 € al mese',
-                    'vote' => 'Con il suo voto nell\'assemblea dei soci contribuisce alle scelte dell\'associazione',
-                ],
-                'language' => [
-                    'heading' => 'Buono a sapersi: le nostre assemblee si tengono in tedesco',
-                    'text' => 'Il modulo di iscrizione e l\'e-mail di benvenuto le arrivano nella sua lingua. Gli inviti all\'assemblea dei soci e i relativi verbali sono in tedesco, la lingua di lavoro dell\'associazione, e attualmente i soci li ricevono via e-mail. Nei prossimi mesi offriremo un\'iscrizione come socio sostenitore senza queste e-mail.',
-                ],
+                'text' => 'Come socio dell\'associazione senza scopo di lucro SUMA-EV, lei contribuisce a sostenere MetaGer.',
                 'action' => 'Diventare socio',
             ],
 

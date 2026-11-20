@@ -95,26 +95,13 @@ return [
             ],
 
             /**
-             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
-             * A non-profit may give nothing in return for a membership fee, so the
-             * text never says the fee pays for the key: members take part in the
-             * research the statutes name by searching, and that is why their key is
-             * topped up. `language` is shown everywhere but on the German interface.
+             * Membership, offered first and in every language
+             * ({@see \App\Support\MembershipOffer}). The form says the rest.
              */
             'membership' => [
                 'badge' => 'Ehdotuksemme',
                 'heading' => 'Tule osaksi MetaGeria',
-                'text' => 'Jäsenemme kannattelevat MetaGeria. Sen takana oleva voittoa tavoittelematon yhdistys <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> tutkii hakukoneteknologiaa, kuten <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">sääntöihin</a> on kirjattu. Tämä tutkimus tarvitsee hakukoneen todellisessa arkikäytössä, ja jäsenemme tekevät MetaGerista sellaisen hakemalla sillä. Siksi heidän avaimensa ladataan joka kuukausi ilman lisäkustannuksia.',
-                'points' => [
-                    'refill' => 'Avaimesi ladataan joka kuukausi ilman lisäkustannuksia',
-                    'anonymous' => '<a href=":url">Anonyymien tokenien</a> ansiosta haet anonyymisti myös jäsenenä',
-                    'amount' => 'Päätät itse jäsenmaksusi suuruuden, alkaen 5 € kuukaudessa',
-                    'vote' => 'Äänelläsi yhdistyksen kokouksessa olet mukana muovaamassa yhdistystä',
-                ],
-                'language' => [
-                    'heading' => 'Hyvä tietää: kokouksemme pidetään saksaksi',
-                    'text' => 'Liittymislomakkeen ja tervetuloviestin saat omalla kielelläsi. Kutsut yhdistyksen kokouksiin ja niiden pöytäkirjat ovat saksaksi, joka on yhdistyksen työkieli, ja jäsenet saavat ne tällä hetkellä sähköpostitse. Tulevina kuukausina tarjoamme kannatusjäsenyyden ilman näitä sähköposteja.',
-                ],
+                'text' => 'Voittoa tavoittelemattoman SUMA-EV:n jäsenenä olet mukana kannattelemassa MetaGeria.',
                 'action' => 'Liity jäseneksi',
             ],
 

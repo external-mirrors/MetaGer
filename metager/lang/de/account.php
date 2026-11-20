@@ -105,27 +105,13 @@ return [
 
             /**
              * Die Mitgliedschaft, zuerst und in jeder Sprache angeboten
-             * ({@see \App\Support\MembershipOffer}). Ein gemeinnütziger Verein darf
-             * für Mitgliedsbeiträge keine Gegenleistung erbringen, deshalb sagt der
-             * Text nie, der Beitrag bezahle den Schlüssel: Mitglieder nehmen durch
-             * ihre Suchen an der Forschung teil, die die Satzung nennt, und darum
-             * wird ihr Schlüssel aufgefüllt. `language` erscheint überall außer auf
-             * der deutschen Oberfläche.
+             * ({@see \App\Support\MembershipOffer}). Alles Weitere steht im
+             * Beitrittsformular.
              */
             'membership' => [
                 'badge' => 'Unser Vorschlag',
                 'heading' => 'Werden Sie Teil von MetaGer',
-                'text' => 'Unsere Mitglieder tragen MetaGer. Der gemeinnützige <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a> erforscht laut <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">Satzung</a> Suchmaschinentechnologie. Diese Forschung braucht eine Suchmaschine im echten Alltag, und unsere Mitglieder machen MetaGer dazu, indem sie damit suchen. Deshalb wird ihr Schlüssel jeden Monat aufgefüllt, ohne weitere Kosten.',
-                'points' => [
-                    'refill' => 'Ihr Schlüssel wird monatlich aufgefüllt, ohne weitere Kosten',
-                    'anonymous' => 'Dank <a href=":url">anonymer Token</a> suchen Sie auch als Mitglied anonym',
-                    'amount' => 'Die Höhe Ihres Beitrags bestimmen Sie selbst, ab 5 € im Monat',
-                    'vote' => 'Mit Ihrer Stimme in der Mitgliederversammlung gestalten Sie den Verein mit',
-                ],
-                'language' => [
-                    'heading' => 'Gut zu wissen: Unsere Versammlungen sind auf Deutsch',
-                    'text' => 'Beitrittsformular und Begrüßungsmail erhalten Sie in Ihrer Sprache. Einladungen zur Mitgliederversammlung und ihre Protokolle sind auf Deutsch, der Vereinssprache, und Mitglieder erhalten sie derzeit per E-Mail. In den kommenden Monaten bieten wir eine Fördermitgliedschaft ohne diese E-Mails an.',
-                ],
+                'text' => 'Als Mitglied im gemeinnützigen SUMA-EV tragen Sie MetaGer mit.',
                 'action' => 'Mitglied werden',
             ],
 

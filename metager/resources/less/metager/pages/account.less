@@ -276,53 +276,6 @@
     line-height: 1.55;
   }
 
-  // Links inside running text need more than colour to stand out: in the dark
-  // theme the orange link and the light text differ by 1.7:1 only.
-  .account-membership__text a,
-  .account-membership__points a {
-    text-decoration: underline;
-  }
-
-  .account-membership__points {
-    display: grid;
-    gap: 0.5rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    li {
-      position: relative;
-      padding-left: 1.6rem;
-      line-height: 1.45;
-
-      // Ein Haken aus zwei Rahmenkanten statt eines Icons: er erbt die
-      // Textfarbe und braucht in keinem Thema eine eigene Datei.
-      &::before {
-        content: "";
-        position: absolute;
-        left: 0.35rem;
-        top: 0.2em;
-        width: 0.4rem;
-        height: 0.75rem;
-        border-right: 2.5px solid currentColor;
-        border-bottom: 2.5px solid currentColor;
-        transform: rotate(45deg);
-      }
-    }
-  }
-
-  // Nur außerhalb der deutschen Oberfläche: was auf Deutsch bleibt.
-  .account-membership__language {
-    display: grid;
-    gap: 0.25rem;
-    padding: 0.8rem 1rem;
-    border: 1px solid @border-color;
-    border-radius: 10px;
-    background-color: @card-background-color;
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-
   // .account-btn wächst in einer Reihe mit `flex: 1 1 0`; hier steht er allein
   // im Raster und soll so breit sein wie seine Beschriftung.
   .account-membership__action {

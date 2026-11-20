@@ -95,26 +95,13 @@ return [
             ],
 
             /**
-             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
-             * A non-profit may give nothing in return for a membership fee, so the
-             * text never says the fee pays for the key: members take part in the
-             * research the statutes name by searching, and that is why their key is
-             * topped up. `language` is shown everywhere but on the German interface.
+             * Membership, offered first and in every language
+             * ({@see \App\Support\MembershipOffer}). The form says the rest.
              */
             'membership' => [
                 'badge' => 'Ons voorstel',
                 'heading' => 'Word deel van MetaGer',
-                'text' => 'Onze leden dragen MetaGer. <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a>, de non-profitvereniging erachter, doet onderzoek naar zoekmachinetechnologie, zoals vastgelegd in <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">de statuten</a>. Dat onderzoek heeft een zoekmachine nodig die echt, dagelijks wordt gebruikt, en onze leden maken MetaGer daartoe door ermee te zoeken. Daarom wordt hun sleutel elke maand opgeladen, zonder verdere kosten.',
-                'points' => [
-                    'refill' => 'Uw sleutel wordt elke maand opgeladen, zonder verdere kosten',
-                    'anonymous' => 'Dankzij <a href=":url">anonieme tokens</a> zoekt u ook als lid anoniem',
-                    'amount' => 'U bepaalt zelf de hoogte van uw contributie, vanaf € 5 per maand',
-                    'vote' => 'Met uw stem in de algemene ledenvergadering beslist u mee over de vereniging',
-                ],
-                'language' => [
-                    'heading' => 'Goed om te weten: onze vergaderingen zijn in het Duits',
-                    'text' => 'Het aanmeldformulier en de welkomstmail ontvangt u in uw taal. Uitnodigingen voor de algemene ledenvergadering en de notulen zijn in het Duits, de werktaal van de vereniging, en leden ontvangen ze momenteel per e-mail. In de komende maanden bieden we een steunlidmaatschap aan zonder deze e-mails.',
-                ],
+                'text' => 'Als lid van de non-profitvereniging SUMA-EV draagt u MetaGer mee.',
                 'action' => 'Lid worden',
             ],
 

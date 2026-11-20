@@ -131,19 +131,7 @@
 			<div class="account-membership" id="charge-membership">
 				<span class="account-membership__badge">@lang('account.page.charge.membership.badge')</span>
 				<h3 class="account-membership__heading">@lang('account.page.charge.membership.heading')</h3>
-				<p class="account-membership__text">{!! __('account.page.charge.membership.text') !!}</p>
-				<ul class="account-membership__points">
-					<li>@lang('account.page.charge.membership.points.refill')</li>
-					<li>{!! __('account.page.charge.membership.points.anonymous', ['url' => route('anonymous-token')]) !!}</li>
-					<li>@lang('account.page.charge.membership.points.amount')</li>
-					<li>@lang('account.page.charge.membership.points.vote')</li>
-				</ul>
-				@if(\App\Support\MembershipOffer::needsLanguageNotice())
-					<div class="account-membership__language">
-						<strong>@lang('account.page.charge.membership.language.heading')</strong>
-						<span>@lang('account.page.charge.membership.language.text')</span>
-					</div>
-				@endif
+				<p class="account-membership__text">@lang('account.page.charge.membership.text')</p>
 				<a class="account-btn account-btn--primary account-membership__action" href="{{ $membershipUrl }}">@lang('account.page.charge.membership.action')</a>
 			</div>
 

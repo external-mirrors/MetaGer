@@ -19,6 +19,9 @@ use Illuminate\Http\Request;
  */
 class MembershipController extends Controller
 {
+    /** Pages the form may send a visitor back to. */
+    private const BACK_ROUTES = ["account"];
+
     /**
      * `$application_id` is accepted and ignored: resume links in mails the
      * legacy form sent out still carry one, and they should land where a new
@@ -43,6 +46,11 @@ class MembershipController extends Controller
      * back to the app from its thanks page (App\Keys\AppCallback there,
      * {@see AppCallback} here). Dropped, the key an app user gets with their
      * membership never reaches the app.
+     *
+     * `?back=` names the page the form's "back to MetaGer" link returns to,
+     * as one of {@see self::BACK_ROUTES}. suma-crm gets the absolute URL,
+     * built here, so it never sees a route name and only ever has to check
+     * that the URL is on a MetaGer host.
      */
     public function form(Request $request, ?string $application_id = null)
     {
@@ -54,6 +62,11 @@ class MembershipController extends Controller
         }
 
         $params += AppCallback::markers($request);
+
+        $back = $request->query("back");
+        if (is_string($back) && in_array($back, self::BACK_ROUTES, true)) {
+            $params["back"] = route($back);
+        }
 
         return redirect()->away(config("metager.metager.crm.url") . "/mitglied-werden?" . http_build_query($params));
     }

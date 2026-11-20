@@ -187,7 +187,7 @@ final class AccountController extends Controller
                 "loginCodeUrl" => route("account.logincode", [], false),
                 "searchUrl" => route("startpage"),
                 "helpUrl" => route("key-faq"),
-                "membershipUrl" => route("membership_form"),
+                "membershipUrl" => route("membership_form", ["back" => "account"]),
             ])
             // Auf dieser Seite steht ein Guthaben und ein Weg zum Schlüssel.
             // Nichts davon gehört in einen Cache, weder in einen gemeinsamen

@@ -95,26 +95,13 @@ return [
             ],
 
             /**
-             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
-             * A non-profit may give nothing in return for a membership fee, so the
-             * text never says the fee pays for the key: members take part in the
-             * research the statutes name by searching, and that is why their key is
-             * topped up. `language` is shown everywhere but on the German interface.
+             * Membership, offered first and in every language
+             * ({@see \App\Support\MembershipOffer}). The form says the rest.
              */
             'membership' => [
                 'badge' => 'Our suggestion',
                 'heading' => 'Become part of MetaGer',
-                'text' => 'Our members carry MetaGer. <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a>, the non-profit behind it, researches search engine technology, as set out in <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">its statutes</a>. That research needs a search engine in real, everyday use, and our members make MetaGer one by searching with it. That is why their key is topped up every month at no further cost.',
-                'points' => [
-                    'refill' => 'Your key is topped up every month at no further cost',
-                    'anonymous' => 'With <a href=":url">anonymous tokens</a> you search anonymously, even as a member',
-                    'amount' => 'You decide the amount of your membership fee yourself, from €5 a month',
-                    'vote' => 'With your vote in the general meeting, you help shape the association',
-                ],
-                'language' => [
-                    'heading' => 'Good to know: our meetings are held in German',
-                    'text' => 'The membership form and your welcome email come in your language. Invitations to our general meetings and their minutes are in German, the association\'s working language, and members currently receive them by email. In the coming months we will offer a supporting membership without these emails.',
-                ],
+                'text' => 'As a member of the non-profit SUMA-EV, you help carry MetaGer.',
                 'action' => 'Become a member',
             ],
 

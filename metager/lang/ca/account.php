@@ -95,26 +95,13 @@ return [
             ],
 
             /**
-             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
-             * A non-profit may give nothing in return for a membership fee, so the
-             * text never says the fee pays for the key: members take part in the
-             * research the statutes name by searching, and that is why their key is
-             * topped up. `language` is shown everywhere but on the German interface.
+             * Membership, offered first and in every language
+             * ({@see \App\Support\MembershipOffer}). The form says the rest.
              */
             'membership' => [
                 'badge' => 'La nostra proposta',
                 'heading' => 'Formi part de MetaGer',
-                'text' => 'Els nostres socis sostenen MetaGer. <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a>, l\'associació sense ànim de lucre que hi ha al darrere, investiga la tecnologia dels cercadors, tal com estableixen <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">els seus estatuts</a>. Aquesta recerca necessita un cercador en ús real i quotidià, i els nostres socis el fan possible cercant amb MetaGer. Per això la seva clau es recarrega cada mes, sense cap cost addicional.',
-                'points' => [
-                    'refill' => 'La seva clau es recarrega cada mes, sense cap cost addicional',
-                    'anonymous' => 'Amb els <a href=":url">tokens anònims</a> cerca de manera anònima, també com a soci',
-                    'amount' => 'L\'import de la quota el decideix vostè, a partir de 5 € al mes',
-                    'vote' => 'Amb el seu vot a l\'assemblea general, ajuda a decidir el futur de l\'associació',
-                ],
-                'language' => [
-                    'heading' => 'Bo de saber: les nostres assemblees són en alemany',
-                    'text' => 'El formulari d\'alta i el correu de benvinguda li arriben en el seu idioma. Les convocatòries de l\'assemblea general i les actes són en alemany, la llengua de treball de l\'associació, i actualment els socis les reben per correu electrònic. En els propers mesos oferirem una modalitat de soci col·laborador sense aquests correus.',
-                ],
+                'text' => 'Com a soci de l\'associació sense ànim de lucre SUMA-EV, vostè ajuda a sostenir MetaGer.',
                 'action' => 'Fer-se soci',
             ],
 

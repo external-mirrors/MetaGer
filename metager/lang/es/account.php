@@ -95,26 +95,13 @@ return [
             ],
 
             /**
-             * Membership, offered first and in every language ({@see \App\Support\MembershipOffer}).
-             * A non-profit may give nothing in return for a membership fee, so the
-             * text never says the fee pays for the key: members take part in the
-             * research the statutes name by searching, and that is why their key is
-             * topped up. `language` is shown everywhere but on the German interface.
+             * Membership, offered first and in every language
+             * ({@see \App\Support\MembershipOffer}). The form says the rest.
              */
             'membership' => [
                 'badge' => 'Nuestra propuesta',
                 'heading' => 'Forme parte de MetaGer',
-                'text' => 'Nuestros socios sostienen MetaGer. <a href="https://suma-ev.de" target="_blank" rel="noopener">SUMA-EV</a>, la asociación sin ánimo de lucro que lo gestiona, investiga la tecnología de los buscadores, tal como recogen <a href="https://suma-ev.de/satzung" target="_blank" rel="noopener">sus estatutos</a>. Esa investigación necesita un buscador en uso real y cotidiano, y nuestros socios lo hacen posible buscando con MetaGer. Por eso su clave se recarga cada mes, sin coste adicional.',
-                'points' => [
-                    'refill' => 'Su clave se recarga cada mes, sin coste adicional',
-                    'anonymous' => 'Con los <a href=":url">tokens anónimos</a> busca de forma anónima, también como socio',
-                    'amount' => 'Usted decide el importe de su cuota, a partir de 5 € al mes',
-                    'vote' => 'Con su voto en la asamblea general, participa en las decisiones de la asociación',
-                ],
-                'language' => [
-                    'heading' => 'Bueno saberlo: nuestras asambleas son en alemán',
-                    'text' => 'El formulario de alta y el correo de bienvenida le llegan en su idioma. Las convocatorias de la asamblea general y sus actas están en alemán, el idioma de trabajo de la asociación, y actualmente los socios las reciben por correo electrónico. En los próximos meses ofreceremos una modalidad de socio colaborador sin estos correos.',
-                ],
+                'text' => 'Como socio de la asociación sin ánimo de lucro SUMA-EV, usted ayuda a sostener MetaGer.',
                 'action' => 'Hacerse socio',
             ],
 

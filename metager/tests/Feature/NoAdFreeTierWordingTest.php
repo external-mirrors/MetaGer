@@ -8,8 +8,7 @@ use PHPUnit\Framework\TestCase;
  * MetaGer once offered search with ads for free and without ads for a key.
  * That tier is gone: every search needs a key now. Copy that says the key,
  * or membership, makes the search "ad-free" promises a difference that no
- * longer exists, and for membership it reads like a return for the fee, which
- * a non-profit may not give.
+ * longer exists.
  *
  * What stays is listed nowhere here on purpose: the tagline and the landing
  * page's "no ads" block and the feature list on /about say MetaGer has no ads

@@ -261,13 +261,7 @@ class MembershipAdvertisingTest extends TestCase
     }
 
     /**
-     * Die Hilfe zum Schlüssel sagte, die Höhe der monatlichen Aufladung hänge
-     * von der Höhe des Mitgliedsbeitrags ab — das liest sich als Gegenleistung
-     * für den Beitrag, die ein gemeinnütziger Verein nicht erbringen darf. Die
-     * Antwort begründet die Aufladung jetzt wie die Karte auf /konto und
-     * verlinkt das Beitrittsformular.
-     *
-     * Auf Englisch geprüft, weil dort das Seitenmenü nicht ins Formular
+     * Die Hilfe zum Schlüssel verlinkt das Beitrittsformular. Auf Englisch geprüft, weil dort das Seitenmenü nicht ins Formular
      * verlinkt: der Link kann also nur aus der Antwort stammen.
      */
     public function testTheKeyHelpDoesNotTieTheRefillToTheFee(): void

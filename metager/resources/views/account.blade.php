@@ -124,16 +124,9 @@
 			<p class="account-section__lede">@lang('account.page.charge.lede')</p>
 
 			{{--
-				Die Mitgliedschaft zuerst, das Paket als Alternative: wer hier
-				aufladen will, soll beides kennen, bevor er bezahlt, und der Verein
-				empfiehlt das eine. Der Text sagt mit Absicht nicht, der Beitrag
-				*bezahle* den Schlüssel — ein gemeinnütziger Verein darf für
-				Mitgliedsbeiträge keine Gegenleistung erbringen. Der Schlüssel
-				folgt daraus, dass Mitglieder durch ihre Nutzung an der Forschung
-				teilnehmen, die die Satzung als Zweck nennt.
-
-				In jeder Sprache, anders als die übrigen Hinweise auf die
-				Mitgliedschaft — siehe App\Support\MembershipOffer.
+				Die Mitgliedschaft zuerst, das Paket als Alternative. In jeder
+				Sprache, anders als die übrigen Hinweise auf die Mitgliedschaft,
+				siehe App\Support\MembershipOffer.
 			--}}
 			<div class="account-membership" id="charge-membership">
 				<span class="account-membership__badge">@lang('account.page.charge.membership.badge')</span>

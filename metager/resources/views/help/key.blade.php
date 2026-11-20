@@ -19,6 +19,7 @@
 		"keylink" => App\Landing\KeymanagerLinks::login(),
 		"voucherlink" => App\Landing\KeymanagerLinks::voucher(),
 		"contactlink" => LaravelLocalization::getLocalizedURL(null, "/kontakt"),
+		"membershiplink" => route("membership_form"),
 	];
 @endphp
 <div id="key-faq">

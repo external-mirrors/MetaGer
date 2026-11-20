@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Vull recarregar la clau de MetaGer automàticament. Com es fa?",
-            "description" => "Als nostres membres, la clau inclosa en l'afiliació se'ls recarrega automàticament cada mes. La quantitat de fitxes depèn de la quota d'afiliació pagada.",
+            "description" => "Faci's <a href=\":membershiplink\">soci de SUMA-EV</a>. L'associació sense ànim de lucre investiga la tecnologia dels cercadors, tal com estableixen els seus estatuts, i aquesta recerca necessita un cercador en ús real i quotidià. Els nostres socis hi contribueixen cercant amb MetaGer. Per això la seva clau es recarrega automàticament cada mes, sense cap cost addicional.",
         ],
         [
             "summary" => "He rebut una targeta o un enllaç amb un codi de val. Què n'he de fer?",

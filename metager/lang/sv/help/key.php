@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Jag skulle vilja ladda min MetaGer-nyckel automatiskt. Hur gör jag det?",
-            "description" => "För våra medlemmar fylls den nyckel som ingår i medlemskapet automatiskt på varje månad. Mängden token här beror på den medlemsavgift som betalats.",
+            "description" => "Bli <a href=\":membershiplink\">medlem i SUMA-EV</a>. Den ideella föreningen forskar om sökmotorteknik, så som det står i stadgarna, och den forskningen behöver en sökmotor i verklig, daglig användning. Våra medlemmar bidrar genom att söka med MetaGer. Därför fylls deras nyckel automatiskt på varje månad utan ytterligare kostnad.",
         ],
         [
             "summary" => "Jag har fått ett kort eller en länk med en presentkod. Vad gör jag med den?",

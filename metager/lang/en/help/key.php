@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "I would like to charge my MetaGer key automatically. How to do it?",
-            "description" => "For our members, the key included in the membership is automatically topped up on a monthly basis. The amount of token here depends on the membership fee paid.",
+            "description" => "Become a <a href=\":membershiplink\">member of SUMA-EV</a>. The non-profit association researches search engine technology, as set out in its statutes, and that research needs a search engine in real, everyday use. Our members contribute by searching with MetaGer. That is why their key is topped up automatically every month, at no further cost.",
         ],
         [
             "summary" => "I received a card or a link with a voucher code. What do I do with it?",

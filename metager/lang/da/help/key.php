@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Jeg vil gerne oplade min MetaGer-nøgle automatisk. Hvordan gør jeg det?",
-            "description" => "For vores medlemmer bliver den nøgle, der er inkluderet i medlemskabet, automatisk fyldt op hver måned. Mængden af token afhænger af det betalte medlemsgebyr.",
+            "description" => "Bliv <a href=\":membershiplink\">medlem af SUMA-EV</a>. Den almennyttige forening forsker i søgemaskineteknologi, som det står i vedtægterne, og den forskning kræver en søgemaskine i virkelig, daglig brug. Vores medlemmer bidrager ved at søge med MetaGer. Derfor fyldes deres nøgle automatisk op hver måned uden yderligere omkostninger.",
         ],
         [
             "summary" => "Jeg har modtaget et kort eller et link med en gavekode. Hvad gør jeg med det?",

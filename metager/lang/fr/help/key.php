@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Je souhaite charger automatiquement ma clé MetaGer. Comment faire ?",
-            "description" => "Pour nos membres, la clé incluse dans l'adhésion est automatiquement rechargée tous les mois. Le montant du jeton dépend de la cotisation payée.",
+            "description" => "Devenez <a href=\":membershiplink\">membre de SUMA-EV</a>. L'association à but non lucratif mène des recherches sur la technologie des moteurs de recherche, comme le prévoient ses statuts, et ces recherches ont besoin d'un moteur de recherche utilisé au quotidien, en conditions réelles. Nos membres y contribuent en cherchant avec MetaGer. C'est pourquoi leur clé est rechargée automatiquement chaque mois, sans frais supplémentaires.",
         ],
         [
             "summary" => "J'ai reçu une carte ou un lien avec un code de bon. Qu'en faire ?",

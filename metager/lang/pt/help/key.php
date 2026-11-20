@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Gostaria que a minha chave MetaGer fosse carregada automaticamente. Como faço?",
-            "description" => "Aos nossos membros, a chave incluída na quota é carregada automaticamente todos os meses. O número de tokens depende do valor da quota paga.",
+            "description" => "Torne-se <a href=\":membershiplink\">sócio da SUMA-EV</a>. A associação sem fins lucrativos investiga a tecnologia dos motores de busca, como está previsto nos seus estatutos, e essa investigação precisa de um motor de busca em uso real e quotidiano. Os nossos sócios contribuem ao pesquisar com o MetaGer. Por isso, a chave deles é carregada automaticamente todos os meses, sem custos adicionais.",
         ],
         [
             "summary" => "Recebi um cartão ou uma ligação com um código promocional. O que faço com ele?",

@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Vorrei caricare automaticamente la mia chiave MetaGer. Come fare?",
-            "description" => "Per i nostri membri, la chiave inclusa nell'iscrizione viene automaticamente ricaricata su base mensile. L'importo del gettone dipende dalla quota associativa versata.",
+            "description" => "Diventi <a href=\":membershiplink\">socio di SUMA-EV</a>. L'associazione senza scopo di lucro fa ricerca sulla tecnologia dei motori di ricerca, come previsto dal suo statuto, e questa ricerca ha bisogno di un motore di ricerca usato davvero, ogni giorno. I nostri soci contribuiscono cercando con MetaGer. Per questo la loro chiave viene ricaricata automaticamente ogni mese, senza ulteriori costi.",
         ],
         [
             "summary" => "Ho ricevuto una tessera o un link con un codice buono. Che cosa devo farne?",

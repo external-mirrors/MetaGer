@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Ich möchte meinen MetaGer-Schlüssel automatisch aufladen lassen. Wie kann ich das tun?",
-            "description" => "Für unsere Mitglieder wird der in der Mitgliedschaft enthaltene Schlüssel automatisch monatlich aufgefüllt. Die Höhe des Tokens hängt dabei von der Höhe des Mitgliedsbeitrags ab.",
+            "description" => "Werden Sie <a href=\":membershiplink\">Mitglied im SUMA-EV</a>. Der gemeinnützige Verein erforscht laut Satzung Suchmaschinentechnologie, und diese Forschung braucht eine Suchmaschine im echten Alltag. Unsere Mitglieder tragen dazu bei, indem sie mit MetaGer suchen. Deshalb wird ihr Schlüssel jeden Monat automatisch aufgefüllt, ohne weitere Kosten.",
         ],
         [
             "summary" => "Ich habe eine Karte oder einen Link mit einem Gutschein-Code erhalten. Was mache ich damit?",

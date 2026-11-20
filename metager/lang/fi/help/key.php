@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Haluaisin ladata MetaGer-avaimeni automaattisesti. Miten se tehdään?",
-            "description" => "Jäsenillemme jäsenyyteen sisältyvä avain täydennetään automaattisesti kuukausittain. Avaimen määrä riippuu tässä tapauksessa maksetusta jäsenmaksusta.",
+            "description" => "Liity <a href=\":membershiplink\">SUMA-EV:n jäseneksi</a>. Voittoa tavoittelematon yhdistys tutkii hakukoneteknologiaa, kuten sääntöihin on kirjattu, ja tämä tutkimus tarvitsee hakukoneen todellisessa arkikäytössä. Jäsenemme osallistuvat hakemalla MetaGerilla. Siksi heidän avaimensa ladataan automaattisesti joka kuukausi ilman lisäkustannuksia.",
         ],
         [
             "summary" => "Sain kortin tai linkin, jossa on lahjakoodi. Mitä teen sillä?",

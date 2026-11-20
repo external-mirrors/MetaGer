@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Me gustaría cargar mi llave MetaGer automáticamente. ¿Cómo hacerlo?",
-            "description" => "Para nuestros miembros, la clave incluida en la afiliación se recarga automáticamente cada mes. La cantidad de fichas depende de la cuota de afiliación pagada.",
+            "description" => "Hágase <a href=\":membershiplink\">socio de SUMA-EV</a>. La asociación sin ánimo de lucro investiga la tecnología de los buscadores, tal como recogen sus estatutos, y esa investigación necesita un buscador en uso real y cotidiano. Nuestros socios contribuyen buscando con MetaGer. Por eso su clave se recarga automáticamente cada mes, sin coste adicional.",
         ],
         [
             "summary" => "He recibido una tarjeta o un enlace con un código de vale. ¿Qué hago con él?",

@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Ik wil mijn MetaGer-sleutel automatisch opladen. Hoe doe ik dat?",
-            "description" => "Voor onze leden wordt de sleutel die bij het lidmaatschap hoort maandelijks automatisch aangevuld. De hoeveelheid token is afhankelijk van het betaalde lidmaatschapsgeld.",
+            "description" => "Word <a href=\":membershiplink\">lid van SUMA-EV</a>. De non-profitvereniging doet onderzoek naar zoekmachinetechnologie, zoals vastgelegd in de statuten, en dat onderzoek heeft een zoekmachine nodig die echt, dagelijks wordt gebruikt. Onze leden dragen bij door met MetaGer te zoeken. Daarom wordt hun sleutel elke maand automatisch opgeladen, zonder verdere kosten.",
         ],
         [
             "summary" => "Ik heb een kaart of een link met een vouchercode gekregen. Wat doe ik daarmee?",

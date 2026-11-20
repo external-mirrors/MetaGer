@@ -259,4 +259,26 @@ class MembershipAdvertisingTest extends TestCase
             ->assertSee("account-tiers", false)
             ->assertDontSee("account-section__more", false);
     }
+
+    /**
+     * Die Hilfe zum Schlüssel sagte, die Höhe der monatlichen Aufladung hänge
+     * von der Höhe des Mitgliedsbeitrags ab — das liest sich als Gegenleistung
+     * für den Beitrag, die ein gemeinnütziger Verein nicht erbringen darf. Die
+     * Antwort begründet die Aufladung jetzt wie die Karte auf /konto und
+     * verlinkt das Beitrittsformular.
+     *
+     * Auf Englisch geprüft, weil dort das Seitenmenü nicht ins Formular
+     * verlinkt: der Link kann also nur aus der Antwort stammen.
+     */
+    public function testTheKeyHelpDoesNotTieTheRefillToTheFee(): void
+    {
+        $this->get("/hilfe/schluessel", self::speaking("en-US,en"))
+            ->assertOk()
+            ->assertSee(route("membership_form"), false)
+            ->assertDontSeeText("depends on the membership fee");
+
+        $this->get("/hilfe/schluessel", self::speaking("de-DE,de"))
+            ->assertOk()
+            ->assertDontSeeText("von der Höhe des Mitgliedsbeitrags ab");
+    }
 }

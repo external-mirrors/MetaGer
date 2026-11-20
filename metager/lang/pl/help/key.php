@@ -71,7 +71,7 @@ return [
         ],
         [
             "summary" => "Chciałbym automatycznie naładować mój klucz MetaGer. Jak to zrobić?",
-            "description" => "W przypadku naszych członków klucz zawarty w członkostwie jest automatycznie doładowywany co miesiąc. Ilość tokenów zależy od uiszczonej opłaty członkowskiej.",
+            "description" => "Zostań <a href=\":membershiplink\">członkiem SUMA-EV</a>. Stowarzyszenie non-profit prowadzi badania nad technologią wyszukiwarek, tak jak przewiduje to statut, a te badania potrzebują wyszukiwarki w prawdziwym, codziennym użyciu. Nasi członkowie przyczyniają się do tego, wyszukując z MetaGer. Dlatego ich klucz jest automatycznie doładowywany co miesiąc, bez dalszych kosztów.",
         ],
         [
             "summary" => "Otrzymałem kartę lub link z kodem podarunkowym. Co mam z tym zrobić?",

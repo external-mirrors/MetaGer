@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'La sua chiave viene ricaricata ogni mese, senza ulteriori costi',
                     'anonymous' => 'Grazie ai <a href=":url">token anonimi</a> cerca in modo anonimo, anche da socio',
-                    'amount' => 'L\'importo della quota lo decide lei',
+                    'amount' => 'L\'importo della quota lo decide lei, a partire da 5 € al mese',
                     'vote' => 'Con il suo voto nell\'assemblea dei soci contribuisce alle scelte dell\'associazione',
                 ],
                 'language' => [

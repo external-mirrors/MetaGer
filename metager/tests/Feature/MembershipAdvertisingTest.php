@@ -179,6 +179,10 @@ class MembershipAdvertisingTest extends TestCase
         // suche“ — die Hilfeseite dazu ist verlinkt.
         $response->assertSee("/hilfe/anonyme-token", false);
 
+        // Der Mindestbeitrag steht dabei, damit niemand erst ins Formular muss,
+        // um zu erfahren, was eine Mitgliedschaft mindestens kostet.
+        $response->assertSeeText("ab 5 € im Monat");
+
         // Deutsch ist die Vereinssprache, hier gibt es nichts anzumerken.
         $response->assertDontSee("account-membership__language", false);
     }

@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'A sua chave é carregada todos os meses, sem custos adicionais',
                     'anonymous' => 'Com os <a href=":url">tokens anónimos</a> pesquisa de forma anónima, também como sócio',
-                    'amount' => 'É você quem decide o valor da sua quota',
+                    'amount' => 'É você quem decide o valor da sua quota, a partir de 5 € por mês',
                     'vote' => 'Com o seu voto na assembleia geral, participa nas decisões da associação',
                 ],
                 'language' => [

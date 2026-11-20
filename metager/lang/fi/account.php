@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'Avaimesi ladataan joka kuukausi ilman lisäkustannuksia',
                     'anonymous' => '<a href=":url">Anonyymien tokenien</a> ansiosta haet anonyymisti myös jäsenenä',
-                    'amount' => 'Päätät itse jäsenmaksusi suuruuden',
+                    'amount' => 'Päätät itse jäsenmaksusi suuruuden, alkaen 5 € kuukaudessa',
                     'vote' => 'Äänelläsi yhdistyksen kokouksessa olet mukana muovaamassa yhdistystä',
                 ],
                 'language' => [

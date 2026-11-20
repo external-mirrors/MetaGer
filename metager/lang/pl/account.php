@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'Twój klucz jest doładowywany co miesiąc, bez dalszych kosztów',
                     'anonymous' => 'Dzięki <a href=":url">anonimowym tokenom</a> wyszukujesz anonimowo, także jako członek',
-                    'amount' => 'Wysokość składki ustalasz sam',
+                    'amount' => 'Wysokość składki ustalasz sam, od 5 € miesięcznie',
                     'vote' => 'Swoim głosem na walnym zgromadzeniu współdecydujesz o stowarzyszeniu',
                 ],
                 'language' => [

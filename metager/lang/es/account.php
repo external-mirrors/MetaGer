@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'Su clave se recarga cada mes, sin coste adicional',
                     'anonymous' => 'Con los <a href=":url">tokens anónimos</a> busca de forma anónima, también como socio',
-                    'amount' => 'Usted decide el importe de su cuota',
+                    'amount' => 'Usted decide el importe de su cuota, a partir de 5 € al mes',
                     'vote' => 'Con su voto en la asamblea general, participa en las decisiones de la asociación',
                 ],
                 'language' => [

@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'Votre clé est rechargée chaque mois, sans frais supplémentaires',
                     'anonymous' => 'Grâce aux <a href=":url">jetons anonymes</a>, vous cherchez de manière anonyme, même en tant que membre',
-                    'amount' => 'Vous fixez vous-même le montant de votre cotisation',
+                    'amount' => 'Vous fixez vous-même le montant de votre cotisation, à partir de 5 € par mois',
                     'vote' => 'Avec votre voix à l\'assemblée générale, vous participez aux décisions de l\'association',
                 ],
                 'language' => [

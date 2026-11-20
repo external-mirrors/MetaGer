@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'Your key is topped up every month at no further cost',
                     'anonymous' => 'With <a href=":url">anonymous tokens</a> you search anonymously, even as a member',
-                    'amount' => 'You decide the amount of your membership fee yourself',
+                    'amount' => 'You decide the amount of your membership fee yourself, from €5 a month',
                     'vote' => 'With your vote in the general meeting, you help shape the association',
                 ],
                 'language' => [

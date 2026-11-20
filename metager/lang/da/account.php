@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'Din nøgle fyldes op hver måned uden yderligere omkostninger',
                     'anonymous' => 'Med <a href=":url">anonyme tokens</a> søger du anonymt, også som medlem',
-                    'amount' => 'Du bestemmer selv størrelsen på dit kontingent',
+                    'amount' => 'Du bestemmer selv størrelsen på dit kontingent, fra 5 € om måneden',
                     'vote' => 'Med din stemme på generalforsamlingen er du med til at forme foreningen',
                 ],
                 'language' => [

@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'Uw sleutel wordt elke maand opgeladen, zonder verdere kosten',
                     'anonymous' => 'Dankzij <a href=":url">anonieme tokens</a> zoekt u ook als lid anoniem',
-                    'amount' => 'U bepaalt zelf de hoogte van uw contributie',
+                    'amount' => 'U bepaalt zelf de hoogte van uw contributie, vanaf € 5 per maand',
                     'vote' => 'Met uw stem in de algemene ledenvergadering beslist u mee over de vereniging',
                 ],
                 'language' => [

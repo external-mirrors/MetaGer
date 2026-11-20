@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'La seva clau es recarrega cada mes, sense cap cost addicional',
                     'anonymous' => 'Amb els <a href=":url">tokens anònims</a> cerca de manera anònima, també com a soci',
-                    'amount' => 'L\'import de la quota el decideix vostè',
+                    'amount' => 'L\'import de la quota el decideix vostè, a partir de 5 € al mes',
                     'vote' => 'Amb el seu vot a l\'assemblea general, ajuda a decidir el futur de l\'associació',
                 ],
                 'language' => [

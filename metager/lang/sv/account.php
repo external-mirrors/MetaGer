@@ -109,7 +109,7 @@ return [
                 'points' => [
                     'refill' => 'Din nyckel fylls på varje månad utan ytterligare kostnad',
                     'anonymous' => 'Med <a href=":url">anonyma tokens</a> söker du anonymt, även som medlem',
-                    'amount' => 'Du bestämmer själv hur stor din medlemsavgift är',
+                    'amount' => 'Du bestämmer själv hur stor din medlemsavgift är, från 5 € i månaden',
                     'vote' => 'Med din röst på årsmötet är du med och formar föreningen',
                 ],
                 'language' => [

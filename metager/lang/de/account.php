@@ -120,7 +120,7 @@ return [
                 'points' => [
                     'refill' => 'Ihr Schlüssel wird monatlich aufgefüllt, ohne weitere Kosten',
                     'anonymous' => 'Dank <a href=":url">anonymer Token</a> suchen Sie auch als Mitglied anonym',
-                    'amount' => 'Die Höhe Ihres Beitrags bestimmen Sie selbst',
+                    'amount' => 'Die Höhe Ihres Beitrags bestimmen Sie selbst, ab 5 € im Monat',
                     'vote' => 'Mit Ihrer Stimme in der Mitgliederversammlung gestalten Sie den Verein mit',
                 ],
                 'language' => [

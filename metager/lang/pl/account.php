@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => 'Moje konto – zalogowano anonimowo przez rozszerzenie przeglądarki',
     ],
     'sidebar' => [
-        'balance' => ':charge Token · bez reklam',
-        // Not "0 Token · …": at zero the searches are not ad-free, they do
-        // not happen at all.
+        'balance' => ':charge Token',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'Brak Token',
         'manage' => 'Zarządzaj',
         'topup' => 'Doładuj',
         'logout' => 'Wyloguj się',
         'login' => 'Zaloguj się',
         'create' => 'Skonfiguruj',
-        'logged_out' => 'Nie zalogowano. Z kluczem szukasz bez reklam i anonimowo.',
-        'anonymous_hint' => 'Bez reklam · zarządzane przez rozszerzenie przeglądarki',
+        'logged_out' => 'Nie zalogowano. Z kluczem szukasz anonimowo.',
+        'anonymous_hint' => 'Zarządzane przez rozszerzenie przeglądarki',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => 'Zarządzaj w rozszerzeniu',

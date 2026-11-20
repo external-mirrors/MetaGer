@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => "El meu compte – sessió iniciada anònimament amb l'extensió web",
     ],
     'sidebar' => [
-        'balance' => ':charge fitxes · sense publicitat',
-        // Not "0 fitxes · sense publicitat": at zero the searches are not
-        // ad-free, they do not happen at all.
+        'balance' => ':charge fitxes',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'No queden fitxes',
         'manage' => 'Gestiona',
         'topup' => 'Recarrega',
         'logout' => 'Tanca la sessió',
         'login' => 'Inicia la sessió',
         'create' => 'Configura',
-        'logged_out' => 'No heu iniciat la sessió. Amb una clau cerqueu sense publicitat i de manera anònima.',
-        'anonymous_hint' => "Sense publicitat · gestionat per l'extensió web",
+        'logged_out' => 'No heu iniciat la sessió. Amb una clau cerqueu de manera anònima.',
+        'anonymous_hint' => 'Gestionat per l\'extensió web',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => "Gestiona a l'extensió",

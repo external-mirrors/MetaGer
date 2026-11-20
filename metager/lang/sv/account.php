@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => 'Mitt konto – inloggad anonymt via webbtillägget',
     ],
     'sidebar' => [
-        'balance' => ':charge Token · annonsfritt',
-        // Not "0 Token · …": at zero the searches are not ad-free, they do
-        // not happen at all.
+        'balance' => ':charge Token',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'Inga Token kvar',
         'manage' => 'Hantera',
         'topup' => 'Fyll på',
         'logout' => 'Logga ut',
         'login' => 'Logga in',
         'create' => 'Kom igång',
-        'logged_out' => 'Inte inloggad. Med en nyckel söker du annonsfritt och anonymt.',
-        'anonymous_hint' => 'Annonsfritt · hanteras av webbtillägget',
+        'logged_out' => 'Inte inloggad. Med en nyckel söker du anonymt.',
+        'anonymous_hint' => 'Hanteras av webbtillägget',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => 'Hantera i tillägget',

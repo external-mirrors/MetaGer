@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => "Il mio account – connesso in modo anonimo tramite l'estensione web",
     ],
     'sidebar' => [
-        'balance' => ':charge Token · senza pubblicità',
-        // Not "0 Token · …": at zero the searches are not ad-free, they do
-        // not happen at all.
+        'balance' => ':charge Token',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'Token esauriti',
         'manage' => 'Gestisci',
         'topup' => 'Ricarica',
         'logout' => 'Esci',
         'login' => 'Accedi',
         'create' => 'Configura',
-        'logged_out' => "Non hai effettuato l'accesso. Con una chiave cerchi senza pubblicità e in modo anonimo.",
-        'anonymous_hint' => "Senza pubblicità · gestito dall'estensione web",
+        'logged_out' => 'Non hai effettuato l\'accesso. Con una chiave cerchi in modo anonimo.',
+        'anonymous_hint' => 'Gestito dall\'estensione web',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => "Gestisci nell'estensione",

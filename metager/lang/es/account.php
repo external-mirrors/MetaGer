@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => 'Mi cuenta – sesión iniciada de forma anónima con la extensión web',
     ],
     'sidebar' => [
-        'balance' => ':charge fichas · sin publicidad',
-        // Not "0 fichas · …": at zero the searches are not ad-free, they do
-        // not happen at all.
+        'balance' => ':charge fichas',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'No quedan fichas',
         'manage' => 'Gestionar',
         'topup' => 'Recargar',
         'logout' => 'Cerrar sesión',
         'login' => 'Iniciar sesión',
         'create' => 'Configurar',
-        'logged_out' => 'No ha iniciado sesión. Con una clave busca sin publicidad y de forma anónima.',
-        'anonymous_hint' => 'Sin publicidad · gestionado por la extensión web',
+        'logged_out' => 'No ha iniciado sesión. Con una clave busca de forma anónima.',
+        'anonymous_hint' => 'Gestionado por la extensión web',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => 'Gestionar en la extensión',

@@ -34,6 +34,9 @@ class AccountTranslationsTest extends TestCase
     private const FILES = ["account.php", "index.php", "sidebar.php"];
 
     /** Every `:placeholder` Laravel would replace in a translation string. */
+    /** "ad-free" in each of the twelve account catalogues. */
+    private const ADS_PATTERN = '/werbe|ad-free|publicit|publicidad|pubblicit|reklam|mainok|advertentie|annons/iu';
+
     private const PLACEHOLDER_PATTERN = '/(?<![\w:]):[a-zA-Z_][a-zA-Z0-9_]*/';
 
     public function testEveryLocaleTranslatesEveryAccountString(): void
@@ -100,6 +103,26 @@ class AccountTranslationsTest extends TestCase
     }
 
     /** The base locales: real directories, not the regional symlinks. */
+    /**
+     * MetaGer offered searches with and without ads once; it does not any more,
+     * so "ad-free" next to a balance promises a difference that no longer
+     * exists. Checked in every language, because it was in every language.
+     */
+    public function testTheAccountSidebarNoLongerPromisesAdFreeSearch(): void
+    {
+        $problems = [];
+
+        foreach ([...$this->locales(), self::BASE_LOCALE] as $locale) {
+            foreach ($this->strings($this->path($locale, "account.php")) as $key => $string) {
+                if (str_starts_with($key, "sidebar.") && preg_match(self::ADS_PATTERN, $string)) {
+                    $problems[] = "$locale/account.php $key: $string";
+                }
+            }
+        }
+
+        $this->assertSame([], $problems);
+    }
+
     private function locales(): array
     {
         $locales = [];

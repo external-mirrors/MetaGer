@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => 'A minha conta – sessão iniciada anonimamente através da extensão web',
     ],
     'sidebar' => [
-        'balance' => ':charge Token · sem publicidade',
-        // Not "0 Token · …": at zero the searches are not ad-free, they do
-        // not happen at all.
+        'balance' => ':charge Token',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'Sem Token',
         'manage' => 'Gerir',
         'topup' => 'Carregar',
         'logout' => 'Terminar sessão',
         'login' => 'Iniciar sessão',
         'create' => 'Configurar',
-        'logged_out' => 'Sessão não iniciada. Com uma chave pesquisa sem publicidade e de forma anónima.',
-        'anonymous_hint' => 'Sem publicidade · gerido pela extensão web',
+        'logged_out' => 'Sessão não iniciada. Com uma chave pesquisa de forma anónima.',
+        'anonymous_hint' => 'Gerido pela extensão web',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => 'Gerir na extensão',

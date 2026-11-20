@@ -29,9 +29,8 @@ return [
         'aria_anonymous' => 'Mein Konto – anonym über die Web-Erweiterung angemeldet',
     ],
     'sidebar' => [
-        'balance' => ':charge Token · werbefrei',
-        // Not "0 Token · werbefrei": at zero the searches are not ad-free,
-        // they do not happen at all.
+        'balance' => ':charge Token',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'Keine Token mehr',
         // Ein einzelnes Verb wie die Nachbarn 'topup'/'logout' — nicht "Konto
         // verwalten": das Konto ist hier schon der Kontext (Kachel direkt
@@ -43,8 +42,8 @@ return [
         'logout' => 'Abmelden',
         'login' => 'Anmelden',
         'create' => 'Einrichten',
-        'logged_out' => 'Nicht angemeldet. Mit einem Schlüssel suchen Sie werbefrei und anonym.',
-        'anonymous_hint' => 'Werbefrei · verwaltet von der Web-Erweiterung',
+        'logged_out' => 'Nicht angemeldet. Mit einem Schlüssel suchen Sie anonym.',
+        'anonymous_hint' => 'Verwaltet von der Web-Erweiterung',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => 'In der Erweiterung verwalten',

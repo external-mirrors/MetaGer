@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => 'My account – signed in anonymously through the web extension',
     ],
     'sidebar' => [
-        'balance' => ':charge tokens · ad-free',
-        // Not "0 tokens · ad-free": at zero the searches are not ad-free,
-        // they do not happen at all.
+        'balance' => ':charge tokens',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'No tokens left',
         'manage' => 'Manage',
         'topup' => 'Top up',
         'logout' => 'Log out',
         'login' => 'Log in',
         'create' => 'Set up',
-        'logged_out' => 'Not logged in. With a key you search ad-free and anonymously.',
-        'anonymous_hint' => 'Ad-free · managed by the web extension',
+        'logged_out' => 'Not logged in. With a key you search anonymously.',
+        'anonymous_hint' => 'Managed by the web extension',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => 'Manage in the extension',

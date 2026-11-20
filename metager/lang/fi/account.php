@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => 'Oma tili – kirjautunut sisään nimettömästi selainlaajennuksen kautta',
     ],
     'sidebar' => [
-        'balance' => ':charge Token · mainokseton',
-        // Not "0 Token · …": at zero the searches are not ad-free, they do
-        // not happen at all.
+        'balance' => ':charge Token',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'Token loppu',
         'manage' => 'Hallitse',
         'topup' => 'Lataa',
         'logout' => 'Kirjaudu ulos',
         'login' => 'Kirjaudu sisään',
         'create' => 'Ota käyttöön',
-        'logged_out' => 'Et ole kirjautunut sisään. Avaimella haet ilman mainoksia ja nimettömästi.',
-        'anonymous_hint' => 'Mainokseton · selainlaajennuksen hallinnassa',
+        'logged_out' => 'Et ole kirjautunut sisään. Avaimella haet nimettömästi.',
+        'anonymous_hint' => 'Selainlaajennuksen hallinnassa',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => 'Hallitse laajennuksessa',

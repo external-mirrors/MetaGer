@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => 'Min konto – logget ind anonymt via webudvidelsen',
     ],
     'sidebar' => [
-        'balance' => ':charge Token · uden reklamer',
-        // Not "0 Token · …": at zero the searches are not ad-free, they do
-        // not happen at all.
+        'balance' => ':charge Token',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'Ingen Token tilbage',
         'manage' => 'Administrer',
         'topup' => 'Fyld op',
         'logout' => 'Log ud',
         'login' => 'Log ind',
         'create' => 'Opret',
-        'logged_out' => 'Ikke logget ind. Med en nøgle søger du uden reklamer og anonymt.',
-        'anonymous_hint' => 'Uden reklamer · administreret af webudvidelsen',
+        'logged_out' => 'Ikke logget ind. Med en nøgle søger du anonymt.',
+        'anonymous_hint' => 'Administreret af webudvidelsen',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => 'Administrer i udvidelsen',

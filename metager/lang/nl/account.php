@@ -29,17 +29,16 @@ return [
         'aria_anonymous' => 'Mijn account – anoniem aangemeld via de webextensie',
     ],
     'sidebar' => [
-        'balance' => ':charge Token · advertentievrij',
-        // Not "0 Token · …": at zero the searches are not ad-free, they do
-        // not happen at all.
+        'balance' => ':charge Token',
+        // At zero there is nothing left to search with, so not "0 tokens".
         'balance_empty' => 'Geen Token meer',
         'manage' => 'Beheren',
         'topup' => 'Opwaarderen',
         'logout' => 'Afmelden',
         'login' => 'Aanmelden',
         'create' => 'Instellen',
-        'logged_out' => 'Niet aangemeld. Met een sleutel zoek je advertentievrij en anoniem.',
-        'anonymous_hint' => 'Advertentievrij · beheerd door de webextensie',
+        'logged_out' => 'Niet aangemeld. Met een sleutel zoek je anoniem.',
+        'anonymous_hint' => 'Beheerd door de webextensie',
         // The webextension holds the key, so the account lives in its popup.
         // The button this labels is hidden until the extension reveals it.
         'extension_settings' => 'Beheren in de extensie',

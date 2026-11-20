@@ -98,7 +98,6 @@ return [
             'lede' => 'Zwei Wege zu Ihrem Guthaben. Wir empfehlen den ersten.',
             'tokens' => ':amount Token',
             'price' => ':price €',
-            'more' => 'Alle Preise und Zahlungswege',
             'or' => 'oder',
             'once' => [
                 'heading' => 'Einmalig aufladen',

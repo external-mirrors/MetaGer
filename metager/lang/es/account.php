@@ -89,7 +89,6 @@ return [
             'lede' => 'Dos maneras de recargar su clave. Le recomendamos la primera.',
             'tokens' => ':amount tokens',
             'price' => ':price €',
-            'more' => 'Todos los precios y formas de pago',
             'or' => 'o',
             'once' => [
                 'heading' => 'Recargar una sola vez',

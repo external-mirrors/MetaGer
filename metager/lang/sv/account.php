@@ -89,7 +89,6 @@ return [
             'lede' => 'Två sätt att fylla på din nyckel. Vi rekommenderar det första.',
             'tokens' => ':amount tokens',
             'price' => ':price €',
-            'more' => 'Alla priser och betalsätt',
             'or' => 'eller',
             'once' => [
                 'heading' => 'Fyll på en gång',

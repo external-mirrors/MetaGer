@@ -218,18 +218,41 @@ class MembershipAdvertisingTest extends TestCase
     }
 
     /**
-     * Ein Mitglied darf nicht aufladen, und die Begründung dafür verlinkt
-     * ebenfalls das Beitrittsformular. Auch dieser Link ist deutsch — ein
-     * Mitglied mit englischer Oberfläche bekommt den Satz, aber nicht den
-     * Weg in ein Formular, das er nicht lesen kann.
+     * Ein Mitglied darf nicht aufladen und bekommt den Satz, warum. Darunter
+     * stand ein Link mit der Beschriftung „Alle Preise und Zahlungswege“, der
+     * ins Beitrittsformular führte: weder das eine noch das andere hat ein
+     * Mitglied hier zu suchen.
      */
-    public function testAMemberIsNotSentToAGermanFormFromAnEnglishPage(): void
+    public function testAMemberIsNotSentAnywhereFromTheChargeSection(): void
     {
         $this->keyserverKnows(membershipEnd: "2027-12-31 00:00:00");
 
+        foreach (["de-DE,de" => "de", "en-US,en" => "en"] as $header => $language) {
+            $this->signedIn()->get("/konto", self::speaking($header))
+                ->assertOk()
+                ->assertSeeText(__("account.page.charge.blocked.member", locale: $language))
+                ->assertDontSee("account-section__more", false);
+        }
+
+        // Auf Englisch hat auch das Seitenmenü keinen Link ins Formular, also
+        // darf die Seite ihn gar nicht enthalten. (Auf Deutsch wirbt das
+        // Seitenmenü, dort ist die Adresse ohnehin im Markup.)
         $this->signedIn()->get("/konto", self::speaking("en-US,en"))
-            ->assertOk()
-            ->assertSeeText(__("account.page.charge.blocked.member", locale: "en"))
             ->assertDontSee(route("membership_form"), false);
+    }
+
+    /**
+     * Die Karte zeigt die Preise selbst, und die Zahlungswege kommen im
+     * nächsten Schritt. Ein Link auf /preise führte nur weg von der Seite, auf
+     * der jemand gerade aufladen wollte.
+     */
+    public function testTheChargeSectionDoesNotSendAnyoneAwayToThePricePage(): void
+    {
+        $this->keyserverKnows();
+
+        $this->signedIn()->get("/konto", self::speaking("de-DE,de"))
+            ->assertOk()
+            ->assertSee("account-tiers", false)
+            ->assertDontSee("account-section__more", false);
     }
 }

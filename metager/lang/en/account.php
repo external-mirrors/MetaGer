@@ -89,7 +89,6 @@ return [
             'lede' => 'Two ways to top up your key. We recommend the first.',
             'tokens' => ':amount tokens',
             'price' => ':price €',
-            'more' => 'All prices and payment methods',
             'or' => 'or',
             'once' => [
                 'heading' => 'Top up once',

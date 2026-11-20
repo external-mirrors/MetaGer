@@ -186,7 +186,6 @@ final class AccountController extends Controller
                 "logoutUrl" => KeymanagerLinks::remove(route("startpage")),
                 "loginCodeUrl" => route("account.logincode", [], false),
                 "searchUrl" => route("startpage"),
-                "priceUrl" => route("price"),
                 "helpUrl" => route("key-faq"),
                 "membershipUrl" => route("membership_form"),
             ])

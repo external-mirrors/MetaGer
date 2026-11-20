@@ -89,7 +89,6 @@ return [
             'lede' => 'Duas formas de carregar a sua chave. Recomendamos a primeira.',
             'tokens' => ':amount tokens',
             'price' => ':price €',
-            'more' => 'Todos os preços e formas de pagamento',
             'or' => 'ou',
             'once' => [
                 'heading' => 'Carregar uma vez',

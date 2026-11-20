@@ -89,7 +89,6 @@ return [
             'lede' => 'To måder at fylde din nøgle op. Vi anbefaler den første.',
             'tokens' => ':amount tokens',
             'price' => ':price €',
-            'more' => 'Alle priser og betalingsmåder',
             'or' => 'eller',
             'once' => [
                 'heading' => 'Fyld op én gang',

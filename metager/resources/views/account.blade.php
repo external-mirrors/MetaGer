@@ -118,9 +118,6 @@
 
 		@if($topupBlocked !== null)
 			<p class="account-blocked">@lang("account.page.charge.blocked.$topupBlocked")</p>
-			@if($topupBlocked === 'member' && \App\Support\MembershipOffer::isAdvertised())
-				<a class="account-section__more" href="{{ $membershipUrl }}">@lang('account.page.charge.more')</a>
-			@endif
 		@elseif($tiers === [])
 			<p class="account-blocked">@lang('account.page.balance.unknown')</p>
 		@else
@@ -173,7 +170,6 @@
 					</li>
 				@endforeach
 			</ul>
-			<a class="account-section__more" href="{{ $priceUrl }}">@lang('account.page.charge.more')</a>
 		@endif
 	</section>
 

@@ -89,7 +89,6 @@ return [
             'lede' => 'Kaksi tapaa ladata avaimesi. Suosittelemme ensimmäistä.',
             'tokens' => ':amount tokenia',
             'price' => ':price €',
-            'more' => 'Kaikki hinnat ja maksutavat',
             'or' => 'tai',
             'once' => [
                 'heading' => 'Lataa kerran',

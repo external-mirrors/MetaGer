@@ -89,7 +89,6 @@ return [
             'lede' => 'Deux façons de recharger votre clé. Nous vous recommandons la première.',
             'tokens' => ':amount jetons',
             'price' => ':price €',
-            'more' => 'Tous les prix et moyens de paiement',
             'or' => 'ou',
             'once' => [
                 'heading' => 'Recharger une seule fois',

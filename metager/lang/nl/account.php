@@ -89,7 +89,6 @@ return [
             'lede' => 'Twee manieren om uw sleutel op te laden. Wij raden de eerste aan.',
             'tokens' => ':amount tokens',
             'price' => ':price €',
-            'more' => 'Alle prijzen en betaalmethoden',
             'or' => 'of',
             'once' => [
                 'heading' => 'Eenmalig opladen',

@@ -89,7 +89,6 @@ return [
             'lede' => 'Dwa sposoby na doładowanie klucza. Polecamy pierwszy.',
             'tokens' => ':amount tokenów',
             'price' => ':price €',
-            'more' => 'Wszystkie ceny i sposoby płatności',
             'or' => 'lub',
             'once' => [
                 'heading' => 'Doładuj jednorazowo',

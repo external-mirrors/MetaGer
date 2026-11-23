@@ -750,9 +750,13 @@ class SettingsController extends Controller
 
     public function removeOneSetting(Request $request)
     {
-        $key = $request->input('key', '');
-        Cookie::queue(Cookie::forget($key, "/"));
-        app(SettingsCarry::class)->forget($key);
+        // No key — absent, empty or (DropArrayInput) sent as an array — is
+        // nothing to remove; Cookie::forget('') throws.
+        $key = $request->input('key');
+        if (is_string($key) && $key !== '') {
+            Cookie::queue(Cookie::forget($key, "/"));
+            app(SettingsCarry::class)->forget($key);
+        }
 
         $redirect_url = $this->backUrl($request, 'https://metager.de');
         if ($request->wantsJson()) {

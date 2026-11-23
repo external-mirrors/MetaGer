@@ -101,6 +101,20 @@ class OrdersTest extends TestCase
             ->assertSee(trans("orders.lookup.heading"));
     }
 
+    /**
+     * The POST twin of the test above, which `(string)` cast into "Array to
+     * string conversion" (GlitchTip METAGER-1B3). See ArrayInputTest.
+     */
+    public function testAnArrayReferencePostDoesNotBreakTheForm(): void
+    {
+        $this->keyserver();
+
+        $this->signedIn()
+            ->post("/de-DE/konto/bestellungen", ["reference" => ["Z1"]])
+            ->assertOk()
+            ->assertSee(trans("orders.lookup.heading"));
+    }
+
     public function testAValidReferenceRedirectsToItsDetailPage(): void
     {
         $this->keyserver([

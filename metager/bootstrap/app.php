@@ -51,6 +51,9 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\HandleCors::class,
             \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
             \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+            // Before anything reads input: no field MetaGer reads is ever an
+            // array, and a hand-built `name[]=` one used to 500 all over.
+            \App\Http\Middleware\DropArrayInput::class,
             \App\Http\Middleware\TrimStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             TrustProxies::class,

@@ -64,7 +64,58 @@ class CookieCarryingUrlGenerator extends UrlGenerator
             $parameters += app(SettingsCarry::class)->all();
         }
 
-        return parent::route($name, $parameters, $absolute);
+        $url = parent::route($name, $this->escapeBracesInPath($name, $parameters), $absolute);
+
+        return str_replace(self::BRACE_STANDINS_ENCODED, ["%7B", "%7D"], $url);
+    }
+
+    /** Private-use code points that stand in for `{` and `}` in a path. */
+    private const BRACE_STANDINS = ["\u{E000}", "\u{E001}"];
+    private const BRACE_STANDINS_ENCODED = ["%EE%80%80", "%EE%80%81"];
+
+    /**
+     * Percent-encodes `{` and `}` in every parameter bound for the path.
+     *
+     * RouteUrlGenerator::to() substitutes the parameters into the path first
+     * and only then looks for a `{…}` left in it to report a missing
+     * parameter, so a value with braces in it is taken for an unfilled
+     * placeholder and route() throws. Every page carries `key` into
+     * `suggest/{key?}`, so one `?key={26322*26322}` from a template-injection
+     * scanner made the startpage, /plugin and the OpenSearch description 500,
+     * and `c/${…}` did the same to the voucher teaser (GlitchTip METAGER-1AB
+     * and its siblings).
+     *
+     * The braces cannot simply be replaced with `%7B`: Laravel encodes a path
+     * parameter on its own and then the whole URL again, so that comes out as
+     * `%257B`. Instead they become private-use code points, which pass the
+     * check and come out of every encoding step as their UTF-8 escapes, and
+     * route() swaps those for `%7B`/`%7D` at the end. A value that already
+     * holds one of those code points is left alone rather than corrupted.
+     * Query parameters are left alone too: they are encoded before the
+     * check, never threw, and come out right as they are.
+     */
+    private function escapeBracesInPath(string $name, mixed $parameters): mixed
+    {
+        $route = $this->routes->getByName($name);
+        if ($route === null) {
+            return $parameters; // parent::route() reports that
+        }
+        $parameters = \Illuminate\Support\Arr::wrap($parameters);
+        $pathNames = $route->parameterNames();
+        foreach ($parameters as $key => $value) {
+            // An int key is a positional parameter, which only ever fills a
+            // path slot.
+            if (
+                is_string($value)
+                && (is_int($key) || in_array($key, $pathNames, true))
+                && strpbrk($value, "{}") !== false
+                && !str_contains($value, self::BRACE_STANDINS[0])
+                && !str_contains($value, self::BRACE_STANDINS[1])
+            ) {
+                $parameters[$key] = str_replace(["{", "}"], self::BRACE_STANDINS, $value);
+            }
+        }
+        return $parameters;
     }
 
     public function signedRoute($name, $parameters = [], $expiration = null, $absolute = true)

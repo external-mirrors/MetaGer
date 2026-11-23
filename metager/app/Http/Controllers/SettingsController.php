@@ -39,7 +39,27 @@ class SettingsController extends Controller
     private function backUrl(Request $request, string $default = ''): string
     {
         $url = $request->input('url');
-        return is_string($url) && $url !== '' ? $url : $default;
+        // A control character would reach the redirect's Location header,
+        // which PHP's header() refuses at send time (METAGER-1AL and its
+        // siblings). No URL worth following has one.
+        if (!is_string($url) || $url === '' || preg_match('/[\x00-\x1F\x7F]/', $url)) {
+            return $default;
+        }
+        return $url;
+    }
+
+    /**
+     * A field that names a fokus or a setting cookie — `focus`, `key`,
+     * `cookieKey` — or "" when it is not one. Every such name is an
+     * identifier (`web`, `dark_mode`, `web_engine_brave`), and these fields
+     * end up as cookie names and in the redirect's fragment, where a CR, LF
+     * or NUL made header() fail at send time and a `;` or `=` made the
+     * Cookie constructor throw.
+     */
+    private static function nameInput(Request $request, string $field): string
+    {
+        $value = $request->input($field);
+        return is_string($value) && preg_match('/^[A-Za-z0-9_-]+$/', $value) ? $value : '';
     }
 
     public function index(Request $request)
@@ -258,7 +278,7 @@ class SettingsController extends Controller
 
     public function enableFilter(Request $request)
     {
-        $fokus = $request->input('focus', '');
+        $fokus = self::nameInput($request, 'focus');
         $url = $this->backUrl($request);
         if (empty($fokus)) {
             abort(404);
@@ -342,7 +362,7 @@ class SettingsController extends Controller
 
     public function enableSetting(Request $request)
     {
-        $fokus = $request->input('focus', '');
+        $fokus = self::nameInput($request, 'focus');
         $url = $this->backUrl($request);
 
         if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_provider", self::SETTING_INPUT($request, 'suggestion_provider'))) {
@@ -502,7 +522,7 @@ class SettingsController extends Controller
 
     public function deleteSettings(Request $request)
     {
-        $fokus = $request->input('focus', '');
+        $fokus = self::nameInput($request, 'focus');
         $url = $this->backUrl($request);
         if (empty($fokus)) {
             abort(404);
@@ -750,10 +770,11 @@ class SettingsController extends Controller
 
     public function removeOneSetting(Request $request)
     {
-        // No key — absent, empty or (DropArrayInput) sent as an array — is
-        // nothing to remove; Cookie::forget('') throws.
-        $key = $request->input('key');
-        if (is_string($key) && $key !== '') {
+        // No usable key — absent, empty, sent as an array (DropArrayInput)
+        // or not a cookie name at all — is nothing to remove;
+        // Cookie::forget('') throws.
+        $key = self::nameInput($request, 'key');
+        if ($key !== '') {
             Cookie::queue(Cookie::forget($key, "/"));
             app(SettingsCarry::class)->forget($key);
         }
@@ -818,7 +839,7 @@ class SettingsController extends Controller
 
     public function newBlacklist(Request $request)
     {
-        $fokus = $request->input('focus', '');
+        $fokus = self::nameInput($request, 'focus');
         $url = $this->backUrl($request);
 
         $blacklist = $request->input('blacklist');
@@ -899,12 +920,13 @@ class SettingsController extends Controller
 
     public function deleteBlacklist(Request $request)
     {
-        $fokus = $request->input('focus', '');
+        $fokus = self::nameInput($request, 'focus');
         $url = $this->backUrl($request);
-        $cookieKey = $request->input('cookieKey');
-
-        Cookie::queue(Cookie::forget($cookieKey, "/"));
-        app(SettingsCarry::class)->forget($cookieKey);
+        $cookieKey = self::nameInput($request, 'cookieKey');
+        if ($cookieKey !== '') {
+            Cookie::queue(Cookie::forget($cookieKey, "/"));
+            app(SettingsCarry::class)->forget($cookieKey);
+        }
 
         $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#" . $fokus . "-bl";
         if ($request->wantsJson()) {
@@ -918,7 +940,7 @@ class SettingsController extends Controller
     public function clearBlacklist(Request $request)
     {
         //function to clear the whole black list
-        $fokus = $request->input('focus', '');
+        $fokus = self::nameInput($request, 'focus');
         $url = $this->backUrl($request);
         $settings = Cookie::get();
         if ($request->wantsJson()) {

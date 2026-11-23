@@ -36,6 +36,10 @@ class RobotsTxtTest extends TestCase
             "/*/schluessel-erstellen",
             "/keys/key/",
             "/keys/admin/",
+            // SafeBrowse: following a link there opens the page in a remote browser (a free
+            // copy for visitors without a key), which crawlers must not set off.
+            "/proxy",
+            "/*/proxy",
         ] as $path) {
             $response->assertSee("Disallow: {$path}", false);
         }

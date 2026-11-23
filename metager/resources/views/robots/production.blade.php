@@ -11,3 +11,5 @@ Disallow: /schluessel-erstellen
 Disallow: /*/schluessel-erstellen
 Disallow: /keys/key/
 Disallow: /keys/admin/
+Disallow: /proxy
+Disallow: /*/proxy

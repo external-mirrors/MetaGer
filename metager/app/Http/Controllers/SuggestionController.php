@@ -30,6 +30,12 @@ class SuggestionController extends Controller
     {
         Suggestions::GET_AVAILABLE_PROVIDERS();
         $query = $request->input("query");
+        // Echoed back as JSON below, which cannot encode invalid UTF-8
+        // (GlitchTip METAGER-1AD), and no provider could suggest anything
+        // for it either.
+        if ($query !== null && (!is_string($query) || !mb_check_encoding($query, "UTF-8"))) {
+            $query = "";
+        }
 
         $authorization = app(Authorization::class);
 

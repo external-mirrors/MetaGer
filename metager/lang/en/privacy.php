@@ -78,6 +78,8 @@ return [
         'proxy' => [
             'title' => 'Use of the anonymizing proxy',
             'description' => 'When using the anonymizing proxy, the following data is generated:',
+            'session' => 'The pages you open with SafeBrowse are loaded by a browser on our servers; your device only receives a rendering of them. Whatever that browser stores during your session, such as cookies, logins to websites, history and downloads, exists only for the duration of the session and is deleted completely when it ends.',
+            'hibernation' => 'If nobody looks at a running session for a few minutes, we set it aside to free server capacity: we store the state of its browser (cookies, logins, data stored by websites, open tabs with their history and form entries, downloads and cached page content) encrypted in our own object storage and shut the browser down. If you come back while the session is still running, we restore the browser from it. The key to this data is stored separately from it. The stored state and its key are deleted as soon as you come back or the session ends, and after one day at the latest. The legal basis is Art. 6(1)(b) GDPR.',
         ],
         'quote' => [
             'title' => 'Use of the citation search',

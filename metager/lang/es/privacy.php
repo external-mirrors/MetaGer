@@ -52,6 +52,8 @@ return [
         'proxy' => [
             'title' => 'Uso del proxy de anonimización',
             'description' => 'Al utilizar el proxy de anonimización, se generan los siguientes datos:',
+            'session' => 'Las páginas que abres con SafeBrowse las carga un navegador en nuestros servidores; tu dispositivo solo recibe una representación de ellas. Lo que ese navegador guarda durante tu sesión, como cookies, inicios de sesión en sitios web, historial y descargas, existe solo mientras dura la sesión y se elimina por completo cuando termina.',
+            'hibernation' => 'Si nadie mira una sesión en curso durante unos minutos, la suspendemos para liberar capacidad de los servidores: guardamos el estado de su navegador (cookies, inicios de sesión, datos guardados por sitios web, pestañas abiertas con su historial y lo introducido en formularios, descargas y contenido de páginas en caché) cifrado en nuestro propio almacenamiento de objetos y cerramos el navegador. Si vuelves mientras la sesión sigue en curso, restauramos el navegador con esos datos. La clave de estos datos se guarda por separado. El estado guardado y su clave se eliminan en cuanto vuelves o la sesión termina, y como máximo al cabo de un día. La base jurídica es el art. 6, apdo. 1, letra b) del RGPD.',
         ],
         'quote' => [
             'title' => 'Utilización de la búsqueda de citas',

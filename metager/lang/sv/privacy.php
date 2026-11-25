@@ -46,6 +46,8 @@ return [
         'proxy' => [
             'title' => 'Användning av anonymiserande proxy',
             'description' => 'När du använder den anonymiserande proxyn genereras följande data:',
+            'session' => 'Sidorna du öppnar med SafeBrowse laddas av en webbläsare på våra servrar; din enhet får bara en återgivning av dem. Det som webbläsaren sparar under din session, till exempel kakor, inloggningar på webbplatser, historik och nedladdningar, finns bara så länge sessionen pågår och raderas helt när den slutar.',
+            'hibernation' => 'Om ingen tittar på en pågående session under några minuter lägger vi den vilande för att frigöra serverkapacitet: vi sparar tillståndet för dess webbläsare (kakor, inloggningar, data som webbplatser har sparat, öppna flikar med deras historik och formulärinmatningar, nedladdningar och cachat sidinnehåll) krypterat i vår egen objektlagring och stänger webbläsaren. Om du kommer tillbaka medan sessionen fortfarande pågår återställer vi webbläsaren med det. Nyckeln till dessa data lagras separat från dem. Det sparade tillståndet och nyckeln raderas så snart du kommer tillbaka eller sessionen slutar, och senast efter en dag. Rättslig grund är artikel 6.1 b i GDPR.',
         ],
         'quote' => [
             'title' => 'Användning av citatsökning',

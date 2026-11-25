@@ -26,6 +26,10 @@ class PrivacyProxyTranslationsTest extends TestCase
                     $problems[] = "$locale is missing privacy.contexts.proxy.$key";
                 }
             }
+            // People know the service by its button, so the text names it by the button's own label.
+            if (!str_contains($proxy["session"] ?? "", ":button")) {
+                $problems[] = "$locale: privacy.contexts.proxy.session does not name the :button";
+            }
         }
         $this->assertSame([], $problems);
     }
@@ -33,7 +37,7 @@ class PrivacyProxyTranslationsTest extends TestCase
     public function testBothParagraphsAreRendered(): void
     {
         $view = file_get_contents(dirname(__DIR__, 2) . "/resources/views/privacy.blade.php");
-        $this->assertStringContainsString("@lang('privacy.contexts.proxy.session')", $view);
+        $this->assertStringContainsString("@lang('privacy.contexts.proxy.session', ['button' => __('result.options.anonym')])", $view);
         $this->assertStringContainsString("@lang('privacy.contexts.proxy.hibernation')", $view);
     }
 

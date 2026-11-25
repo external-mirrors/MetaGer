@@ -107,13 +107,13 @@ class Polias extends Searchengine
 
     public function loadResults($resultstring)
     {
-        $response = json_decode($resultstring);
-        if (!is_object($response) || !isset($response->results) || !is_array($response->results)) {
+        $page = $this->page($resultstring);
+        if ($page === null) {
             return;
         }
 
         try {
-            foreach ($response->results as $result) {
+            foreach ($page->results as $result) {
                 if (empty($result->url) || empty($result->title)) {
                     continue;
                 }
@@ -151,11 +151,11 @@ class Polias extends Searchengine
      */
     public function getNext(\App\MetaGer $metager, $result)
     {
-        $response = json_decode($result);
-        if (!is_object($response) || !isset($response->results) || !is_array($response->results)) {
+        $page = $this->page($result);
+        if ($page === null) {
             return;
         }
-        if (count($response->results) < self::PAGE_SIZE) {
+        if (count($page->results) < self::PAGE_SIZE) {
             return;
         }
 
@@ -163,7 +163,7 @@ class Polias extends Searchengine
         if ($offset > self::MAX_OFFSET) {
             return;
         }
-        if (isset($response->total) && is_numeric($response->total) && $offset >= (int) $response->total) {
+        if (isset($page->total) && is_numeric($page->total) && $offset >= (int) $page->total) {
             return;
         }
 
@@ -171,6 +171,23 @@ class Polias extends Searchengine
         $newConfiguration = unserialize(serialize($this->configuration));
         $newConfiguration->getParameter->offset = $offset;
         $this->next = new static($this->name, $newConfiguration);
+    }
+
+    /**
+     * The part of the response holding `results` and `total`, or null when
+     * there is none. The web search has them at the top level.
+     */
+    protected function page(string $body): ?object
+    {
+        return self::pageIn(json_decode($body));
+    }
+
+    protected static function pageIn($page): ?object
+    {
+        if (!is_object($page) || !isset($page->results) || !is_array($page->results)) {
+            return null;
+        }
+        return $page;
     }
 
     private function parseDate($value): ?Carbon

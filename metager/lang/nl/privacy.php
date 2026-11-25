@@ -58,6 +58,8 @@ return [
         'proxy' => [
             'title' => 'Gebruik van de anonimiserende proxy',
             'description' => 'Bij gebruik van de anonimiserende proxy worden de volgende gegevens gegenereerd:',
+            'session' => 'De pagina\'s die u via SafeBrowse opent, worden geladen door een browser op onze servers; uw apparaat ontvangt alleen een weergave ervan. Wat deze browser tijdens uw sessie opslaat, zoals cookies, aanmeldingen bij websites, geschiedenis en downloads, bestaat alleen zolang de sessie duurt en wordt aan het einde ervan volledig verwijderd.',
+            'hibernation' => 'Als niemand een lopende sessie een paar minuten bekijkt, zetten we die stil om servercapaciteit vrij te maken: we slaan de toestand van de browser (cookies, aanmeldingen, door websites opgeslagen gegevens, open tabbladen met hun geschiedenis en formulierinvoer, downloads en gecachte pagina-inhoud) versleuteld op in onze eigen objectopslag en sluiten de browser af. Komt u terug terwijl de sessie nog loopt, dan herstellen we de browser daarmee. De sleutel tot deze gegevens wordt er gescheiden van bewaard. De opgeslagen toestand en de sleutel worden verwijderd zodra u terugkomt of de sessie eindigt, en uiterlijk na één dag. De rechtsgrond is art. 6, lid 1, onder b AVG.',
         ],
         'quote' => [
             'title' => 'Gebruik van de citatenzoekfunctie',

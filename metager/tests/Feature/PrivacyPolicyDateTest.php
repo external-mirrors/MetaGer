@@ -19,8 +19,8 @@ use PHPUnit\Framework\TestCase;
  */
 class PrivacyPolicyDateTest extends TestCase
 {
-    private const DATE = "2026-11-11";
-    private const FINGERPRINT = "c2d630bdd7c5a4e681a1049d6e10ddfde692fd1ddeda5e2b76ed9c8539897298";
+    private const DATE = "2026-11-25";
+    private const FINGERPRINT = "77b9e10579dedebe2264d4360f1dc499eb41ffac658c974cad850ecec341701a";
 
     private const DATE_PATTERN = "/@lang\('privacy\.changes\.date', \['date' => '([0-9-]+)'\]\)/";
 

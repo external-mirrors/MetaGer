@@ -78,6 +78,8 @@ return [
         'proxy' => [
             'title' => 'Ús del servidor intermediari anònim',
             'description' => 'En fer servir el servidor intermediari anònim es generen les dades següents:',
+            'session' => 'Les pàgines que obres amb SafeBrowse les carrega un navegador als nostres servidors; el teu dispositiu només en rep una representació. El que aquest navegador desa durant la teva sessió, com ara galetes, inicis de sessió a llocs web, historial i baixades, només existeix mentre dura la sessió i s\'elimina completament quan acaba.',
+            'hibernation' => 'Si ningú no mira una sessió en curs durant uns minuts, la suspenem per alliberar capacitat dels servidors: desem l\'estat del seu navegador (galetes, inicis de sessió, dades desades pels llocs web, pestanyes obertes amb el seu historial i el que s\'ha introduït als formularis, baixades i contingut de pàgines a la memòria cau) xifrat al nostre propi emmagatzematge d\'objectes i tanquem el navegador. Si tornes mentre la sessió encara és en curs, restaurem el navegador a partir d\'aquestes dades. La clau d\'aquestes dades es desa per separat. L\'estat desat i la seva clau s\'eliminen tan bon punt tornes o la sessió acaba, i com a molt tard al cap d\'un dia. La base jurídica és l\'art. 6.1.b del RGPD.',
         ],
         'quote' => [
             'title' => 'Ús de la cerca de citacions',

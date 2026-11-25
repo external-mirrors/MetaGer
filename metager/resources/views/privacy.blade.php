@@ -146,6 +146,11 @@
                             <li><a href="#ip-address">@lang('privacy.data.ip')</a>: @lang('privacy.data.unused')</li>
                             <li><a href="#user-agent">@lang('privacy.data.useragent')</a>: @lang('privacy.data.unused')</li>
                         </ol>
+                        <div>@lang('privacy.contexts.proxy.session')</div>
+                        {{-- SafeBrowse's hibernation (safe-browse docs/ideas/hibernation.md): what is kept,
+                             where, and when it goes. Keep in step with HIBERNATE_* and the bucket's
+                             lifecycle rule there. --}}
+                        <div>@lang('privacy.contexts.proxy.hibernation')</div>
                     </article>
                     <article class="kontext">
                         <h1>@lang('privacy.contexts.quote.title')</h1>
@@ -324,6 +329,6 @@
         <div class="section">
             <h1>@lang('privacy.changes.title')</h1>
             <div>@lang('privacy.changes.description')</div>
-            <div>@lang('privacy.changes.date', ['date' => '2026-11-11'])</div>
+            <div>@lang('privacy.changes.date', ['date' => '2026-11-25'])</div>
         </div>
 @endsection

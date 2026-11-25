@@ -129,6 +129,8 @@ return [
         'proxy' => [
             'title' => 'Utilização do proxy de anonimização',
             'description' => 'Ao utilizar o proxy de anonimização, são gerados os seguintes dados:',
+            'session' => 'As páginas que abre com o SafeBrowse são carregadas por um navegador nos nossos servidores; o seu dispositivo recebe apenas uma representação delas. O que esse navegador guarda durante a sua sessão, como cookies, inícios de sessão em sites, histórico e transferências, existe apenas enquanto a sessão dura e é totalmente eliminado quando ela termina.',
+            'hibernation' => 'Se ninguém olhar para uma sessão em curso durante alguns minutos, suspendemo-la para libertar capacidade dos servidores: guardamos o estado do seu navegador (cookies, inícios de sessão, dados guardados por sites, separadores abertos com o seu histórico e dados introduzidos em formulários, transferências e conteúdos de páginas em cache) de forma cifrada no nosso próprio armazenamento de objetos e encerramos o navegador. Se voltar enquanto a sessão ainda decorre, restauramos o navegador a partir desses dados. A chave destes dados é guardada separadamente. O estado guardado e a sua chave são eliminados assim que voltar ou a sessão terminar, e o mais tardar ao fim de um dia. A base jurídica é o art. 6.º, n.º 1, alínea b) do RGPD.',
         ],
         'membership' => [
             'title' => 'Candidatar-se e gerir a adesão à SUMA-EV',

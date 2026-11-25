@@ -146,6 +146,8 @@
                             <li><a href="#ip-address">@lang('privacy.data.ip')</a>: @lang('privacy.data.unused')</li>
                             <li><a href="#user-agent">@lang('privacy.data.useragent')</a>: @lang('privacy.data.unused')</li>
                         </ol>
+                        {{-- The 15 minutes are SafeBrowse's SESSION_DURATION_MINUTES (also the step of each
+                             extension), and the end button's label is its connect.session.close. Keep in step. --}}
                         <div>@lang('privacy.contexts.proxy.session', ['button' => __('result.options.anonym')])</div>
                         {{-- SafeBrowse's hibernation (safe-browse docs/ideas/hibernation.md): what is kept,
                              where, and when it goes. Keep in step with HIBERNATE_* and the bucket's

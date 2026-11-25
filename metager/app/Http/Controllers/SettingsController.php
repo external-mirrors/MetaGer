@@ -691,7 +691,7 @@ class SettingsController extends Controller
                     "enabledByDefault" => !$engine->configuration->disabledByDefault,
                     // Whether this engine can serve the requested language at all.
                     // Engines are indexed per language, not globally: Staan covers
-                    // German, French and English, Polias only German. A search
+                    // German, French and English, Polias' web search only German. A search
                     // already drops the ones that cannot serve the current locale
                     // (`SearchengineConfiguration::applyLocale()`), so without this a
                     // client would show a toggle with nothing behind it.

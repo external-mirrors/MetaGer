@@ -29,7 +29,8 @@
     "sumas": [
       "brave_news",
       "serper_news",
-      "tootnews"
+      "tootnews",
+      "polias_news"
     ],
     "main": [
       "brave_news"

@@ -67,6 +67,7 @@ return [
         'brave_news' => 'brave',
         'serper_news' => 'google',
         'tootnews' => 'suma',
+        'polias_news' => 'polias',
         // produkte
         'serper_shopping' => 'google',
         // science

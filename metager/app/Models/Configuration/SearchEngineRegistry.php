@@ -13,6 +13,9 @@ use App\Models\Searchengine;
  * mg_produkt/mg_produkt2/mg_produkt2_ads). config/sumas.json only ever
  * contributes secrets (API keys/tokens, either as request-header or
  * get-parameter entries, and http-auth-credentials), merged on top.
+ * An engine whose `secrets-from` names another engine takes that engine's
+ * entry instead of one under its own name: two endpoints of one provider
+ * then share one key, and deploying the second needs no new secret.
  *
  * config/foki.json (fokus -> engine membership) and config/filters.json
  * (query-filter/parameter-filter definitions incl. per-engine value
@@ -56,8 +59,9 @@ class SearchEngineRegistry
             $config = json_decode(json_encode($config, JSON_FORCE_OBJECT));
             $config->{"parser-class"} = $className;
 
-            if (property_exists($secrets, $engineName)) {
-                $this->mergeSecrets($config, $secrets->{$engineName});
+            $secretsName = $config->{"secrets-from"} ?? $engineName;
+            if (property_exists($secrets, $secretsName)) {
+                $this->mergeSecrets($config, $secrets->{$secretsName});
             }
 
             $this->sumas->{$engineName} = $config;

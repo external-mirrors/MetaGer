@@ -14,7 +14,7 @@ return [
         'proxy' => [
             'title' => 'Korzystanie z anonimizującego serwera proxy',
             'description' => 'Podczas korzystania z anonimizującego serwera proxy generowane są następujące dane:',
-            'session' => 'Strony otwierane przez SafeBrowse ładuje przeglądarka na naszych serwerach; Twoje urządzenie otrzymuje jedynie ich obraz. To, co ta przeglądarka zapisuje podczas sesji, np. pliki cookie, logowania na stronach, historia i pobrane pliki, istnieje tylko przez czas trwania sesji i jest całkowicie usuwane po jej zakończeniu.',
+            'session' => 'Strony wyświetlane przez „:button” ładuje przeglądarka na naszych serwerach; Twoje urządzenie otrzymuje jedynie ich obraz. Każda sesja dostaje własną, świeżo uruchomioną przeglądarkę, z której nie korzysta nikt inny, więc inni użytkownicy nigdy nie widzą Twoich stron ani danych. Pliki cookie, logowania na stronach, historię i pobrane pliki ta przeglądarka przechowuje tylko podczas Twojej sesji. Gdy sesja się kończy, usuwamy wszystko.',
             'hibernation' => 'Jeśli nikt nie ogląda trwającej sesji przez kilka minut, wstrzymujemy ją, aby zwolnić moc serwerów: zapisujemy stan jej przeglądarki (pliki cookie, logowania, dane zapisane przez strony, otwarte karty z ich historią i danymi wpisanymi w formularze, pobrane pliki i zawartość stron w pamięci podręcznej) w postaci zaszyfrowanej w naszym własnym magazynie obiektów i zamykamy przeglądarkę. Jeśli wrócisz, zanim sesja się zakończy, przywracamy z tych danych przeglądarkę. Klucz do tych danych jest przechowywany oddzielnie. Zapisany stan i jego klucz są usuwane, gdy tylko wrócisz lub sesja się zakończy, najpóźniej po jednym dniu. Podstawą prawną jest art. 6 ust. 1 lit. b RODO.',
         ],
         'quote' => [

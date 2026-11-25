@@ -50,7 +50,7 @@ return [
         'proxy' => [
             'title' => 'Brug af den anonymiserende proxy',
             'description' => 'Når du bruger den anonymiserende proxy, genereres følgende data:',
-            'session' => 'Siderne, du åbner med SafeBrowse, indlæses af en browser på vores servere; din enhed modtager kun en gengivelse af dem. Det, som browseren gemmer under din session, f.eks. cookies, logins på websteder, historik og downloads, findes kun, så længe sessionen varer, og slettes helt, når den slutter.',
+            'session' => 'Sider, du besøger via “:button”, indlæses af en browser på vores servere; din enhed modtager kun en gengivelse af dem. Hver session får sin egen nystartede browser, som ingen andre bruger, så andre brugere ser aldrig dine sider eller dine data. Browseren beholder kun cookies, logins på websteder, historik og downloads, mens din session kører. Når den slutter, sletter vi det hele.',
             'hibernation' => 'Hvis ingen ser på en igangværende session i nogle minutter, lægger vi den i dvale for at frigøre serverkapacitet: vi gemmer tilstanden af dens browser (cookies, logins, data gemt af websteder, åbne faner med deres historik og formularindtastninger, downloads og cachelagret sideindhold) krypteret i vores eget objektlager og lukker browseren. Kommer du tilbage, mens sessionen stadig kører, genskaber vi browseren ud fra det. Nøglen til disse data opbevares adskilt fra dem. Den gemte tilstand og nøglen slettes, så snart du kommer tilbage, eller sessionen slutter, og senest efter én dag. Retsgrundlaget er artikel 6, stk. 1, litra b, i GDPR.',
         ],
         'quote' => [

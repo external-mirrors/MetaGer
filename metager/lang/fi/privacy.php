@@ -52,7 +52,7 @@ return [
         'proxy' => [
             'title' => 'Anonymisoivan välityspalvelimen käyttö',
             'description' => 'Anonymisoivaa välityspalvelinta käytettäessä luodaan seuraavat tiedot:',
-            'session' => 'SafeBrowsen kautta avaamasi sivut lataa palvelimillamme toimiva selain; laitteesi saa niistä vain esityksen. Se, mitä selain tallentaa istuntosi aikana, kuten evästeet, kirjautumiset verkkosivustoille, historia ja lataukset, on olemassa vain istunnon ajan ja poistetaan kokonaan sen päättyessä.',
+            'session' => 'Painikkeen ”:button” kautta katselemasi sivut lataa palvelimillamme toimiva selain; laitteesi saa niistä vain esityksen. Jokainen istunto saa oman, juuri käynnistetyn selaimen, jota kukaan muu ei käytä, joten muut käyttäjät eivät koskaan näe sivujasi tai tietojasi. Selain säilyttää evästeet, kirjautumiset verkkosivustoille, historian ja lataukset vain istuntosi ajan. Kun istunto päättyy, poistamme kaiken.',
             'hibernation' => 'Jos kukaan ei katso käynnissä olevaa istuntoa muutamaan minuuttiin, asetamme sen lepotilaan vapauttaaksemme palvelinkapasiteettia: tallennamme sen selaimen tilan (evästeet, kirjautumiset, verkkosivustojen tallentamat tiedot, avoimet välilehdet historioineen ja lomakesyötteineen, lataukset ja välimuistiin tallennettu sivusisältö) salattuna omaan objektitallennustilaamme ja suljemme selaimen. Jos palaat istunnon vielä ollessa käynnissä, palautamme selaimen näistä tiedoista. Näiden tietojen avain säilytetään niistä erillään. Tallennettu tila ja sen avain poistetaan heti, kun palaat tai istunto päättyy, ja viimeistään yhden päivän kuluttua. Oikeusperuste on tietosuoja-asetuksen 6 artiklan 1 kohdan b alakohta.',
         ],
         'quote' => [

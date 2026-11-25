@@ -146,7 +146,7 @@
                             <li><a href="#ip-address">@lang('privacy.data.ip')</a>: @lang('privacy.data.unused')</li>
                             <li><a href="#user-agent">@lang('privacy.data.useragent')</a>: @lang('privacy.data.unused')</li>
                         </ol>
-                        <div>@lang('privacy.contexts.proxy.session')</div>
+                        <div>@lang('privacy.contexts.proxy.session', ['button' => __('result.options.anonym')])</div>
                         {{-- SafeBrowse's hibernation (safe-browse docs/ideas/hibernation.md): what is kept,
                              where, and when it goes. Keep in step with HIBERNATE_* and the bucket's
                              lifecycle rule there. --}}

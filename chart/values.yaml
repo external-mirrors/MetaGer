@@ -207,7 +207,7 @@ valkey:
   image:
     registry: docker.io
     repository: valkey/valkey
-    tag: "9.2.0-alpine"
+    tag: "9.2.1-alpine"
 
   # Sentinel needs a quorum, so three. Anything less cannot fail over.
   architecture: replication
@@ -266,7 +266,7 @@ valkey:
     image:
       registry: docker.io
       repository: valkey/valkey
-      tag: "9.2.0-alpine"
+      tag: "9.2.1-alpine"
     # 2 of 3. Left at the chart default, stated here because it has to move with
     # replicaCount if that ever changes.
     quorum: 2
